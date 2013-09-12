@@ -24,11 +24,11 @@ LayoutModel::LayoutModel()
     width=200;
     height=200;
     nrows=2;
-    nsegs=12;
+    nsegs=48;
 
     nseg = new int[nrows];
-    nseg[0] = 5;
-    nseg[1] = 7;
+    nseg[0] = 24;
+    nseg[1] = 24;
 
     rowheight = new int[nrows];
     rowheightpx = new int[nrows];
@@ -41,11 +41,17 @@ LayoutModel::LayoutModel()
     setAll(nsegs,segwidth,1);
 
     segwidthmax=new int[nrows];
-    segwidthmax[0]= 5;
-    segwidthmax[1]= 7;
+    segwidthmax[0]= 24;
+    segwidthmax[1]= 24;
 
     note = new int[nsegs];
-    note[0]=62;
+    for(int i=48;i<72;i++) {
+        note[i-48]=i;
+    }
+    for(int i=48;i<=72;i++) {
+        note[i-24]=i+5;
+    }
+/*    note[0]=62;
     note[1]=65;
     note[2]=67;
     note[3]=70;
@@ -56,13 +62,13 @@ LayoutModel::LayoutModel()
     note[8]=82;
     note[9]=86;
     note[10]=89;
-    note[11]=91;
+    note[11]=91; */
 
     ctlx=new int[nsegs];
     setAll(nsegs,ctlx,0);
 
     ctly=new int[nsegs];
-    setAll(nsegs,ctly,1);
+    setAll(nsegs,ctly,0);
 
     chan=new int[nsegs];
     setAll(nsegs,chan,0);

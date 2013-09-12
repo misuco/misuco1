@@ -60,6 +60,7 @@ protected:
     /*  QGLWidget implementation */
     void paintEvent(QPaintEvent *event);
     void resizeEvent(QResizeEvent *event);
+    void timerEvent(QTimerEvent *);
     bool event(QEvent *event);
 
     /*  PathObject (Server) implementation */

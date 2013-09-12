@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDebug>
 #include <QtWidgets>
 #include <QTimer>
+#include <QtGlobal>
 #include "rc1.h"
 #include "event/eventhandlerrect.h"
 #include "comm/senderdebug.h"
@@ -36,7 +37,7 @@ RC1::RC1(QWidget *parent) :
     qDebug() << "View() size:" << width() << " " << height();
     eventId = 1;
     nomouse = false;
-    ttl=10000;
+    ttl=2000;
 
     storage=new Storage();
     layout=new LayoutModel();
@@ -60,6 +61,48 @@ RC1::RC1(QWidget *parent) :
     pointpainters[3]=new PointPaintShape();
     pointpainters[4]=new PointPaintShape();
 
+    // move down
+    pointpainters[3]->setParam(15,0.5);
+    // do not grow height
+    pointpainters[3]->setParam(29,0);
+    // become 1 screen wide
+    pointpainters[3]->setParam(22,1);
+    // hight constant
+    pointpainters[3]->setParam(24,1);
+    // rotation 0
+    pointpainters[3]->setParam(96,0);
+    // rotate
+    pointpainters[3]->setParam(101,360);
+
+    // move up
+    pointpainters[2]->setParam(15,-0.5);
+    // do not grow height
+    pointpainters[2]->setParam(29,0);
+    // become 1 screen wide
+    pointpainters[2]->setParam(22,1);
+    // hight constant
+    pointpainters[2]->setParam(24,1);
+    // rotation 0
+    pointpainters[2]->setParam(96,90);
+    // rotate
+    pointpainters[2]->setParam(101,360);
+
+    // shape circle
+    pointpainters[4]->setParam(104,0);
+    // brush hue by time
+    pointpainters[4]->setParam(69,255);
+    // brush saturation constant
+    pointpainters[4]->setParam(72,150);
+    // brush light constant
+    pointpainters[4]->setParam(80,120);
+
+    // shape circle
+    pointpainters[1]->setParam(104,0);
+    // grow width
+    pointpainters[1]->setParam(21,50);
+    // grow height
+    pointpainters[1]->setParam(29,100);
+
     nPostPainters=1;
     postpainters=new IPaint*[nPostPainters];
     postpainters[0]=new PaintStat();
@@ -67,20 +110,22 @@ RC1::RC1(QWidget *parent) :
     painterOn=new bool[nPrePainters+nPointPainters+nPostPainters];
     painterOn[0]=true;
     painterOn[1]=true;
-    painterOn[2]=false;
+    painterOn[2]=true;
     painterOn[3]=false;
     painterOn[4]=false;
-    painterOn[5]=false;
+    painterOn[5]=true;
     painterOn[6]=true;
 
     oscin = new QOscServer(3333,this);
     oscin->registerPathObject(this);
 
     resetStat();
-
+/*
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
     timer->start(10);
+*/
+    this->startTimer(10);
 
     fpsT.start();
     fcnt=0;    
@@ -138,6 +183,22 @@ void RC1::resizeEvent(QResizeEvent *)
         storage->getPoint(i)->setWidth(width());
         storage->getPoint(i)->setHeight(height());
     }
+}
+
+void RC1::timerEvent(QTimerEvent *)
+{
+    repaint();
+
+    /*
+     * total chaos
+     *
+    float p=(float)qrand()/(float)RAND_MAX;
+    float q=(float)qrand()/(float)RAND_MAX;
+    float r=(float)qrand()/(float)RAND_MAX;
+    r*=nPointPainters;
+    q*=pointpainters[(int)r]->getParamCount();
+    pointpainters[(int)r]->setParam(q,p);
+    */
 }
 
 bool RC1::event(QEvent *event)
@@ -241,7 +302,13 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
                 painterOn[dl.at(0).toInt()]=dl.at(1).toBool();
             }
         }
-        
+
+        if(path=="/misuco/paintparam") {
+            if(dl.size()==3) {
+                pointpainters[dl.at(0).toInt()]->setParam(dl.at(1).toInt(),dl.at(2).toFloat());
+            }
+        }
+
         if(path=="/tuio/2Dcur") {
             qDebug() << "got /tuio/2Dcur signal " << path << " data " << data << " source " << host->toString();
             if(dl.size()>0) {
@@ -320,11 +387,6 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
             }
         }
 
-        if(path=="/misuco/paintparam") {
-            if(dl.size()==3) {
-                drw[dl.at(0).toInt()]->setParam(dl.at(1).toInt(),dl.at(2).toFloat());
-            }
-        }
 
         if(path=="/misuco/scale") {
             if(dl.size()>0) {

@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 SenderOscPuredata::SenderOscPuredata(RC1 *rc1)
 {
-    oscout=new QOscClient(QHostAddress("255.255.255.255"),3333);
-    oscout->setAddress(QHostAddress("255.255.255.255"),3333);
+    oscout=new QOscClient(QHostAddress("255.255.255.255"),3334);
+    oscout->setAddress(QHostAddress("255.255.255.255"),3334);
     notestate=new quint8[127];
     for(int i=0;i<127;i++) {
         notestate[i]=0;

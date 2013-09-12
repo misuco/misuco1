@@ -45,24 +45,24 @@ LayoutModel::LayoutModel()
     segwidthmax[1]= 7;
 
     note = new int[nsegs];
-    note[0]=50;
-    note[1]=51;
-    note[2]=52;
-    note[3]=53;
-    note[4]=54;
-    note[5]=55;
-    note[6]=56;
-    note[7]=57;
-    note[8]=58;
-    note[9]=59;
-    note[10]=60;
-    note[11]=61;
+    note[0]=62;
+    note[1]=65;
+    note[2]=67;
+    note[3]=70;
+    note[4]=74;
+    note[5]=74;
+    note[6]=77;
+    note[7]=79;
+    note[8]=82;
+    note[9]=86;
+    note[10]=89;
+    note[11]=91;
 
     ctlx=new int[nsegs];
     setAll(nsegs,ctlx,0);
 
     ctly=new int[nsegs];
-    setAll(nsegs,ctly,0);
+    setAll(nsegs,ctly,1);
 
     chan=new int[nsegs];
     setAll(nsegs,chan,0);

@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Storage::Storage()
 {
-    len=100;
+    len=2000;
     pnts = new Point*[len];
     put_pnt=0;
     for(int i=0;i<len;i++) {

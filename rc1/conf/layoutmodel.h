@@ -42,10 +42,14 @@ public:
     int getPressed(int i) const;
     void incPressed(int i);
     void decPressed(int i);
+    void setXY(int x, int y);
+    void setScale(int start, int n, int step);
 
 private:
     int nrows;
     int nsegs;
+    int nrowsmax;
+    int nsegsmax;
     int *rowheight;
     int rowheightmax;
     int *rowheightpx;

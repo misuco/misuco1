@@ -261,12 +261,12 @@ bool RC1::event(QEvent *event)
 
 void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 port)
 {
-//    qDebug() << "got osc signal " << path << " data " << data << " source " << host->toString();
+    qDebug() << "got osc signal " << path << " data " << data << " source " << host->toString();
     int ignoreIndex=ignoreAddr.indexOf(*host);
     if(ignoreIndex==-1) {
         QList<QVariant> dl=data.toList();
 
-        if(path=="/misuco/fullscreen") {
+        if(path=="/fs") {
             if(dl.size()==1) {
                 if(dl.at(0).toInt()>0) {
                     setWindowState(Qt::WindowFullScreen);
@@ -276,13 +276,13 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
             }
         }
 
-        if(path=="/misuco/ignore") {
+        if(path=="/ign") {
             if(dl.size()==1) {
                 ignoreAddr.append(QHostAddress(dl.at(0).toString()));
             }
         }
 
-        if(path=="/misuco/listen") {
+        if(path=="/lst") {
             if(dl.size()==1) {
                 int i=ignoreAddr.indexOf(QHostAddress(dl.at(0).toString()));
                 if(i>=0) {
@@ -291,21 +291,33 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
             }
         }
 
-        if(path=="/misuco/ttl") {
+        if(path=="/ttl") {
             if(dl.size()==1) {
                 ttl=dl.at(0).toInt();
             }
         }
 
-        if(path=="/misuco/painter") {
+        if(path=="/pnt") {
             if(dl.size()==2) {
                 painterOn[dl.at(0).toInt()]=dl.at(1).toBool();
             }
         }
 
-        if(path=="/misuco/paintparam") {
+        if(path=="/pnt") {
+            if(dl.size()==2) {
+                painterOn[dl.at(0).toInt()]=dl.at(1).toBool();
+            }
+        }
+
+        if(path=="/lxy") {
+            if(dl.size()==2) {
+                layout->setXY(dl.at(0).toInt(),dl.at(1).toInt());
+            }
+        }
+
+        if(path=="/lsc") {
             if(dl.size()==3) {
-                pointpainters[dl.at(0).toInt()]->setParam(dl.at(1).toInt(),dl.at(2).toFloat());
+                layout->setScale(dl.at(0).toInt(),dl.at(1).toInt(),dl.at(2).toInt());
             }
         }
 

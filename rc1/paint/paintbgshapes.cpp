@@ -71,6 +71,11 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 pnt->setPen(Qt::NoPen);
             }
             pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
+
+            pnt->setPen(QColor::fromHsl(col+127,100,100));
+            pnt->setFont(QFont("Ubuntu",100));
+            pnt->drawText(xpaint,ypaint+100,*lay->getSegText(iseg));
+
             xpaint+=xpaint1;
             iseg++;
         }

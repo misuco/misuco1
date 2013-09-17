@@ -25,47 +25,17 @@ LayoutModel::LayoutModel()
     height=200;
     nrowsmax=16;
     nsegsmax=16*16;
-
-//    nrows=2;
-//    nsegs=48;
-
     nseg = new int[nrowsmax];
-//    nseg[0] = 24;
-//    nseg[1] = 24;
-
     rowheight = new int[nrowsmax];
     rowheightpx = new int[nrowsmax];
-//    rowheight[0] = 4;
-//    rowheight[1] = 4;
-//    rowheightmax=8;
-
     segwidth = new int[nsegsmax];
     segwidthpx = new int[nsegsmax];
-//    setAll(nsegs,segwidth,1);
-
     segwidthmax=new int[nrowsmax];
-//    segwidthmax[0]= 24;
-//    segwidthmax[1]= 24;
-
     note = new int[nsegsmax];
-    for(int i=48;i<72;i++) {
-        note[i-48]=i;
+    segText=new QString[nsegsmax];
+    for(int i=0;i<nsegsmax;i++) {
+        segText[i].setNum(i);
     }
-    for(int i=48;i<=72;i++) {
-        note[i-24]=i+5;
-    }
-/*    note[0]=62;
-    note[1]=65;
-    note[2]=67;
-    note[3]=70;
-    note[4]=74;
-    note[5]=74;
-    note[6]=77;
-    note[7]=79;
-    note[8]=82;
-    note[9]=86;
-    note[10]=89;
-    note[11]=91; */
 
     ctlx=new int[nsegsmax];
     setAll(nsegs,ctlx,0);
@@ -79,8 +49,7 @@ LayoutModel::LayoutModel()
     pressed=new int[nsegsmax];
     setAll(nsegs,pressed,0);
 
-
-//    calcGeo(200,200);
+    setScale(0,127,0);
     setXY(4,4);
 }
 
@@ -184,6 +153,11 @@ int LayoutModel::getSegwidthmax(int i) const
 int LayoutModel::getPressed(int i) const
 {
     return pressed[i];
+}
+
+QString *LayoutModel::getSegText(int i) const
+{
+    return &(segText[i]);
 }
 
 void LayoutModel::incPressed(int i)

@@ -321,6 +321,13 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
             }
         }
 
+        if(path=="/ltx") {
+            if(dl.size()==2) {
+                layout->getSegText(dl.at(0).toInt())->clear();
+                layout->getSegText(dl.at(0).toInt())->append(dl.at(1).toString());
+            }
+        }
+
         if(path=="/tuio/2Dcur") {
             qDebug() << "got /tuio/2Dcur signal " << path << " data " << data << " source " << host->toString();
             if(dl.size()>0) {

@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #ifndef LAYOUTMODEL_H
 #define LAYOUTMODEL_H
+#include <QString>
 
 class LayoutModel
 {
@@ -40,6 +41,7 @@ public:
     int getCtly(int i) const;
     int getChan(int i) const;
     int getPressed(int i) const;
+    QString * getSegText(int i) const;
     void incPressed(int i);
     void decPressed(int i);
     void setXY(int x, int y);
@@ -62,6 +64,7 @@ private:
     int *ctly;
     int *chan;
     int *pressed;
+    QString * segText;
     int width;
     int height;
 

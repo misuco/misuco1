@@ -42,10 +42,12 @@ public:
     int getChan(int i) const;
     int getPressed(int i) const;
     QString * getSegText(int i) const;
+    int getSegH(int i) const;
     void incPressed(int i);
     void decPressed(int i);
     void setXY(int x, int y);
     void setScale(int start, int n, int step);
+    void setSegH(int i, int v);
 
 private:
     int nrows;
@@ -65,6 +67,7 @@ private:
     int *chan;
     int *pressed;
     QString * segText;
+    int * segH;
     int width;
     int height;
 

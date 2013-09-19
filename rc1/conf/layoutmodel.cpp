@@ -33,24 +33,26 @@ LayoutModel::LayoutModel()
     segwidthmax=new int[nrowsmax];
     note = new int[nsegsmax];
     segText=new QString[nsegsmax];
+    segH = new int[nsegsmax];
     for(int i=0;i<nsegsmax;i++) {
         segText[i].setNum(i);
+        segH[i]=i*10%255;
     }
 
     ctlx=new int[nsegsmax];
-    setAll(nsegs,ctlx,0);
+    setAll(nsegsmax,ctlx,0);
 
     ctly=new int[nsegsmax];
-    setAll(nsegs,ctly,0);
+    setAll(nsegsmax,ctly,0);
 
     chan=new int[nsegsmax];
-    setAll(nsegs,chan,0);
+    setAll(nsegsmax,chan,0);
 
     pressed=new int[nsegsmax];
-    setAll(nsegs,pressed,0);
+    setAll(nsegsmax,pressed,0);
 
-    setScale(0,127,0);
-    setXY(4,4);
+    setScale(36,127,0);
+    setXY(8,4);
 }
 
 void LayoutModel::calcGeo(int w, int h)
@@ -160,6 +162,11 @@ QString *LayoutModel::getSegText(int i) const
     return &(segText[i]);
 }
 
+int LayoutModel::getSegH(int i) const
+{
+    return segH[i];
+}
+
 void LayoutModel::incPressed(int i)
 {
     pressed[i]++;
@@ -234,5 +241,10 @@ void LayoutModel::setScale(int start, int n, int step)
             note[i]=note[i-1]+steps[i%nsteps];
         }
     }
+}
+
+void LayoutModel::setSegH(int i, int v)
+{
+    segH[i]=v;
 }
 

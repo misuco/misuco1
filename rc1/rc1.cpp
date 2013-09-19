@@ -46,7 +46,7 @@ RC1::RC1(QWidget *parent) :
     ehand=new EventHandlerRect();
     evstat=new EventStat();
 
-    layout->calcGeo(width(),height());    
+    layout->calcGeo(width(),height());
 
     nPrePainters=1;
     prepainters=new IPaint*[nPrePainters];
@@ -89,12 +89,30 @@ RC1::RC1(QWidget *parent) :
 
     // shape circle
     pointpainters[4]->setParam(104,0);
+    // c pen alpha
+    pointpainters[4]->setParam(56,255);
+    // pen disappear by time
+    pointpainters[4]->setParam(61,-255);
+    // brush alpha
+    pointpainters[4]->setParam(88,0);
     // brush hue by time
     pointpainters[4]->setParam(69,255);
     // brush saturation constant
     pointpainters[4]->setParam(72,150);
     // brush light constant
     pointpainters[4]->setParam(80,120);
+    // c width
+    pointpainters[4]->setParam(16,10);
+    // c height
+    pointpainters[4]->setParam(24,10);
+    // grow radX
+    pointpainters[4]->setParam(21,100);
+    // grow radY
+    pointpainters[4]->setParam(29,100);
+    // grow radX 0.4 width
+    //pointpainters[4]->setParam(22,0.4);
+    // grow radY 0.4 height
+    //pointpainters[4]->setParam(30,0.4);
 
     // shape circle
     pointpainters[1]->setParam(104,0);
@@ -106,15 +124,87 @@ RC1::RC1(QWidget *parent) :
     nPostPainters=1;
     postpainters=new IPaint*[nPostPainters];
     postpainters[0]=new PaintStat();
-    
+
     painterOn=new bool[nPrePainters+nPointPainters+nPostPainters];
     painterOn[0]=true;
-    painterOn[1]=true;
-    painterOn[2]=true;
+    painterOn[1]=false;
+    painterOn[2]=false;
     painterOn[3]=false;
     painterOn[4]=false;
     painterOn[5]=true;
-    painterOn[6]=true;
+    painterOn[6]=false;
+
+    for(int i=0;i<32;i++) {
+        layout->getSegText(i)->clear();
+    }
+    layout->getSegText(0)->append("he");
+    layout->getSegText(1)->append("jo");
+    layout->getSegText(2)->append("hej");
+    layout->getSegText(3)->append("oo");
+    layout->getSegText(4)->append("ajo");
+    layout->getSegText(5)->append("hej");
+    layout->getSegText(6)->append("awe");
+    layout->getSegText(7)->append("io");
+
+    layout->getSegText(8)->append("he");
+    layout->getSegText(9)->append("jo");
+    layout->getSegText(10)->append("hej");
+    layout->getSegText(11)->append("oo");
+    layout->getSegText(12)->append("hej");
+    layout->getSegText(13)->append("hej");
+    layout->getSegText(14)->append("awe");
+    layout->getSegText(15)->append("ioe");
+    layout->getSegText(16)->append("ajo");
+    layout->getSegText(17)->append("hej");
+    layout->getSegText(18)->append("awe");
+    layout->getSegText(19)->append("io");
+    layout->getSegText(20)->append("ajo");
+    layout->getSegText(21)->append("hej");
+    layout->getSegText(22)->append("awe");
+    layout->getSegText(23)->append("ioe");
+    layout->getSegText(24)->append("ajo");
+    layout->getSegText(25)->append("hej");
+    layout->getSegText(26)->append("awe");
+    layout->getSegText(27)->append("io");
+    layout->getSegText(28)->append("ajo");
+    layout->getSegText(29)->append("hej");
+    layout->getSegText(30)->append("awe");
+    layout->getSegText(31)->append("io");
+
+    layout->setSegH(0,8*255/8);
+    layout->setSegH(1,8*255/8);
+    layout->setSegH(2,6*255/8);
+    layout->setSegH(3,4*255/8);
+    layout->setSegH(4,6*255/8);
+    layout->setSegH(5,4*255/8);
+    layout->setSegH(6,6*255/8);
+    layout->setSegH(7,6*255/8);
+
+    layout->setSegH(8,8*255/8);
+    layout->setSegH(9,8*255/8);
+    layout->setSegH(10,6*255/8);
+    layout->setSegH(11,4*255/8);
+    layout->setSegH(12,8*255/8);
+    layout->setSegH(13,2*255/8);
+    layout->setSegH(14,1*255/8);
+    layout->setSegH(15,1*255/8);
+
+    layout->setSegH(16,4*255/8);
+    layout->setSegH(17,4*255/8);
+    layout->setSegH(18,6*255/8);
+    layout->setSegH(19,6*255/8);
+    layout->setSegH(20,2*255/8);
+    layout->setSegH(21,1*255/8);
+    layout->setSegH(22,1*255/8);
+    layout->setSegH(23,1*255/8);
+    layout->setSegH(24,4*255/8);
+    layout->setSegH(25,2*255/8);
+    layout->setSegH(26,2*255/8);
+    layout->setSegH(27,2*255/8);
+    layout->setSegH(28,1*255/8);
+    layout->setSegH(29,0*255/8);
+    layout->setSegH(30,1*255/8);
+    layout->setSegH(31,1*255/8);
 
     oscin = new QOscServer(3333,this);
     oscin->registerPathObject(this);
@@ -128,7 +218,9 @@ RC1::RC1(QWidget *parent) :
     this->startTimer(10);
 
     fpsT.start();
-    fcnt=0;    
+    fcnt=0;
+
+    setWindowState(Qt::WindowFullScreen);
 }
 
 void RC1::paintEvent(QPaintEvent *event)
@@ -331,7 +423,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
         if(path=="/tuio/2Dcur") {
             qDebug() << "got /tuio/2Dcur signal " << path << " data " << data << " source " << host->toString();
             if(dl.size()>0) {
-                
+
                 // find source host in ip source adress table
                 qint16 sourceId=tuioSources.indexOf(host->toIPv4Address());
                 // if not yet exists, add it
@@ -340,11 +432,11 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
                     sourceId=tuioSources.size()-1;
                 }
                 sourceId++; // source Id=0 is for local events
-                
+
                 if(dl.at(0)=="set") {
                     QDateTime ct = QDateTime::currentDateTime();
                     long t=ct.toMSecsSinceEpoch();
-                    
+
                     quint32 sid=dl.at(1).toInt()%65536 + sourceId*65536;
                     // session id:
                     // bit0-15: sid according message
@@ -364,7 +456,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
                     p->setState(touchType);
                     storage->next();
                     ehand->processPoint(p,this);
-                    
+
                 }
                 if(dl.at(0)=="alive") {
                     for(int i=0;i<tuioAlive.size();i++) {
@@ -379,7 +471,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
                                 p->setGid(tuioAlive.at(i));
                                 p->setState(Qt::TouchPointReleased);
                                 storage->next();
-                                ehand->processPoint(p,this);                                
+                                ehand->processPoint(p,this);
                                 tuioAlive.removeAt(i);
                                 i--;
                             }
@@ -388,7 +480,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
                 }
             }
         }
-        
+
         /*
         if(path=="/misuco/channel") {
             if(dl.size()==1) {

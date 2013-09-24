@@ -47,7 +47,8 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
         xpaint=0;
         for (int x = 0; x < lay->getNseg(y); x ++) {
             xpaint1=lay->getSegwidthpx(iseg);
-            int col=21*(lay->getNote(iseg)%12);
+//            int col=21*(lay->getNote(iseg)%12);
+            int col=lay->getSegH(iseg);
             int lightP=lPenPsv;
             int lightB=lBrushPsv;
             int satP=sPenPsv;
@@ -71,6 +72,11 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 pnt->setPen(Qt::NoPen);
             }
             pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
+
+            pnt->setPen(QColor::fromHsl((col+127)%255,100,100));
+            pnt->setFont(QFont("Ubuntu",20));
+            pnt->drawText(xpaint,ypaint+90,*lay->getSegText(iseg));
+
             xpaint+=xpaint1;
             iseg++;
         }

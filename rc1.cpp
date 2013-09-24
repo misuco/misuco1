@@ -1,0 +1,701 @@
+/*
+
+Copyright (C) 2013 by Claudio Zopfi, Zurich, Suisse, z@x21.ch
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+#include <QDebug>
+#include <QtWidgets>
+#include <QTimer>
+#include <QtGlobal>
+#include "rc1.h"
+#include "event/eventhandlerrect.h"
+#include "comm/senderdebug.h"
+#include "comm/senderoscpuredata.h"
+#include "paint/paintbgshapes.h"
+#include "paint/pointpaintshape.h"
+#include "paint/pointpaintsphere.h"
+#include "paint/paintstat.h"
+
+
+RC1::RC1(QWidget *parent) :
+    QGLWidget(parent)
+{
+    setAttribute(Qt::WA_AcceptTouchEvents,true);
+//    qDebug() << "View() size:" << width() << " " << height();
+    eventId = 1;
+    nomouse = false;
+    ttl=2000;
+
+    storage=new Storage();
+    layout=new LayoutModel();
+    sender=new SenderOscPuredata(this);
+//    sender=new SenderDebug();
+    ehand=new EventHandlerRect();
+    evstat=new EventStat();
+
+    layout->calcGeo(width(),height());
+
+    nPrePainters=1;
+    prepainters=new IPaint*[nPrePainters];
+    prepainters[0]=new PaintBgShapes();
+
+    nPointPainters=5;
+    pointpainters=new IPointPaint*[nPointPainters];
+    pointpainters[0]=new PointPaintShape();
+    pointpainters[1]=new PointPaintShape();
+    pointpainters[2]=new PointPaintShape();
+    pointpainters[3]=new PointPaintShape();
+    pointpainters[4]=new PointPaintShape();
+
+    nPostPainters=1;
+    postpainters=new IPaint*[nPostPainters];
+    postpainters[0]=new PaintStat();
+
+    painterOn=new bool[nPrePainters+nPointPainters+nPostPainters];
+    painterOn[0]=true;
+    painterOn[1]=false;
+    painterOn[2]=false;
+    painterOn[3]=false;
+    painterOn[4]=false;
+    painterOn[5]=true;
+    painterOn[6]=true;
+
+    setConfigSlideRC();
+    setPPS0();
+
+    oscin = new QOscServer(3333,this);
+    oscin->registerPathObject(this);
+
+    resetStat();
+    this->startTimer(10);
+
+    fpsT.start();
+    fcnt=0;
+
+    setWindowState(Qt::WindowFullScreen);
+}
+
+void RC1::paintEvent(QPaintEvent *event)
+{
+    now=QDateTime::currentMSecsSinceEpoch();
+
+    if(fpsT.elapsed()>1000) {
+        fpsT.restart();
+        fps=fcnt;
+        fcnt=0;
+//        qDebug() << "fps: " << fps;
+    }
+
+    QPainter painter(this);
+    int k=0;
+    for(int i=0;i<nPrePainters;i++) {
+        if(painterOn[k]) {
+            prepainters[i]->paint(this,&painter);
+        }
+        k++;
+    }
+    for(int i=storage->getLen()-1;i>0;i--) {
+        Point * p = storage->getPoint(i);
+        if(p!=NULL) {
+            int lifetime=now-p->getT();
+            if(lifetime >0 && lifetime< ttl) {
+                if(p->getX()>=0 && p->getY()>=0) {
+                    for(int j=0;j<nPointPainters;j++) {
+                        if(painterOn[j+k]) {
+                            pointpainters[j]->paint(p,this,&painter);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    k+=nPointPainters;
+    for(int i=0;i<nPostPainters;i++) {
+        if(painterOn[k]) {
+            postpainters[i]->paint(this,&painter);
+        }
+        k++;
+    }
+    fcnt++;
+}
+
+void RC1::resizeEvent(QResizeEvent *)
+{
+    //qDebug() << "resize event";
+    layout->calcGeo(width(),height());
+    for(int i=0;i<storage->getLen();i++) {
+        storage->getPoint(i)->setWidth(width());
+        storage->getPoint(i)->setHeight(height());
+    }
+}
+
+void RC1::timerEvent(QTimerEvent *)
+{
+    repaint();
+
+    /*
+     * total chaos
+     *
+    float p=(float)qrand()/(float)RAND_MAX;
+    float q=(float)qrand()/(float)RAND_MAX;
+    float r=(float)qrand()/(float)RAND_MAX;
+    r*=nPointPainters;
+    q*=pointpainters[(int)r]->getParamCount();
+    pointpainters[(int)r]->setParam(q,p);
+    */
+}
+
+bool RC1::event(QEvent *event)
+{
+    QList<QTouchEvent::TouchPoint> touchPoints;
+    if( event->type()==QEvent::TouchEnd ||
+            event->type()==QEvent::TouchUpdate ||
+            event->type()==QEvent::TouchBegin ) {
+
+        QDateTime ct = QDateTime::currentDateTime();
+        long t=ct.toMSecsSinceEpoch();
+
+        nomouse=true;
+        touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
+        foreach (const QTouchEvent::TouchPoint &touchPoint, touchPoints) {
+            //            qDebug() << sEvent << ": x:" << touchPoint.pos().x() << " y:" << touchPoint.pos().y() << " t: " << t1.tv_sec << "." << t1.tv_usec;
+            evstat->incToucheventcount();
+            Point * p = storage->getPoint(0);
+            p->set(touchPoint.pos().x(),touchPoint.pos().y(),this->width(),this->height());
+            p->setT(t);
+            p->setGid(touchPoint.id());
+            p->setState(touchPoint.state());
+            storage->next();
+            ehand->processPoint(p,this);
+        }
+        return true;
+    } else if( !nomouse && (
+                    event->type()==QEvent::MouseMove ||
+                    event->type()==QEvent::MouseButtonPress ||
+                    event->type()==QEvent::MouseButtonRelease )) {
+
+        QDateTime ct = QDateTime::currentDateTime();
+        long t=ct.toMSecsSinceEpoch();
+
+        const QMouseEvent * meve = static_cast<QMouseEvent *>(event);
+
+        Qt::TouchPointState state;
+
+        if(event->type()==QEvent::MouseMove) {
+            state=Qt::TouchPointMoved;
+        } else if(event->type()==QEvent::MouseButtonPress) {
+            state=Qt::TouchPointPressed;
+            eventId++;
+        } else if(event->type()==QEvent::MouseButtonRelease) {
+            state=Qt::TouchPointReleased;
+        }
+        //        qDebug() << sEvent << ": x:" << meve->pos().x() << " y:" << meve->pos().y() << " t: " << t1.tv_sec << "." << t1.tv_usec;
+        evstat->incToucheventcount();
+        Point * p = storage->getPoint(0);
+        p->set(meve->pos().x(),meve->pos().y(),this->width(),this->height());
+        p->setT(t);
+        p->setGid(eventId);
+        p->setState(state);
+        storage->next();
+        ehand->processPoint(p,this);
+        return true;
+    }
+    return QWidget::event(event);
+}
+
+void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 port)
+{
+    qDebug() << "got osc signal " << path << " data " << data << " source " << host->toString();
+    int ignoreIndex=ignoreAddr.indexOf(*host);
+    if(ignoreIndex==-1) {
+        QList<QVariant> dl=data.toList();
+
+        if(path=="/fs") {
+            if(dl.size()==1) {
+                if(dl.at(0).toInt()>0) {
+                    setWindowState(Qt::WindowFullScreen);
+                } else {
+                    setWindowState(Qt::WindowNoState);
+                }
+            }
+        }
+
+        if(path=="/ign") {
+            if(dl.size()==1) {
+                ignoreAddr.append(QHostAddress(dl.at(0).toString()));
+            }
+        }
+
+        if(path=="/lst") {
+            if(dl.size()==1) {
+                int i=ignoreAddr.indexOf(QHostAddress(dl.at(0).toString()));
+                if(i>=0) {
+                    ignoreAddr.removeAt(i);
+                }
+            }
+        }
+
+        if(path=="/ttl") {
+            if(dl.size()==1) {
+                ttl=dl.at(0).toInt();
+            }
+        }
+
+        if(path=="/pnt") {
+            if(dl.size()==2) {
+                painterOn[dl.at(0).toInt()]=dl.at(1).toBool();
+            }
+        }
+
+        if(path=="/pnt") {
+            if(dl.size()==2) {
+                painterOn[dl.at(0).toInt()]=dl.at(1).toBool();
+            }
+        }
+
+        if(path=="/lxy") {
+            if(dl.size()==2) {
+                layout->setXY(dl.at(0).toInt(),dl.at(1).toInt());
+            }
+        }
+
+        if(path=="/lsc") {
+            if(dl.size()==3) {
+                layout->setScale(dl.at(0).toInt(),dl.at(1).toInt(),dl.at(2).toInt());
+            }
+        }
+
+        if(path=="/ltx") {
+            if(dl.size()==2) {
+                layout->getSegText(dl.at(0).toInt())->clear();
+                layout->getSegText(dl.at(0).toInt())->append(dl.at(1).toString());
+            }
+        }
+
+        if(path=="/lxc") {
+            if(dl.size()==1) {
+                layout->setAllCtlx(dl.at(0).toInt());
+            }
+        }
+
+        if(path=="/lyc") {
+            if(dl.size()==1) {
+                layout->setAllCtly(dl.at(0).toInt());
+            }
+        }
+
+        if(path=="/pp0") {
+            this->setPPS0();
+        }
+
+        if(path=="/pp1") {
+            this->setPPS1();
+        }
+
+        if(path=="/tuio/2Dcur") {
+            qDebug() << "got /tuio/2Dcur signal " << path << " data " << data << " source " << host->toString();
+            if(dl.size()>0) {
+
+                // find source host in ip source adress table
+                qint16 sourceId=tuioSources.indexOf(host->toIPv4Address());
+                // if not yet exists, add it
+                if(sourceId==-1) {
+                    tuioSources.append(host->toIPv4Address());
+                    sourceId=tuioSources.size()-1;
+                }
+                sourceId++; // source Id=0 is for local events
+
+                if(dl.at(0)=="set") {
+                    QDateTime ct = QDateTime::currentDateTime();
+                    long t=ct.toMSecsSinceEpoch();
+
+                    quint32 sid=dl.at(1).toInt()%65536 + sourceId*65536;
+                    // session id:
+                    // bit0-15: sid according message
+                    // bit16-31: sourceId according to index in ip list
+                    quint16 xpos=dl.at(2).toFloat()*layout->getWidth();
+                    quint16 ypos=dl.at(3).toFloat()*layout->getHeight();
+                    Qt::TouchPointState touchType=Qt::TouchPointMoved;
+                    if(!tuioAlive.contains(sid)) {
+                        tuioAlive.append(sid);
+                        touchType=Qt::TouchPointPressed;
+                        //                   qDebug() << "new point with id " << sid;
+                    }
+                    Point * p = storage->getPoint(0);
+                    p->set(xpos,ypos,this->layout->getWidth(),this->layout->getHeight());
+                    p->setT(t);
+                    p->setGid(sid);
+                    p->setState(touchType);
+                    storage->next();
+                    ehand->processPoint(p,this);
+
+                }
+                if(dl.at(0)=="alive") {
+                    for(int i=0;i<tuioAlive.size();i++) {
+                        if(tuioAlive.at(i)/65536==sourceId) {
+                            if(!dl.contains(tuioAlive.at(i)-sourceId*65536)) {
+                                QDateTime ct = QDateTime::currentDateTime();
+                                long t=ct.toMSecsSinceEpoch();
+                                //                            qDebug() << "removing point with id " << tuioAlive.at(i);
+                                Point * p = storage->getPoint(0);
+                                p->set(0,0,this->layout->getWidth(),this->layout->getHeight());
+                                p->setT(t);
+                                p->setGid(tuioAlive.at(i));
+                                p->setState(Qt::TouchPointReleased);
+                                storage->next();
+                                ehand->processPoint(p,this);
+                                tuioAlive.removeAt(i);
+                                i--;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /*
+        if(path=="/misuco/channel") {
+            if(dl.size()==1) {
+                defaultChan=dl.at(0).toInt();
+            }
+        }
+
+
+        if(path=="/misuco/painterrst") {
+            if(dl.size()==1) {
+                int p2rst=dl.at(0).toInt();
+                for(int i=0;i<drw[p2rst]->getParamCount();i++) {
+                    drw[p2rst]->setParam(i,0);
+                }
+            }
+        }
+
+
+        if(path=="/misuco/scale") {
+            if(dl.size()>0) {
+                nscale=dl.size();
+//                neve=nscale;
+//                scale=new int[nscale];
+                quint16 i=0;
+//                quint16 j=0;
+                quint16 offset=0;
+                while(i<nscale) {
+//                    scale[i]=dl.at(j).toInt()+offset;
+                    scale[i]=dl.at(i).toInt();
+                    i++;
+//                    j++;
+//                    if(j>=dl.size()) {
+//                        j=0;
+//                        offset+=12;
+//                    }
+                }
+                scaleRcv();
+                updatePan();
+            }
+        }
+
+        if(path=="/misuco/scale2d") {
+            if(dl.size()>0) {
+                rows=0;
+                nscale=0;
+                neve=nscale;
+                cpr[rows] = 0;
+                quint16 i=0;    // index source
+                quint16 j=0;    // index destination
+                while(i<dl.size()) {
+                    quint16 val=dl.at(i).toInt();
+                    if(val>0) {
+                        eve[j]=dl.at(i).toInt();
+                        evep[j]=defaultProg;
+                        evetype[j]=0;
+                        evechan[j]=defaultChan;
+                        nscale++;
+                        cpr[rows]++;
+                        j++;
+                    } else {
+                        rows++;
+                        cpr[rows]=0;
+                    }
+                    i++;
+                }
+                rows++;
+                updatePan();
+            }
+        }
+
+ */
+    }
+}
+
+void RC1::resetStat()
+{
+
+    fps=0;
+}
+
+void RC1::setConfigPdjam2013()
+{
+    painterOn[6]=false;
+    for(int i=0;i<32;i++) {
+        layout->getSegText(i)->clear();
+    }
+    layout->getSegText(0)->append("he");
+    layout->getSegText(1)->append("jo");
+    layout->getSegText(2)->append("hej");
+    layout->getSegText(3)->append("oo");
+    layout->getSegText(4)->append("ajo");
+    layout->getSegText(5)->append("hej");
+    layout->getSegText(6)->append("awe");
+    layout->getSegText(7)->append("io");
+
+    layout->getSegText(8)->append("he");
+    layout->getSegText(9)->append("jo");
+    layout->getSegText(10)->append("hej");
+    layout->getSegText(11)->append("oo");
+    layout->getSegText(12)->append("hej");
+    layout->getSegText(13)->append("hej");
+    layout->getSegText(14)->append("awe");
+    layout->getSegText(15)->append("ioe");
+    layout->getSegText(16)->append("ajo");
+    layout->getSegText(17)->append("hej");
+    layout->getSegText(18)->append("awe");
+    layout->getSegText(19)->append("io");
+    layout->getSegText(20)->append("ajo");
+    layout->getSegText(21)->append("hej");
+    layout->getSegText(22)->append("awe");
+    layout->getSegText(23)->append("ioe");
+    layout->getSegText(24)->append("ajo");
+    layout->getSegText(25)->append("hej");
+    layout->getSegText(26)->append("awe");
+    layout->getSegText(27)->append("io");
+    layout->getSegText(28)->append("ajo");
+    layout->getSegText(29)->append("hej");
+    layout->getSegText(30)->append("awe");
+    layout->getSegText(31)->append("io");
+
+    layout->setSegH(0,8*255/8);
+    layout->setSegH(1,8*255/8);
+    layout->setSegH(2,6*255/8);
+    layout->setSegH(3,4*255/8);
+    layout->setSegH(4,6*255/8);
+    layout->setSegH(5,4*255/8);
+    layout->setSegH(6,6*255/8);
+    layout->setSegH(7,6*255/8);
+
+    layout->setSegH(8,8*255/8);
+    layout->setSegH(9,8*255/8);
+    layout->setSegH(10,6*255/8);
+    layout->setSegH(11,4*255/8);
+    layout->setSegH(12,8*255/8);
+    layout->setSegH(13,2*255/8);
+    layout->setSegH(14,1*255/8);
+    layout->setSegH(15,1*255/8);
+
+    layout->setSegH(16,4*255/8);
+    layout->setSegH(17,4*255/8);
+    layout->setSegH(18,6*255/8);
+    layout->setSegH(19,6*255/8);
+    layout->setSegH(20,2*255/8);
+    layout->setSegH(21,1*255/8);
+    layout->setSegH(22,1*255/8);
+    layout->setSegH(23,1*255/8);
+    layout->setSegH(24,4*255/8);
+    layout->setSegH(25,2*255/8);
+    layout->setSegH(26,2*255/8);
+    layout->setSegH(27,2*255/8);
+    layout->setSegH(28,1*255/8);
+    layout->setSegH(29,0*255/8);
+    layout->setSegH(30,1*255/8);
+    layout->setSegH(31,1*255/8);
+}
+
+void RC1::setConfigSlideRC()
+{
+    painterOn[6]=false;
+    layout->setXY(3,1);
+    for(int i=0;i<3;i++) {
+        layout->getSegText(i)->clear();
+    }
+    layout->getSegText(0)->append("Go");
+    layout->getSegText(1)->append("Previous");
+    layout->getSegText(2)->append("Next");
+    layout->setSegH(0,0);
+    layout->setSegH(1,100);
+    layout->setSegH(2,200);
+}
+
+void RC1::setPPS0()
+{
+    painterOn[0]=true;
+    painterOn[1]=false;
+    painterOn[2]=true;
+    painterOn[3]=false;
+    painterOn[4]=false;
+    painterOn[5]=false;
+    painterOn[6]=true;
+
+    for(int i=0;i<pointpainters[1]->getParamCount();i++) {
+        pointpainters[1]->setParam(i,0);
+    }
+    // init x/y
+    pointpainters[1]->setParam(1,1);
+    pointpainters[1]->setParam(10,1);
+
+    // radius 5 constant
+    pointpainters[1]->setParam(16,5);
+    pointpainters[1]->setParam(24,5);
+
+    // grow width
+    pointpainters[1]->setParam(21,100);
+    // grow height
+    pointpainters[1]->setParam(29,100);
+
+    // color brush constant
+    pointpainters[1]->setParam(64,0);
+    pointpainters[1]->setParam(69,255);
+    pointpainters[1]->setParam(72,127);
+    pointpainters[1]->setParam(80,140);
+    pointpainters[1]->setParam(88,250);
+
+    // fade brush out
+    pointpainters[1]->setParam(93,-250);
+
+    // color pen constant
+    pointpainters[1]->setParam(32,255);
+    pointpainters[1]->setParam(40,255);
+    pointpainters[1]->setParam(48,255);
+    pointpainters[1]->setParam(56,255);
+
+    // fade pen out
+    pointpainters[1]->setParam(61,-255);
+
+    // shape circle
+    pointpainters[1]->setParam(104,0);
+}
+
+void RC1::setPPS1()
+{
+    painterOn[0]=true;
+    painterOn[1]=true;
+    painterOn[2]=true;
+    painterOn[3]=false;
+    painterOn[4]=false;
+    painterOn[5]=true;
+    painterOn[6]=false;
+
+    for(int j=0;j<5;j++) {
+        for(int i=0;i<pointpainters[1]->getParamCount();i++) {
+            pointpainters[j]->setParam(i,0);
+        }
+        // init x/y
+        pointpainters[j]->setParam(1,1);
+        pointpainters[j]->setParam(10,1);
+
+        // radius 5 constant
+        pointpainters[j]->setParam(16,5);
+        pointpainters[j]->setParam(24,5);
+
+        // radius by time
+        pointpainters[j]->setParam(21,80);
+        pointpainters[j]->setParam(29,50);
+
+        // color pen constant
+        pointpainters[j]->setParam(32,255);
+        pointpainters[j]->setParam(40,255);
+        pointpainters[j]->setParam(48,255);
+        pointpainters[j]->setParam(56,255);
+        // fade pen out
+        pointpainters[j]->setParam(61,-255);
+
+        // color brush constant
+        pointpainters[j]->setParam(64,0);
+        pointpainters[j]->setParam(72,0);
+        pointpainters[j]->setParam(80,0);
+        pointpainters[j]->setParam(88,250);
+        // fade brush out
+        pointpainters[j]->setParam(93,-250);
+
+        // rotation constan 45
+        pointpainters[j]->setParam(96,45);
+        // rotate once per lt
+        pointpainters[j]->setParam(101,360);
+
+        // shape constan 1 (rect)
+        pointpainters[j]->setParam(104,1);
+    }
+
+    // shape circle
+    pointpainters[4]->setParam(104,0);
+    // brush hue by time
+    pointpainters[4]->setParam(69,255);
+    // brush saturation constant
+    pointpainters[4]->setParam(72,150);
+    // brush light constant
+    pointpainters[4]->setParam(80,120);
+
+    // shape circle
+    pointpainters[1]->setParam(104,0);
+    // grow width
+    pointpainters[1]->setParam(21,50);
+    // grow height
+    pointpainters[1]->setParam(29,100);
+
+}
+
+Storage *RC1::getStorage() const
+{
+    return storage;
+}
+
+LayoutModel *RC1::getLayout() const
+{
+    return layout;
+}
+
+long RC1::getNow()
+{
+    return now;
+}
+
+int RC1::getFps()
+{
+    return fps;
+}
+
+QTime * RC1::getFpsT()
+{
+    return &fpsT;
+}
+
+long RC1::getTtl() const
+{
+    return ttl;
+}
+
+void RC1::setTtl(long value)
+{
+    ttl = value;
+}
+
+ISender * RC1::getSender() const
+{
+return sender;
+}
+
+EventStat *RC1::getEvstat() const
+{
+return evstat;
+}

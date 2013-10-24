@@ -41,10 +41,10 @@ LayoutModel::LayoutModel()
     }
 
     ctlx=new int[nsegsmax];
-    setAll(nsegsmax,ctlx,0);
+    setAll(nsegsmax,ctlx,16);
 
     ctly=new int[nsegsmax];
-    setAll(nsegsmax,ctly,0);
+    setAll(nsegsmax,ctly,8);
 
     chan=new int[nsegsmax];
     setAll(nsegsmax,chan,0);

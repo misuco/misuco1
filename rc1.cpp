@@ -85,7 +85,7 @@ RC1::RC1(QWidget *parent) :
     fpsT.start();
     fcnt=0;
 
-    setWindowState(Qt::WindowFullScreen);
+//    setWindowState(Qt::WindowFullScreen);
 }
 
 void RC1::paintEvent(QPaintEvent *event)
@@ -245,6 +245,12 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
                 if(i>=0) {
                     ignoreAddr.removeAt(i);
                 }
+            }
+        }
+
+        if(path=="/dst") {
+            if(dl.size()==2) {
+                sender->setDestination(QHostAddress(dl.at(0).toString()),dl.at(1).toInt());
             }
         }
 

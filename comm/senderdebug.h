@@ -28,6 +28,7 @@ public:
     virtual void cc(int c, int voiceId, int cc, double v1);
     virtual void pc(int c, int v1);
     virtual void note(int c, int voiceId, int f, int v);
+    virtual void setDestination(QHostAddress a,int p) {}
 };
 
 #endif // SENDERDEBUG_H

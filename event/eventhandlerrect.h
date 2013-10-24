@@ -39,8 +39,10 @@ private:
     int * isegb;        // current segment index buffer
     int * chan;         // current note channel
 
-    double * ccval1;    // current controller1 value: xrel
-    double * ccval2;    // current controller1 value: yrel
+    int * ccval1;       // current controller1 value: xrel
+    int * ccval2;       // current controller1 value: yrel
+    int * ccval1q;      // current controller1 value: xrel (quantized)
+    int * ccval2q;      // current controller1 value: yrel (quantized)
 
     double cccval1;     // common cc value, average of individual ccvals
     double cccval2;     // common cc value, average of individual ccvals

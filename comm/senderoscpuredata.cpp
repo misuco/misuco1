@@ -24,8 +24,10 @@ SenderOscPuredata::SenderOscPuredata(RC1 *rc1)
     oscout=new QOscClient(QHostAddress("255.255.255.255"),3334);
     oscout->setAddress(QHostAddress("255.255.255.255"),3334);
     notestate=new quint8[127];
+    ccstate=new int[127];
     for(int i=0;i<127;i++) {
         notestate[i]=0;
+        ccstate[i]=0;
     }
     prog=0;
     onNoteCnt=0;
@@ -61,6 +63,11 @@ void SenderOscPuredata::note(int c, int voiceId, int f, int vel)
     }
 }
 
+void SenderOscPuredata::setDestination(QHostAddress a, int p)
+{
+    oscout->setAddress(a,p);
+}
+
 void SenderOscPuredata::pc(int c, int v1)
 {
     QVariantList v;
@@ -73,12 +80,16 @@ void SenderOscPuredata::cc(int c, int voiceId, int cc, double v1)
 {
     // translate value to midi
     int v1mid=(double)127*v1;
+
     // translate cc numbers
-    QVariantList v;
-    v.append(cc);
-    v.append(v1mid);
-    v.append(c);
-    sendOsc("/cc",v);
+    if(v1mid!=ccstate[cc]) {
+        ccstate[cc]=v1mid;
+        QVariantList v;
+        v.append(cc);
+        v.append(v1mid);
+        v.append(c);
+        sendOsc("/cc",v);
+    }
 }
 
 void SenderOscPuredata::sendOsc(QString path, QVariant list)

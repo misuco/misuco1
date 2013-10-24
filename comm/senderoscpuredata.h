@@ -30,13 +30,16 @@ public:
     virtual void cc(int c, int voiceId, int cc, double v1);
     virtual void pc(int c, int v1);
     virtual void note(int c, int voiceId, int f, int vel);
+    virtual void setDestination(QHostAddress a,int p);
 private:
     QOscClientInterface* oscout;
     RC1 * rc1;
 
     int prog;           // current program
     quint8 * notestate;      // currently played notes
+    int * ccstate;       // current ccval;
     quint8 onNoteCnt;   // count of on Notes
+
 
     void sendOsc(QString path, QVariant list);
 

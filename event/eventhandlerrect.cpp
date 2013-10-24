@@ -57,9 +57,6 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
     if( p->getState() == Qt::TouchPointPressed ||
         p->getState() == Qt::TouchPointMoved ) {
 
-        double xnorm=p->getXn();
-        double ynorm=p->getYn();
-
 //        qDebug() << "pressed: x1:" << x1 << " y1:" << y1 << " xnorm: " << xnorm << " ynorm: " << ynorm;
 
         // 2.b. translate to MisuEvent index
@@ -84,6 +81,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             }
             if(iseg>0) {
                 iseg--;
+                ix--;
             }
         }
 
@@ -110,24 +108,29 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         }
 
         if(layout->getCtlx(iseg)>0) {
-            if(xnorm!=ccval1[evptr]) {
-                ccval1[evptr]=xnorm;
+            if(p->getX()!=ccval1[evptr]) {
+                ccval1[evptr]=p->getX();
+                double xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg));
+                xrel=xrel/(double)layout->getSegwidthpx(iseg);
                 if(useCCCVal==true) {
-                    cccval1=ccval1[evptr]/cccvalAvg+(cccvalAvg-1)*cccval1/cccvalAvg;
+                    cccval1=xrel/cccvalAvg+(cccvalAvg-1)*cccval1/cccvalAvg;
                     snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtlx(iseg), cccval1);
                 } else {
-                    snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtlx(iseg), xnorm);
+                    snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtlx(iseg), xrel);
                 }
             }
         }
         if(layout->getCtly(iseg)>0) {
-            if(ynorm!=ccval2[evptr]) {
-                ccval2[evptr]=ynorm;
+            if(p->getY()!=ccval2[evptr]) {
+                ccval2[evptr]=p->getY();
+                double yrel=p->getY()-(ysum-layout->getRowheightpx(iy));
+                yrel=yrel/(double)layout->getRowheightpx(iy);
+//                ysum+=layout->getRowheightpx(iy);
                 if(useCCCVal==true) {
-                    cccval2=ccval2[evptr]/cccvalAvg+(cccvalAvg-1)*cccval2/cccvalAvg;
+                    cccval2=yrel/cccvalAvg+(cccvalAvg-1)*cccval2/cccvalAvg;
                     snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtly(iseg), cccval2);
                 } else {
-                    snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtly(iseg), ynorm);
+                    snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtly(iseg), yrel);
                 }
             }
         }
@@ -157,8 +160,8 @@ void EventHandlerRect::init()
     act=new bool[ntp];
     ievent=new int[ntp];
     ieventout=new int[ntp];
-    ccval1=new double[ntp];
-    ccval2=new double[ntp];
+    ccval1=new int[ntp];
+    ccval2=new int[ntp];
     note=new int[ntp];
     chan=new int[ntp];
     isegb=new int[ntp];

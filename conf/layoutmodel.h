@@ -36,7 +36,7 @@ public:
     int getSegwidth(int i) const;
     int getSegwidthmax(int i) const;
     int getSegwidthpx(int i) const;
-    int getNote(int i) const;
+    double getNote(int i) const;
     int getCtlx(int i) const;
     int getCtly(int i) const;
     int getChan(int i) const;
@@ -63,7 +63,8 @@ private:
     int *segwidth;
     int *segwidthmax;
     int *segwidthpx;
-    int *note;
+    double *note;
+    double *midi2f;
     int *ctlx;
     int *ctly;
     int *chan;

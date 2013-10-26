@@ -35,7 +35,7 @@ private:
     int * ieventout;    // event id sent (one input event can lead in several output events)
     int ieventoutnext;  // id of next output event
 
-    int * note;         // current note
+    double * note;      // current note
     int * isegb;        // current segment index buffer
     int * chan;         // current note channel
 

@@ -36,7 +36,8 @@ SOURCES += main.cpp\
     comm/senderoscpuredata.cpp \
     rc1.cpp \
     eventstat.cpp \
-    paint/pointpaintsphere.cpp
+    paint/pointpaintsphere.cpp \
+    comm/sendersupercollider.cpp
 
 HEADERS  += \
     storage.h \
@@ -67,7 +68,8 @@ HEADERS  += \
     comm/senderoscpuredata.h \
     rc1.h \
     eventstat.h \
-    paint/pointpaintsphere.h
+    paint/pointpaintsphere.h \
+    comm/sendersupercollider.h
 
 OTHER_FILES += \
     android/res/values-ru/strings.xml \

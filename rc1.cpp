@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "event/eventhandlerrect.h"
 #include "comm/senderdebug.h"
 #include "comm/senderoscpuredata.h"
+#include "comm/sendersupercollider.h"
 #include "paint/paintbgshapes.h"
 #include "paint/pointpaintshape.h"
 #include "paint/pointpaintsphere.h"
@@ -36,12 +37,13 @@ RC1::RC1(QWidget *parent) :
     setAttribute(Qt::WA_AcceptTouchEvents,true);
 //    qDebug() << "View() size:" << width() << " " << height();
     eventId = 1;
-    nomouse = false;
+    nomouse = true;
     ttl=2000;
 
     storage=new Storage();
     layout=new LayoutModel();
-    sender=new SenderOscPuredata(this);
+    sender=new SenderSuperCollider(this);
+//    sender=new SenderOscPuredata(this);
 //    sender=new SenderDebug();
     ehand=new EventHandlerRect();
     evstat=new EventStat();
@@ -73,7 +75,8 @@ RC1::RC1(QWidget *parent) :
     painterOn[5]=true;
     painterOn[6]=true;
 
-    setConfigSlideRC();
+//    setConfigSlideRC();
+    setConfigPdjam2013();
     setPPS0();
 
     oscin = new QOscServer(3333,this);
@@ -84,6 +87,7 @@ RC1::RC1(QWidget *parent) :
 
     fpsT.start();
     fcnt=0;
+
 
 //    setWindowState(Qt::WindowFullScreen);
 }
@@ -218,7 +222,7 @@ bool RC1::event(QEvent *event)
 
 void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 port)
 {
-    qDebug() << "got osc signal " << path << " data " << data << " source " << host->toString();
+    // qDebug() << "got osc signal " << path << " data " << data << " source " << host->toString();
     int ignoreIndex=ignoreAddr.indexOf(*host);
     if(ignoreIndex==-1) {
         QList<QVariant> dl=data.toList();

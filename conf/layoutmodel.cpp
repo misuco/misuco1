@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 #include <QDebug>
+#include <math.h>
 #include "layoutmodel.h"
 
 LayoutModel::LayoutModel()
@@ -32,7 +33,7 @@ LayoutModel::LayoutModel()
     setAll(nsegsmax,segwidth,1);
     segwidthpx = new int[nsegsmax];
     segwidthmax=new int[nrowsmax];
-    note = new int[nsegsmax];
+    note = new double[nsegsmax];
     segText=new QString[nsegsmax];
     segH = new int[nsegsmax];
     for(int i=0;i<nsegsmax;i++) {
@@ -51,6 +52,15 @@ LayoutModel::LayoutModel()
 
     pressed=new int[nsegsmax];
     setAll(nsegsmax,pressed,0);
+
+    // thanx 2 http://subsynth.sourceforge.net/midinote2freq.html
+    midi2f = new double[127];
+    float a = 440; // a is 440 hz...
+    for (int x = 0; x < 127; ++x)
+    {
+       midi2f[x] = (a / 32.0) * (pow(2.0 , (((float)x - 9.0)) / 12.0));
+       qDebug() << "note " << x << " f " << midi2f[x];
+    }
 
     setScale(36,127,0);
     setXY(8,4);
@@ -136,7 +146,7 @@ int LayoutModel::getCtlx(int i) const
     return ctlx[i];
 }
 
-int LayoutModel::getNote(int i) const
+double LayoutModel::getNote(int i) const
 {
     return note[i];
 }
@@ -237,9 +247,13 @@ void LayoutModel::setScale(int start, int n, int step)
         if(step==0) {
             steps[0] = 1;
         }
-        note[0]=start;
+        note[0]=midi2f[start];
+        int notex1=start;
+        int notex=start;
         for(int i=1;i<n;i++) {
-            note[i]=note[i-1]+steps[i%nsteps];
+            notex=notex1+steps[i%nsteps];
+            note[i]=midi2f[notex];
+            notex1=notex;
         }
     }
 }

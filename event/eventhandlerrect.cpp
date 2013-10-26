@@ -36,7 +36,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
     // 1. figure out, at which index (evptr) the data for this touch point is stored
     qint16 evptr=p->getGid()%ntp;
 
-    // qDebug() << "processPoint ptr " << evptr << " id " << p->getGid();
+    qDebug() << "processPoint ptr " << evptr << " id " << p->getGid();
     if(p->getState()==Qt::TouchPointPressed) {
         if(act[evptr]!=true) {  // if needed, else ieventsub will be set to 0 by accitent -> hanging note
             act[evptr]=true;
@@ -56,8 +56,6 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
     }
     if( p->getState() == Qt::TouchPointPressed ||
         p->getState() == Qt::TouchPointMoved ) {
-
-//        qDebug() << "pressed: x1:" << x1 << " y1:" << y1 << " xnorm: " << xnorm << " ynorm: " << ynorm;
 
         // 2.b. translate to MisuEvent index
         int iy=0;
@@ -85,7 +83,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             }
         }
 
-        int v1=layout->getNote(iseg);
+        double v1=layout->getNote(iseg);
         if(note[evptr]!=v1) {
             if(note[evptr]>0) {
                 snd->note(chan[evptr],ieventout[evptr],note[evptr],0);
@@ -146,7 +144,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
 
 void EventHandlerRect::init()
 {
-    veldef = 127;
+    veldef = 1;
 
     ieventoutnext=1;
 
@@ -162,7 +160,7 @@ void EventHandlerRect::init()
     ieventout=new int[ntp];
     ccval1=new int[ntp];
     ccval2=new int[ntp];
-    note=new int[ntp];
+    note=new double[ntp];
     chan=new int[ntp];
     isegb=new int[ntp];
 

@@ -34,8 +34,9 @@ SenderOscPuredata::SenderOscPuredata(RC1 *rc1)
     this->rc1=rc1;
 }
 
-void SenderOscPuredata::note(int c, int voiceId, int f, int vel)
+void SenderOscPuredata::note(int c, int voiceId, double fr, int vel)
 {
+    int f = (int)fr;
     if(vel>0) {
         if(notestate[f]==0) {
             notestate[f]=vel;

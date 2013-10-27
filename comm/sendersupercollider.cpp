@@ -59,6 +59,14 @@ void SenderSuperCollider::note(int c, int voiceId, double f, int vel)
     }
 }
 
+void SenderSuperCollider::pitch(int c, int voiceId, double f)
+{
+    QVariantList v;
+    v.append(voiceId);
+    v.append("freq");
+    v.append(f);
+    sendOsc("/n_set",v);
+}
 
 void SenderSuperCollider::sendOsc(QString path, QVariant list)
 {

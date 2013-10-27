@@ -36,10 +36,13 @@ LayoutModel::LayoutModel()
     note = new double[nsegsmax];
     segText=new QString[nsegsmax];
     segH = new int[nsegsmax];
+    // put numbers as text
     for(int i=0;i<nsegsmax;i++) {
         segText[i].setNum(i);
         segH[i]=i*10%255;
     }
+    segtype = new int[nsegsmax];
+    setAll(nsegsmax,segtype,0);
 
     ctlx=new int[nsegsmax];
     setAll(nsegsmax,ctlx,16);
@@ -59,10 +62,9 @@ LayoutModel::LayoutModel()
     for (int x = 0; x < 127; ++x)
     {
        midi2f[x] = (a / 32.0) * (pow(2.0 , (((float)x - 9.0)) / 12.0));
-       qDebug() << "note " << x << " f " << midi2f[x];
+       //qDebug() << "note " << x << " f " << midi2f[x];
     }
-
-    setScale(36,127,0);
+    setScale(36,127,0,false);
     setXY(8,4);
 }
 
@@ -119,6 +121,11 @@ int LayoutModel::getNseg(int i) const
     return nseg[i];
 }
 
+int LayoutModel::getNsegs() const
+{
+    return nsegs;
+}
+
 void LayoutModel::setAll(int n, int *d, int v)
 {
     for(int i=0;i<n;i++) {
@@ -168,6 +175,11 @@ int LayoutModel::getPressed(int i) const
     return pressed[i];
 }
 
+int LayoutModel::getSegtype(int i) const
+{
+    return segtype[i];
+}
+
 QString *LayoutModel::getSegText(int i) const
 {
     return &(segText[i]);
@@ -206,7 +218,7 @@ void LayoutModel::setXY(int x, int y)
     }
 }
 
-void LayoutModel::setScale(int start, int n, int step)
+void LayoutModel::setScale(int start, int n, int step, bool withTransistion = false)
 {
     int nsteps;
     int * steps;
@@ -247,12 +259,20 @@ void LayoutModel::setScale(int start, int n, int step)
         if(step==0) {
             steps[0] = 1;
         }
-        note[0]=midi2f[start];
         int notex1=start;
         int notex=start;
-        for(int i=1;i<n;i++) {
+        for(int i=0;i<n;i++) {
             notex=notex1+steps[i%nsteps];
-            note[i]=midi2f[notex];
+            if(withTransistion) {
+                note[i*2]=midi2f[notex];
+                segtype[i*2]=0;
+                if(i<n-1) {
+                    segtype[i*2+1]=1;
+                }
+            } else {
+                note[i]=midi2f[notex];
+                segtype[i]=0;
+            }
             notex1=notex;
         }
     }
@@ -272,4 +292,3 @@ void LayoutModel::setAllCtly(int v)
 {
     setAll(nsegs,ctly,v);
 }
-

@@ -104,6 +104,7 @@ private:
     
     void resetStat();
 
+    void setConfigTransistions();
     void setConfigPdjam2013();
     void setConfigSlideRC();
     void setPPS0();

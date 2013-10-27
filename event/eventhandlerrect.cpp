@@ -26,7 +26,6 @@ EventHandlerRect::EventHandlerRect()
     init();
 }
 
-
 //void EventHandlerRect::processPoint(int p->getGid(), Qt::TouchPointState touchPointState, quint16 x1, quint16 y1)
 void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
 {
@@ -36,7 +35,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
     // 1. figure out, at which index (evptr) the data for this touch point is stored
     qint16 evptr=p->getGid()%ntp;
 
-    qDebug() << "processPoint ptr " << evptr << " id " << p->getGid();
+    // qDebug() << "processPoint ptr " << evptr << " id " << p->getGid();
     if(p->getState()==Qt::TouchPointPressed) {
         if(act[evptr]!=true) {  // if needed, else ieventsub will be set to 0 by accitent -> hanging note
             act[evptr]=true;
@@ -83,52 +82,91 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             }
         }
 
-        double v1=layout->getNote(iseg);
-        if(note[evptr]!=v1) {
-            if(note[evptr]>0) {
-                snd->note(chan[evptr],ieventout[evptr],note[evptr],0);
-            }
-            ieventout[evptr]=ieventoutnext;
-            ieventoutnext++;
-            snd->note(layout->getChan(iseg),ieventout[evptr], v1, veldef);
-            note[evptr]=v1;
-            chan[evptr]=layout->getChan(iseg);
-        }
-
-        if(isegb[evptr]!=iseg) {
-            if(isegb[evptr]!=-1) {
-                layout->decPressed(isegb[evptr]);
-                // increase statistics for transitions
-                rc1->getEvstat()->incTransitioncount();
-            }
-            isegb[evptr]=iseg;
-            layout->incPressed(isegb[evptr]);
-        }
-
-        if(layout->getCtlx(iseg)>0) {
-            if(p->getX()!=ccval1[evptr]) {
-                ccval1[evptr]=p->getX();
-                double xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg));
-                xrel=xrel/(double)layout->getSegwidthpx(iseg);
-                if(useCCCVal==true) {
-                    cccval1=xrel/cccvalAvg+(cccvalAvg-1)*cccval1/cccvalAvg;
-                    snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtlx(iseg), cccval1);
+        if(layout->getSegtype(iseg)==0) {
+            double v1=layout->getNote(iseg);
+            if(note[evptr]!=v1) {
+                if(transitionMode) {
+                    if(note[evptr]>0) {
+                        snd->pitch(layout->getChan(iseg),ieventout[evptr],v1);
+                    } else {
+                        ieventout[evptr]=ieventoutnext;
+                        ieventoutnext++;
+                        snd->note(layout->getChan(iseg),ieventout[evptr], v1, veldef);
+                    }
                 } else {
-                    snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtlx(iseg), xrel);
+                    if(note[evptr]>0) {
+                        snd->note(chan[evptr],ieventout[evptr],note[evptr],0);
+                    }
+                    ieventout[evptr]=ieventoutnext;
+                    ieventoutnext++;
+                    snd->note(layout->getChan(iseg),ieventout[evptr], v1, veldef);
+                }
+                note[evptr]=v1;
+                chan[evptr]=layout->getChan(iseg);
+            }
+
+            if(isegb[evptr]!=iseg) {
+                if(isegb[evptr]!=-1) {
+                    layout->decPressed(isegb[evptr]);
+                    // increase statistics for transitions
+                    rc1->getEvstat()->incTransitioncount();
+                }
+                isegb[evptr]=iseg;
+                layout->incPressed(isegb[evptr]);
+            }
+
+            if(layout->getCtlx(iseg)>0) {
+                if(p->getX()!=ccval1[evptr]) {
+                    ccval1[evptr]=p->getX();
+                    double xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg));
+                    xrel=xrel/(double)layout->getSegwidthpx(iseg);
+                    if(useCCCVal==true) {
+                        cccval1=xrel/cccvalAvg+(cccvalAvg-1)*cccval1/cccvalAvg;
+                        snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtlx(iseg), cccval1);
+                    } else {
+                        snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtlx(iseg), xrel);
+                    }
                 }
             }
-        }
-        if(layout->getCtly(iseg)>0) {
-            if(p->getY()!=ccval2[evptr]) {
-                ccval2[evptr]=p->getY();
-                double yrel=p->getY()-(ysum-layout->getRowheightpx(iy));
-                yrel=yrel/(double)layout->getRowheightpx(iy);
-//                ysum+=layout->getRowheightpx(iy);
-                if(useCCCVal==true) {
-                    cccval2=yrel/cccvalAvg+(cccvalAvg-1)*cccval2/cccvalAvg;
-                    snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtly(iseg), cccval2);
-                } else {
-                    snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtly(iseg), yrel);
+            if(layout->getCtly(iseg)>0) {
+                if(p->getY()!=ccval2[evptr]) {
+                    ccval2[evptr]=p->getY();
+                    double yrel=p->getY()-(ysum-layout->getRowheightpx(iy));
+                    yrel=yrel/(double)layout->getRowheightpx(iy);
+    //                ysum+=layout->getRowheightpx(iy);
+                    if(useCCCVal==true) {
+                        cccval2=yrel/cccvalAvg+(cccvalAvg-1)*cccval2/cccvalAvg;
+                        snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtly(iseg), cccval2);
+                    } else {
+                        snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtly(iseg), yrel);
+                    }
+                }
+            }
+        } else if(layout->getSegtype(iseg)==1) {
+            // for transition segments calculate the frequency value between neighbour segments
+
+            // 1. make sure, to be in range to have two neighbours
+            if(iseg>0 && iseg<layout->getNsegs()-1) {
+                // 2. make sure, two neighbours are notes
+                if(layout->getSegtype(iseg+1)==0 && layout->getSegtype(iseg-1)==0) {
+                    // 3. calculate frequency
+                    // 3a. calculate relative xposition in field
+                    double xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg));
+                    xrel=xrel/(double)layout->getSegwidthpx(iseg);
+                    // 3b. calculate frequency difference
+                    double fdiff=layout->getNote(iseg+1)-layout->getNote(iseg-1);
+                    // 3c. calculate relative frequency
+                    double frel=fdiff*xrel;
+                    frel+=layout->getNote(iseg-1);
+
+                    if(note[evptr]>0) {
+                        snd->pitch(layout->getChan(iseg),ieventout[evptr],frel);
+                    } else {
+                        ieventout[evptr]=ieventoutnext;
+                        ieventoutnext++;
+                        snd->note(layout->getChan(iseg),ieventout[evptr], frel, veldef);
+                    }
+                    note[evptr]=frel;
                 }
             }
         }
@@ -153,6 +191,7 @@ void EventHandlerRect::init()
     cccval1=0;
     cccval2=0;
 
+    transitionMode=true;
     ntp=32;
 
     act=new bool[ntp];

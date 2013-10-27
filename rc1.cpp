@@ -76,7 +76,8 @@ RC1::RC1(QWidget *parent) :
     painterOn[6]=true;
 
 //    setConfigSlideRC();
-    setConfigPdjam2013();
+//    setConfigPdjam2013();
+    setConfigTransistions();
     setPPS0();
 
     oscin = new QOscServer(3333,this);
@@ -284,7 +285,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
 
         if(path=="/lsc") {
             if(dl.size()==3) {
-                layout->setScale(dl.at(0).toInt(),dl.at(1).toInt(),dl.at(2).toInt());
+                layout->setScale(dl.at(0).toInt(),dl.at(1).toInt(),dl.at(2).toInt(),false);
             }
         }
 
@@ -454,6 +455,10 @@ void RC1::resetStat()
 {
 
     fps=0;
+}
+void RC1::setConfigTransistions() {
+    layout->setXY(15,1);
+    layout->setScale(62,8,3,true);
 }
 
 void RC1::setConfigPdjam2013()

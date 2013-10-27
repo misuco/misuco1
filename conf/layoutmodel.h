@@ -33,6 +33,7 @@ public:
 
     int getRowheightpx(int i) const;
     int getNseg(int i) const;
+    int getNsegs() const;
     int getSegwidth(int i) const;
     int getSegwidthmax(int i) const;
     int getSegwidthpx(int i) const;
@@ -41,28 +42,30 @@ public:
     int getCtly(int i) const;
     int getChan(int i) const;
     int getPressed(int i) const;
+    int getSegtype(int i) const;
     QString * getSegText(int i) const;
     int getSegH(int i) const;
     void incPressed(int i);
     void decPressed(int i);
     void setXY(int x, int y);
-    void setScale(int start, int n, int step);
+    void setScale(int start, int n, int step, bool withTransistion);
     void setSegH(int i, int v);
     void setAllCtlx(int v);
     void setAllCtly(int v);
 
 private:
     int nrows;
-    int nsegs;
+    int nsegs;          // total number of active segments
     int nrowsmax;
-    int nsegsmax;
+    int nsegsmax;       // size of segments memory
     int *rowheight;
     int rowheightmax;
     int *rowheightpx;
-    int *nseg;
+    int *nseg;          // segments per row
     int *segwidth;
     int *segwidthmax;
     int *segwidthpx;
+    int *segtype;       // segmenttyp: 0=note, 1=transition
     double *note;
     double *midi2f;
     int *ctlx;

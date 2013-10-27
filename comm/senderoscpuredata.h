@@ -30,6 +30,7 @@ public:
     virtual void cc(int c, int voiceId, int cc, double v1);
     virtual void pc(int c, int v1);
     virtual void note(int c, int voiceId, double f, int vel);
+    virtual void pitch(int c, int voiceId, double f) {}
     virtual void setDestination(QHostAddress a,int p);
 
 private:

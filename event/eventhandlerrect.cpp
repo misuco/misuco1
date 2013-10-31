@@ -82,6 +82,16 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             }
         }
 
+        if(isegb[evptr]!=iseg) {
+            if(isegb[evptr]!=-1) {
+                layout->decPressed(isegb[evptr]);
+                // increase statistics for transitions
+                rc1->getEvstat()->incTransitioncount();
+            }
+            isegb[evptr]=iseg;
+            layout->incPressed(isegb[evptr]);
+        }
+
         if(layout->getSegtype(iseg)==0) {
             double v1=layout->getNote(iseg);
             if(note[evptr]!=v1) {
@@ -103,16 +113,6 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 }
                 note[evptr]=v1;
                 chan[evptr]=layout->getChan(iseg);
-            }
-
-            if(isegb[evptr]!=iseg) {
-                if(isegb[evptr]!=-1) {
-                    layout->decPressed(isegb[evptr]);
-                    // increase statistics for transitions
-                    rc1->getEvstat()->incTransitioncount();
-                }
-                isegb[evptr]=iseg;
-                layout->incPressed(isegb[evptr]);
             }
 
             if(layout->getCtlx(iseg)>0) {

@@ -62,16 +62,24 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 satB=sBrushAct;
             }
 
-            if(lightB>0) {
-                pnt->setBrush(QColor::fromHsl(col,satB,lightB));
+            if(lay->getSegtype(iseg)==1) {
+                QLinearGradient linearGrad(QPointF(xpaint, ypaint), QPointF(xpaint+xpaint1, ypaint));
+                linearGrad.setColorAt(0, Qt::black);
+                linearGrad.setColorAt(1, Qt::white);
+                pnt->setBrush(linearGrad);
             } else {
-                pnt->setBrush(Qt::NoBrush);
+                if(lightB>0) {
+                    pnt->setBrush(QColor::fromHsl(col,satB,lightB));
+                } else {
+                    pnt->setBrush(Qt::NoBrush);
+                }
             }
             if(lightP>0) {
                 pnt->setPen(QColor::fromHsl(col,satP,lightP));
             } else {
                 pnt->setPen(Qt::NoPen);
             }
+
             pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
 
             pnt->setPen(QColor::fromHsl((col+127)%255,100,100));

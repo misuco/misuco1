@@ -218,6 +218,160 @@ void LayoutModel::setXY(int x, int y)
     }
 }
 
+void LayoutModel::setRaga(int i, int b)
+{
+    /*
+     * Raag Bihag
+     *
+     * ni sa ga ma pa ni sa
+     * -1 1  4  1  2  4  1
+     * 59 60 64 65 67 71 72
+     * (7 notes + 6 trans = 13 segs)
+     *
+     * sa re ga ma pa da ni sa
+     * 60 62 64 65 67 69 71 72
+     * (8 notes + 7 trans = 15 segs)
+     *
+     * ni sa ga ma pa ni sa
+     * 59 60 64 65 67 71 72
+     * (7 notes + 6 trans = 13 segs)
+     *
+     * sa ni sa re ga ma ga pa ma pa da ni sa
+     * 60 59 60 62 64 65 64 67 66 67 69 71 72
+     * (13 notes + 12 trans = 25 segs)
+     *
+     **/
+
+    // basic config
+    nrows=4;
+    rowheightmax=nrows;
+    nseg[0]=13;
+    segwidthmax[0]=13;
+    rowheight[0]=1;
+    nseg[1]=15;
+    segwidthmax[1]=15;
+    rowheight[1]=1;
+    nseg[2]=13;
+    segwidthmax[2]=13;
+    rowheight[2]=1;
+    nseg[3]=25;
+    segwidthmax[3]=25;
+    rowheight[3]=1;
+    nsegs=13+15+13+25; // =66
+    setAll(nsegs,segwidth,1);
+    calcGeo(width,height);
+
+    // row 1
+    segtype[0]=0;
+    segtype[1]=1;
+    segtype[2]=0;
+    segtype[3]=1;
+    segtype[4]=0;
+    segtype[5]=1;
+    segtype[6]=0;
+    segtype[7]=1;
+    segtype[8]=0;
+    segtype[9]=1;
+    segtype[10]=0;
+    segtype[11]=1;
+    segtype[12]=0;
+    note[0]=midi2f[59];
+    note[2]=midi2f[60];
+    note[4]=midi2f[64];
+    note[6]=midi2f[65];
+    note[8]=midi2f[67];
+    note[10]=midi2f[71];
+    note[12]=midi2f[72];
+
+    // row 2
+    segtype[13]=0;
+    segtype[14]=1;
+    segtype[15]=0;
+    segtype[16]=1;
+    segtype[17]=0;
+    segtype[18]=1;
+    segtype[19]=0;
+    segtype[20]=1;
+    segtype[21]=0;
+    segtype[22]=1;
+    segtype[23]=0;
+    segtype[24]=1;
+    segtype[25]=0;
+    segtype[26]=1;
+    segtype[27]=0;
+    note[13]=midi2f[60];
+    note[15]=midi2f[62];
+    note[17]=midi2f[64];
+    note[19]=midi2f[65];
+    note[21]=midi2f[67];
+    note[23]=midi2f[69];
+    note[25]=midi2f[71];
+    note[27]=midi2f[72];
+
+    // row 3
+    segtype[28]=0;
+    segtype[29]=1;
+    segtype[30]=0;
+    segtype[31]=1;
+    segtype[32]=0;
+    segtype[33]=1;
+    segtype[34]=0;
+    segtype[35]=1;
+    segtype[36]=0;
+    segtype[37]=1;
+    segtype[38]=0;
+    segtype[39]=1;
+    segtype[40]=0;
+    note[28]=midi2f[59];
+    note[30]=midi2f[60];
+    note[32]=midi2f[64];
+    note[34]=midi2f[65];
+    note[36]=midi2f[67];
+    note[38]=midi2f[71];
+    note[40]=midi2f[72];
+
+    // row 4
+    segtype[41]=0;
+    segtype[42]=1;
+    segtype[43]=0;
+    segtype[44]=1;
+    segtype[45]=0;
+    segtype[46]=1;
+    segtype[47]=0;
+    segtype[48]=1;
+    segtype[49]=0;
+    segtype[50]=1;
+    segtype[51]=0;
+    segtype[52]=1;
+    segtype[53]=0;
+    segtype[54]=1;
+    segtype[55]=0;
+    segtype[56]=1;
+    segtype[57]=0;
+    segtype[58]=1;
+    segtype[59]=0;
+    segtype[60]=1;
+    segtype[61]=0;
+    segtype[62]=1;
+    segtype[63]=0;
+    segtype[64]=1;
+    segtype[65]=0;
+    note[41]=midi2f[60];
+    note[43]=midi2f[59];
+    note[45]=midi2f[60];
+    note[47]=midi2f[62];
+    note[49]=midi2f[64];
+    note[51]=midi2f[65];
+    note[53]=midi2f[64];
+    note[55]=midi2f[67];
+    note[57]=midi2f[66];
+    note[59]=midi2f[67];
+    note[61]=midi2f[69];
+    note[63]=midi2f[71];
+    note[65]=midi2f[72];
+
+}
+
 void LayoutModel::setScale(int start, int n, int step, bool withTransistion = false)
 {
     int nsteps;
@@ -225,6 +379,7 @@ void LayoutModel::setScale(int start, int n, int step, bool withTransistion = fa
     steps=new int[12];
     if(n<nsegsmax) {
         switch (step) {
+        // regular keyboard
         case 1:
             steps[0]=2;
             steps[1]=2;

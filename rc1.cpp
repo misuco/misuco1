@@ -77,7 +77,8 @@ RC1::RC1(QWidget *parent) :
 
 //    setConfigSlideRC();
 //    setConfigPdjam2013();
-    setConfigTransistions();
+//    setConfigTransistions();
+    layout->setRaga(0,0);
     setPPS0();
 
     oscin = new QOscServer(3333,this);

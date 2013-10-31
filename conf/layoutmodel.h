@@ -51,7 +51,8 @@ public:
     void setScale(int start, int n, int step, bool withTransistion);
     void setSegH(int i, int v);
     void setAllCtlx(int v);
-    void setAllCtly(int v);
+    void setAllCtly(int v);    
+    void setRaga(int i, int b);
 
 private:
     int nrows;

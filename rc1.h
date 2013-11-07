@@ -55,8 +55,6 @@ public:
     long getTtl() const;
     void setTtl(long value);
 
-    double *getMidi2f() const;
-
 protected:
     /*  QGLWidget implementation */
     void paintEvent(QPaintEvent *event);
@@ -81,7 +79,6 @@ private:
     EventStat * evstat;
     QOscServer * oscin;
 
-    double * midi2f;
     QList<QHostAddress> ignoreAddr;
 
     int nPrePainters;

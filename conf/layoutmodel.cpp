@@ -474,6 +474,60 @@ void LayoutModel::setScale(int start, int n, int step, bool withTransistion = fa
     }
 }
 
+void LayoutModel::setFactoryLayout(int i)
+{
+    // basic config
+    nrows=2;
+    rowheightmax=8;
+    nseg[0]=8;
+    segwidthmax[0]=10;
+    rowheight[0]=1;
+    nseg[1]=8;
+    segwidthmax[1]=8;
+    rowheight[1]=7;
+    nsegs=16;
+    setAll(nsegs,segwidth,1);
+    setAll(nsegs,segtype,0);
+    setAll(nsegs,chan,0);
+    calcGeo(width,height);
+
+    // row 1
+    segtype[0]=2;
+    segtype[1]=2;
+    segtype[2]=2;
+    segtype[3]=2;
+    segtype[4]=2;
+    segtype[5]=2;
+    segtype[6]=2;
+    segtype[7]=2;
+    chan[0]=0;
+    chan[1]=1;
+    chan[2]=2;
+    chan[3]=3;
+    chan[4]=4;
+    chan[5]=5;
+    chan[6]=6;
+    chan[7]=7;
+
+    note[8]=midi2f[59+i];
+    note[9]=midi2f[60+i];
+    note[10]=midi2f[64+i];
+    note[11]=midi2f[65+i];
+    note[12]=midi2f[67+i];
+    note[13]=midi2f[71+i];
+    note[14]=midi2f[72+i];
+    note[15]=midi2f[74+i];
+
+    midinote[8]=59+i;
+    midinote[9]=60+i;
+    midinote[10]=64+i;
+    midinote[11]=65+i;
+    midinote[12]=67+i;
+    midinote[13]=71+i;
+    midinote[14]=72+i;
+    midinote[15]=74+i;
+}
+
 void LayoutModel::setSegH(int i, int v)
 {
     segH[i]=v;

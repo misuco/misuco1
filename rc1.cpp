@@ -35,19 +35,10 @@ RC1::RC1(QWidget *parent) :
     QGLWidget(parent)
 {
     setAttribute(Qt::WA_AcceptTouchEvents,true);
-//    qDebug() << "View() size:" << width() << " " << height();
+    qDebug() << "View() size:" << width() << " " << height();
     eventId = 1;
     nomouse = true;
     ttl=2000;
-
-    // thanx 2 http://subsynth.sourceforge.net/midinote2freq.html
-    midi2f = new double[127];
-    float a = 440; // a is 440 hz...
-    for (int x = 0; x < 127; ++x)
-    {
-       midi2f[x] = (a / 32.0) * (pow(2.0 , (((float)x - 9.0)) / 12.0));
-       //qDebug() << "note " << x << " f " << midi2f[x];
-    }
 
     storage=new Storage();
     layout=new LayoutModel();
@@ -87,7 +78,8 @@ RC1::RC1(QWidget *parent) :
 //    setConfigSlideRC();
 //    setConfigPdjam2013();
 //    setConfigTransistions();
-    layout->setRaga(0,0);
+//    layout->setRaga(0,0);
+    layout->setFactoryLayout(1);
     setPPS0();
 
     oscin = new QOscServer(3333,this);
@@ -99,8 +91,7 @@ RC1::RC1(QWidget *parent) :
     fpsT.start();
     fcnt=0;
 
-
-    setWindowState(Qt::WindowFullScreen);
+//    setWindowState(Qt::WindowFullScreen);
 }
 
 void RC1::paintEvent(QPaintEvent *event)
@@ -460,11 +451,6 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
  */
     }
 }
-double *RC1::getMidi2f() const
-{
-    return midi2f;
-}
-
 
 void RC1::resetStat()
 {

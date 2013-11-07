@@ -50,6 +50,7 @@ public:
     void decPressed(int i);
     void setXY(int x, int y);
     void setScale(int start, int n, int step, bool withTransistion);
+    void setFactoryLayout(int i);
     void setSegH(int i, int v);
     void setAllCtlx(int v);
     void setAllCtly(int v);    
@@ -67,7 +68,7 @@ private:
     int *segwidth;
     int *segwidthmax;
     int *segwidthpx;
-    int *segtype;       // segmenttyp: 0=note, 1=transition
+    int *segtype;       // segmenttyp: 0=note, 1=transition, 2=layout
     double *note;
     int *midinote;
     double *midi2f;

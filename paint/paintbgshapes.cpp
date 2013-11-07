@@ -21,12 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 PaintBgShapes::PaintBgShapes()
 {
     sPenAct=160;
-    lPenAct=0;
+    lPenAct=200;
     sBrushAct=160;
     lBrushAct=200;
 
     sPenPsv=160;
-    lPenPsv=0;
+    lPenPsv=50;
     sBrushPsv=160;
     lBrushPsv=80;
 }
@@ -48,8 +48,9 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
 
         for (int x = 0; x < lay->getNseg(y); x ++) {
             xpaint1=lay->getSegwidthpx(iseg);
+            int col=21*(lay->getMidiNote(iseg)%12);
 //            int col=21*(lay->getNote(iseg)%12);
-            int col=lay->getSegH(iseg);
+//            int col=lay->getSegH(iseg);
             int lightP=lPenPsv;
             int lightB=lBrushPsv;
             int satP=sPenPsv;
@@ -62,10 +63,22 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 satB=sBrushAct;
             }
 
+//            int col1=lay->getSegH(iseg-1);
+//            int col2=lay->getSegH(iseg+1);
+            int col1=0;
+            int col2=0;
             if(lay->getSegtype(iseg)==1) {
                 QLinearGradient linearGrad(QPointF(xpaint, ypaint), QPointF(xpaint+xpaint1, ypaint));
-                linearGrad.setColorAt(0, Qt::black);
-                linearGrad.setColorAt(1, Qt::white);
+                if(iseg>0) {
+                    col1=(lay->getMidiNote(iseg-1)%12)*21;
+                    col2=(lay->getMidiNote(iseg+1)%12)*21;
+                    linearGrad.setColorAt(0, QColor::fromHsl(col1,satB,lightB));
+                    linearGrad.setColorAt(1, QColor::fromHsl(col2,satB,lightB));
+                } else {
+                    linearGrad.setColorAt(0, Qt::black);
+                    linearGrad.setColorAt(1, Qt::white);
+
+                }
                 pnt->setBrush(linearGrad);
             } else {
                 if(lightB>0) {
@@ -80,7 +93,26 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 pnt->setPen(Qt::NoPen);
             }
 
-            pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
+            if(lay->getSegtype(iseg)==1) {
+                pnt->setBrush(QColor::fromHsl(col1,satB,lightB));
+                QPoint points1[4] = {
+                    QPoint(xpaint, ypaint),
+                    QPoint(xpaint+xpaint1, ypaint),
+                    QPoint(xpaint, ypaint+ypaint1),
+                    QPoint(xpaint, ypaint)
+                };
+                pnt->drawPolygon(points1,4);
+                pnt->setBrush(QColor::fromHsl(col2,satB,lightB));
+                QPoint points2[4] = {
+                    QPoint(xpaint+xpaint1, ypaint),
+                    QPoint(xpaint+xpaint1, ypaint+ypaint1),
+                    QPoint(xpaint, ypaint+ypaint1),
+                    QPoint(xpaint+xpaint1, ypaint)
+                };
+                pnt->drawPolygon(points2,4);
+            } else {
+                pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
+            }
 
             pnt->setPen(QColor::fromHsl((col+127)%255,100,100));
             pnt->setFont(QFont("Ubuntu",20));

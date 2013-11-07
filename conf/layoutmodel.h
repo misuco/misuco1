@@ -38,6 +38,7 @@ public:
     int getSegwidthmax(int i) const;
     int getSegwidthpx(int i) const;
     double getNote(int i) const;
+    int getMidiNote(int i) const;
     int getCtlx(int i) const;
     int getCtly(int i) const;
     int getChan(int i) const;
@@ -68,6 +69,7 @@ private:
     int *segwidthpx;
     int *segtype;       // segmenttyp: 0=note, 1=transition
     double *note;
+    int *midinote;
     double *midi2f;
     int *ctlx;
     int *ctly;

@@ -40,6 +40,15 @@ RC1::RC1(QWidget *parent) :
     nomouse = true;
     ttl=2000;
 
+    // thanx 2 http://subsynth.sourceforge.net/midinote2freq.html
+    midi2f = new double[127];
+    float a = 440; // a is 440 hz...
+    for (int x = 0; x < 127; ++x)
+    {
+       midi2f[x] = (a / 32.0) * (pow(2.0 , (((float)x - 9.0)) / 12.0));
+       //qDebug() << "note " << x << " f " << midi2f[x];
+    }
+
     storage=new Storage();
     layout=new LayoutModel();
     sender=new SenderSuperCollider(this);
@@ -91,7 +100,7 @@ RC1::RC1(QWidget *parent) :
     fcnt=0;
 
 
-//    setWindowState(Qt::WindowFullScreen);
+    setWindowState(Qt::WindowFullScreen);
 }
 
 void RC1::paintEvent(QPaintEvent *event)
@@ -451,6 +460,11 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
  */
     }
 }
+double *RC1::getMidi2f() const
+{
+    return midi2f;
+}
+
 
 void RC1::resetStat()
 {
@@ -561,7 +575,7 @@ void RC1::setPPS0()
     painterOn[3]=false;
     painterOn[4]=false;
     painterOn[5]=false;
-    painterOn[6]=true;
+    painterOn[6]=false;
 
     for(int i=0;i<pointpainters[1]->getParamCount();i++) {
         pointpainters[1]->setParam(i,0);

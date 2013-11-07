@@ -34,6 +34,7 @@ LayoutModel::LayoutModel()
     segwidthpx = new int[nsegsmax];
     segwidthmax=new int[nrowsmax];
     note = new double[nsegsmax];
+    midinote = new int[nsegsmax];
     segText=new QString[nsegsmax];
     segH = new int[nsegsmax];
     // put numbers as text
@@ -156,6 +157,11 @@ int LayoutModel::getCtlx(int i) const
 double LayoutModel::getNote(int i) const
 {
     return note[i];
+}
+
+int LayoutModel::getMidiNote(int i) const
+{
+    return midinote[i];
 }
 
 
@@ -282,6 +288,13 @@ void LayoutModel::setRaga(int i, int b)
     note[8]=midi2f[67];
     note[10]=midi2f[71];
     note[12]=midi2f[72];
+    midinote[0]=59;
+    midinote[2]=60;
+    midinote[4]=64;
+    midinote[6]=65;
+    midinote[8]=67;
+    midinote[10]=71;
+    midinote[12]=72;
 
     // row 2
     segtype[13]=0;
@@ -307,6 +320,14 @@ void LayoutModel::setRaga(int i, int b)
     note[23]=midi2f[69];
     note[25]=midi2f[71];
     note[27]=midi2f[72];
+    midinote[13]=60;
+    midinote[15]=62;
+    midinote[17]=64;
+    midinote[19]=65;
+    midinote[21]=67;
+    midinote[23]=69;
+    midinote[25]=71;
+    midinote[27]=72;
 
     // row 3
     segtype[28]=0;
@@ -329,6 +350,13 @@ void LayoutModel::setRaga(int i, int b)
     note[36]=midi2f[67];
     note[38]=midi2f[71];
     note[40]=midi2f[72];
+    midinote[28]=59;
+    midinote[30]=60;
+    midinote[32]=64;
+    midinote[34]=65;
+    midinote[36]=67;
+    midinote[38]=71;
+    midinote[40]=72;
 
     // row 4
     segtype[41]=0;
@@ -369,6 +397,19 @@ void LayoutModel::setRaga(int i, int b)
     note[61]=midi2f[69];
     note[63]=midi2f[71];
     note[65]=midi2f[72];
+    midinote[41]=60;
+    midinote[43]=59;
+    midinote[45]=60;
+    midinote[47]=62;
+    midinote[49]=64;
+    midinote[51]=65;
+    midinote[53]=64;
+    midinote[55]=67;
+    midinote[57]=66;
+    midinote[59]=67;
+    midinote[61]=69;
+    midinote[63]=71;
+    midinote[65]=72;
 
 }
 

@@ -48,7 +48,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
 
         for (int x = 0; x < lay->getNseg(y); x ++) {
             xpaint1=lay->getSegwidthpx(iseg);
-            int col=21*(lay->getMidiNote(iseg)%12);
+            int col=23*(lay->getMidiNote(iseg)%12)+2;
 //            int col=21*(lay->getNote(iseg)%12);
 //            int col=lay->getSegH(iseg);
             int lightP=lPenPsv;
@@ -70,8 +70,8 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
             if(lay->getSegtype(iseg)==1) {
                 QLinearGradient linearGrad(QPointF(xpaint, ypaint), QPointF(xpaint+xpaint1, ypaint));
                 if(iseg>0) {
-                    col1=(lay->getMidiNote(iseg-1)%12)*21;
-                    col2=(lay->getMidiNote(iseg+1)%12)*21;
+                    col1=(lay->getMidiNote(iseg-1)%12)*23+2;
+                    col2=(lay->getMidiNote(iseg+1)%12)*23+2;
                     linearGrad.setColorAt(0, QColor::fromHsl(col1,satB,lightB));
                     linearGrad.setColorAt(1, QColor::fromHsl(col2,satB,lightB));
                 } else {

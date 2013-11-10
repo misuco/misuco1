@@ -55,6 +55,13 @@ public:
     void setAllCtlx(int v);
     void setAllCtly(int v);    
     void setRaga(int i, int b);
+    int getBasenote() const;
+    void setBasenote(int value);
+    int getBasescale() const;
+    void setBasescale(int value);
+
+    int getNoct() const;
+    void setNoct(int value);
 
 private:
     int nrows;
@@ -77,10 +84,18 @@ private:
     int *chan;
     int *pressed;
     QString * segText;
+    QString * midi2Text;
     int * segH;
     int width;
     int height;
 
+    int basenote;
+    int basescale;
+    int noct;
+    int * factoryScaleValues;
+    int * factoryScaleStart;
+    int * factoryScaleLen;
+    int nFactoryScales;
     void setAll(int n, int * d, int v);
 
 };

@@ -171,6 +171,12 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             }
         } else if(layout->getSegtype(iseg)==2) {
             rc1->getLayout()->setFactoryLayout(layout->getChan(iseg));
+        } else if(layout->getSegtype(iseg)==3) {
+            rc1->getLayout()->setBasenote(layout->getMidiNote(iseg));
+        } else if(layout->getSegtype(iseg)==4) {
+            rc1->getLayout()->setBasescale(layout->getChan(iseg));
+        } else if(layout->getSegtype(iseg)==5) {
+            rc1->getLayout()->setNoct(layout->getChan(iseg));
         }
 
     } else if( p->getState() == Qt::TouchPointReleased ) {

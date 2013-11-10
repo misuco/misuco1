@@ -65,8 +65,105 @@ LayoutModel::LayoutModel()
        midi2f[x] = (a / 32.0) * (pow(2.0 , (((float)x - 9.0)) / 12.0));
        //qDebug() << "note " << x << " f " << midi2f[x];
     }
-    setScale(36,127,0,false);
-    setXY(8,4);
+
+    midi2Text = new QString[12];
+    midi2Text[0]="SA\nC";
+    midi2Text[1]="SA'\nC#";
+    midi2Text[2]="RE\nD";
+    midi2Text[3]="RE'\nD#";
+    midi2Text[4]="GA\nE";
+    midi2Text[5]="MA\nF";
+    midi2Text[6]="MA'\nF#";
+    midi2Text[7]="PA\nG";
+    midi2Text[8]="PA'\nG#";
+    midi2Text[9]="DA\nA";
+    midi2Text[10]="DA'\nA#";
+    midi2Text[11]="NI\nB";
+
+    basenote=60;
+    basescale=0;
+    noct=2;
+
+    nFactoryScales=8;
+    factoryScaleStart=new int[nFactoryScales];
+    factoryScaleLen=new int[nFactoryScales];
+    factoryScaleValues=new int[48];
+
+    factoryScaleStart[0]=0;
+    factoryScaleLen[0]=12;
+    factoryScaleValues[0]=1;
+    factoryScaleValues[1]=1;
+    factoryScaleValues[2]=1;
+    factoryScaleValues[3]=1;
+    factoryScaleValues[4]=1;
+    factoryScaleValues[5]=1;
+    factoryScaleValues[6]=1;
+    factoryScaleValues[7]=1;
+    factoryScaleValues[8]=1;
+    factoryScaleValues[9]=1;
+    factoryScaleValues[10]=1;
+    factoryScaleValues[11]=1;
+
+    factoryScaleStart[1]=12;
+    factoryScaleLen[1]=7;
+    factoryScaleValues[12]=2;
+    factoryScaleValues[13]=2;
+    factoryScaleValues[14]=1;
+    factoryScaleValues[16]=2;
+    factoryScaleValues[17]=2;
+    factoryScaleValues[18]=2;
+    factoryScaleValues[19]=1;
+
+    factoryScaleStart[2]=20;
+    factoryScaleLen[2]=7;
+    factoryScaleValues[20]=2;
+    factoryScaleValues[21]=1;
+    factoryScaleValues[22]=2;
+    factoryScaleValues[23]=2;
+    factoryScaleValues[24]=2;
+    factoryScaleValues[25]=2;
+    factoryScaleValues[26]=1;
+
+    factoryScaleStart[3]=27;
+    factoryScaleLen[3]=5;
+    factoryScaleValues[27]=2;
+    factoryScaleValues[28]=3;
+    factoryScaleValues[29]=2;
+    factoryScaleValues[30]=4;
+    factoryScaleValues[31]=1;
+
+    factoryScaleStart[4]=32;
+    factoryScaleLen[4]=5;
+    factoryScaleValues[32]=3;
+    factoryScaleValues[33]=2;
+    factoryScaleValues[34]=3;
+    factoryScaleValues[35]=2;
+    factoryScaleValues[36]=2;
+
+    factoryScaleStart[5]=37;
+    factoryScaleLen[5]=5;
+    factoryScaleValues[37]=3;
+    factoryScaleValues[38]=3;
+    factoryScaleValues[39]=3;
+    factoryScaleValues[40]=1;
+    factoryScaleValues[41]=2;
+
+    factoryScaleStart[6]=42;
+    factoryScaleLen[6]=3;
+    factoryScaleValues[42]=4;
+    factoryScaleValues[43]=3;
+    factoryScaleValues[44]=5;
+
+    factoryScaleStart[7]=45;
+    factoryScaleLen[7]=3;
+    factoryScaleValues[45]=3;
+    factoryScaleValues[46]=4;
+    factoryScaleValues[47]=5;
+
+    setFactoryLayout(0);
+
+//    setScale(36,127,0,false);
+//    setXY(8,4);
 }
 
 void LayoutModel::calcGeo(int w, int h)
@@ -412,6 +509,39 @@ void LayoutModel::setRaga(int i, int b)
     midinote[65]=72;
 
 }
+int LayoutModel::getBasenote() const
+{
+    return basenote;
+}
+
+void LayoutModel::setBasenote(int value)
+{
+    basenote = value;
+    setFactoryLayout(0);
+}
+int LayoutModel::getBasescale() const
+{
+    return basescale;
+}
+
+void LayoutModel::setBasescale(int value)
+{
+    basescale = value;
+    setFactoryLayout(0);
+}
+int LayoutModel::getNoct() const
+{
+    return noct;
+}
+
+void LayoutModel::setNoct(int value)
+{
+    noct = value;
+    setFactoryLayout(0);
+}
+
+
+
 
 void LayoutModel::setScale(int start, int n, int step, bool withTransistion = false)
 {
@@ -477,55 +607,71 @@ void LayoutModel::setScale(int start, int n, int step, bool withTransistion = fa
 void LayoutModel::setFactoryLayout(int i)
 {
     // basic config
-    nrows=2;
-    rowheightmax=8;
-    nseg[0]=8;
-    segwidthmax[0]=10;
+    nrows=4;
+    rowheightmax=12;
+    nseg[0]=24;
+    segwidthmax[0]=8;
     rowheight[0]=1;
     nseg[1]=8;
     segwidthmax[1]=8;
-    rowheight[1]=7;
-    nsegs=16;
+    rowheight[1]=1;
+    nseg[2]=8;
+    segwidthmax[2]=8;
+    rowheight[2]=1;
+
+    nseg[3]=factoryScaleLen[basescale]*noct*2-1;
+    if(nseg[3]+40>nsegsmax) {
+        nseg[3]=nsegsmax-40;
+    }
+    segwidthmax[3]=nseg[3];
+    rowheight[3]=9;
+    nsegs=40+nseg[3];
+
+    qDebug() << "nsegs " << nsegs;
     setAll(nsegs,segwidth,1);
-    setAll(nsegs,segtype,0);
-    setAll(nsegs,chan,0);
+    qDebug() << "calc geo " << width << " " << height;
     calcGeo(width,height);
+    qDebug() << "set segtype 0";
+    setAll(nsegs,segtype,0);
+    qDebug() << "set chan 0";
+    setAll(nsegs,chan,0);
 
-    // row 1
-    segtype[0]=2;
-    segtype[1]=2;
-    segtype[2]=2;
-    segtype[3]=2;
-    segtype[4]=2;
-    segtype[5]=2;
-    segtype[6]=2;
-    segtype[7]=2;
-    chan[0]=0;
-    chan[1]=1;
-    chan[2]=2;
-    chan[3]=3;
-    chan[4]=4;
-    chan[5]=5;
-    chan[6]=6;
-    chan[7]=7;
 
-    note[8]=midi2f[59+i];
-    note[9]=midi2f[60+i];
-    note[10]=midi2f[64+i];
-    note[11]=midi2f[65+i];
-    note[12]=midi2f[67+i];
-    note[13]=midi2f[71+i];
-    note[14]=midi2f[72+i];
-    note[15]=midi2f[74+i];
+    // row 1: control basenote
+    for(int i=0;i<24;i++) {
+        qDebug() << "row 1: " << i;
+        segtype[i]=3;
+        midinote[i]=i+60;
+    }
 
-    midinote[8]=59+i;
-    midinote[9]=60+i;
-    midinote[10]=64+i;
-    midinote[11]=65+i;
-    midinote[12]=67+i;
-    midinote[13]=71+i;
-    midinote[14]=72+i;
-    midinote[15]=74+i;
+    // row 2-3: control rows
+    for(int i=0;i<8;i++) {
+        qDebug() << "row 2/3: " << i;
+        segtype[i+24]=4;
+        segtype[i+32]=5;
+        midinote[i+24]=i;
+        midinote[i+32]=i;
+        chan[i+24]=i;
+        chan[i+32]=i+1;
+        segText[i+24].sprintf("X%2d",i);
+        segText[i+32].sprintf("Y%2d",i);
+    }
+
+    // row 4: the scale
+    int calcnote=basenote;
+    for(int i=0;i<nseg[3];i++) {
+        qDebug() << "row 4: " << i;
+        if(i%2==0) {
+            qDebug() << "calcnote " << calcnote;
+            midinote[i+40]=calcnote;
+            note[i+40]=midi2f[calcnote];
+            segText[i+40]=midi2Text[calcnote%12];
+            calcnote+=factoryScaleValues[factoryScaleStart[basescale]+((i/2)%factoryScaleLen[basescale])];
+        } else {
+            segtype[i+40]=1;
+            segText[i+40]="";
+        }
+    }
 }
 
 void LayoutModel::setSegH(int i, int v)

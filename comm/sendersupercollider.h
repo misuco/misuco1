@@ -3,7 +3,7 @@
 
 #include "rc1.h"
 #include "isender.h"
-#include "comm/libofqf/qoscclientinterface.h"
+#include "../comm/libofqf/qoscclientinterface.h"
 
 class SenderSuperCollider : public ISender
 {

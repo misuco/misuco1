@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "rc1.h"
 #include "isender.h"
-#include "comm/libofqf/qoscclientinterface.h"
+#include "../comm/libofqf/qoscclientinterface.h"
 
 class SenderOscPuredata : public ISender
 {

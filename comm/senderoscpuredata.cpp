@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 #include "senderoscpuredata.h"
-#include "comm/libofqf/qoscclient.h"
+#include "../comm/libofqf/qoscclient.h"
 
 SenderOscPuredata::SenderOscPuredata(RC1 *rc1)
 {

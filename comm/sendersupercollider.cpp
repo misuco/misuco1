@@ -1,6 +1,6 @@
 #include <QVariantList>
 #include "sendersupercollider.h"
-#include "comm/libofqf/qoscclient.h"
+#include "../comm/libofqf/qoscclient.h"
 
 SenderSuperCollider::SenderSuperCollider(RC1 * rc1)
 {

@@ -91,7 +91,7 @@ RC1::RC1(QWidget *parent) :
     fpsT.start();
     fcnt=0;
 
-//    setWindowState(Qt::WindowFullScreen);
+    setWindowState(Qt::WindowFullScreen);
 }
 
 void RC1::paintEvent(QPaintEvent *event)

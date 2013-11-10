@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <QDebug>
 #include "eventhandlerrect.h"
-#include "comm/senderdebug.h"
-#include "comm/senderoscpuredata.h"
+#include "../comm/senderdebug.h"
+#include "../comm/senderoscpuredata.h"
 
 EventHandlerRect::EventHandlerRect()
 {

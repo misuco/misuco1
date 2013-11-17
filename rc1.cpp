@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "comm/senderdebug.h"
 #include "comm/senderoscpuredata.h"
 #include "comm/sendersupercollider.h"
+#include "comm/sendermobilesynth.h"
 #include "paint/paintbgshapes.h"
 #include "paint/pointpaintshape.h"
 #include "paint/pointpaintsphere.h"
@@ -42,7 +43,8 @@ RC1::RC1(QWidget *parent) :
 
     storage=new Storage();
     layout=new LayoutModel();
-    sender=new SenderSuperCollider(this);
+    sender=new SenderMobileSynth(this);
+//    sender=new SenderSuperCollider(this);
 //    sender=new SenderOscPuredata(this);
 //    sender=new SenderDebug();
     ehand=new EventHandlerRect();

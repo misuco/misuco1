@@ -11,7 +11,11 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = rc1
 TEMPLATE = app
 
+INCLUDEPATH += comm
 INCLUDEPATH += comm/libofqf
+INCLUDEPATH += mobilesynth/mobilesynth/Classes/synth
+INCLUDEPATH += mobilesynth/mobilesynth/Classes
+INCLUDEPATH += mobilesynth/lib
 
 SOURCES += main.cpp\
     storage.cpp \
@@ -37,7 +41,17 @@ SOURCES += main.cpp\
     rc1.cpp \
     eventstat.cpp \
     paint/pointpaintsphere.cpp \
-    comm/sendersupercollider.cpp
+    comm/sendersupercollider.cpp \
+    mobilesynth/mobilesynth/Classes/synth/arpeggio.cpp \
+    mobilesynth/mobilesynth/Classes/synth/controller.cpp \
+    mobilesynth/mobilesynth/Classes/synth/envelope.cpp \
+    mobilesynth/mobilesynth/Classes/synth/filter.cpp \
+    mobilesynth/mobilesynth/Classes/synth/key_stack.cpp \
+    mobilesynth/mobilesynth/Classes/synth/lag_processor.cpp \
+    mobilesynth/mobilesynth/Classes/synth/modulation.cpp \
+    mobilesynth/mobilesynth/Classes/synth/oscillator.cpp \
+    mobilesynth/mobilesynth/Classes/synth/parameter.cpp \
+    comm/sendermobilesynth.cpp
 
 HEADERS  += \
     storage.h \
@@ -69,7 +83,21 @@ HEADERS  += \
     rc1.h \
     eventstat.h \
     paint/pointpaintsphere.h \
-    comm/sendersupercollider.h
+    comm/sendersupercollider.h \
+    mobilesynth/mobilesynth/Classes/AudioOutput.h \
+    mobilesynth/mobilesynth/Classes/mobilesynthViewControllerRc1.h \
+    mobilesynth/mobilesynth/Classes/synth/arpeggio.h \
+    mobilesynth/mobilesynth/Classes/synth/controller.h \
+    mobilesynth/mobilesynth/Classes/synth/envelope.h \
+    mobilesynth/mobilesynth/Classes/synth/filter.h \
+    mobilesynth/mobilesynth/Classes/synth/key_stack.h \
+    mobilesynth/mobilesynth/Classes/synth/lag_processor.h \
+    mobilesynth/mobilesynth/Classes/synth/modulation.h \
+    mobilesynth/mobilesynth/Classes/synth/oscillator.h \
+    mobilesynth/mobilesynth/Classes/synth/parameter.h \
+    mobilesynth/mobilesynth/Classes/synth/test_util.h \
+    comm/sendermobilesynth.h \
+    mobilesynth/mobilesynth/Classes/mobilesynthviewcontrollerrc1.hpp
 
 OTHER_FILES += \
     android/res/values-ru/strings.xml \
@@ -101,4 +129,15 @@ OTHER_FILES += \
     android/src/org/kde/necessitas/ministro/IMinistro.aidl \
     android/src/org/kde/necessitas/ministro/IMinistroCallback.aidl \
     puredata/osc2midi.pd \
-    puredata/xdotool.sh
+    puredata/xdotool.sh \
+    mobilesynth/mobilesynth/Classes/synth/Makefile \
+    mobilesynth/mobilesynth/MainWindow.xib \
+    mobilesynth/mobilesynth/mobilesynthViewController.xib \
+    mobilesynth/mobilesynth/main.m \
+    mobilesynth/mobilesynth/Info.plist \
+    mobilesynth/mobilesynth/mobilesynth_Prefix.pch \
+    mobilesynth/mobilesynth/mobilesynth.xcodeproj
+
+OBJECTIVE_SOURCES += \
+    mobilesynth/mobilesynth/Classes/mobilesynthViewControllerRc1.mm \
+    mobilesynth/mobilesynth/Classes/AudioOutput.m \

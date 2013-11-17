@@ -93,7 +93,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         }
 
         if(layout->getSegtype(iseg)==0) {
-            double v1=layout->getNote(iseg);
+//            double v1=layout->getNote(iseg);
+            double v1=layout->getMidiNote(iseg);
             if(note[evptr]!=v1) {
                 if(transitionMode) {
                     if(note[evptr]>0) {

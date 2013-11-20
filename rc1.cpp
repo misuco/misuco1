@@ -80,8 +80,14 @@ RC1::RC1(QWidget *parent) :
 //    setConfigSlideRC();
 //    setConfigPdjam2013();
 //    setConfigTransistions();
+
 //    layout->setRaga(0,0);
-    layout->setFactoryLayout(1);
+    
+//    layout->setFactoryLayout(1);
+    
+    layout->setXY(5, 1);
+    layout->setScale(50, 5, 1, false);
+    
     setPPS0();
 
     oscin = new QOscServer(3333,this);

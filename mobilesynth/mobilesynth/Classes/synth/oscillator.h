@@ -34,7 +34,8 @@ class Oscillator : public Parameter {
 
   // Returns the value at the specific time [0.0, 1.0].  The returned value
   // returned value is in the range [-1.0, 1.0].
-  virtual float GetValue();
+  virtual float GetValue() {};
+  float GetValue(int sample_num);
 
   // Start at the beginning of the period
   void Reset() { sample_num_ = 0; }
@@ -79,6 +80,7 @@ class KeyboardOscillator : public Parameter {
 
   // Return the value of the combine oscillators
   virtual float GetValue();
+  float GetValue(int sample_num) {};
 
  private:
   Parameter* base_frequency_;

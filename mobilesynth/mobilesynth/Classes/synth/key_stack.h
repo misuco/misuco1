@@ -19,7 +19,7 @@ class KeyStack {
   ~KeyStack();
 
   // Returns true if this was the first note pushed on to the key stack
-  bool NoteOn(int note);
+  bool NoteOn(int note, float freq);
 
   // Returns true if this was the last note removed from the key stack
   bool NoteOff(int note);
@@ -30,7 +30,10 @@ class KeyStack {
   // Return the note at the specified position in the stack.  num must be less
   // than size. 
   int GetNote(int num);
-  
+    
+  int GetSize();
+  float GetFreq(int num);
+    
   bool IsNoteInStack(int note);
 
   int size();
@@ -40,6 +43,7 @@ class KeyStack {
  private:
   int size_;
   int notes_[kMaxSize];
+  float freqs_[kMaxSize];
   // Number of times the note at the position was pressed
   int count_[kMaxSize];
 };

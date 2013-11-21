@@ -46,7 +46,7 @@ class Controller {
   // volume and filter envelopes, depending on the order of the on/off events.
   // It is an error to call NoteOff() for a note that was never the argument of
   // NoteOn();
-  void NoteOn(int midi_note);
+  void NoteOn(int midi_note, float freq);
   void NoteOff(int midi_note);
   void NoteOnFrequency(float frequency);  // For testing
   void NoteOff();  // Invoked when all notes have been released as a fallback
@@ -148,6 +148,7 @@ class Controller {
   Volume volume_;
 
   bool osc_sync_;
+  long sample_num;
 
   ModulationSource modulation_source_;
   ModulationDestination modulation_destination_;

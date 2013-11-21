@@ -10,8 +10,8 @@ namespace mobilesynthview
   public:
     Widget();
     ~Widget();
-    void noteOn(int f);
-    void noteOff(int f);
+    void noteOn(int n, float f);
+    void noteOff(int n);
   };
 }
 

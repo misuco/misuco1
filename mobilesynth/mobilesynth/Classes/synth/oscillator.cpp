@@ -28,7 +28,7 @@ void Oscillator::set_frequency(Parameter* frequency) {
   frequency_ = frequency;
 }
 
-float Oscillator::GetValue() {
+float Oscillator::GetValue(int sample_num) {
   if (frequency_ == NULL) {
     return 0.0f;
   }
@@ -37,17 +37,18 @@ float Oscillator::GetValue() {
     return 0.0f;
   }
   long period_samples = sample_rate_ / freq;
+  sample_num = sample_num % (long)period_samples;
   if (period_samples == 0) {
     return 0.0f;
   }
-  float x = (sample_num_ / (float)period_samples);
+  float x = (sample_num / (float)period_samples);
   float value = 0;
   switch (wave_type_) {
     case SINE:
       value = sinf(2.0f * M_PI * x);
       break;
     case SQUARE:
-      if (sample_num_ < (period_samples / 2)) {
+      if (sample_num < (period_samples / 2)) {
         value = 1.0f;
       } else {
         value = -1.0f;
@@ -66,7 +67,7 @@ float Oscillator::GetValue() {
       assert(false);
       break;
   }
-  sample_num_ = (sample_num_ + 1) % (long)period_samples;
+//  sample_num_ = (sample_num_ + 1) % (long)period_samples;
   return value;
 }
 
@@ -118,8 +119,8 @@ float KeyboardOscillator::GetValue() {
   osc2_freq *= osc2_shift_;
   osc2_freq_.set_value(osc2_freq);
 
-  float value = osc1_level_ * osc1_->GetValue() +
-                osc2_level_ * osc2_->GetValue();
+  float value = osc1_level_ * osc1_->GetValue(0) +
+                osc2_level_ * osc2_->GetValue(0);
   // Clip
   value = fminf(value, 1.0f);
   return fmaxf(value, -1.0f);

@@ -9,20 +9,28 @@ using namespace std;
 
 namespace synth {
 
-KeyStack::KeyStack() : size_(0) { }
+KeyStack::KeyStack() : size_(0) {
+    for (int i = 0; i < kMaxSize; ++i) {
+        notes_[i] = 0;
+        freqs_[i] = 0;
+//        count_[i] = 0;
+    }
+}
 
 KeyStack::~KeyStack() { }
 
-bool KeyStack::NoteOn(int note) {
+bool KeyStack::NoteOn(int note, float freq) {
   assert(size_ < kMaxSize);
   for (int i = 0; i < size_; ++i) {
     if (notes_[i] == note) {
-      count_[i]++;
+      freqs_[i]=freq;
+//      count_[i]++;
       return false;
     }
   }
   notes_[size_] = note;
-  count_[size_] = 1;
+  freqs_[size_] = freq;
+//  count_[size_] = 1;
   size_++;
   return true;
 }
@@ -30,15 +38,16 @@ bool KeyStack::NoteOn(int note) {
 bool KeyStack::NoteOff(int note) {
   for (int i = 0; i < size_; ++i) {
     if (notes_[i] == note) {
-      count_[i]--;
-      if (count_[i] == 0) {
+//      count_[i]--;
+//      if (count_[i] == 0) {
         // Remove this element from the stack -- copy all elements above
         for (int j = i; j < size_ - 1; ++j) {
           notes_[j] = notes_[j + 1];
-          count_[j] = count_[j + 1];
+//          count_[j] = count_[j + 1];
+          freqs_[j] = freqs_[j + 1];
         }
         size_--;
-      }
+//      }
       return true;
     }
   }
@@ -59,11 +68,11 @@ bool KeyStack::IsNoteInStack(int note) {
 }
 
 int KeyStack::size() {
-  int count = 0;
+  /*int count = 0;
   for (int i = 0; i < size_; ++i) {
     count += count_[i];
-  }
-  return count;
+  }*/
+  return size_;
 }
 
 int KeyStack::GetCurrentNote() {
@@ -72,13 +81,24 @@ int KeyStack::GetCurrentNote() {
   }
   return 0;
 }
-
-int KeyStack::GetNote(int num) {
-  if (num >= size_) {
-    return 0;
-  }
-  return notes_[num];
-}
+    
+    int KeyStack::GetSize() {
+        return size_;
+    }
+    
+    float KeyStack::GetFreq(int num) {
+        if (num >= size_) {
+            return 0;
+        }
+        return freqs_[num];
+    }
+    
+    int KeyStack::GetNote(int num) {
+        if (num >= size_) {
+            return 0;
+        }
+        return notes_[num];
+    }
 
 static const int kMiddleAKey(49);
 static const float kNotesPerOctave = 12.0f;

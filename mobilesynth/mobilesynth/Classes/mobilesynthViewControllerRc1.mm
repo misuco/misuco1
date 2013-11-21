@@ -34,13 +34,13 @@ namespace mobilesynthview
       [impl->wrapped release];
     delete impl;
   }
-    void Widget::noteOn(int f)
+    void Widget::noteOn(int n, float f)
     {
-        [impl->wrapped noteOn:f];
+        [impl->wrapped noteOn:n :f];
     }
-    void Widget::noteOff(int f)
+    void Widget::noteOff(int n)
     {
-        [impl->wrapped noteOff:f];
+        [impl->wrapped noteOff:n];
     }
 }
 
@@ -62,15 +62,15 @@ static float GetFrequencyForNote(int note) {
     
     controller_ = new synth::Controller;
     
-    controller_->filter_envelope()->set_attack(10);
+    controller_->filter_envelope()->set_attack(400);
     controller_->filter_envelope()->set_decay(100);
     controller_->filter_envelope()->set_sustain(1);
     controller_->filter_envelope()->set_release(100);
     
     controller_->volume_envelope()->set_attack(10);
     controller_->volume_envelope()->set_decay(100);
-    controller_->volume_envelope()->set_sustain(1);
-    controller_->volume_envelope()->set_release(100);
+    controller_->volume_envelope()->set_sustain(0.5);
+    controller_->volume_envelope()->set_release(40000);
         
     controller_->set_modulation_amount(0.5);
     controller_->set_modulation_frequency(0.3);
@@ -93,7 +93,7 @@ static float GetFrequencyForNote(int note) {
     controller_->set_glide_samples(0);
     
     controller_->set_filter_cutoff(2000);
-    controller_->set_filter_resonance(0.3);
+    controller_->set_filter_resonance(0.7);
     
     controller_->set_arpeggio_enabled(0);
     controller_->set_arpeggio_octaves(1);
@@ -117,8 +117,8 @@ static float GetFrequencyForNote(int note) {
     return self;
 }
 
-- (void)noteOn:(int)note {
-  controller_->NoteOn(note);
+- (void)noteOn:(int)note :(float)freq {
+  controller_->NoteOn(note, freq);
 }
 
 - (void)noteOff:(int)note {

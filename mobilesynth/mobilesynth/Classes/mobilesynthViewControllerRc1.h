@@ -26,7 +26,7 @@ namespace synth { class LowPass; }
   AudioStreamBasicDescription outputFormat;
 }
 
-- (void)noteOn:(int)note;
+- (void)noteOn:(int)note :(float)freq;
 - (void)noteOff:(int)note;
 - (OSStatus)generateSamples:(AudioBufferList*)buffers;
 

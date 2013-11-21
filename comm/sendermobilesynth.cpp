@@ -20,14 +20,15 @@ void SenderMobileSynth::pc(int c, int v1)
 void SenderMobileSynth::note(int c, int voiceId, double f, int vel)
 {
     if(vel>0) {
-        sy->noteOn(f);
-        
+        sy->noteOn(voiceId, (float)f);
     } else {
-        sy->noteOff(f);
+        sy->noteOff(voiceId);
     }
 }
 
-void SenderMobileSynth::pitch(int c, int voiceId, double f) {}
+void SenderMobileSynth::pitch(int c, int voiceId, double f) {
+    sy->noteOn(voiceId, (float)f);
+}
 
 void SenderMobileSynth::setDestination(QHostAddress a, int p)
 {

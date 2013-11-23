@@ -32,7 +32,11 @@ class KeyStack {
   int GetNote(int num);
     
   int GetSize();
-  float GetFreq(int num);
+    float GetFreq(int num);
+    float GetFreq1(int num);
+    void SetFreq1(int num, float value);
+  long GetPos(int num);
+  void SetPos(int num,long value);
     
   bool IsNoteInStack(int note);
 
@@ -43,7 +47,9 @@ class KeyStack {
  private:
   int size_;
   int notes_[kMaxSize];
-  float freqs_[kMaxSize];
+    float freqs_[kMaxSize];
+    float freqs1_[kMaxSize];
+  long pos_[kMaxSize];
   // Number of times the note at the position was pressed
   int count_[kMaxSize];
 };

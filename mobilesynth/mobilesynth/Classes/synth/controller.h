@@ -148,7 +148,8 @@ class Controller {
   Volume volume_;
 
   bool osc_sync_;
-  long sample_num;
+//  long sample_num;
+  float sample_rate_;
 
   ModulationSource modulation_source_;
   ModulationDestination modulation_destination_;

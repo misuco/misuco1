@@ -9,13 +9,7 @@ using namespace std;
 
 namespace synth {
 
-KeyStack::KeyStack() : size_(0) {
-    for (int i = 0; i < kMaxSize; ++i) {
-        notes_[i] = 0;
-        freqs_[i] = 0;
-//        count_[i] = 0;
-    }
-}
+KeyStack::KeyStack() : size_(0) { }
 
 KeyStack::~KeyStack() { }
 
@@ -23,13 +17,15 @@ bool KeyStack::NoteOn(int note, float freq) {
   assert(size_ < kMaxSize);
   for (int i = 0; i < size_; ++i) {
     if (notes_[i] == note) {
-      freqs_[i]=freq;
+        freqs_[i]=freq;
+        freqs1_[i]=freq;
 //      count_[i]++;
       return false;
     }
   }
   notes_[size_] = note;
   freqs_[size_] = freq;
+    pos_[size_] = 0;
 //  count_[size_] = 1;
   size_++;
   return true;
@@ -44,7 +40,9 @@ bool KeyStack::NoteOff(int note) {
         for (int j = i; j < size_ - 1; ++j) {
           notes_[j] = notes_[j + 1];
 //          count_[j] = count_[j + 1];
-          freqs_[j] = freqs_[j + 1];
+            freqs_[j] = freqs_[j + 1];
+            freqs1_[j] = freqs1_[j + 1];
+            pos_[j] = pos_[j + 1];
         }
         size_--;
 //      }
@@ -93,13 +91,36 @@ int KeyStack::GetCurrentNote() {
         return freqs_[num];
     }
     
+    float KeyStack::GetFreq1(int num) {
+        if (num >= size_) {
+            return 0;
+        }
+        return freqs1_[num];
+    }
+    
+    void KeyStack::SetFreq1(int num, float value) {
+        if (num < size_) {
+            freqs1_[num]=value;
+        }
+    }
+    
     int KeyStack::GetNote(int num) {
         if (num >= size_) {
             return 0;
         }
         return notes_[num];
     }
-
+    long KeyStack::GetPos(int num) {
+        if (num >= size_) {
+            return 0;
+        }
+        return pos_[num];
+    }
+    void KeyStack::SetPos(int num,long value) {
+        if (num < size_) {
+            pos_[num]=value;
+        }
+    }
 static const int kMiddleAKey(49);
 static const float kNotesPerOctave = 12.0f;
 static const float kMiddleAFrequency = 440.0f;

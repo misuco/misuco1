@@ -72,7 +72,7 @@ static float GetFrequencyForNote(int note) {
     controller_->volume_envelope()->set_sustain(0.5);
     controller_->volume_envelope()->set_release(40000);
         
-    controller_->set_modulation_amount(0.5);
+    controller_->set_modulation_amount(0.7);
     controller_->set_modulation_frequency(0.3);
     controller_->set_modulation_source(synth::Controller::LFO_SRC_TRIANGLE);
     controller_->set_modulation_destination(synth::Controller::LFO_DEST_FILTER);
@@ -93,7 +93,7 @@ static float GetFrequencyForNote(int note) {
     controller_->set_glide_samples(0);
     
     controller_->set_filter_cutoff(2000);
-    controller_->set_filter_resonance(0.7);
+    controller_->set_filter_resonance(0.9);
     
     controller_->set_arpeggio_enabled(0);
     controller_->set_arpeggio_octaves(1);

@@ -29,7 +29,7 @@ Controller::Controller()
 
   lowpass_filter_.set_cutoff(&filter_cutoff_);
   resonant_filter_.set_cutoff(&filter_cutoff_);
-  sample_num=0;
+//  sample_num=0;
 
   reset_routing();
 }
@@ -41,6 +41,7 @@ void Controller::set_volume(float volume) {
 void Controller::set_sample_rate(float sample_rate) {
   osc1_.set_sample_rate(sample_rate);
   osc2_.set_sample_rate(sample_rate);
+    sample_rate_=sample_rate;
 }
 
 void Controller::NoteOn(int note, float freq) {
@@ -223,15 +224,23 @@ float Controller::GetSample() {
   float value=0;
   for(int i=0;i<key_stack_.GetSize();i++) {
     // Combined oscillators, volume/envelope/modulation
+      if(key_stack_.GetFreq(i)!=key_stack_.GetFreq1(i)) {
+//          key_stack_.SetPos(i, 0);
+//          key_stack_.SetPos(i, key_stack_.GetPos(i)*key_stack_.GetFreq(i)/key_stack_.GetFreq1(i));
+          key_stack_.SetPos(i, key_stack_.GetPos(i)*key_stack_.GetFreq1(i)/key_stack_.GetFreq(i));
+          key_stack_.SetFreq1(i, key_stack_.GetFreq(i));
+      }
     key_frequency_.set_value(key_stack_.GetFreq(i));
     osc1_.set_frequency(&key_frequency_);
-    value += osc1_.GetValue(sample_num);
+    value += osc1_.GetValue(key_stack_.GetPos(i));
     // Clip!
     value = fmaxf(-1.0f, value);
     value = fminf(1.0f, value);
-        
+    long period_samples = sample_rate_ / key_stack_.GetFreq(i);
+      key_stack_.SetPos(i, (key_stack_.GetPos(i)+1) % period_samples );
+      
   }
-  sample_num++;
+//  sample_num++;
     
   // Combined filter with envelope/modulation
   value = lowpass_filter_.GetValue(value);

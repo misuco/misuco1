@@ -42,6 +42,9 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
     int ypaint1=0;
 
     pnt->setPen(Qt::NoPen);
+    pnt->setBrush(Qt::black);
+    pnt->drawRect(0,0,view->width(),view->height());
+    
     for(int y = 0; y < lay->getNrows(); y++) {
         ypaint1=lay->getRowheightpx(y);
         xpaint=0;
@@ -68,10 +71,11 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
             int col1=0;
             int col2=0;
             if(lay->getSegtype(iseg)==1) {
+                col1=(lay->getMidiNote(iseg-1)%12)*23+2;
+                col2=(lay->getMidiNote(iseg+1)%12)*23+2;
+                /* v1/2
                 QLinearGradient linearGrad(QPointF(xpaint, ypaint), QPointF(xpaint+xpaint1, ypaint));
                 if(iseg>0) {
-                    col1=(lay->getMidiNote(iseg-1)%12)*23+2;
-                    col2=(lay->getMidiNote(iseg+1)%12)*23+2;
                     linearGrad.setColorAt(0, QColor::fromHsl(col1,satB,lightB));
                     linearGrad.setColorAt(1, QColor::fromHsl(col2,satB,lightB));
                 } else {
@@ -80,6 +84,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
 
                 }
                 pnt->setBrush(linearGrad);
+                 */
             } else {
                 if(lightB>0) {
                     pnt->setBrush(QColor::fromHsl(col,satB,lightB));
@@ -94,24 +99,33 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
             }
 
             if(lay->getSegtype(iseg)==1) {
+//v1
+//                pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
+                
+//v2
+//                pnt->drawRoundedRect(xpaint,ypaint,xpaint1,ypaint1, 10, 10);
+                
+                //   variant 3
                 pnt->setBrush(QColor::fromHsl(col1,satB,lightB));
                 QPoint points1[4] = {
-                    QPoint(xpaint, ypaint),
-                    QPoint(xpaint+xpaint1, ypaint),
-                    QPoint(xpaint, ypaint+ypaint1),
-                    QPoint(xpaint, ypaint)
+                    QPoint(xpaint, ypaint+10),
+                    QPoint(xpaint+xpaint1, ypaint+10),
+                    QPoint(xpaint, ypaint+ypaint1-20),
+                    QPoint(xpaint, ypaint+10)
                 };
                 pnt->drawPolygon(points1,4);
                 pnt->setBrush(QColor::fromHsl(col2,satB,lightB));
                 QPoint points2[4] = {
-                    QPoint(xpaint+xpaint1, ypaint),
-                    QPoint(xpaint+xpaint1, ypaint+ypaint1),
-                    QPoint(xpaint, ypaint+ypaint1),
-                    QPoint(xpaint+xpaint1, ypaint)
+                    QPoint(xpaint+xpaint1, ypaint+10),
+                    QPoint(xpaint+xpaint1, ypaint+ypaint1-20),
+                    QPoint(xpaint, ypaint+ypaint1-20),
+                    QPoint(xpaint+xpaint1, ypaint+10)
                 };
                 pnt->drawPolygon(points2,4);
+                
             } else {
-                pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
+//                pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
+                pnt->drawRoundedRect(xpaint,ypaint,xpaint1,ypaint1, 10, 10);
             }
 
             pnt->setPen(QColor::fromHsl((col+127)%255,100,100));

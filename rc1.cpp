@@ -85,10 +85,10 @@ RC1::RC1(QWidget *parent) :
     
 //    layout->setFactoryLayout(1);
     
-    layout->setXY(5, 1);
-    layout->setScale(50, 5, 1, true);
+    layout->setXY(9, 2);
+    layout->setScale(50, 18, 1, true);
     
-    setPPS1();
+    setPPS0();
 
     oscin = new QOscServer(3333,this);
     oscin->registerPathObject(this);

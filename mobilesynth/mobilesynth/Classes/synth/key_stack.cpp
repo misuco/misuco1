@@ -17,15 +17,18 @@ bool KeyStack::NoteOn(int note, float freq) {
   assert(size_ < kMaxSize);
   for (int i = 0; i < size_; ++i) {
     if (notes_[i] == note) {
+        freqs1_[i]=freqs_[i];
         freqs_[i]=freq;
-        freqs1_[i]=freq;
+        period_samples_[i]=sample_rate_/freq;
 //      count_[i]++;
       return false;
     }
   }
   notes_[size_] = note;
   freqs_[size_] = freq;
+  freqs1_[size_] = freq;
     pos_[size_] = 0;
+    period_samples_[size_]=sample_rate_/freq;
 //  count_[size_] = 1;
   size_++;
   return true;
@@ -118,9 +121,13 @@ int KeyStack::GetCurrentNote() {
     }
     void KeyStack::SetPos(int num,long value) {
         if (num < size_) {
-            pos_[num]=value;
+            pos_[num]=value%period_samples_[num];
         }
     }
+    void KeyStack::SetSampleRate(float s) {
+        sample_rate_=s;
+    }
+    
 static const int kMiddleAKey(49);
 static const float kNotesPerOctave = 12.0f;
 static const float kMiddleAFrequency = 440.0f;

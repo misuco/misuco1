@@ -10,6 +10,8 @@
 #include "synth/modulation.h"
 #include "synth/oscillator.h"
 
+#include <QDebug>
+
 namespace synth {
   
 Controller::Controller()
@@ -42,6 +44,7 @@ void Controller::set_sample_rate(float sample_rate) {
   osc1_.set_sample_rate(sample_rate);
   osc2_.set_sample_rate(sample_rate);
     sample_rate_=sample_rate;
+    key_stack_.SetSampleRate(sample_rate);
 }
 
 void Controller::NoteOn(int note, float freq) {
@@ -226,9 +229,14 @@ float Controller::GetSample() {
     // Combined oscillators, volume/envelope/modulation
       if(key_stack_.GetFreq(i)!=key_stack_.GetFreq1(i)) {
 //          key_stack_.SetPos(i, 0);
-//          key_stack_.SetPos(i, key_stack_.GetPos(i)*key_stack_.GetFreq(i)/key_stack_.GetFreq1(i));
-          key_stack_.SetPos(i, key_stack_.GetPos(i)*key_stack_.GetFreq1(i)/key_stack_.GetFreq(i));
+          float oldPos=key_stack_.GetPos(i);
+          float divisor=key_stack_.GetFreq1(i)/key_stack_.GetFreq(i);
+          float newPos=oldPos*divisor;
+          long newPosL=(long)newPos;
+          key_stack_.SetPos(i, newPosL);
+//          key_stack_.SetPos(i, key_stack_.GetPos(i)*key_stack_.GetFreq1(i)/key_stack_.GetFreq(i));
           key_stack_.SetFreq1(i, key_stack_.GetFreq(i));
+          qDebug() << "hallo " << oldPos << " " << divisor << " " << newPos << " " << newPosL << " " << key_stack_.GetPos(i);
       }
     key_frequency_.set_value(key_stack_.GetFreq(i));
     osc1_.set_frequency(&key_frequency_);
@@ -237,7 +245,7 @@ float Controller::GetSample() {
     value = fmaxf(-1.0f, value);
     value = fminf(1.0f, value);
     long period_samples = sample_rate_ / key_stack_.GetFreq(i);
-      key_stack_.SetPos(i, (key_stack_.GetPos(i)+1) % period_samples );
+      key_stack_.SetPos(i, key_stack_.GetPos(i)+1 );
       
   }
 //  sample_num++;

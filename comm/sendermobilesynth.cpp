@@ -14,7 +14,7 @@ void SenderMobileSynth::cc(int c, int voiceId, int cc, double v1)
 
 void SenderMobileSynth::pc(int c, int v1)
 {
-
+    sy->pc(v1);
 }
 
 void SenderMobileSynth::note(int c, int voiceId, double f, int vel)

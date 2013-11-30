@@ -51,6 +51,7 @@ public:
     void setXY(int x, int y);
     void setScale(int start, int n, int step, bool withTransistion);
     void setFactoryLayout(int i);
+    void setFactoryProg(int i);
     void setSegH(int i, int v);
     void setAllCtlx(int v);
     void setAllCtly(int v);    
@@ -85,7 +86,7 @@ private:
     int *pressed;
     QString * segText;
     QString * midi2Text;
-    int * segH;
+    int * segH;         // segment color hue
     int width;
     int height;
 

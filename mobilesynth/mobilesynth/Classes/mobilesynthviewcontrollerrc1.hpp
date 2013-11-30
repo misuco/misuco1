@@ -12,6 +12,7 @@ namespace mobilesynthview
     ~Widget();
     void noteOn(int n, float f);
     void noteOff(int n);
+    void pc(int n);
   };
 }
 

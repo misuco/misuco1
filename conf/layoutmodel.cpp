@@ -87,7 +87,7 @@ LayoutModel::LayoutModel()
     nFactoryScales=8;
     factoryScaleStart=new int[nFactoryScales];
     factoryScaleLen=new int[nFactoryScales];
-    factoryScaleValues=new int[48];
+    factoryScaleValues=new int[56];
 
     factoryScaleStart[0]=0;
     factoryScaleLen[0]=12;
@@ -153,14 +153,28 @@ LayoutModel::LayoutModel()
     factoryScaleValues[42]=4;
     factoryScaleValues[43]=3;
     factoryScaleValues[44]=5;
-
+    
     factoryScaleStart[7]=45;
     factoryScaleLen[7]=3;
     factoryScaleValues[45]=3;
     factoryScaleValues[46]=4;
     factoryScaleValues[47]=5;
+    
+    factoryScaleStart[8]=48;
+    factoryScaleLen[8]=4;
+    factoryScaleValues[48]=3;
+    factoryScaleValues[49]=4;
+    factoryScaleValues[50]=3;
+    factoryScaleValues[51]=2;
+    
+    factoryScaleStart[9]=52;
+    factoryScaleLen[9]=4;
+    factoryScaleValues[52]=3;
+    factoryScaleValues[53]=3;
+    factoryScaleValues[54]=4;
+    factoryScaleValues[55]=2;
 
-    setFactoryLayout(0);
+    setFactoryProg(0);
 
 //    setScale(36,127,0,false);
 //    setXY(8,4);
@@ -540,9 +554,6 @@ void LayoutModel::setNoct(int value)
     setFactoryLayout(0);
 }
 
-
-
-
 void LayoutModel::setScale(int start, int n, int step, bool withTransistion = false)
 {
     int nsteps;
@@ -600,6 +611,40 @@ void LayoutModel::setScale(int start, int n, int step, bool withTransistion = fa
                 segtype[i]=0;
             }
             notex1=notex;
+        }
+    }
+}
+
+void LayoutModel::setFactoryProg(int p)
+{
+    // basic config
+    nrows=2;
+    rowheightmax=4;
+    nseg[0]=10;
+    segwidthmax[0]=10;
+    rowheight[0]=1;
+    nseg[1]=9;
+    segwidthmax[1]=9;
+    rowheight[1]=3;
+    
+    // row 1: control basenote
+    for(int i=0;i<10;i++) {
+        segtype[i]=6;
+        midinote[i]=i;
+        chan[i]=i;
+    }
+    
+    // row 2: the scale
+    int calcnote=basenote;
+    for(int i=0;i<nseg[1];i++) {
+        if(i%2==0) {
+            midinote[i+10]=calcnote;
+            note[i+10]=midi2f[calcnote];
+            segText[i+10]=midi2Text[calcnote%12];
+            calcnote+=factoryScaleValues[factoryScaleStart[p]+((i/2)%factoryScaleLen[p])];
+        } else {
+            segtype[i+10]=1;
+            segText[i+10]="";
         }
     }
 }

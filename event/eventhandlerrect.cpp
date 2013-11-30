@@ -159,7 +159,9 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     // 3c. calculate relative frequency
                     double frel=fdiff*xrel;
                     frel+=layout->getNote(iseg-1);
-
+                    
+                    layout->setSegH(iseg, xrel*255);    // store value for painter
+                    
                     if(note[evptr]>0) {
                         snd->pitch(layout->getChan(iseg),ieventout[evptr],frel);
                     } else {
@@ -178,6 +180,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             rc1->getLayout()->setBasescale(layout->getChan(iseg));
         } else if(layout->getSegtype(iseg)==5) {
             rc1->getLayout()->setNoct(layout->getChan(iseg));
+        } else if(layout->getSegtype(iseg)==6) {
+            rc1->setProg(layout->getChan(iseg));
         }
 
     } else if( p->getState() == Qt::TouchPointReleased ) {

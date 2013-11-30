@@ -42,6 +42,10 @@ namespace mobilesynthview
     {
         [impl->wrapped noteOff:n];
     }
+    void Widget::pc(int n)
+    {
+        [impl->wrapped pc:n];
+    }
 }
 
 @implementation mobilesynthViewControllerRc1
@@ -100,6 +104,8 @@ static float GetFrequencyForNote(int note) {
     controller_->set_arpeggio_samples(1);
     controller_->set_arpeggio_step(synth::Arpeggio::UP);
     
+    controller_->set_sample_rate(44100);
+    
     // Format preferred by the iphone (Fixed 8.24)
     outputFormat.mSampleRate = 44100.0;
     outputFormat.mFormatID = kAudioFormatLinearPCM;
@@ -122,7 +128,11 @@ static float GetFrequencyForNote(int note) {
 }
 
 - (void)noteOff:(int)note {
-  controller_->NoteOff(note);
+    controller_->NoteOff(note);
+}
+
+- (void)pc:(int)prog {
+  controller_->set_osc1_wave_type_int(prog%5);
 }
 
 - (void)syncControls {

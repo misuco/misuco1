@@ -4,6 +4,7 @@
 #include "key_stack.h"
 #include <math.h>
 #include <assert.h>
+#include <qDebug.h>
 
 using namespace std;
 
@@ -17,10 +18,10 @@ bool KeyStack::NoteOn(int note, float freq) {
   assert(size_ < kMaxSize);
   for (int i = 0; i < size_; ++i) {
     if (notes_[i] == note) {
-        freqs1_[i]=freqs_[i];
+//        freqs1_[i]=freqs_[i];
         freqs_[i]=freq;
-        period_samples_[i]=sample_rate_/freq;
 //      count_[i]++;
+//        qDebug() << "pitch "  << freq << " " << freqs1_[i];
       return false;
     }
   }
@@ -31,6 +32,7 @@ bool KeyStack::NoteOn(int note, float freq) {
     period_samples_[size_]=sample_rate_/freq;
 //  count_[size_] = 1;
   size_++;
+//    qDebug() << "new note "  << size_;
   return true;
 }
 
@@ -103,6 +105,7 @@ int KeyStack::GetCurrentNote() {
     
     void KeyStack::SetFreq1(int num, float value) {
         if (num < size_) {
+            period_samples_[num]=sample_rate_/freqs_[num];
             freqs1_[num]=value;
         }
     }
@@ -122,6 +125,14 @@ int KeyStack::GetCurrentNote() {
     void KeyStack::SetPos(int num,long value) {
         if (num < size_) {
             pos_[num]=value%period_samples_[num];
+/*            if(pos_[num]==0) {
+                qDebug() << "snap while setPos";
+            }
+ */
+            if(pos_[num]>period_samples_[num]) {
+                qDebug() << " manually set to 0 from " << pos_[num] << " since > " << period_samples_[num] << " at freq " << freqs_[num] << " at sr " << sample_rate_;
+                pos_[num]=0;
+            }
         }
     }
     void KeyStack::SetSampleRate(float s) {

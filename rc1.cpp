@@ -88,7 +88,9 @@ RC1::RC1(QWidget *parent) :
     layout->setXY(9, 2);
     layout->setScale(50, 18, 1, true);
     
-    setPPS0();
+//    setPPS0();
+    
+    setProg(0);
 
     oscin = new QOscServer(3333,this);
     oscin->registerPathObject(this);
@@ -317,14 +319,6 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
             }
         }
 
-        if(path=="/pp0") {
-            this->setPPS0();
-        }
-
-        if(path=="/pp1") {
-            this->setPPS1();
-        }
-
         if(path=="/tuio/2Dcur") {
             qDebug() << "got /tuio/2Dcur signal " << path << " data " << data << " source " << host->toString();
             if(dl.size()>0) {
@@ -385,78 +379,6 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
                 }
             }
         }
-
-        /*
-        if(path=="/misuco/channel") {
-            if(dl.size()==1) {
-                defaultChan=dl.at(0).toInt();
-            }
-        }
-
-
-        if(path=="/misuco/painterrst") {
-            if(dl.size()==1) {
-                int p2rst=dl.at(0).toInt();
-                for(int i=0;i<drw[p2rst]->getParamCount();i++) {
-                    drw[p2rst]->setParam(i,0);
-                }
-            }
-        }
-
-
-        if(path=="/misuco/scale") {
-            if(dl.size()>0) {
-                nscale=dl.size();
-//                neve=nscale;
-//                scale=new int[nscale];
-                quint16 i=0;
-//                quint16 j=0;
-                quint16 offset=0;
-                while(i<nscale) {
-//                    scale[i]=dl.at(j).toInt()+offset;
-                    scale[i]=dl.at(i).toInt();
-                    i++;
-//                    j++;
-//                    if(j>=dl.size()) {
-//                        j=0;
-//                        offset+=12;
-//                    }
-                }
-                scaleRcv();
-                updatePan();
-            }
-        }
-
-        if(path=="/misuco/scale2d") {
-            if(dl.size()>0) {
-                rows=0;
-                nscale=0;
-                neve=nscale;
-                cpr[rows] = 0;
-                quint16 i=0;    // index source
-                quint16 j=0;    // index destination
-                while(i<dl.size()) {
-                    quint16 val=dl.at(i).toInt();
-                    if(val>0) {
-                        eve[j]=dl.at(i).toInt();
-                        evep[j]=defaultProg;
-                        evetype[j]=0;
-                        evechan[j]=defaultChan;
-                        nscale++;
-                        cpr[rows]++;
-                        j++;
-                    } else {
-                        rows++;
-                        cpr[rows]=0;
-                    }
-                    i++;
-                }
-                rows++;
-                updatePan();
-            }
-        }
-
- */
     }
 }
 
@@ -561,122 +483,128 @@ void RC1::setConfigSlideRC()
     layout->setSegH(2,200);
 }
 
-void RC1::setPPS0()
+void RC1::setPPS(int p)
 {
-    painterOn[0]=true;
-    painterOn[1]=false;
-    painterOn[2]=true;
-    painterOn[3]=false;
-    painterOn[4]=false;
-    painterOn[5]=false;
-    painterOn[6]=false;
-
-    for(int i=0;i<pointpainters[1]->getParamCount();i++) {
-        pointpainters[1]->setParam(i,0);
+    switch (p) {
+        case 0:
+            painterOn[0]=true;
+            painterOn[1]=false;
+            painterOn[2]=true;
+            painterOn[3]=false;
+            painterOn[4]=false;
+            painterOn[5]=false;
+            painterOn[6]=false;
+            
+            for(int i=0;i<pointpainters[1]->getParamCount();i++) {
+                pointpainters[1]->setParam(i,0);
+            }
+            // init x/y
+            pointpainters[1]->setParam(1,1);
+            pointpainters[1]->setParam(10,1);
+            
+            // radius 5 constant
+            pointpainters[1]->setParam(16,5);
+            pointpainters[1]->setParam(24,5);
+            
+            // grow width
+            pointpainters[1]->setParam(21,100);
+            // grow height
+            pointpainters[1]->setParam(29,100);
+            
+            // color brush constant
+            pointpainters[1]->setParam(64,0);
+            pointpainters[1]->setParam(69,255);
+            pointpainters[1]->setParam(72,127);
+            pointpainters[1]->setParam(80,140);
+            pointpainters[1]->setParam(88,250);
+            
+            // fade brush out
+            pointpainters[1]->setParam(93,-250);
+            
+            // color pen constant
+            pointpainters[1]->setParam(32,255);
+            pointpainters[1]->setParam(40,255);
+            pointpainters[1]->setParam(48,255);
+            pointpainters[1]->setParam(56,255);
+            
+            // fade pen out
+            pointpainters[1]->setParam(61,-255);
+            
+            // shape circle
+            pointpainters[1]->setParam(104,0);
+            break;
+            
+        case 1:
+            painterOn[0]=true;
+            painterOn[1]=true;
+            painterOn[2]=true;
+            painterOn[3]=false;
+            painterOn[4]=false;
+            painterOn[5]=true;
+            painterOn[6]=false;
+            
+            for(int j=0;j<5;j++) {
+                for(int i=0;i<pointpainters[1]->getParamCount();i++) {
+                    pointpainters[j]->setParam(i,0);
+                }
+                // init x/y
+                pointpainters[j]->setParam(1,1);
+                pointpainters[j]->setParam(10,1);
+                
+                // radius 5 constant
+                pointpainters[j]->setParam(16,5);
+                pointpainters[j]->setParam(24,5);
+                
+                // radius by time
+                pointpainters[j]->setParam(21,80);
+                pointpainters[j]->setParam(29,50);
+                
+                // color pen constant
+                pointpainters[j]->setParam(32,255);
+                pointpainters[j]->setParam(40,255);
+                pointpainters[j]->setParam(48,255);
+                pointpainters[j]->setParam(56,255);
+                // fade pen out
+                pointpainters[j]->setParam(61,-255);
+                
+                // color brush constant
+                pointpainters[j]->setParam(64,0);
+                pointpainters[j]->setParam(72,0);
+                pointpainters[j]->setParam(80,0);
+                pointpainters[j]->setParam(88,250);
+                // fade brush out
+                pointpainters[j]->setParam(93,-250);
+                
+                // rotation constan 45
+                pointpainters[j]->setParam(96,45);
+                // rotate once per lt
+                pointpainters[j]->setParam(101,360);
+                
+                // shape constan 1 (rect)
+                pointpainters[j]->setParam(104,1);
+            }
+            
+            // shape circle
+            pointpainters[4]->setParam(104,0);
+            // brush hue by time
+            pointpainters[4]->setParam(69,255);
+            // brush saturation constant
+            pointpainters[4]->setParam(72,150);
+            // brush light constant
+            pointpainters[4]->setParam(80,120);
+            
+            // shape circle
+            pointpainters[1]->setParam(104,0);
+            // grow width
+            pointpainters[1]->setParam(21,50);
+            // grow height
+            pointpainters[1]->setParam(29,100);
+            
+            break;
+            
+        default:
+            break;
     }
-    // init x/y
-    pointpainters[1]->setParam(1,1);
-    pointpainters[1]->setParam(10,1);
-
-    // radius 5 constant
-    pointpainters[1]->setParam(16,5);
-    pointpainters[1]->setParam(24,5);
-
-    // grow width
-    pointpainters[1]->setParam(21,100);
-    // grow height
-    pointpainters[1]->setParam(29,100);
-
-    // color brush constant
-    pointpainters[1]->setParam(64,0);
-    pointpainters[1]->setParam(69,255);
-    pointpainters[1]->setParam(72,127);
-    pointpainters[1]->setParam(80,140);
-    pointpainters[1]->setParam(88,250);
-
-    // fade brush out
-    pointpainters[1]->setParam(93,-250);
-
-    // color pen constant
-    pointpainters[1]->setParam(32,255);
-    pointpainters[1]->setParam(40,255);
-    pointpainters[1]->setParam(48,255);
-    pointpainters[1]->setParam(56,255);
-
-    // fade pen out
-    pointpainters[1]->setParam(61,-255);
-
-    // shape circle
-    pointpainters[1]->setParam(104,0);
-}
-
-void RC1::setPPS1()
-{
-    painterOn[0]=true;
-    painterOn[1]=true;
-    painterOn[2]=true;
-    painterOn[3]=false;
-    painterOn[4]=false;
-    painterOn[5]=true;
-    painterOn[6]=false;
-
-    for(int j=0;j<5;j++) {
-        for(int i=0;i<pointpainters[1]->getParamCount();i++) {
-            pointpainters[j]->setParam(i,0);
-        }
-        // init x/y
-        pointpainters[j]->setParam(1,1);
-        pointpainters[j]->setParam(10,1);
-
-        // radius 5 constant
-        pointpainters[j]->setParam(16,5);
-        pointpainters[j]->setParam(24,5);
-
-        // radius by time
-        pointpainters[j]->setParam(21,80);
-        pointpainters[j]->setParam(29,50);
-
-        // color pen constant
-        pointpainters[j]->setParam(32,255);
-        pointpainters[j]->setParam(40,255);
-        pointpainters[j]->setParam(48,255);
-        pointpainters[j]->setParam(56,255);
-        // fade pen out
-        pointpainters[j]->setParam(61,-255);
-
-        // color brush constant
-        pointpainters[j]->setParam(64,0);
-        pointpainters[j]->setParam(72,0);
-        pointpainters[j]->setParam(80,0);
-        pointpainters[j]->setParam(88,250);
-        // fade brush out
-        pointpainters[j]->setParam(93,-250);
-
-        // rotation constan 45
-        pointpainters[j]->setParam(96,45);
-        // rotate once per lt
-        pointpainters[j]->setParam(101,360);
-
-        // shape constan 1 (rect)
-        pointpainters[j]->setParam(104,1);
-    }
-
-    // shape circle
-    pointpainters[4]->setParam(104,0);
-    // brush hue by time
-    pointpainters[4]->setParam(69,255);
-    // brush saturation constant
-    pointpainters[4]->setParam(72,150);
-    // brush light constant
-    pointpainters[4]->setParam(80,120);
-
-    // shape circle
-    pointpainters[1]->setParam(104,0);
-    // grow width
-    pointpainters[1]->setParam(21,50);
-    // grow height
-    pointpainters[1]->setParam(29,100);
-
 }
 
 Storage *RC1::getStorage() const
@@ -723,3 +651,11 @@ EventStat *RC1::getEvstat() const
 {
 return evstat;
 }
+
+void RC1::setProg(int p)
+{
+    setPPS(p);
+    layout->setFactoryProg(p);
+    sender->pc(0, p);
+}
+

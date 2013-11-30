@@ -74,6 +74,8 @@ class Controller {
   void set_osc1_level(float level);
   // Set the wave form of oscillator
   void set_osc1_wave_type(Oscillator::WaveType wave_type);
+  void set_osc1_wave_type_int(int w);
+    
   // The oscillator frequency is shifted by the specified amount.
   void set_osc1_octave(OctaveShift octave);
 

@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 #include "paintbgshapes.h"
+#include <QColor.h>
 
 PaintBgShapes::PaintBgShapes()
 {
@@ -40,103 +41,170 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
     int ypaint=0;
     int xpaint1=0;
     int ypaint1=0;
+    
+    int avg_cnt=0;
+    int sum_r=0;
+    int sum_g=0;
+    int sum_b=0;
 
     pnt->setPen(Qt::NoPen);
     pnt->setBrush(Qt::black);
     pnt->drawRect(0,0,view->width(),view->height());
     
     for(int y = 0; y < lay->getNrows(); y++) {
+        for (int x = 0; x < lay->getNseg(y); x ++) {
+            if(lay->getPressed(iseg)) {
+                int col;
+                if(lay->getSegtype(iseg)==1) {
+                    int col1=(lay->getMidiNote(iseg-1)%12)*32;
+                    int col2=(lay->getMidiNote(iseg+1)%12)*32;
+                    if(col2>col1) {
+                        col=col1+((col2-col1)*lay->getSegH(iseg))/255;
+                    } else {
+                        col=col2+((col1-col2)*lay->getSegH(iseg))/255;
+                    }
+//                    qDebug() << col << lay->getSegH(iseg);
+                } else {
+                    col=32*(lay->getMidiNote(iseg)%12);
+                }
+                int lightB=lBrushPsv;
+                int satB=sBrushPsv;
+                QColor c1=QColor::fromHsl(col,satB,lightB);
+                sum_r+=c1.red();
+                sum_g+=c1.green();
+                sum_b+=c1.blue();
+                avg_cnt++;
+            }
+            iseg++;
+        }
+    }
+    
+    if(avg_cnt>0) {
+        sum_r/=avg_cnt;
+        sum_g/=avg_cnt;
+        sum_b/=avg_cnt;
+        pnt->setBrush(QColor::fromRgb(sum_r,sum_g,sum_b));
+        pnt->drawRect(0,0,view->width(),view->height());
+    }
+    
+    iseg=0;
+    for(int y = 0; y < lay->getNrows(); y++) {
         ypaint1=lay->getRowheightpx(y);
         xpaint=0;
-
+        
         for (int x = 0; x < lay->getNseg(y); x ++) {
             xpaint1=lay->getSegwidthpx(iseg);
-            int col=23*(lay->getMidiNote(iseg)%12)+2;
-//            int col=21*(lay->getNote(iseg)%12);
-//            int col=lay->getSegH(iseg);
+            int col=32*(lay->getMidiNote(iseg)%12);
+            //            int col=21*(lay->getNote(iseg)%12);
+            //            int col=lay->getSegH(iseg);
             int lightP=lPenPsv;
             int lightB=lBrushPsv;
             int satP=sPenPsv;
             int satB=sBrushPsv;
-
+            
             if(lay->getPressed(iseg) > 0) {
                 lightP=lPenAct;
                 lightB=lBrushAct;
                 satP=sPenAct;
                 satB=sBrushAct;
             }
-
-//            int col1=lay->getSegH(iseg-1);
-//            int col2=lay->getSegH(iseg+1);
+            
+            //            int col1=lay->getSegH(iseg-1);
+            //            int col2=lay->getSegH(iseg+1);
             int col1=0;
             int col2=0;
             if(lay->getSegtype(iseg)==1) {
-                col1=(lay->getMidiNote(iseg-1)%12)*23+2;
-                col2=(lay->getMidiNote(iseg+1)%12)*23+2;
+                col1=(lay->getMidiNote(iseg-1)%12)*32;
+                col2=(lay->getMidiNote(iseg+1)%12)*32;
                 /* v1/2
-                QLinearGradient linearGrad(QPointF(xpaint, ypaint), QPointF(xpaint+xpaint1, ypaint));
-                if(iseg>0) {
-                    linearGrad.setColorAt(0, QColor::fromHsl(col1,satB,lightB));
-                    linearGrad.setColorAt(1, QColor::fromHsl(col2,satB,lightB));
-                } else {
-                    linearGrad.setColorAt(0, Qt::black);
-                    linearGrad.setColorAt(1, Qt::white);
-
-                }
-                pnt->setBrush(linearGrad);
+                 QLinearGradient linearGrad(QPointF(xpaint, ypaint), QPointF(xpaint+xpaint1, ypaint));
+                 if(iseg>0) {
+                 linearGrad.setColorAt(0, QColor::fromHsl(col1,satB,lightB));
+                 linearGrad.setColorAt(1, QColor::fromHsl(col2,satB,lightB));
+                 } else {
+                 linearGrad.setColorAt(0, Qt::black);
+                 linearGrad.setColorAt(1, Qt::white);
+                 
+                 }
+                 pnt->setBrush(linearGrad);
                  */
-            } else {
+/*            } else {
                 if(lightB>0) {
                     pnt->setBrush(QColor::fromHsl(col,satB,lightB));
                 } else {
                     pnt->setBrush(Qt::NoBrush);
-                }
+                } 
+ */
             }
+            
+            pnt->setBrush(Qt::NoBrush);
+            
             if(lightP>0) {
                 pnt->setPen(QColor::fromHsl(col,satP,lightP));
             } else {
                 pnt->setPen(Qt::NoPen);
             }
-
+            
+            if(lay->getPressed(iseg)) {
+                QColor c1=QColor::fromHsl(col,satB,lightB);
+//                qDebug() << col << " " << satB << " " << lightB;
+                sum_r+=c1.red();
+                sum_g+=c1.green();
+                sum_b+=c1.blue();
+                avg_cnt++;
+//                qDebug() << sum_r << " " << sum_g << " " << sum_b;
+            }
+            
             if(lay->getSegtype(iseg)==1) {
-//v1
-//                pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
+                //v1
+                //                pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
                 
-//v2
-//                pnt->drawRoundedRect(xpaint,ypaint,xpaint1,ypaint1, 10, 10);
+                //v2
+                //                pnt->drawRoundedRect(xpaint,ypaint,xpaint1,ypaint1, 10, 10);
                 
                 //   variant 3
+                
+                /*
                 pnt->setBrush(QColor::fromHsl(col1,satB,lightB));
+                 */
                 QPoint points1[4] = {
                     QPoint(xpaint, ypaint+10),
-                    QPoint(xpaint+xpaint1, ypaint+10),
-                    QPoint(xpaint, ypaint+ypaint1-20),
+                    QPoint(xpaint+xpaint1-2, ypaint+10),
+                    QPoint(xpaint, ypaint+ypaint1-23),
                     QPoint(xpaint, ypaint+10)
                 };
+                
+                pnt->setPen(QColor::fromHsl(col1,satP,lightP));
                 pnt->drawPolygon(points1,4);
+                
+                /*
                 pnt->setBrush(QColor::fromHsl(col2,satB,lightB));
+                 */
                 QPoint points2[4] = {
-                    QPoint(xpaint+xpaint1, ypaint+10),
-                    QPoint(xpaint+xpaint1, ypaint+ypaint1-20),
+                    QPoint(xpaint+xpaint1-1, ypaint+10),
+                    QPoint(xpaint+xpaint1-1, ypaint+ypaint1-20),
                     QPoint(xpaint, ypaint+ypaint1-20),
-                    QPoint(xpaint+xpaint1, ypaint+10)
+                    QPoint(xpaint+xpaint1-1, ypaint+10)
                 };
+                
+                pnt->setPen(QColor::fromHsl(col2,satP,lightP));
                 pnt->drawPolygon(points2,4);
                 
             } else {
-//                pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
-                pnt->drawRoundedRect(xpaint,ypaint,xpaint1,ypaint1, 10, 10);
+                //                pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
+                pnt->drawRoundedRect(xpaint,ypaint,xpaint1-1,ypaint1, 10, 10);
             }
-
-            pnt->setPen(QColor::fromHsl((col+127)%255,100,100));
+            
+            pnt->setPen(QColor::fromHsl((col+180)%360,100,100));
             pnt->setFont(QFont("Ubuntu",20));
             pnt->drawText(xpaint,ypaint,xpaint1,ypaint1,Qt::AlignCenter,*lay->getSegText(iseg));
-
+            
             xpaint+=xpaint1;
             iseg++;
         }
         ypaint+=ypaint1;
     }
+    
 }
 
 int PaintBgShapes::getParamCount() {

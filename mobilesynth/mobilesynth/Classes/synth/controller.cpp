@@ -51,10 +51,12 @@ void Controller::NoteOn(int note, float freq) {
 //  assert(note >= 1);
 //  assert(note <= 88);
   key_stack_.NoteOn(note, freq);
+    /*
+     */
   if (key_stack_.size() == 1) {
     // This is the first note played, so start attacking
-    key_lag_processor_.reset();
-    arpeggio_.reset();
+    // key_lag_processor_.reset();
+    // arpeggio_.reset();
     volume_envelope()->NoteOn();
     filter_envelope()->NoteOn();
   }
@@ -89,10 +91,30 @@ void Controller::NoteOff() {
 void Controller::set_osc1_level(float level) {
   combined_osc_.set_osc1_level(level);
 }
-
-void Controller::set_osc1_wave_type(Oscillator::WaveType wave_type) {
-  osc1_.set_wave_type(wave_type);
-}
+    
+    void Controller::set_osc1_wave_type(Oscillator::WaveType wave_type) {
+        osc1_.set_wave_type(wave_type);
+    }
+    
+    void Controller::set_osc1_wave_type_int(int w) {
+        switch (w) {
+            case 0:
+                osc1_.set_wave_type(Oscillator::SINE);
+                break;
+            case 1:
+                osc1_.set_wave_type(Oscillator::SQUARE);
+                break;
+            case 2:
+                osc1_.set_wave_type(Oscillator::SAWTOOTH);
+                break;
+            case 3:
+                osc1_.set_wave_type(Oscillator::TRIANGLE);
+                break;
+            default:
+                osc1_.set_wave_type(Oscillator::REVERSE_SAWTOOTH);
+                break;
+        }
+    }
 
 void Controller::set_osc1_octave(OctaveShift octave) {
   combined_osc_.set_osc1_octave((int)octave);
@@ -220,44 +242,58 @@ void Controller::GetFloatSamples(float* buffer, int size) {
 }
 
 float Controller::GetSample() {
+    /*
   if (volume_envelope()->released() || filter_envelope()->released()) {
     return 0;
   }
-  
+  */
+    
   float value=0;
   for(int i=0;i<key_stack_.GetSize();i++) {
     // Combined oscillators, volume/envelope/modulation
+/*      if(key_stack_.GetPos(i)==0) {
+          qDebug() << "snap loop ";
+      }
+*/
       if(key_stack_.GetFreq(i)!=key_stack_.GetFreq1(i)) {
-//          key_stack_.SetPos(i, 0);
+/*
           float oldPos=key_stack_.GetPos(i);
           float divisor=key_stack_.GetFreq1(i)/key_stack_.GetFreq(i);
           float newPos=oldPos*divisor;
           long newPosL=(long)newPos;
           key_stack_.SetPos(i, newPosL);
 //          key_stack_.SetPos(i, key_stack_.GetPos(i)*key_stack_.GetFreq1(i)/key_stack_.GetFreq(i));
-          key_stack_.SetFreq1(i, key_stack_.GetFreq(i));
-          qDebug() << "hallo " << oldPos << " " << divisor << " " << newPos << " " << newPosL << " " << key_stack_.GetPos(i);
+ */
+//          qDebug() << key_stack_.GetFreq(i) << " != " << key_stack_.GetFreq1(i) << i;
+          if(key_stack_.GetPos(i)==0) {
+              key_stack_.SetFreq1(i, key_stack_.GetFreq(i));
+//              qDebug() << "snap change";
+          }
+          key_frequency_.set_value(key_stack_.GetFreq1(i));
+      } else {
+          key_frequency_.set_value(key_stack_.GetFreq(i));
       }
-    key_frequency_.set_value(key_stack_.GetFreq(i));
     osc1_.set_frequency(&key_frequency_);
     value += osc1_.GetValue(key_stack_.GetPos(i));
     // Clip!
     value = fmaxf(-1.0f, value);
     value = fminf(1.0f, value);
-    long period_samples = sample_rate_ / key_stack_.GetFreq(i);
-      key_stack_.SetPos(i, key_stack_.GetPos(i)+1 );
+//    long period_samples = sample_rate_ / key_stack_.GetFreq(i);
+    key_stack_.SetPos(i, key_stack_.GetPos(i)+1 );
       
   }
 //  sample_num++;
     
   // Combined filter with envelope/modulation
-  value = lowpass_filter_.GetValue(value);
-  value = resonant_filter_.GetValue(value);
+  // value = lowpass_filter_.GetValue(value);
+  // value = resonant_filter_.GetValue(value);
+    
   // Clip!
   value = fmaxf(-1.0f, value);
   value = fminf(1.0f, value);
   // Adjust volume
-  value *= volume_.GetValue();
+  // value *= volume_.GetValue();
+    
   return value;
 }
 

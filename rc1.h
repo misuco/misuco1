@@ -54,6 +54,8 @@ public:
 
     long getTtl() const;
     void setTtl(long value);
+    
+    void setProg(int);
 
 protected:
     /*  QGLWidget implementation */
@@ -106,8 +108,7 @@ private:
     void setConfigTransistions();
     void setConfigPdjam2013();
     void setConfigSlideRC();
-    void setPPS0();
-    void setPPS1();
+    void setPPS(int);
 };
 
 #endif // VIEW_H

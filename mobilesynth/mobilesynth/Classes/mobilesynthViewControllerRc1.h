@@ -28,6 +28,7 @@ namespace synth { class LowPass; }
 
 - (void)noteOn:(int)note :(float)freq;
 - (void)noteOff:(int)note;
+- (void)pc:(int)prog;
 - (OSStatus)generateSamples:(AudioBufferList*)buffers;
 
 // For control panel

@@ -24,7 +24,7 @@ void Oscillator::set_wave_type(WaveType wave_type) {
   wave_type_ = wave_type;
 } 
 
-void Oscillator::set_frequency(Parameter* frequency) {
+void Oscillator::set_frequency(float frequency) {
   frequency_ = frequency;
 }
 
@@ -32,11 +32,11 @@ float Oscillator::GetValue(int sample_num) {
   if (frequency_ == NULL) {
     return 0.0f;
   }
-  float freq = frequency_->GetValue();
-  if (freq < 0.01f) {
+//  float freq = frequency_->GetValue();
+  if (frequency_ < 0.01f) {
     return 0.0f;
   }
-  long period_samples = sample_rate_ / freq;
+  long period_samples = sample_rate_ / frequency_;
   sample_num = sample_num % (long)period_samples;
   if (period_samples == 0) {
     return 0.0f;
@@ -71,7 +71,7 @@ float Oscillator::GetValue(int sample_num) {
   return value;
 }
 
-
+/*
 KeyboardOscillator::KeyboardOscillator(Oscillator* osc1,
                                        Oscillator* osc2,
                                        Parameter* frequency)
@@ -125,5 +125,5 @@ float KeyboardOscillator::GetValue() {
   value = fminf(value, 1.0f);
   return fmaxf(value, -1.0f);
 }
-
+*/
 }  // namespace synth

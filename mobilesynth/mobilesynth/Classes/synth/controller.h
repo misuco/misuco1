@@ -17,7 +17,7 @@
 
 namespace synth {
 
-class Volume : public Parameter {
+    /*class Volume : public Parameter {
  public:
   Volume();
   virtual ~Volume();
@@ -33,7 +33,7 @@ class Volume : public Parameter {
   float level_;
   Envelope envelope_;
   Parameter* modulation_;
-};
+};*/
 
 class Controller {
  public:
@@ -52,9 +52,9 @@ class Controller {
   void NoteOff();  // Invoked when all notes have been released as a fallback
   
   // True when nothing is playing
-  bool released() {
+  /*bool released() {
     return (volume_envelope()->released() || filter_envelope()->released());
-  }
+  }*/
   
   void set_sample_rate(float sample_rate);  // For testing
 
@@ -71,24 +71,25 @@ class Controller {
   // OSC 1
 
   // Set the volume of oscillator
-  void set_osc1_level(float level);
+  // void set_osc1_level(float level);
   // Set the wave form of oscillator
   void set_osc1_wave_type(Oscillator::WaveType wave_type);
   void set_osc1_wave_type_int(int w);
     
   // The oscillator frequency is shifted by the specified amount.
-  void set_osc1_octave(OctaveShift octave);
+//  void set_osc1_octave(OctaveShift octave);
 
   // OSC 2
-  void set_osc2_level(float level);
+/*  void set_osc2_level(float level);
   void set_osc2_wave_type(Oscillator::WaveType wave_type);
   void set_osc2_octave(OctaveShift octave);
   void set_osc2_shift(int cents);
 
   void set_osc_sync(bool sync);
-
+ 
   Envelope* volume_envelope() { return volume_.envelope(); }
   Envelope* filter_envelope() { return filter_cutoff_.envelope(); }
+ */
 
   enum ModulationSource {
     LFO_SRC_SQUARE,
@@ -117,14 +118,16 @@ class Controller {
   
   // [0.0, 1.0]
   void set_filter_resonance(float value);
-
+    
+  /*
   void set_glide_samples(long samples);
   
   void set_arpeggio_enabled(bool enabled);
   void set_arpeggio_samples(long samples);
   void set_arpeggio_octaves(int octaves);
   void set_arpeggio_step(Arpeggio::Step step);
-
+  */
+    
   // Get a single sample
   float GetSample();
 
@@ -136,18 +139,18 @@ class Controller {
   void reset_routing();
 
   KeyStack key_stack_;
-  MutableParameter key_frequency_;
+//  MutableParameter key_frequency_;
 
-  bool arpeggio_enabled_;
-  Arpeggio arpeggio_;
-  LagProcessor key_lag_processor_;
+//  bool arpeggio_enabled_;
+//  Arpeggio arpeggio_;
+//  LagProcessor key_lag_processor_;
 
   Oscillator osc1_;
-  Oscillator osc2_;
+//  Oscillator osc2_;
 
   // The two oscillators combined
-  KeyboardOscillator combined_osc_;
-  Volume volume_;
+  //  KeyboardOscillator combined_osc_;
+  // Volume volume_;
 
   bool osc_sync_;
 //  long sample_num;
@@ -163,6 +166,7 @@ class Controller {
   FilterCutoff filter_cutoff_;
   LowPassFilter lowpass_filter_;
   ResonantFilter resonant_filter_;
+    
 };
 
 }  // namespace synth

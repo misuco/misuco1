@@ -10,16 +10,24 @@ using namespace std;
 
 namespace synth {
 
-KeyStack::KeyStack() : size_(0) { }
+KeyStack::KeyStack() : size_(0) {
+    for(int i=0;i<kMaxSize;i++) {
+        for(int j=0;j<kNumEnv;j++) {
+            envelopes[j][i]=new Envelope();
+        }
+        filters[i]=new LowPassFilter();
+    }
+}
 
 KeyStack::~KeyStack() { }
-
+    
 bool KeyStack::NoteOn(int note, float freq) {
   assert(size_ < kMaxSize);
   for (int i = 0; i < size_; ++i) {
     if (notes_[i] == note) {
 //        freqs1_[i]=freqs_[i];
         freqs_[i]=freq;
+        period_samples_[i]=sample_rate_/freqs_[i];
 //      count_[i]++;
 //        qDebug() << "pitch "  << freq << " " << freqs1_[i];
       return false;
@@ -30,36 +38,74 @@ bool KeyStack::NoteOn(int note, float freq) {
   freqs1_[size_] = freq;
     pos_[size_] = 0;
     period_samples_[size_]=sample_rate_/freq;
+    
+    for(int i=0;i<kNumEnv;i++) {
+        envelopes[i][size_]->set_attack(env_a[i]);
+        envelopes[i][size_]->set_decay(env_d[i]);
+        envelopes[i][size_]->set_sustain(env_s[i]);
+        envelopes[i][size_]->set_release(env_r[i]);
+        envelopes[i][size_]->NoteOn();
+    }
+    filters[size_]->
 //  count_[size_] = 1;
   size_++;
 //    qDebug() << "new note "  << size_;
   return true;
 }
-
-bool KeyStack::NoteOff(int note) {
-  for (int i = 0; i < size_; ++i) {
-    if (notes_[i] == note) {
-//      count_[i]--;
-//      if (count_[i] == 0) {
-        // Remove this element from the stack -- copy all elements above
-        for (int j = i; j < size_ - 1; ++j) {
-          notes_[j] = notes_[j + 1];
-//          count_[j] = count_[j + 1];
-            freqs_[j] = freqs_[j + 1];
-            freqs1_[j] = freqs1_[j + 1];
-            pos_[j] = pos_[j + 1];
+    
+    bool KeyStack::NoteOff(int note) {
+        for (int i = 0; i < size_; ++i) {
+            if (notes_[i] == note) {
+                    for(int k=0;k<kNumEnv;k++) {
+                        envelopes[k][i]->NoteOff();
+                    }
+                return true;
+            }
         }
-        size_--;
-//      }
-      return true;
+        // The note wasn't on the stack.  The multi-touch events on the iphone seem
+        // to be flaky, so we don't worry if we were asked to remove something that
+        // was not on the stack.  The controller also calls our clear() method when
+        // no touch events are left as a fallback. 
+        return false;
     }
-  }
-  // The note wasn't on the stack.  The multi-touch events on the iphone seem
-  // to be flaky, so we don't worry if we were asked to remove something that
-  // was not on the stack.  The controller also calls our clear() method when
-  // no touch events are left as a fallback. 
-  return false;
-}
+    
+    bool KeyStack::NoteClear(int note) {
+        for (int i = 0; i < size_; ++i) {
+            if (notes_[i] == note) {
+                //      count_[i]--;
+                //      if (count_[i] == 0) {
+                // Remove this element from the stack -- copy all elements above
+                Envelope * ex[kNumEnv];
+                for(int k=0;k<kNumEnv;k++) {
+                    ex[k]=envelopes[k][i];
+                }
+                for (int j = i; j < size_ - 1; ++j) {
+                    notes_[j] = notes_[j + 1];
+                    //          count_[j] = count_[j + 1];
+                    freqs_[j] = freqs_[j + 1];
+                    freqs1_[j] = freqs1_[j + 1];
+                    period_samples_[j] = period_samples_[j+1];
+                    pos_[j] = pos_[j + 1];
+                    for(int k=0;k<kNumEnv;k++) {
+                        envelopes[k][j]=(envelopes[k][j + 1]);
+                        
+//                        envelopes[k][j]->transfer(envelopes[k][j + 1]);
+                    }
+                }
+                for(int k=0;k<kNumEnv;k++) {
+                    envelopes[k][size_-1]=ex[k];
+                }
+                size_--;
+                //      }
+                return true;
+            }
+        }
+        // The note wasn't on the stack.  The multi-touch events on the iphone seem
+        // to be flaky, so we don't worry if we were asked to remove something that
+        // was not on the stack.  The controller also calls our clear() method when
+        // no touch events are left as a fallback. 
+        return false;
+    }
   
 bool KeyStack::IsNoteInStack(int note) {
   for (int i = 0; i < size_; ++i) {
@@ -105,7 +151,6 @@ int KeyStack::GetCurrentNote() {
     
     void KeyStack::SetFreq1(int num, float value) {
         if (num < size_) {
-            period_samples_[num]=sample_rate_/freqs_[num];
             freqs1_[num]=value;
         }
     }
@@ -135,6 +180,7 @@ int KeyStack::GetCurrentNote() {
             }
         }
     }
+    
     void KeyStack::SetSampleRate(float s) {
         sample_rate_=s;
     }

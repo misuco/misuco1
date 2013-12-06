@@ -43,6 +43,15 @@ class Envelope : public Parameter {
 
   // True when the note has finished playing.
   bool released() const;
+    
+    void transfer(Envelope * e) {
+        current_=e->current_;
+        attack_=e->attack_;
+        decay_=e->decay_;
+        sustain_=e->sustain_;
+        release_=e->release_;
+        state_=e->state_;
+    }
 
  private:
   enum State {

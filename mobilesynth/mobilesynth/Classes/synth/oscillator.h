@@ -27,7 +27,7 @@ class Oscillator : public Parameter {
   };
   void set_wave_type(WaveType wave_type);
 
-  void set_frequency(Parameter* frequency);
+  void set_frequency(float frequency);
 
   // Override the default sample rate
   void set_sample_rate(long sample_rate);
@@ -45,12 +45,13 @@ class Oscillator : public Parameter {
 
  private:
   WaveType wave_type_;
-  Parameter* frequency_;
+  float frequency_;
 
   long sample_rate_;  
   long sample_num_;
 };
 
+/*
 // Groups logic related to running the oscillators from keyboard input.
 class KeyboardOscillator : public Parameter {
  public:
@@ -101,7 +102,7 @@ class KeyboardOscillator : public Parameter {
   Oscillator* osc2_;
 };
 
-
+*/
 }  // namespace synth
 
 #endif  // __OSCILLATOR_H__

@@ -618,6 +618,7 @@ void LayoutModel::setScale(int start, int n, int step, bool withTransistion = fa
 void LayoutModel::setFactoryProg(int p)
 {
     // basic config
+    nsegs=19;
     nrows=2;
     rowheightmax=4;
     nseg[0]=10;

@@ -65,7 +65,7 @@ static float GetFrequencyForNote(int note) {
     self = [super init];
     
     controller_ = new synth::Controller;
-    
+    /*
     controller_->filter_envelope()->set_attack(400);
     controller_->filter_envelope()->set_decay(100);
     controller_->filter_envelope()->set_sustain(1);
@@ -75,35 +75,36 @@ static float GetFrequencyForNote(int note) {
     controller_->volume_envelope()->set_decay(100);
     controller_->volume_envelope()->set_sustain(0.5);
     controller_->volume_envelope()->set_release(40000);
-        
+    */
+    
     controller_->set_modulation_amount(0.7);
     controller_->set_modulation_frequency(0.3);
     controller_->set_modulation_source(synth::Controller::LFO_SRC_TRIANGLE);
     controller_->set_modulation_destination(synth::Controller::LFO_DEST_FILTER);
     
-    controller_->set_osc2_shift(0);
-    controller_->set_osc_sync(0);
+    //controller_->set_osc2_shift(0);
+    //controller_->set_osc_sync(0);
     
     // OSC 1
-    controller_->set_osc1_level(0.5);
+    // controller_->set_osc1_level(0.5);
     controller_->set_osc1_wave_type(synth::Oscillator::SAWTOOTH);
-    controller_->set_osc1_octave(synth::Controller::OCTAVE_1);
+    //controller_->set_osc1_octave(synth::Controller::OCTAVE_1);
     
     // OSC 2
-    controller_->set_osc2_level(0);
-    controller_->set_osc2_wave_type(synth::Oscillator::TRIANGLE);
-    controller_->set_osc2_octave(synth::Controller::OCTAVE_1);
+    //controller_->set_osc2_level(0);
+    //controller_->set_osc2_wave_type(synth::Oscillator::TRIANGLE);
+    //controller_->set_osc2_octave(synth::Controller::OCTAVE_1);
     
-    controller_->set_glide_samples(0);
+    //controller_->set_glide_samples(0);
     
     controller_->set_filter_cutoff(2000);
     controller_->set_filter_resonance(0.9);
     
-    controller_->set_arpeggio_enabled(0);
+/*    controller_->set_arpeggio_enabled(0);
     controller_->set_arpeggio_octaves(1);
     controller_->set_arpeggio_samples(1);
     controller_->set_arpeggio_step(synth::Arpeggio::UP);
-    
+    */
     controller_->set_sample_rate(44100);
     
     // Format preferred by the iphone (Fixed 8.24)
@@ -145,11 +146,13 @@ static float GetFrequencyForNote(int note) {
   assert(buffers->mNumberBuffers == 1);  // mono output  
   AudioBuffer* outputBuffer = &buffers->mBuffers[0];
   SInt32* data = (SInt32*)outputBuffer->mData;
+    /*
   if (controller_->released()) {
     // Silence
     memset(data, 0, outputBuffer->mDataByteSize);
     return noErr;
   }
+     */
   int samples = outputBuffer->mDataByteSize / sizeof(SInt32);
   float buffer[samples];
   controller_->GetFloatSamples(buffer, samples);

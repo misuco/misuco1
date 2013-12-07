@@ -15,7 +15,11 @@ KeyStack::KeyStack() : size_(0) {
         for(int j=0;j<kNumEnv;j++) {
             envelopes[j][i]=new Envelope();
         }
-        filters[i]=new LowPassFilter();
+        cutoffs[i]=new FilterCutoff();
+        cutoffs[i]->set_envelope(envelopes[1][i]);
+        cutoffs[i]->set_cutoff(5000);
+        filters[i]=new ResonantFilter();
+        filters[i]->set_cutoff(cutoffs[i]);
     }
 }
 
@@ -46,7 +50,6 @@ bool KeyStack::NoteOn(int note, float freq) {
         envelopes[i][size_]->set_release(env_r[i]);
         envelopes[i][size_]->NoteOn();
     }
-    filters[size_]->
 //  count_[size_] = 1;
   size_++;
 //    qDebug() << "new note "  << size_;
@@ -76,9 +79,13 @@ bool KeyStack::NoteOn(int note, float freq) {
                 //      if (count_[i] == 0) {
                 // Remove this element from the stack -- copy all elements above
                 Envelope * ex[kNumEnv];
+                Filter * fi;
+                FilterCutoff * cu;
                 for(int k=0;k<kNumEnv;k++) {
                     ex[k]=envelopes[k][i];
                 }
+                fi=filters[i];
+                cu=cutoffs[i];
                 for (int j = i; j < size_ - 1; ++j) {
                     notes_[j] = notes_[j + 1];
                     //          count_[j] = count_[j + 1];
@@ -88,13 +95,15 @@ bool KeyStack::NoteOn(int note, float freq) {
                     pos_[j] = pos_[j + 1];
                     for(int k=0;k<kNumEnv;k++) {
                         envelopes[k][j]=(envelopes[k][j + 1]);
-                        
-//                        envelopes[k][j]->transfer(envelopes[k][j + 1]);
                     }
+                    filters[j]=(filters[j + 1]);
+                    cutoffs[j]=(cutoffs[j + 1]);
                 }
                 for(int k=0;k<kNumEnv;k++) {
                     envelopes[k][size_-1]=ex[k];
                 }
+                cutoffs[size_-1]=cu;
+                filters[size_-1]=fi;
                 size_--;
                 //      }
                 return true;

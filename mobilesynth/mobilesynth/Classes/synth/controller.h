@@ -163,9 +163,9 @@ class Controller {
   MutableParameter modulation_amount_;
   LFO modulation_;
 
-  FilterCutoff filter_cutoff_;
+/*  FilterCutoff filter_cutoff_;
   LowPassFilter lowpass_filter_;
-  ResonantFilter resonant_filter_;
+  ResonantFilter resonant_filter_;*/
     
 };
 

@@ -109,10 +109,10 @@ LayoutModel::LayoutModel()
     factoryScaleValues[12]=2;
     factoryScaleValues[13]=2;
     factoryScaleValues[14]=1;
+    factoryScaleValues[15]=2;
     factoryScaleValues[16]=2;
     factoryScaleValues[17]=2;
-    factoryScaleValues[18]=2;
-    factoryScaleValues[19]=1;
+    factoryScaleValues[18]=1;
 
     factoryScaleStart[2]=20;
     factoryScaleLen[2]=7;

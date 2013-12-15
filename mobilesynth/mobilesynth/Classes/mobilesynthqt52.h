@@ -1,0 +1,51 @@
+#ifndef MOBILESYNTHQT52_H
+#define MOBILESYNTHQT52_H
+
+
+#include <QAudioOutput>
+#include <QByteArray>
+#include <QComboBox>
+#include <QIODevice>
+#include <QLabel>
+#include <QMainWindow>
+#include <QObject>
+#include <QPushButton>
+#include <QSlider>
+#include <QTimer>
+
+#include "mobilesynth/mobilesynth/Classes/synth/controller.h"
+
+class mobileSynthQT52 : public QIODevice
+{
+    Q_OBJECT
+
+public:
+    mobileSynthQT52();
+    ~mobileSynthQT52();
+
+    void start();
+    void stop();
+
+    qint64 readData(char *data, qint64 maxlen);
+    qint64 writeData(const char *data, qint64 len);
+    qint64 bytesAvailable() const;
+
+    void noteOn(int vid, float f);
+    void noteOff(int vid);
+
+public slots:
+    void pullTimerExpired();
+
+private:
+//    void generateData(const QAudioFormat &format, qint64 durationUs, int sampleRate);
+//    qint64 m_pos;
+    QTimer *m_pullTimer;
+    QByteArray m_buffer;
+    synth::Controller * syctl;
+    QAudioOutput *m_audioOutput;
+    QIODevice *m_output; // not owned
+    QAudioFormat m_format;
+    QAudioDeviceInfo m_device;
+};
+
+#endif // MOBILESYNTHQT52_H

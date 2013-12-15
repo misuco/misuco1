@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui opengl network
+QT       += core gui opengl network multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -51,7 +51,8 @@ SOURCES += main.cpp\
     mobilesynth/mobilesynth/Classes/synth/modulation.cpp \
     mobilesynth/mobilesynth/Classes/synth/oscillator.cpp \
     mobilesynth/mobilesynth/Classes/synth/parameter.cpp \
-    comm/sendermobilesynth.cpp
+    comm/sendermobilesynth.cpp \
+    mobilesynth/mobilesynth/Classes/mobilesynthqt52.cpp
 
 HEADERS  += \
     storage.h \
@@ -97,7 +98,8 @@ HEADERS  += \
     mobilesynth/mobilesynth/Classes/synth/parameter.h \
     mobilesynth/mobilesynth/Classes/synth/test_util.h \
     comm/sendermobilesynth.h \
-    mobilesynth/mobilesynth/Classes/mobilesynthviewcontrollerrc1.hpp
+    mobilesynth/mobilesynth/Classes/mobilesynthviewcontrollerrc1.hpp \
+    mobilesynth/mobilesynth/Classes/mobilesynthqt52.h
 
 OTHER_FILES += \
     android/res/values-ru/strings.xml \

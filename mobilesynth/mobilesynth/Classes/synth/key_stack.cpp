@@ -4,7 +4,7 @@
 #include "key_stack.h"
 #include <math.h>
 #include <assert.h>
-#include <qDebug.h>
+#include <QDebug>
 
 using namespace std;
 

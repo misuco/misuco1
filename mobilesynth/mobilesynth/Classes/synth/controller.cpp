@@ -11,6 +11,7 @@
 #include "synth/oscillator.h"
 
 #include <QDebug>
+#include <qendian.h>
 
 namespace synth {
     
@@ -36,6 +37,7 @@ namespace synth {
         
         key_stack_.setADSR(0, 1000, 1000, 0.8, 80000);
         key_stack_.setADSR(1, 80000,   0,   1, 80000);
+        format=0;
         reset_routing();
     }
     /*
@@ -245,7 +247,68 @@ namespace synth {
             buffer[i] = GetSample();
         }
     }
-    
+
+    void Controller::GetCharSamples(char* buffer, int size) {
+
+        if(format!=0) {
+//            qint64 length = (format.sampleRate() * format.channelCount() * (format.sampleSize() / 8))
+//                                * durationUs / 100000;
+
+            Q_ASSERT(size % sampleBytes == 0);
+            Q_UNUSED(sampleBytes) // suppress warning in release builds
+
+//            m_buffer.resize(length);
+            unsigned char *ptr = reinterpret_cast<unsigned char *>(buffer);
+    //        int sampleIndex = 0;
+
+            while (size) {
+                qreal x=GetSample();
+                for (int i=0; i<format->channelCount(); ++i) {
+                    if (format->sampleSize() == 8 && format->sampleType() == QAudioFormat::UnSignedInt) {
+                        const quint8 value = static_cast<quint8>((1.0 + x) / 2 * 255);
+                        *reinterpret_cast<quint8*>(ptr) = value;
+                    } else if (format->sampleSize() == 8 && format->sampleType() == QAudioFormat::SignedInt) {
+                        const qint8 value = static_cast<qint8>(x * 127);
+                        *reinterpret_cast<quint8*>(ptr) = value;
+                    } else if (format->sampleSize() == 16 && format->sampleType() == QAudioFormat::UnSignedInt) {
+                        quint16 value = static_cast<quint16>((1.0 + x) / 2 * 65535);
+                        if (format->byteOrder() == QAudioFormat::LittleEndian)
+                            qToLittleEndian<quint16>(value, ptr);
+                        else
+                            qToBigEndian<quint16>(value, ptr);
+                    } else if (format->sampleSize() == 16 && format->sampleType() == QAudioFormat::SignedInt) {
+                        qint16 value = static_cast<qint16>(x * 32767);
+                        if (format->byteOrder() == QAudioFormat::LittleEndian)
+                            qToLittleEndian<qint16>(value, ptr);
+                        else
+                            qToBigEndian<qint16>(value, ptr);
+                    }
+
+                    ptr += channelBytes;
+                    size -= channelBytes;
+                }
+            }
+        }
+
+        /* ---- known as working
+        int len=size/2;
+        unsigned char *ptr = reinterpret_cast<unsigned char *>(buffer);
+        for (int i = 0; i < len; ++i) {
+            float sample=GetSample();
+            qint16 value = static_cast<qint16>(sample * 32767);
+            qToLittleEndian<qint16>(value, ptr);
+            ptr+=2;
+        }
+        */
+    }
+
+    void Controller::setFormat(QAudioFormat *f)
+    {
+        format=f;
+        channelBytes = format->sampleSize() / 8;
+        sampleBytes = format->channelCount() * channelBytes;
+    }
+
     float Controller::GetSample() {
         /*
          if (volume_envelope()->released() || filter_envelope()->released()) {

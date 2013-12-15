@@ -38,7 +38,7 @@ RC1::RC1(QWidget *parent) :
     setAttribute(Qt::WA_AcceptTouchEvents,true);
     qDebug() << "View() size:" << width() << " " << height();
     eventId = 1;
-    nomouse = true;
+    nomouse = false;
     ttl=2000;
 
     storage=new Storage();
@@ -101,7 +101,7 @@ RC1::RC1(QWidget *parent) :
     fpsT.start();
     fcnt=0;
 
-    setWindowState(Qt::WindowFullScreen);
+    // setWindowState(Qt::WindowFullScreen);
 }
 
 void RC1::paintEvent(QPaintEvent *event)

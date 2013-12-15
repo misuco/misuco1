@@ -3,7 +3,11 @@
 
 #include "rc1.h"
 #include "isender.h"
+#ifdef IOS
 #include "../mobilesynth/mobilesynth/Classes/mobilesynthviewcontrollerrc1.hpp"
+#else
+#include "../mobilesynthqt52.h"
+#endif
 
 class SenderMobileSynth : public ISender
 {
@@ -16,7 +20,11 @@ public:
     virtual void setDestination(QHostAddress a,int p);
     
 private:
+#ifdef IOS
     mobilesynthview::Widget * sy;
+#else
+    mobileSynthQT52 * sy;
+#endif
 };
 
 #endif // SENDERMOBILESYNTH_H

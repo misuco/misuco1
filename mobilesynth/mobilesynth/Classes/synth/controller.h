@@ -6,6 +6,8 @@
 #ifndef __CONTROLLER_H__
 #define __CONTROLLER_H__
 
+#include <QAudioFormat>
+
 #include "synth/arpeggio.h"
 #include "synth/envelope.h"
 #include "synth/filter.h"
@@ -131,9 +133,12 @@ class Controller {
   // Get a single sample
   float GetSample();
 
-  void GetFloatSamples(float* buffer, int size);
-  
- private:
+  void GetFloatSamples(float* buffer, int size); 
+  void GetCharSamples(char *buffer, int size);
+
+  void setFormat(QAudioFormat * f);
+
+private:
   // Invoked when one of the routing parameters changes, such as the source
   // or destination of modulation.
   void reset_routing();
@@ -162,6 +167,11 @@ class Controller {
   Oscillator modulation_osc_;
   MutableParameter modulation_amount_;
   LFO modulation_;
+
+  QAudioFormat * format;
+  int channelBytes;
+  int sampleBytes;
+
 
 /*  FilterCutoff filter_cutoff_;
   LowPassFilter lowpass_filter_;

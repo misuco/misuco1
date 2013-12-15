@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 #include "paintbgshapes.h"
-#include <QColor.h>
+#include <QColor>
 
 PaintBgShapes::PaintBgShapes()
 {

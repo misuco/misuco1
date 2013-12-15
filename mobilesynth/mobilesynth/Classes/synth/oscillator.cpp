@@ -10,7 +10,7 @@ namespace synth {
 
 Oscillator::Oscillator()
     : wave_type_(SINE),
-      frequency_(NULL),
+      frequency_(0),
       sample_rate_(kDefaultSampleRate),
       sample_num_(0) { }
 
@@ -29,7 +29,7 @@ void Oscillator::set_frequency(float frequency) {
 }
 
 float Oscillator::GetValue(int sample_num) {
-  if (frequency_ == NULL) {
+  if (frequency_ == 0) {
     return 0.0f;
   }
 //  float freq = frequency_->GetValue();

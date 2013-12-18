@@ -3,8 +3,9 @@
 
 #include "rc1.h"
 #include "isender.h"
-#ifdef IOS
+#ifndef QT_AUDIO
 #include "../mobilesynth/mobilesynth/Classes/mobilesynthviewcontrollerrc1.hpp"
+#include "../mobilesynth/mobilesynth/Classes/synth/controller.h"
 #else
 #include "../mobilesynthqt52.h"
 #endif
@@ -20,8 +21,9 @@ public:
     virtual void setDestination(QHostAddress a,int p);
     
 private:
-#ifdef IOS
-    mobilesynthview::Widget * sy;
+#ifndef QT_AUDIO
+    mobilesynthview::Widget * syco;
+    synth::Controller * sy;
 #else
     mobileSynthQT52 * sy;
 #endif

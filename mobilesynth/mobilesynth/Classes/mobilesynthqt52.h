@@ -4,16 +4,12 @@
 
 #include <QAudioOutput>
 #include <QByteArray>
-#include <QComboBox>
 #include <QIODevice>
-#include <QLabel>
 #include <QMainWindow>
 #include <QObject>
-#include <QPushButton>
-#include <QSlider>
 #include <QTimer>
 
-#include "mobilesynth/mobilesynth/Classes/synth/controller.h"
+#include "synth/controller.h"
 
 class mobileSynthQT52 : public QIODevice
 {

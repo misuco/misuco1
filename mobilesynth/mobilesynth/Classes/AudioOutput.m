@@ -6,6 +6,8 @@
 //  Copyright 2008 thebends. All rights reserved.
 //
 
+#ifndef QT_AUDIO
+
 #import "AudioOutput.h"
 #import <AudioUnit/AudioUnitProperties.h>
 #import <AudioUnit/AudioOutputUnit.h>
@@ -142,3 +144,5 @@ static OSStatus playCallback(void *inRefCon,
 
 
 @end
+
+#endif

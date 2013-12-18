@@ -1,5 +1,9 @@
+#ifndef QT_AUDIO
+
 #ifndef MOBILESYNTHVIEWCONTROLLERRC1_HPP
 #define MOBILESYNTHVIEWCONTROLLERRC1_HPP
+
+#include "synth/controller.h"
 
 namespace mobilesynthview
 {
@@ -13,7 +17,10 @@ namespace mobilesynthview
     void noteOn(int n, float f);
     void noteOff(int n);
     void pc(int n);
+    void setController(synth::Controller * ctl);
   };
 }
 
 #endif // MOBILESYNTHVIEWCONTROLLERRC1_HPP
+#endif // MOBILESYNTHVIEWCONTROLLERRC1_HPP
+

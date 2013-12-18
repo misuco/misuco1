@@ -6,6 +6,8 @@
 //  Copyright 2008 thebends. All rights reserved.
 //
 
+#ifndef QT_AUDIO
+
 #import <Foundation/Foundation.h>
 #import <AudioUnit/AUComponent.h>
 
@@ -34,3 +36,5 @@
                   errorCode:(OSStatus)status;
 
 @end
+
+#endif

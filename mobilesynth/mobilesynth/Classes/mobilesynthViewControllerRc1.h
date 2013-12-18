@@ -5,6 +5,7 @@
 //  Created by Allen Porter on 12/7/08.
 //  Copyright thebends 2008. All rights reserved.
 //
+#ifndef QT_AUDIO
 
 #import <UIKit/UIKit.h>
 #import "AudioOutput.h"
@@ -29,6 +30,7 @@ namespace synth { class LowPass; }
 - (void)noteOn:(int)note :(float)freq;
 - (void)noteOff:(int)note;
 - (void)pc:(int)prog;
+- (void)setController:(synth::Controller*)ctl;
 - (OSStatus)generateSamples:(AudioBufferList*)buffers;
 
 // For control panel
@@ -36,3 +38,4 @@ namespace synth { class LowPass; }
 
 @end
 
+#endif

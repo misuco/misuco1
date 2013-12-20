@@ -33,6 +33,7 @@ public:
     void setTTL(long ttl);
     void setGid(int id);
     void setState(int s);
+    void setHue(int h);
 
     int getX();
     int getY();
@@ -41,6 +42,7 @@ public:
     long getT();
     int getGid();
     int getState();
+    int getHue();
 
 private:
     int x;
@@ -53,6 +55,7 @@ private:
     long ttl;
     int gid;
     int state;
+    int hue;
 };
 
 #endif // POINT_H

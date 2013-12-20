@@ -171,7 +171,7 @@ void RC1::timerEvent(QTimerEvent *)
     r*=nPointPainters;
     q*=pointpainters[(int)r]->getParamCount();
     pointpainters[(int)r]->setParam(q,p);
-    */
+     */
 }
 
 bool RC1::event(QEvent *event)
@@ -500,41 +500,120 @@ void RC1::setPPS(int p)
             }
             // init x/y
             pointpainters[1]->setParam(1,1);
-            pointpainters[1]->setParam(10,1);
+            pointpainters[1]->setParam(11,1);
             
             // radius 5 constant
-            pointpainters[1]->setParam(16,5);
-            pointpainters[1]->setParam(24,5);
+            pointpainters[1]->setParam(18,5);
+            pointpainters[1]->setParam(27,5);
             
             // grow width
-            pointpainters[1]->setParam(21,100);
+            pointpainters[1]->setParam(23,100);
             // grow height
-            pointpainters[1]->setParam(29,100);
+            pointpainters[1]->setParam(32,100);
             
             // color brush constant
-            pointpainters[1]->setParam(64,0);
-            pointpainters[1]->setParam(69,255);
-            pointpainters[1]->setParam(72,127);
-            pointpainters[1]->setParam(80,140);
-            pointpainters[1]->setParam(88,250);
+            pointpainters[1]->setParam(72,0);
+            pointpainters[1]->setParam(77,255);  // change hue with time
+            pointpainters[1]->setParam(81,127);
+            pointpainters[1]->setParam(90,140);
+            pointpainters[1]->setParam(99,250);
             
             // fade brush out
-            pointpainters[1]->setParam(93,-250);
+            pointpainters[1]->setParam(104,-250);
             
             // color pen constant
-            pointpainters[1]->setParam(32,255);
-            pointpainters[1]->setParam(40,255);
-            pointpainters[1]->setParam(48,255);
-            pointpainters[1]->setParam(56,255);
+            pointpainters[1]->setParam(36,255);
+            pointpainters[1]->setParam(45,255);
+            pointpainters[1]->setParam(54,255);
+            pointpainters[1]->setParam(63,0);   // pen alpha constant 0
             
             // fade pen out
-            pointpainters[1]->setParam(61,-255);
+            // pointpainters[1]->setParam(68,-255);
             
             // shape circle
-            pointpainters[1]->setParam(104,0);
+            pointpainters[1]->setParam(117,0);
+            
+            prepainters[0]->setParam(0, 160);   // sPenAct
+            prepainters[0]->setParam(1, 200);   // lPenAct
+            prepainters[0]->setParam(2, 160);   // sBrushAct
+            prepainters[0]->setParam(3, 200);   // lBrushAct
+            prepainters[0]->setParam(4, 160);   // sPenPsv
+            prepainters[0]->setParam(5, 50);    // lPenPsv
+            prepainters[0]->setParam(6, 160);   // sBrushPsv
+            prepainters[0]->setParam(7, 80);    // lBrushPsv
+            prepainters[0]->setParam(8, 1);     // colorMode
+            prepainters[0]->setParam(9, 0);     // chue
+            prepainters[0]->setParam(10, 10);   // cradx
+            prepainters[0]->setParam(11, 10);   // crady
+            prepainters[0]->setParam(12, 0);    // gradients
+            prepainters[0]->setParam(13, 0);    // painttext
+            
             break;
             
         case 1:
+            painterOn[0]=true;
+            painterOn[1]=false;
+            painterOn[2]=true;
+            painterOn[3]=false;
+            painterOn[4]=false;
+            painterOn[5]=false;
+            painterOn[6]=false;
+            
+            for(int i=0;i<pointpainters[1]->getParamCount();i++) {
+                pointpainters[1]->setParam(i,0);
+            }
+            // init x/y
+            pointpainters[1]->setParam(1,1);
+            pointpainters[1]->setParam(11,1);
+            
+            // radius 5 constant
+            pointpainters[1]->setParam(18,5);
+            pointpainters[1]->setParam(27,5);
+            
+            // grow width
+            pointpainters[1]->setParam(23,100);
+            // grow height
+            pointpainters[1]->setParam(32,100);
+            
+            // color brush constant
+            pointpainters[1]->setParam(72,0);
+            pointpainters[1]->setParam(77,255);
+            pointpainters[1]->setParam(81,127);
+            pointpainters[1]->setParam(90,140);
+            pointpainters[1]->setParam(99,0);     // brush alpha constant 0
+            
+            // fade brush out
+            // pointpainters[1]->setParam(104,-250);
+            
+            // color pen constant
+            pointpainters[1]->setParam(36,255);
+            pointpainters[1]->setParam(45,255);
+            pointpainters[1]->setParam(54,255);
+            pointpainters[1]->setParam(63,255);
+            
+            // fade pen out
+            pointpainters[1]->setParam(68,-255);
+            
+            // shape circle
+            pointpainters[1]->setParam(117,1);
+            
+            prepainters[0]->setParam(0, 0);   // sPenAct
+            prepainters[0]->setParam(1, 200);   // lPenAct
+            prepainters[0]->setParam(2, 0);   // sBrushAct
+            prepainters[0]->setParam(3, 200);   // lBrushAct
+            prepainters[0]->setParam(4, 0);   // sPenPsv
+            prepainters[0]->setParam(5, 0);    // lPenPsv
+            prepainters[0]->setParam(6, 0);   // sBrushPsv
+            prepainters[0]->setParam(7, 80);    // lBrushPsv
+            prepainters[0]->setParam(8, 0);     // colorMode
+            prepainters[0]->setParam(9, 0);     // chue
+            prepainters[0]->setParam(10, 10);   // cradx
+            prepainters[0]->setParam(11, 10);   // crady
+            prepainters[0]->setParam(12, 0);    // gradients
+            prepainters[0]->setParam(13, 1);    // painttext
+            break;
+            
+        case 2:
             painterOn[0]=true;
             painterOn[1]=true;
             painterOn[2]=true;
@@ -549,56 +628,72 @@ void RC1::setPPS(int p)
                 }
                 // init x/y
                 pointpainters[j]->setParam(1,1);
-                pointpainters[j]->setParam(10,1);
+                pointpainters[j]->setParam(11,1);
                 
                 // radius 5 constant
-                pointpainters[j]->setParam(16,5);
-                pointpainters[j]->setParam(24,5);
+                pointpainters[j]->setParam(18,5);
+                pointpainters[j]->setParam(27,5);
                 
                 // radius by time
-                pointpainters[j]->setParam(21,80);
-                pointpainters[j]->setParam(29,50);
+                pointpainters[j]->setParam(23,80);
+                pointpainters[j]->setParam(32,50);
                 
                 // color pen constant
-                pointpainters[j]->setParam(32,255);
-                pointpainters[j]->setParam(40,255);
-                pointpainters[j]->setParam(48,255);
-                pointpainters[j]->setParam(56,255);
+                pointpainters[j]->setParam(36,255);
+                pointpainters[j]->setParam(45,255);
+                pointpainters[j]->setParam(54,255);
+                pointpainters[j]->setParam(63,255);
                 // fade pen out
-                pointpainters[j]->setParam(61,-255);
+                pointpainters[j]->setParam(68,-255);
                 
                 // color brush constant
-                pointpainters[j]->setParam(64,0);
                 pointpainters[j]->setParam(72,0);
-                pointpainters[j]->setParam(80,0);
-                pointpainters[j]->setParam(88,250);
+                pointpainters[j]->setParam(81,0);
+                pointpainters[j]->setParam(90,0);
+                pointpainters[j]->setParam(99,250);
                 // fade brush out
-                pointpainters[j]->setParam(93,-250);
+                pointpainters[j]->setParam(104,-250);
                 
                 // rotation constan 45
-                pointpainters[j]->setParam(96,45);
+                pointpainters[j]->setParam(108,45);
                 // rotate once per lt
-                pointpainters[j]->setParam(101,360);
+                pointpainters[j]->setParam(113,360);
                 
                 // shape constan 1 (rect)
-                pointpainters[j]->setParam(104,1);
+                pointpainters[j]->setParam(117,1);
             }
             
             // shape circle
-            pointpainters[4]->setParam(104,0);
+            pointpainters[4]->setParam(117,0);
             // brush hue by time
-            pointpainters[4]->setParam(69,255);
+            pointpainters[4]->setParam(77,255);
             // brush saturation constant
-            pointpainters[4]->setParam(72,150);
+            pointpainters[4]->setParam(81,150);
             // brush light constant
-            pointpainters[4]->setParam(80,120);
+            pointpainters[4]->setParam(90,120);
             
             // shape circle
-            pointpainters[1]->setParam(104,0);
+            pointpainters[1]->setParam(117,0);
             // grow width
-            pointpainters[1]->setParam(21,50);
+            pointpainters[1]->setParam(23,50);
             // grow height
-            pointpainters[1]->setParam(29,100);
+            pointpainters[1]->setParam(32,100);
+            
+            
+            prepainters[0]->setParam(0, 160);   // sPenAct
+            prepainters[0]->setParam(1, 200);   // lPenAct
+            prepainters[0]->setParam(2, 160);   // sBrushAct
+            prepainters[0]->setParam(3, 200);   // lBrushAct
+            prepainters[0]->setParam(4, 160);   // sPenPsv
+            prepainters[0]->setParam(5, 50);    // lPenPsv
+            prepainters[0]->setParam(6, 160);   // sBrushPsv
+            prepainters[0]->setParam(7, 80);    // lBrushPsv
+            prepainters[0]->setParam(8, 1);     // colorMode
+            prepainters[0]->setParam(9, 0);     // chue
+            prepainters[0]->setParam(10, 10);   // cradx
+            prepainters[0]->setParam(11, 10);   // crady
+            prepainters[0]->setParam(12, 1);    // gradients
+            prepainters[0]->setParam(13, 1);    // painttext
             
             break;
             

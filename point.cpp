@@ -124,3 +124,17 @@ int Point::getState()
 {
     return state;
 }
+
+
+int Point::getHue()
+{
+    return hue;
+}
+
+
+void Point::setHue(int h)
+{
+    hue=h;
+}
+
+

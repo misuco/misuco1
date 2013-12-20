@@ -41,6 +41,12 @@ private:
     quint8 lBrushAct;
     quint8 sBrushPsv;
     quint8 lBrushPsv;
+    quint8 colorMode;
+    quint8 chue;
+    quint8 cradx;
+    quint8 crady;
+    quint8 gradients;
+    quint8 painttext;
 };
 
 #endif // PAINTERBGSHAPES_H

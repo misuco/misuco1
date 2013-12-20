@@ -95,6 +95,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         if(layout->getSegtype(iseg)==0) {
 //            double v1=layout->getNote(iseg);
             double v1=layout->getNote(iseg);
+            p->setHue(30*layout->getMidiNote(iseg));
             if(note[evptr]!=v1) {
                 if(transitionMode) {
                     if(note[evptr]>0) {
@@ -156,11 +157,13 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     xrel=xrel/(double)layout->getSegwidthpx(iseg);
                     // 3b. calculate frequency difference
                     double fdiff=layout->getNote(iseg+1)-layout->getNote(iseg-1);
+                    float mndiff=layout->getMidiNote(iseg+1)-layout->getMidiNote(iseg-1);
                     // 3c. calculate relative frequency
                     double frel=fdiff*xrel;
                     frel+=layout->getNote(iseg-1);
                     
-                    layout->setSegH(iseg, xrel*255);    // store value for painter
+                    layout->setSegH(iseg, xrel*256);    // store value for painter
+                    p->setHue(mndiff+xrel*30);
                     
                     if(note[evptr]>0) {
                         snd->pitch(layout->getChan(iseg),ieventout[evptr],frel);

@@ -57,7 +57,7 @@ namespace synth {
         }
         
         void setADSR(int n, long a, long d, float s, long r) {env_a[n]=a;env_d[n]=d;env_s[n]=s;env_r[n]=r;};        
-        void clear() { size_ = 0; }
+//        void clear() { size_ = 0; }
         
     private:
         int size_;

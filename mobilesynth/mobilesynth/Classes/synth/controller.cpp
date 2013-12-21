@@ -46,15 +46,15 @@ namespace synth {
      */
     void Controller::NoteOff(int note) {
         key_stack_.NoteOff(note);
-        if (key_stack_.size() == 0) {
-            // All notes were release, so start the release phase of the envelope
-            NoteOff();
-        }
+        /*        if (key_stack_.size() == 0) {
+         // All notes were release, so start the release phase of the envelope
+         NoteOff();
+         }*/
     }
     
-    void Controller::NoteOff() {
-        key_stack_.clear();
-    }
+    /*    void Controller::NoteOff() {
+     key_stack_.clear();
+     }*/
     
     void Controller::set_osc1_wave_type(Oscillator::WaveType wave_type) {
         osc1_.set_wave_type(wave_type);

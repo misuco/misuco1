@@ -6,7 +6,7 @@
 //  Copyright 2008 thebends. All rights reserved.
 //
 
-#ifndef QT_AUDIO
+#ifdef Q_OS_IOS
 
 #import "AudioOutput.h"
 #import <AudioUnit/AudioUnitProperties.h>

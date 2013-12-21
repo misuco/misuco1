@@ -36,9 +36,9 @@ RC1::RC1(QWidget *parent) :
     QGLWidget(parent)
 {
     setAttribute(Qt::WA_AcceptTouchEvents,true);
-    qDebug() << "View() size:" << width() << " " << height();
+//    qDebug() << "View() size:" << width() << " " << height();
     eventId = 1;
-    nomouse = false;
+    nomouse = true;
     ttl=2000;
 
     storage=new Storage();
@@ -597,13 +597,13 @@ void RC1::setPPS(int p)
             // shape circle
             pointpainters[1]->setParam(117,1);
             
-            prepainters[0]->setParam(0, 0);   // sPenAct
+            prepainters[0]->setParam(0, 0);     // sPenAct
             prepainters[0]->setParam(1, 200);   // lPenAct
-            prepainters[0]->setParam(2, 0);   // sBrushAct
+            prepainters[0]->setParam(2, 0);     // sBrushAct
             prepainters[0]->setParam(3, 200);   // lBrushAct
-            prepainters[0]->setParam(4, 0);   // sPenPsv
-            prepainters[0]->setParam(5, 0);    // lPenPsv
-            prepainters[0]->setParam(6, 0);   // sBrushPsv
+            prepainters[0]->setParam(4, 0);     // sPenPsv
+            prepainters[0]->setParam(5, 0);     // lPenPsv
+            prepainters[0]->setParam(6, 0);     // sBrushPsv
             prepainters[0]->setParam(7, 80);    // lBrushPsv
             prepainters[0]->setParam(8, 0);     // colorMode
             prepainters[0]->setParam(9, 0);     // chue

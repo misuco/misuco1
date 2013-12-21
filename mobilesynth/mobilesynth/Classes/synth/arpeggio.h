@@ -2,7 +2,7 @@
 // Author: Allen Porter <allen@thebends.org>
 //
 // TODO
-
+/*
 #include "synth/parameter.h"
 
 namespace synth {
@@ -44,3 +44,4 @@ class Arpeggio : public Parameter {
 };
 
 }  // namespace synth
+*/

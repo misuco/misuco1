@@ -33,13 +33,13 @@ namespace synth {
         // NoteOn();
         void NoteOn(int midi_note, float freq);
         void NoteOff(int midi_note);
-//        void NoteOnFrequency(float frequency);  // For testing
+        //        void NoteOnFrequency(float frequency);  // For testing
         void NoteOff();  // Invoked when all notes have been released as a fallback
         
         // True when nothing is playing
-        /*bool released() {
-         return (volume_envelope()->released() || filter_envelope()->released());
-         }*/
+        bool released() {
+            return key_stack_.GetSize()==0;
+        }
         
         void set_sample_rate(float sample_rate);  // For testing
         void setADSR(int n, long a, long d, float s, long r);

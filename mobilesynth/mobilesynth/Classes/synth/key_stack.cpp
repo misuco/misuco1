@@ -9,66 +9,66 @@
 using namespace std;
 
 namespace synth {
-
-KeyStack::KeyStack() : size_(0) {
-    for(int i=0;i<kMaxSize;i++) {
-        for(int j=0;j<kNumEnv;j++) {
-            envelopes[j][i]=new Envelope();
+    
+    KeyStack::KeyStack() : size_(0) {
+        for(int i=0;i<kMaxSize;i++) {
+            for(int j=0;j<kNumEnv;j++) {
+                envelopes[j][i]=new Envelope();
+            }
+            cutoffs[i]=new FilterCutoff();
+            cutoffs[i]->set_envelope(envelopes[1][i]);
+            cutoffs[i]->set_cutoff(5000);
+            filters[i]=new ResonantFilter();
+            filters[i]->set_cutoff(cutoffs[i]);
         }
-        cutoffs[i]=new FilterCutoff();
-        cutoffs[i]->set_envelope(envelopes[1][i]);
-        cutoffs[i]->set_cutoff(5000);
-        filters[i]=new ResonantFilter();
-        filters[i]->set_cutoff(cutoffs[i]);
     }
-}
-
-KeyStack::~KeyStack() { }
     
-bool KeyStack::NoteOn(int note, float freq) {
-  assert(size_ < kMaxSize);
-  for (int i = 0; i < size_; ++i) {
-    if (notes_[i] == note) {
-//        freqs1_[i]=freqs_[i];
-        freqs_[i]=freq;
-        period_samples_[i]=sample_rate_/freqs_[i];
-//      count_[i]++;
-//        qDebug() << "pitch "  << freq << " " << freqs1_[i];
-      return false;
-    }
-  }
-  notes_[size_] = note;
-  freqs_[size_] = freq;
-  freqs1_[size_] = freq;
-    pos_[size_] = 0;
-    period_samples_[size_]=sample_rate_/freq;
+    KeyStack::~KeyStack() { }
     
-    for(int i=0;i<kNumEnv;i++) {
-        envelopes[i][size_]->set_attack(env_a[i]);
-        envelopes[i][size_]->set_decay(env_d[i]);
-        envelopes[i][size_]->set_sustain(env_s[i]);
-        envelopes[i][size_]->set_release(env_r[i]);
-        envelopes[i][size_]->NoteOn();
+    bool KeyStack::NoteOn(int note, float freq) {
+        assert(size_ < kMaxSize);
+        for (int i = 0; i < size_; ++i) {
+            if (notes_[i] == note) {
+                //        freqs1_[i]=freqs_[i];
+                freqs_[i]=freq;
+                period_samples_[i]=sample_rate_/freqs_[i];
+                //      count_[i]++;
+                //        qDebug() << "pitch "  << freq << " " << freqs1_[i];
+                return false;
+            }
+        }
+        notes_[size_] = note;
+        freqs_[size_] = freq;
+        freqs1_[size_] = freq;
+        pos_[size_] = 0;
+        period_samples_[size_]=sample_rate_/freq;
+        
+        for(int i=0;i<kNumEnv;i++) {
+            envelopes[i][size_]->set_attack(env_a[i]);
+            envelopes[i][size_]->set_decay(env_d[i]);
+            envelopes[i][size_]->set_sustain(env_s[i]);
+            envelopes[i][size_]->set_release(env_r[i]);
+            envelopes[i][size_]->NoteOn();
+        }
+        //  count_[size_] = 1;
+        size_++;
+        //    qDebug() << "new note "  << size_;
+        return true;
     }
-//  count_[size_] = 1;
-  size_++;
-//    qDebug() << "new note "  << size_;
-  return true;
-}
     
     bool KeyStack::NoteOff(int note) {
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == note) {
-                    for(int k=0;k<kNumEnv;k++) {
-                        envelopes[k][i]->NoteOff();
-                    }
+                for(int k=0;k<kNumEnv;k++) {
+                    envelopes[k][i]->NoteOff();
+                }
                 return true;
             }
         }
         // The note wasn't on the stack.  The multi-touch events on the iphone seem
         // to be flaky, so we don't worry if we were asked to remove something that
         // was not on the stack.  The controller also calls our clear() method when
-        // no touch events are left as a fallback. 
+        // no touch events are left as a fallback.
         return false;
     }
     
@@ -112,33 +112,33 @@ bool KeyStack::NoteOn(int note, float freq) {
         // The note wasn't on the stack.  The multi-touch events on the iphone seem
         // to be flaky, so we don't worry if we were asked to remove something that
         // was not on the stack.  The controller also calls our clear() method when
-        // no touch events are left as a fallback. 
+        // no touch events are left as a fallback.
         return false;
     }
-  
-bool KeyStack::IsNoteInStack(int note) {
-  for (int i = 0; i < size_; ++i) {
-    if (notes_[i] == note) {
-      return true;
+    
+    bool KeyStack::IsNoteInStack(int note) {
+        for (int i = 0; i < size_; ++i) {
+            if (notes_[i] == note) {
+                return true;
+            }
+        }
+        return false;
     }
-  }
-  return false;
-}
-
-int KeyStack::size() {
-  /*int count = 0;
-  for (int i = 0; i < size_; ++i) {
-    count += count_[i];
-  }*/
-  return size_;
-}
-
-int KeyStack::GetCurrentNote() {
-  if (size_ > 0) {
-    return notes_[size_ - 1];
-  }
-  return 0;
-}
+    
+    int KeyStack::size() {
+        /*int count = 0;
+         for (int i = 0; i < size_; ++i) {
+         count += count_[i];
+         }*/
+        return size_;
+    }
+    
+    int KeyStack::GetCurrentNote() {
+        if (size_ > 0) {
+            return notes_[size_ - 1];
+        }
+        return 0;
+    }
     
     int KeyStack::GetSize() {
         return size_;
@@ -179,10 +179,10 @@ int KeyStack::GetCurrentNote() {
     void KeyStack::SetPos(int num,long value) {
         if (num < size_) {
             pos_[num]=value%period_samples_[num];
-/*            if(pos_[num]==0) {
-                qDebug() << "snap while setPos";
-            }
- */
+            /*            if(pos_[num]==0) {
+             qDebug() << "snap while setPos";
+             }
+             */
             if(pos_[num]>period_samples_[num]) {
                 qDebug() << " manually set to 0 from " << pos_[num] << " since > " << period_samples_[num] << " at freq " << freqs_[num] << " at sr " << sample_rate_;
                 pos_[num]=0;
@@ -194,12 +194,13 @@ int KeyStack::GetCurrentNote() {
         sample_rate_=s;
     }
     
-static const int kMiddleAKey(49);
-static const float kNotesPerOctave = 12.0f;
-static const float kMiddleAFrequency = 440.0f;
-
-float KeyToFrequency(int key) {
-  return kMiddleAFrequency * powf(2, (key - kMiddleAKey) / kNotesPerOctave);
-}
-
+    static const int kMiddleAKey(49);
+    static const float kNotesPerOctave = 12.0f;
+    static const float kMiddleAFrequency = 440.0f;
+    /*
+    float KeyToFrequency(int key) {
+        return kMiddleAFrequency * powf(2, (key - kMiddleAKey) / kNotesPerOctave);
+    }
+    */
+    
 }  // namespace synth

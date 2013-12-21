@@ -1,6 +1,6 @@
 #include "sendermobilesynth.h"
 
-#ifndef QT_AUDIO
+#ifdef Q_OS_IOS
 
 SenderMobileSynth::SenderMobileSynth(RC1 * rc1)
 {

@@ -138,7 +138,8 @@ OTHER_FILES += \
     mobilesynth/mobilesynth/main.m \
     mobilesynth/mobilesynth/Info.plist \
     mobilesynth/mobilesynth/mobilesynth_Prefix.pch \
-    mobilesynth/mobilesynth/mobilesynth.xcodeproj
+    mobilesynth/mobilesynth/mobilesynth.xcodeproj \
+    Info.plist
 
 OBJECTIVE_SOURCES += \
     mobilesynth/mobilesynth/Classes/mobilesynthViewControllerRc1.mm \

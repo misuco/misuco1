@@ -1,6 +1,6 @@
 // arpeggio.cpp
 // Allen Porter <allen@thebends.org>
-
+/*
 #include "synth/arpeggio.h"
 #include <assert.h>
 #include <stdlib.h>
@@ -84,3 +84,4 @@ void Arpeggio::reset() {
 }
 
 }  // namespace synth
+*/

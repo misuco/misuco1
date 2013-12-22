@@ -85,8 +85,8 @@ RC1::RC1(QWidget *parent) :
     
 //    layout->setFactoryLayout(1);
     
-    layout->setXY(9, 2);
-    layout->setScale(50, 18, 1, true);
+//    layout->setXY(9, 2);
+//    layout->setScale(50, 18, 1, true);
     
 //    setPPS0();
     
@@ -486,7 +486,7 @@ void RC1::setConfigSlideRC()
 void RC1::setPPS(int p)
 {
     switch (p) {
-        case 0:
+        case 1:
             painterOn[0]=true;
             painterOn[1]=false;
             painterOn[2]=true;
@@ -534,11 +534,11 @@ void RC1::setPPS(int p)
             pointpainters[1]->setParam(117,0);
             
             prepainters[0]->setParam(0, 160);   // sPenAct
-            prepainters[0]->setParam(1, 200);   // lPenAct
-            prepainters[0]->setParam(2, 160);   // sBrushAct
-            prepainters[0]->setParam(3, 200);   // lBrushAct
-            prepainters[0]->setParam(4, 160);   // sPenPsv
-            prepainters[0]->setParam(5, 50);    // lPenPsv
+            prepainters[0]->setParam(1, 0);   // lPenAct
+            prepainters[0]->setParam(2, 160);   // sPenPsv
+            prepainters[0]->setParam(3, 0);    // lPenPsv
+            prepainters[0]->setParam(4, 160);   // sBrushAct
+            prepainters[0]->setParam(5, 200);   // lBrushAct
             prepainters[0]->setParam(6, 160);   // sBrushPsv
             prepainters[0]->setParam(7, 80);    // lBrushPsv
             prepainters[0]->setParam(8, 1);     // colorMode
@@ -550,7 +550,7 @@ void RC1::setPPS(int p)
             
             break;
             
-        case 1:
+        case 0:
             painterOn[0]=true;
             painterOn[1]=false;
             painterOn[2]=true;
@@ -599,10 +599,10 @@ void RC1::setPPS(int p)
             
             prepainters[0]->setParam(0, 0);     // sPenAct
             prepainters[0]->setParam(1, 200);   // lPenAct
-            prepainters[0]->setParam(2, 0);     // sBrushAct
-            prepainters[0]->setParam(3, 200);   // lBrushAct
-            prepainters[0]->setParam(4, 0);     // sPenPsv
-            prepainters[0]->setParam(5, 0);     // lPenPsv
+            prepainters[0]->setParam(2, 0);     // sPenPsv
+            prepainters[0]->setParam(3, 0);     // lPenPsv
+            prepainters[0]->setParam(4, 0);     // sBrushAct
+            prepainters[0]->setParam(5, 200);   // lBrushAct
             prepainters[0]->setParam(6, 0);     // sBrushPsv
             prepainters[0]->setParam(7, 80);    // lBrushPsv
             prepainters[0]->setParam(8, 0);     // colorMode
@@ -682,10 +682,10 @@ void RC1::setPPS(int p)
             
             prepainters[0]->setParam(0, 160);   // sPenAct
             prepainters[0]->setParam(1, 200);   // lPenAct
-            prepainters[0]->setParam(2, 160);   // sBrushAct
-            prepainters[0]->setParam(3, 200);   // lBrushAct
-            prepainters[0]->setParam(4, 160);   // sPenPsv
-            prepainters[0]->setParam(5, 50);    // lPenPsv
+            prepainters[0]->setParam(2, 160);   // sPenPsv
+            prepainters[0]->setParam(3, 50);    // lPenPsv
+            prepainters[0]->setParam(4, 160);   // sBrushAct
+            prepainters[0]->setParam(5, 200);   // lBrushAct
             prepainters[0]->setParam(6, 160);   // sBrushPsv
             prepainters[0]->setParam(7, 80);    // lBrushPsv
             prepainters[0]->setParam(8, 1);     // colorMode

@@ -176,17 +176,23 @@ namespace synth {
         }
         return pos_[num];
     }
+    long KeyStack::GetPeriodSamples(int num) {
+        if (num >= size_) {
+            return 0;
+        }
+        return period_samples_[num];
+    }
     void KeyStack::SetPos(int num,long value) {
         if (num < size_) {
             pos_[num]=value%period_samples_[num];
             /*            if(pos_[num]==0) {
              qDebug() << "snap while setPos";
              }
-             */
             if(pos_[num]>period_samples_[num]) {
                 qDebug() << " manually set to 0 from " << pos_[num] << " since > " << period_samples_[num] << " at freq " << freqs_[num] << " at sr " << sample_rate_;
                 pos_[num]=0;
             }
+             */
         }
     }
     

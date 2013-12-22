@@ -1,6 +1,6 @@
 #include "sendermobilesynth.h"
 
-#ifdef Q_OS_IOS
+#ifndef Q_OS_IOSx
 
 SenderMobileSynth::SenderMobileSynth(RC1 * rc1)
 {
@@ -18,6 +18,7 @@ void SenderMobileSynth::cc(int c, int voiceId, int cc, double v1)
 void SenderMobileSynth::pc(int c, int v1)
 {
 //    sy->pc(v1);
+    sy->set_osc1_wave_type_int(v1%4);
 }
 
 void SenderMobileSynth::note(int c, int voiceId, double f, int vel)

@@ -41,6 +41,7 @@ namespace synth {
         float GetFreq1(int num);
         void SetFreq1(int num, float value);
         long GetPos(int num);
+        long GetPeriodSamples(int num);
         void SetPos(int num,long value);
         void SetSampleRate(float s);
         

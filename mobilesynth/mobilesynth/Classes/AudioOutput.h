@@ -6,7 +6,7 @@
 //  Copyright 2008 thebends. All rights reserved.
 //
 
-#ifndef QT_AUDIO
+#ifndef Q_OS_IOSx
 
 #import <Foundation/Foundation.h>
 #import <AudioUnit/AUComponent.h>

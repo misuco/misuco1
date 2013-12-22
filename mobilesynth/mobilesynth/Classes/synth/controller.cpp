@@ -203,6 +203,7 @@ namespace synth {
         
         float value=0;
         for(int i=0;i<key_stack_.GetSize();i++) {
+            
             if(key_stack_.GetFreq(i)!=key_stack_.GetFreq1(i)) {
                 float oldPos=key_stack_.GetPos(i);
                 float divisor=key_stack_.GetFreq1(i)/key_stack_.GetFreq(i);
@@ -211,10 +212,13 @@ namespace synth {
                 key_stack_.SetPos(i, newPosL);
                 key_stack_.SetFreq1(i, key_stack_.GetFreq(i));
             }
+            
             //    key_frequency_.set_value(key_stack_.GetFreq(i));
+            osc1_.set_period_samples(key_stack_.GetPeriodSamples(i));
             osc1_.set_frequency(key_stack_.GetFreq(i));
             
-            value += key_stack_.getFilter(i)->GetValue(osc1_.GetValue(key_stack_.GetPos(i)));
+//            value += key_stack_.getFilter(i)->GetValue(osc1_.GetValue(key_stack_.GetPos(i)));
+            value+=osc1_.GetValue(key_stack_.GetPos(i));
             
             // Clip!
             value = fmaxf(-1.0f, value);

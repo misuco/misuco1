@@ -1,21 +1,21 @@
 /*
-
-Copyright (C) 2013 by Claudio Zopfi, Zurich, Suisse, z@x21.ch
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-*/
+ 
+ Copyright (C) 2013 by Claudio Zopfi, Zurich, Suisse, z@x21.ch
+ 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 
+ */
 #include <QDebug>
 #include <math.h>
 #include "layoutmodel.h"
@@ -44,28 +44,28 @@ LayoutModel::LayoutModel()
     }
     segtype = new int[nsegsmax];
     setAll(nsegsmax,segtype,0);
-
+    
     ctlx=new int[nsegsmax];
     setAll(nsegsmax,ctlx,16);
-
+    
     ctly=new int[nsegsmax];
     setAll(nsegsmax,ctly,8);
-
+    
     chan=new int[nsegsmax];
     setAll(nsegsmax,chan,0);
-
+    
     pressed=new int[nsegsmax];
     setAll(nsegsmax,pressed,0);
-
+    
     // thanx 2 http://subsynth.sourceforge.net/midinote2freq.html
     midi2f = new double[127];
     float a = 440; // a is 440 hz...
     for (int x = 0; x < 127; ++x)
     {
-       midi2f[x] = (a / 32.0) * (pow(2.0 , (((float)x - 9.0)) / 12.0));
-       //qDebug() << "note " << x << " f " << midi2f[x];
+        midi2f[x] = (a / 32.0) * (pow(2.0 , (((float)x - 9.0)) / 12.0));
+        //qDebug() << "note " << x << " f " << midi2f[x];
     }
-
+    
     midi2Text = new QString[12];
     midi2Text[0]="SA\nC";
     midi2Text[1]="SA'\nC#";
@@ -79,16 +79,16 @@ LayoutModel::LayoutModel()
     midi2Text[9]="DA\nA";
     midi2Text[10]="DA'\nA#";
     midi2Text[11]="NI\nB";
-
+    
     basenote=60;
     basescale=0;
     noct=2;
-
+    
     nFactoryScales=8;
     factoryScaleStart=new int[nFactoryScales];
     factoryScaleLen=new int[nFactoryScales];
     factoryScaleValues=new int[56];
-
+    
     factoryScaleStart[0]=0;
     factoryScaleLen[0]=12;
     factoryScaleValues[0]=1;
@@ -103,7 +103,7 @@ LayoutModel::LayoutModel()
     factoryScaleValues[9]=1;
     factoryScaleValues[10]=1;
     factoryScaleValues[11]=1;
-
+    
     factoryScaleStart[1]=12;
     factoryScaleLen[1]=7;
     factoryScaleValues[12]=2;
@@ -113,7 +113,7 @@ LayoutModel::LayoutModel()
     factoryScaleValues[16]=2;
     factoryScaleValues[17]=2;
     factoryScaleValues[18]=1;
-
+    
     factoryScaleStart[2]=20;
     factoryScaleLen[2]=7;
     factoryScaleValues[20]=2;
@@ -123,7 +123,7 @@ LayoutModel::LayoutModel()
     factoryScaleValues[24]=2;
     factoryScaleValues[25]=2;
     factoryScaleValues[26]=1;
-
+    
     factoryScaleStart[3]=27;
     factoryScaleLen[3]=5;
     factoryScaleValues[27]=2;
@@ -131,7 +131,7 @@ LayoutModel::LayoutModel()
     factoryScaleValues[29]=2;
     factoryScaleValues[30]=4;
     factoryScaleValues[31]=1;
-
+    
     factoryScaleStart[4]=32;
     factoryScaleLen[4]=5;
     factoryScaleValues[32]=3;
@@ -139,7 +139,7 @@ LayoutModel::LayoutModel()
     factoryScaleValues[34]=3;
     factoryScaleValues[35]=2;
     factoryScaleValues[36]=2;
-
+    
     factoryScaleStart[5]=37;
     factoryScaleLen[5]=5;
     factoryScaleValues[37]=3;
@@ -147,7 +147,7 @@ LayoutModel::LayoutModel()
     factoryScaleValues[39]=3;
     factoryScaleValues[40]=1;
     factoryScaleValues[41]=2;
-
+    
     factoryScaleStart[6]=42;
     factoryScaleLen[6]=3;
     factoryScaleValues[42]=4;
@@ -173,11 +173,11 @@ LayoutModel::LayoutModel()
     factoryScaleValues[53]=3;
     factoryScaleValues[54]=4;
     factoryScaleValues[55]=2;
-
+    
     setFactoryProg(0);
-
-//    setScale(36,127,0,false);
-//    setXY(8,4);
+    
+    //    setScale(36,127,0,false);
+    //    setXY(8,4);
 }
 
 void LayoutModel::calcGeo(int w, int h)
@@ -358,7 +358,7 @@ void LayoutModel::setRaga(int i, int b)
      * (13 notes + 12 trans = 25 segs)
      *
      **/
-
+    
     // basic config
     nrows=4;
     rowheightmax=nrows;
@@ -377,7 +377,7 @@ void LayoutModel::setRaga(int i, int b)
     nsegs=13+15+13+25; // =66
     setAll(nsegs,segwidth,1);
     calcGeo(width,height);
-
+    
     // row 1
     segtype[0]=0;
     segtype[1]=1;
@@ -406,7 +406,7 @@ void LayoutModel::setRaga(int i, int b)
     midinote[8]=67;
     midinote[10]=71;
     midinote[12]=72;
-
+    
     // row 2
     segtype[13]=0;
     segtype[14]=1;
@@ -439,7 +439,7 @@ void LayoutModel::setRaga(int i, int b)
     midinote[23]=69;
     midinote[25]=71;
     midinote[27]=72;
-
+    
     // row 3
     segtype[28]=0;
     segtype[29]=1;
@@ -468,7 +468,7 @@ void LayoutModel::setRaga(int i, int b)
     midinote[36]=67;
     midinote[38]=71;
     midinote[40]=72;
-
+    
     // row 4
     segtype[41]=0;
     segtype[42]=1;
@@ -521,7 +521,7 @@ void LayoutModel::setRaga(int i, int b)
     midinote[61]=69;
     midinote[63]=71;
     midinote[65]=72;
-
+    
 }
 int LayoutModel::getBasenote() const
 {
@@ -561,37 +561,37 @@ void LayoutModel::setScale(int start, int n, int step, bool withTransistion = fa
     steps=new int[12];
     if(n<nsegsmax) {
         switch (step) {
-        // regular keyboard
-        case 1:
-            steps[0]=2;
-            steps[1]=2;
-            steps[2]=1;
-            steps[3]=2;
-            steps[4]=2;
-            steps[5]=2;
-            steps[6]=1;
-            nsteps=7;
-            break;
-        case 2:
-            steps[0]=2;
-            steps[1]=1;
-            steps[2]=2;
-            steps[3]=2;
-            steps[4]=2;
-            steps[5]=2;
-            steps[6]=1;
-            nsteps=7;
-            break;
-        case 3:
-            steps[0]=4;
-            steps[1]=3;
-            steps[2]=5;
-            nsteps=3;
-            break;
-        default:
-            steps[0]=1;
-            nsteps=1;
-            break;
+                // regular keyboard
+            case 1:
+                steps[0]=2;
+                steps[1]=2;
+                steps[2]=1;
+                steps[3]=2;
+                steps[4]=2;
+                steps[5]=2;
+                steps[6]=1;
+                nsteps=7;
+                break;
+            case 2:
+                steps[0]=2;
+                steps[1]=1;
+                steps[2]=2;
+                steps[3]=2;
+                steps[4]=2;
+                steps[5]=2;
+                steps[6]=1;
+                nsteps=7;
+                break;
+            case 3:
+                steps[0]=4;
+                steps[1]=3;
+                steps[2]=5;
+                nsteps=3;
+                break;
+            default:
+                steps[0]=1;
+                nsteps=1;
+                break;
         }
         if(step==0) {
             steps[0] = 1;
@@ -618,15 +618,11 @@ void LayoutModel::setScale(int start, int n, int step, bool withTransistion = fa
 void LayoutModel::setFactoryProg(int p)
 {
     // basic config
-    nsegs=19;
     nrows=2;
     rowheightmax=4;
     nseg[0]=10;
     segwidthmax[0]=10;
     rowheight[0]=1;
-    nseg[1]=9;
-    segwidthmax[1]=9;
-    rowheight[1]=3;
     
     // row 1: control basenote
     for(int i=0;i<10;i++) {
@@ -635,19 +631,123 @@ void LayoutModel::setFactoryProg(int p)
         chan[i]=i;
     }
     
-    // row 2: the scale
-    int calcnote=basenote;
-    for(int i=0;i<nseg[1];i++) {
-        if(i%2==0) {
-            midinote[i+10]=calcnote;
-            note[i+10]=midi2f[calcnote];
-            segText[i+10]=midi2Text[calcnote%12];
-            calcnote+=factoryScaleValues[factoryScaleStart[p]+((i/2)%factoryScaleLen[p])];
-        } else {
-            segtype[i+10]=1;
-            segText[i+10]="";
-        }
+    int calcnote;
+    
+    switch (p) {
+        case 0:
+            nsegs=14;
+            nseg[1]=4;
+            segwidthmax[1]=4;
+            rowheight[1]=3;
+            
+            // row 2: the scale
+            calcnote=basenote;
+            for(int i=0;i<nseg[1];i++) {
+                midinote[i+10]=calcnote;
+                note[i+10]=midi2f[calcnote];
+                segText[i+10]=midi2Text[calcnote%12];
+                segtype[i+10]=0;
+                calcnote+=factoryScaleValues[factoryScaleStart[3]+(i%factoryScaleLen[3])];
+            }
+            break;
+            
+        case 1:
+            nsegs=18;
+            nseg[1]=8;
+            segwidthmax[1]=8;
+            rowheight[1]=3;
+            
+            // row 2: the scale
+            calcnote=basenote;
+            for(int i=0;i<nseg[1];i++) {
+                midinote[i+10]=calcnote;
+                note[i+10]=midi2f[calcnote];
+                segText[i+10]=midi2Text[calcnote%12];
+                segtype[i+10]=0;
+                calcnote+=factoryScaleValues[factoryScaleStart[1]+(i%factoryScaleLen[1])];
+            }
+            break;
+            
+        case 2:
+            nsegs=18;
+            nseg[1]=8;
+            segwidthmax[1]=8;
+            rowheight[1]=3;
+            
+            // row 2: the scale
+            calcnote=basenote;
+            for(int i=0;i<nseg[1];i++) {
+                midinote[i+10]=calcnote;
+                note[i+10]=midi2f[calcnote];
+                segText[i+10]=midi2Text[calcnote%12];
+                segtype[i+10]=0;
+                calcnote+=factoryScaleValues[factoryScaleStart[2]+(i%factoryScaleLen[2])];
+            }
+            break;
+            
+        case 3:
+            nsegs=22;
+            nseg[1]=12;
+            segwidthmax[1]=12;
+            rowheight[1]=3;
+            
+            // row 2: the scale
+            calcnote=basenote;
+            for(int i=0;i<nseg[1];i++) {
+                midinote[i+10]=calcnote;
+                note[i+10]=midi2f[calcnote];
+                segText[i+10]=midi2Text[calcnote%12];
+                segtype[i+10]=0;
+                calcnote+=factoryScaleValues[factoryScaleStart[0]+(i%factoryScaleLen[0])];
+            }
+            break;
+            
+        case 4:
+            nsegs=17;
+            nseg[1]=7;
+            segwidthmax[1]=7;
+            rowheight[1]=3;
+            
+            // row 2: the scale
+            calcnote=basenote;
+            for(int i=0;i<nseg[1];i++) {
+                if(i%2==0) {
+                    midinote[i+10]=calcnote;
+                    note[i+10]=midi2f[calcnote];
+                    segText[i+10]=midi2Text[calcnote%12];
+                    segtype[i+10]=0;
+                    calcnote+=factoryScaleValues[factoryScaleStart[3]+((i/2)%factoryScaleLen[3])];
+                } else {
+                    segtype[i+10]=1;
+                    segText[i+10]="";
+                    segtype[i+10]=1;
+                }
+            }
+            break;
+            
+        default:
+            nsegs=14;
+            nseg[1]=4;
+            segwidthmax[1]=4;
+            rowheight[1]=3;
+            
+            // row 2: the scale
+            calcnote=basenote;
+            for(int i=0;i<nseg[1];i++) {
+                if(i%2==0) {
+                    midinote[i+10]=calcnote;
+                    note[i+10]=midi2f[calcnote];
+                    segText[i+10]=midi2Text[calcnote%12];
+                    calcnote+=factoryScaleValues[factoryScaleStart[p]+((i/2)%factoryScaleLen[p])];
+                } else {
+                    segtype[i+10]=1;
+                    segText[i+10]="";
+                }
+            }
+            break;
     }
+    calcGeo(this->width, this->height);
+    
 }
 
 void LayoutModel::setFactoryLayout(int i)
@@ -664,7 +764,7 @@ void LayoutModel::setFactoryLayout(int i)
     nseg[2]=8;
     segwidthmax[2]=8;
     rowheight[2]=1;
-
+    
     nseg[3]=factoryScaleLen[basescale]*noct*2-1;
     if(nseg[3]+40>nsegsmax) {
         nseg[3]=nsegsmax-40;
@@ -672,7 +772,7 @@ void LayoutModel::setFactoryLayout(int i)
     segwidthmax[3]=nseg[3];
     rowheight[3]=9;
     nsegs=40+nseg[3];
-
+    
     qDebug() << "nsegs " << nsegs;
     setAll(nsegs,segwidth,1);
     qDebug() << "calc geo " << width << " " << height;
@@ -681,15 +781,15 @@ void LayoutModel::setFactoryLayout(int i)
     setAll(nsegs,segtype,0);
     qDebug() << "set chan 0";
     setAll(nsegs,chan,0);
-
-
+    
+    
     // row 1: control basenote
     for(int i=0;i<24;i++) {
         qDebug() << "row 1: " << i;
         segtype[i]=3;
         midinote[i]=i+60;
     }
-
+    
     // row 2-3: control rows
     for(int i=0;i<8;i++) {
         qDebug() << "row 2/3: " << i;
@@ -702,7 +802,7 @@ void LayoutModel::setFactoryLayout(int i)
         segText[i+24].sprintf("X%2d",i);
         segText[i+32].sprintf("Y%2d",i);
     }
-
+    
     // row 4: the scale
     int calcnote=basenote;
     for(int i=0;i<nseg[3];i++) {

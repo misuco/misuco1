@@ -59,32 +59,118 @@ LayoutModel::LayoutModel()
     
     // thanx 2 http://subsynth.sourceforge.net/midinote2freq.html
     midi2f = new double[127];
-    float a = 440; // a is 440 hz...
+    float freq_a = 440; // a is 440 hz...
     for (int x = 0; x < 127; ++x)
     {
-        midi2f[x] = (a / 32.0) * (pow(2.0 , (((float)x - 9.0)) / 12.0));
+        midi2f[x] = (freq_a / 32.0) * (pow(2.0 , (((float)x - 9.0)) / 12.0));
         //qDebug() << "note " << x << " f " << midi2f[x];
     }
+    /*
+     
+     "guessed by me"
+     01 C      <-  1/1
+     02 cis    <- 13/12
+     03 D      <-  7/6
+     04 dis    <-  5/4
+     05 E      <-  4/3
+     06 F      <- 17/12
+     07 fis    <-  3/2
+     08 G      <- 19/12
+     09 gis    <-  5/3
+     10 A      <-  7/4
+     11 Ais    <- 11/6
+     12 H      <- 23/12
+     13 C      <-  2/1
+     
+     Reines Interval
+     01 C   1/1
+     02 des 16/15
+     03 D   9/8 bzw. 10/9
+     04 es  6/5
+     05 E   5/4
+     06 F   4/3
+     07 fis 45/32
+     08 G   3/2
+     09 as  8/5
+     10 A   5/3
+     11 B   16/9 bzw. 9/5
+     12 H   15/8
+     13 C   2
+     
+     */
     
-    midi2Text = new QString[12];
-    midi2Text[0]="SA\nC";
-    midi2Text[1]="SA'\nC#";
-    midi2Text[2]="RE\nD";
-    midi2Text[3]="RE'\nD#";
-    midi2Text[4]="GA\nE";
-    midi2Text[5]="MA\nF";
-    midi2Text[6]="MA'\nF#";
-    midi2Text[7]="PA\nG";
-    midi2Text[8]="PA'\nG#";
-    midi2Text[9]="DA\nA";
-    midi2Text[10]="DA'\nA#";
-    midi2Text[11]="NI\nB";
+    midi2fpure = new double[127];
+    int pure_m[] = {1,16,9,6,5,4,45,3,8,5,16,15,2};
+    int pure_d[] = {1,15,8,5,4,3,32,2,5,3,9,8,1};
+    float freq_c = freq_a / 5 * 3; // 264 hz
+    for (int x = 60; x < 72; ++x)
+    {
+        float freq=freq_c * pure_m[x%12] / pure_d[x%12];
+        midi2fpure[x] = freq;
+        int xup=x; float frequp=freq;
+        int xdown=x; float freqdown=freq;
+        for(int y=0;y<6;y++) {
+            xup+=12;
+            xdown-=12;
+            frequp*=2;
+            freqdown/=2;
+            if(xup<128) {
+                midi2fpure[xup] = frequp;
+            }
+            if(xdown>0) {
+                midi2fpure[xdown] = freqdown;
+            }
+        }
+        qDebug() << "note " << x << " f " << midi2fpure[x];
+    }
+    
+    midi2TextEU = new QString[12];
+    midi2TextEU[0]="C";
+    midi2TextEU[1]="C#";
+    midi2TextEU[2]="D";
+    midi2TextEU[3]="D#";
+    midi2TextEU[4]="E";
+    midi2TextEU[5]="F";
+    midi2TextEU[6]="F#";
+    midi2TextEU[7]="G";
+    midi2TextEU[8]="G#";
+    midi2TextEU[9]="A";
+    midi2TextEU[10]="A#";
+    midi2TextEU[11]="B";
+    
+    midi2TextIN = new QString[12];
+    midi2TextIN[0]="SA";
+    midi2TextIN[1]="SA'";
+    midi2TextIN[2]="RE";
+    midi2TextIN[3]="RE'";
+    midi2TextIN[4]="GA";
+    midi2TextIN[5]="MA";
+    midi2TextIN[6]="MA'#";
+    midi2TextIN[7]="PA";
+    midi2TextIN[8]="PA'";
+    midi2TextIN[9]="DA";
+    midi2TextIN[10]="DA'";
+    midi2TextIN[11]="NI";
+    
+    midi2TextDO = new QString[12];
+    midi2TextDO[0]="DO";
+    midi2TextDO[1]="DO";
+    midi2TextDO[2]="RE";
+    midi2TextDO[3]="RE";
+    midi2TextDO[4]="MI";
+    midi2TextDO[5]="FA";
+    midi2TextDO[6]="FA";
+    midi2TextDO[7]="SO";
+    midi2TextDO[8]="SO";
+    midi2TextDO[9]="LA";
+    midi2TextDO[10]="LA";
+    midi2TextDO[11]="TI";
     
     basenote=60;
     basescale=0;
     noct=2;
     
-    nFactoryScales=8;
+    nFactoryScales=10;
     factoryScaleStart=new int[nFactoryScales];
     factoryScaleLen=new int[nFactoryScales];
     factoryScaleValues=new int[56];
@@ -617,12 +703,29 @@ void LayoutModel::setScale(int start, int n, int step, bool withTransistion = fa
 
 void LayoutModel::setFactoryProg(int p)
 {
+    /*
+     . -----
+     . -----
+     . xxxxx
+     . |
+     . |
+     . |
+     . |
+     . |
+     . |
+     
+     */
     // basic config
-    nrows=2;
-    rowheightmax=4;
+    nrows=3;
+    rowheightmax=9;
+    
     nseg[0]=10;
     segwidthmax[0]=10;
-    rowheight[0]=1;
+    rowheight[0]=2;
+    
+    nseg[1]=1;
+    segwidthmax[1]=1;
+    rowheight[1]=1;
     
     // row 1: control basenote
     for(int i=0;i<10;i++) {
@@ -631,117 +734,159 @@ void LayoutModel::setFactoryProg(int p)
         chan[i]=i;
     }
     
+    // row 2: info bar
+    segtype[10]=7;
+    midinote[10]=0;
+    chan[10]=0;
+    
     int calcnote;
     
     switch (p) {
         case 0:
-            nsegs=14;
-            nseg[1]=4;
-            segwidthmax[1]=4;
-            rowheight[1]=3;
+            segText[10]="MISUCO.ORG MICROTONAL SURFACE CTL";
+            nsegs=15;
+            nseg[2]=4;
+            segwidthmax[2]=4;
+            rowheight[2]=6;
             
             // row 2: the scale
             calcnote=basenote;
-            for(int i=0;i<nseg[1];i++) {
-                midinote[i+10]=calcnote;
-                note[i+10]=midi2f[calcnote];
-                segText[i+10]=midi2Text[calcnote%12];
-                segtype[i+10]=0;
-                calcnote+=factoryScaleValues[factoryScaleStart[3]+(i%factoryScaleLen[3])];
+            for(int i=0;i<nseg[2];i++) {
+                midinote[i+11]=calcnote;
+                note[i+11]=midi2f[calcnote];
+                segText[i+11]="";
+                segtype[i+11]=0;
+                calcnote+=factoryScaleValues[factoryScaleStart[6]+(i%factoryScaleLen[6])];
             }
+            segText[11]="THE";
+            segText[12]="FUTURE";
+            segText[13]="OF";
+            segText[14]="SOUND";
             break;
             
         case 1:
-            nsegs=18;
-            nseg[1]=8;
-            segwidthmax[1]=8;
-            rowheight[1]=3;
+            segText[10]="SIMPLE SCALE - ALL MY LITTLE DUCKS";
+            nsegs=19;
+            nseg[2]=8;
+            segwidthmax[2]=8;
+            rowheight[2]=6;
             
             // row 2: the scale
             calcnote=basenote;
-            for(int i=0;i<nseg[1];i++) {
-                midinote[i+10]=calcnote;
-                note[i+10]=midi2f[calcnote];
-                segText[i+10]=midi2Text[calcnote%12];
-                segtype[i+10]=0;
+            for(int i=0;i<nseg[2];i++) {
+                midinote[i+11]=calcnote;
+                note[i+11]=midi2f[calcnote];
+                segText[i+11]=midi2TextDO[calcnote%12];
+                segtype[i+11]=0;
                 calcnote+=factoryScaleValues[factoryScaleStart[1]+(i%factoryScaleLen[1])];
             }
             break;
             
         case 2:
-            nsegs=18;
-            nseg[1]=8;
-            segwidthmax[1]=8;
-            rowheight[1]=3;
+            segText[10]="THE POWER OF INDIAN RAGAS";
+            nsegs=19;
+            nseg[2]=8;
+            segwidthmax[2]=8;
+            rowheight[2]=6;
             
             // row 2: the scale
             calcnote=basenote;
-            for(int i=0;i<nseg[1];i++) {
-                midinote[i+10]=calcnote;
-                note[i+10]=midi2f[calcnote];
-                segText[i+10]=midi2Text[calcnote%12];
-                segtype[i+10]=0;
+            for(int i=0;i<nseg[2];i++) {
+                midinote[i+11]=calcnote;
+                note[i+11]=midi2f[calcnote];
+                segText[i+11]=midi2TextIN[calcnote%12];
+                segtype[i+11]=0;
                 calcnote+=factoryScaleValues[factoryScaleStart[2]+(i%factoryScaleLen[2])];
             }
             break;
             
         case 3:
+            segText[10]="FULL PIANO SCALE";
             nsegs=22;
-            nseg[1]=12;
-            segwidthmax[1]=12;
-            rowheight[1]=3;
+            nseg[2]=13;
+            segwidthmax[2]=13;
+            rowheight[2]=6;
             
             // row 2: the scale
             calcnote=basenote;
-            for(int i=0;i<nseg[1];i++) {
-                midinote[i+10]=calcnote;
-                note[i+10]=midi2f[calcnote];
-                segText[i+10]=midi2Text[calcnote%12];
-                segtype[i+10]=0;
+            for(int i=0;i<nseg[2];i++) {
+                midinote[i+11]=calcnote;
+                note[i+11]=midi2f[calcnote];
+                segText[i+11]=midi2TextEU[calcnote%12];
+                segtype[i+11]=0;
                 calcnote+=factoryScaleValues[factoryScaleStart[0]+(i%factoryScaleLen[0])];
             }
             break;
             
         case 4:
-            nsegs=17;
-            nseg[1]=7;
-            segwidthmax[1]=7;
-            rowheight[1]=3;
+            segText[10]="UNIQUE: FREQ TRANSISION AREAS";
+            nsegs=18;
+            nseg[2]=7;
+            segwidthmax[2]=7;
+            rowheight[2]=6;
             
             // row 2: the scale
             calcnote=basenote;
-            for(int i=0;i<nseg[1];i++) {
+            for(int i=0;i<nseg[2];i++) {
                 if(i%2==0) {
-                    midinote[i+10]=calcnote;
-                    note[i+10]=midi2f[calcnote];
-                    segText[i+10]=midi2Text[calcnote%12];
-                    segtype[i+10]=0;
+                    midinote[i+11]=calcnote;
+                    note[i+11]=midi2f[calcnote];
+                    segText[i+11]=midi2TextEU[calcnote%12];
+                    segtype[i+11]=0;
                     calcnote+=factoryScaleValues[factoryScaleStart[3]+((i/2)%factoryScaleLen[3])];
                 } else {
-                    segtype[i+10]=1;
-                    segText[i+10]="";
-                    segtype[i+10]=1;
+                    segtype[i+11]=1;
+                    segText[i+11]="";
+                    segtype[i+11]=1;
                 }
             }
             break;
             
-        default:
-            nsegs=14;
-            nseg[1]=4;
-            segwidthmax[1]=4;
-            rowheight[1]=3;
+        case 5:
+            segText[10]="TEMPERED VS. PURE SCALES";
+            nrows=4;
+            nsegs=35;
+            nseg[2]=13;
+            nseg[3]=13;
+            segwidthmax[2]=13;
+            segwidthmax[3]=13;
+            rowheight[2]=3;
+            rowheight[3]=3;
             
             // row 2: the scale
             calcnote=basenote;
-            for(int i=0;i<nseg[1];i++) {
+            for(int i=0;i<nseg[2];i++) {
+                midinote[i+11]=calcnote;
+                note[i+11]=midi2f[calcnote];
+                segText[i+11]=midi2TextEU[calcnote%12];
+                segtype[i+11]=0;
+                
+                midinote[i+24]=calcnote;
+                note[i+24]=midi2fpure[calcnote];
+                segText[i+24]=midi2TextEU[calcnote%12];
+                segtype[i+24]=0;
+                calcnote+=factoryScaleValues[factoryScaleStart[0]+(i%factoryScaleLen[0])];
+            }
+            break;
+            
+        default:
+            segText[10]="PLEASE SUPPORT: MISUCO.ORG";
+            nsegs=15;
+            nseg[2]=5;
+            segwidthmax[2]=5;
+            rowheight[2]=6;
+            
+            // row 2: the scale
+            calcnote=basenote;
+            for(int i=0;i<nseg[2];i++) {
                 if(i%2==0) {
-                    midinote[i+10]=calcnote;
-                    note[i+10]=midi2f[calcnote];
-                    segText[i+10]=midi2Text[calcnote%12];
+                    midinote[i+11]=calcnote;
+                    note[i+11]=midi2f[calcnote];
+                    segText[i+11]=midi2TextEU[calcnote%12];
                     calcnote+=factoryScaleValues[factoryScaleStart[p]+((i/2)%factoryScaleLen[p])];
                 } else {
-                    segtype[i+10]=1;
-                    segText[i+10]="";
+                    segtype[i+11]=1;
+                    segText[i+11]="";
                 }
             }
             break;
@@ -811,7 +956,7 @@ void LayoutModel::setFactoryLayout(int i)
             qDebug() << "calcnote " << calcnote;
             midinote[i+40]=calcnote;
             note[i+40]=midi2f[calcnote];
-            segText[i+40]=midi2Text[calcnote%12];
+            segText[i+40]=midi2TextEU[calcnote%12];
             calcnote+=factoryScaleValues[factoryScaleStart[basescale]+((i/2)%factoryScaleLen[basescale])];
         } else {
             segtype[i+40]=1;

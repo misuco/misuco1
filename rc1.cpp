@@ -56,13 +56,17 @@ RC1::RC1(QWidget *parent) :
     prepainters=new IPaint*[nPrePainters];
     prepainters[0]=new PaintBgShapes();
 
-    nPointPainters=5;
+    nPointPainters=9;
     pointpainters=new IPointPaint*[nPointPainters];
     pointpainters[0]=new PointPaintShape();
     pointpainters[1]=new PointPaintShape();
     pointpainters[2]=new PointPaintShape();
     pointpainters[3]=new PointPaintShape();
     pointpainters[4]=new PointPaintShape();
+    pointpainters[5]=new PointPaintShape();
+    pointpainters[6]=new PointPaintShape();
+    pointpainters[7]=new PointPaintShape();
+    pointpainters[8]=new PointPaintShape();
 
     nPostPainters=1;
     postpainters=new IPaint*[nPostPainters];
@@ -75,7 +79,11 @@ RC1::RC1(QWidget *parent) :
     painterOn[3]=false;
     painterOn[4]=false;
     painterOn[5]=true;
-    painterOn[6]=true;
+    painterOn[6]=false;
+    painterOn[7]=false;
+    painterOn[8]=false;
+    painterOn[9]=false;
+    painterOn[10]=false;
 
 //    setConfigSlideRC();
 //    setConfigPdjam2013();
@@ -494,6 +502,10 @@ void RC1::setPPS(int p)
             painterOn[4]=false;
             painterOn[5]=false;
             painterOn[6]=false;
+            painterOn[7]=false;
+            painterOn[8]=false;
+            painterOn[9]=false;
+            painterOn[10]=false;
             
             for(int i=0;i<pointpainters[1]->getParamCount();i++) {
                 pointpainters[1]->setParam(i,0);
@@ -546,7 +558,7 @@ void RC1::setPPS(int p)
             prepainters[0]->setParam(10, 10);   // cradx
             prepainters[0]->setParam(11, 10);   // crady
             prepainters[0]->setParam(12, 0);    // gradients
-            prepainters[0]->setParam(13, 0);    // painttext
+            prepainters[0]->setParam(13, 1);    // painttext
             
             break;
             
@@ -558,6 +570,10 @@ void RC1::setPPS(int p)
             painterOn[4]=false;
             painterOn[5]=false;
             painterOn[6]=false;
+            painterOn[7]=false;
+            painterOn[8]=false;
+            painterOn[9]=false;
+            painterOn[10]=false;
             
             for(int i=0;i<pointpainters[1]->getParamCount();i++) {
                 pointpainters[1]->setParam(i,0);
@@ -621,6 +637,10 @@ void RC1::setPPS(int p)
             painterOn[4]=false;
             painterOn[5]=true;
             painterOn[6]=false;
+            painterOn[7]=false;
+            painterOn[8]=false;
+            painterOn[9]=false;
+            painterOn[10]=false;
             
             for(int j=0;j<5;j++) {
                 for(int i=0;i<pointpainters[1]->getParamCount();i++) {
@@ -695,6 +715,78 @@ void RC1::setPPS(int p)
             prepainters[0]->setParam(12, 1);    // gradients
             prepainters[0]->setParam(13, 1);    // painttext
             
+            break;
+            
+        case 3:
+            painterOn[0]=true;
+            painterOn[1]=true;
+            painterOn[2]=true;
+            painterOn[3]=true;
+            painterOn[4]=true;
+            painterOn[5]=true;
+            painterOn[6]=true;
+            painterOn[7]=true;
+            painterOn[8]=true;
+            painterOn[9]=false;
+            painterOn[10]=false;
+            
+            for(int i=0;i<9;i++) {
+                for(int j=0;j<pointpainters[i]->getParamCount();j++) {
+                    pointpainters[i]->setParam(j,0);
+                }
+                // init x/y
+                pointpainters[i]->setParam(1,1);
+                pointpainters[i]->setParam(11,1);
+                
+                // radius 5 constant
+                pointpainters[i]->setParam(18,5);
+                pointpainters[i]->setParam(27,5);
+                
+                // color brush constant
+                pointpainters[i]->setParam(72,0);
+                pointpainters[i]->setParam(80,1);       // hue by context
+                pointpainters[i]->setParam(81,127);
+                pointpainters[i]->setParam(90,140);
+                pointpainters[i]->setParam(99,255);     // brush alpha constant 255
+                
+                // color pen constant
+                pointpainters[i]->setParam(36,0);
+                pointpainters[i]->setParam(45,0);
+                pointpainters[i]->setParam(54,0);
+                pointpainters[i]->setParam(63,0);
+                
+                pointpainters[i]->setParam(113,720);    // rotate by lifetime
+                pointpainters[i]->setParam(117,2);      // shape triangle
+            }
+            pointpainters[0]->setParam(6, 1);   // x*wt
+            pointpainters[1]->setParam(6, -1);   // x*wt
+            pointpainters[2]->setParam(16, 1);   // y*wt
+            pointpainters[3]->setParam(16, -1);   // y*ht
+            
+            pointpainters[4]->setParam(6, 1);   // x*wt
+            pointpainters[4]->setParam(16, -1);   // y*ht
+            pointpainters[5]->setParam(6, 1);   // x*wt
+            pointpainters[5]->setParam(16, 1);   // y*ht
+            pointpainters[6]->setParam(6, -1);   // x*wt
+            pointpainters[6]->setParam(16, -1);   // x*wt
+            pointpainters[7]->setParam(6, -1);   // y*wt
+            pointpainters[7]->setParam(16, 1);   // y*ht
+
+            
+            prepainters[0]->setParam(0, 160);   // sPenAct
+            prepainters[0]->setParam(1, 200);   // lPenAct
+            prepainters[0]->setParam(2, 160);   // sPenPsv
+            prepainters[0]->setParam(3, 50);    // lPenPsv
+            prepainters[0]->setParam(4, 160);   // sBrushAct
+            prepainters[0]->setParam(5, 200);   // lBrushAct
+            prepainters[0]->setParam(6, 160);   // sBrushPsv
+            prepainters[0]->setParam(7, 80);    // lBrushPsv
+            prepainters[0]->setParam(8, 1);     // colorMode
+            prepainters[0]->setParam(9, 0);     // chue
+            prepainters[0]->setParam(10, 10);   // cradx
+            prepainters[0]->setParam(11, 10);   // crady
+            prepainters[0]->setParam(12, 1);    // gradients
+            prepainters[0]->setParam(13, 1);    // painttext
             break;
             
         default:

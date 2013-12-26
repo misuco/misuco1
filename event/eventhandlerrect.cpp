@@ -53,34 +53,37 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
     if(p->getState() == Qt::TouchPointReleased) {
         rc1->getEvstat()->incTouchendcount();
     }
+    
+    // 2.b. translate to MisuEvent index
+    int iy=0;
+    int ix=0;
+    int iseg=0;
+    int ysum=0;
+    int xsum=0;
+    while(p->getY()>ysum && iy<layout->getNrows()) {
+        ysum+=layout->getRowheightpx(iy);
+        iseg+=layout->getNseg(iy);
+        iy++;
+        //            qDebug() << "loop1 iy:" << iy << " iseg:" << iseg << " ysum: " << ysum;
+    }
+    if(iy>0) {
+        iy--;
+        iseg-=layout->getNseg(iy);
+        while(p->getX()>xsum && ix<layout->getNseg(iy)) {
+            xsum+=layout->getSegwidthpx(iseg);
+            iseg++; ix++;
+            //                qDebug() << "loop2 iseg:" << iseg << " xsum: " << xsum;
+        }
+        if(iseg>0) {
+            iseg--;
+            ix--;
+        }
+    }
+    
     if( p->getState() == Qt::TouchPointPressed ||
         p->getState() == Qt::TouchPointMoved ) {
 
-        // 2.b. translate to MisuEvent index
-        int iy=0;
-        int ix=0;
-        int iseg=0;
-        int ysum=0;
-        int xsum=0;
-        while(p->getY()>ysum && iy<layout->getNrows()) {
-            ysum+=layout->getRowheightpx(iy);
-            iseg+=layout->getNseg(iy);
-            iy++;
-//            qDebug() << "loop1 iy:" << iy << " iseg:" << iseg << " ysum: " << ysum;
-        }
-        if(iy>0) {
-            iy--;
-            iseg-=layout->getNseg(iy);
-            while(p->getX()>xsum && ix<layout->getNseg(iy)) {
-                xsum+=layout->getSegwidthpx(iseg);
-                iseg++; ix++;
-//                qDebug() << "loop2 iseg:" << iseg << " xsum: " << xsum;
-            }
-            if(iseg>0) {
-                iseg--;
-                ix--;
-            }
-        }
+
 
         if(isegb[evptr]!=iseg) {
             if(isegb[evptr]!=-1) {
@@ -95,7 +98,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         if(layout->getSegtype(iseg)==0) {
 //            double v1=layout->getNote(iseg);
             double v1=layout->getNote(iseg);
-            p->setHue(30*layout->getMidiNote(iseg));
+            p->setHue(30*(layout->getMidiNote(iseg)%12));
             if(note[evptr]!=v1) {
                 if(transitionMode) {
                     if(note[evptr]>0) {
@@ -188,11 +191,13 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         }
 
     } else if( p->getState() == Qt::TouchPointReleased ) {
-        act[evptr]=false;
-        snd->note(chan[evptr],ieventout[evptr],note[evptr],0);
-        note[evptr]=-1;
-        layout->decPressed(isegb[evptr]);
-        isegb[evptr]=-1;
+        if(layout->getSegtype(iseg)==0 || layout->getSegtype(iseg)==1) {
+            act[evptr]=false;
+            snd->note(chan[evptr],ieventout[evptr],note[evptr],0);
+            note[evptr]=-1;
+            layout->decPressed(isegb[evptr]);
+            isegb[evptr]=-1;
+        }
     }
 }
 

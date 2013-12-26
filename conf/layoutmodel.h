@@ -80,12 +80,15 @@ private:
     double *note;
     int *midinote;
     double *midi2f;
+    double *midi2fpure;
     int *ctlx;
     int *ctly;
     int *chan;
     int *pressed;
     QString * segText;
-    QString * midi2Text;
+    QString * midi2TextEU;
+    QString * midi2TextIN;
+    QString * midi2TextDO;
     int * segH;         // segment color hue
     int width;
     int height;

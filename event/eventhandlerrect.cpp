@@ -35,7 +35,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
     // 1. figure out, at which index (evptr) the data for this touch point is stored
     qint16 evptr=p->getGid()%ntp;
 
-    // qDebug() << "processPoint ptr " << evptr << " id " << p->getGid();
+    qDebug() << "processPoint ptr " << evptr << " id " << p->getGid();
     if(p->getState()==Qt::TouchPointPressed) {
         if(act[evptr]!=true) {  // if needed, else ieventsub will be set to 0 by accitent -> hanging note
             act[evptr]=true;
@@ -80,10 +80,10 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         }
     }
     
+    qDebug() << "iseg " << iseg;
+    
     if( p->getState() == Qt::TouchPointPressed ||
         p->getState() == Qt::TouchPointMoved ) {
-
-
 
         if(isegb[evptr]!=iseg) {
             if(isegb[evptr]!=-1) {
@@ -191,8 +191,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         }
 
     } else if( p->getState() == Qt::TouchPointReleased ) {
+        act[evptr]=false;
         if(layout->getSegtype(iseg)==0 || layout->getSegtype(iseg)==1) {
-            act[evptr]=false;
             snd->note(chan[evptr],ieventout[evptr],note[evptr],0);
             note[evptr]=-1;
             layout->decPressed(isegb[evptr]);

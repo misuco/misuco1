@@ -103,6 +103,17 @@ private:
     QList<quint32> tuioAlive;
     QList<quint16> tuioSources;
     
+    // test facilities
+    
+    Point * tp;
+    long tpt;
+    int tpn;
+    int nTests;
+    int tpy;
+    int tpx;
+    int tpstep;
+    bool testMode;
+    
     void resetStat();
 
     void setConfigTransistions();

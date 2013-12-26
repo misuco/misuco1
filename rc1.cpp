@@ -36,7 +36,7 @@ RC1::RC1(QWidget *parent) :
     QGLWidget(parent)
 {
     setAttribute(Qt::WA_AcceptTouchEvents,true);
-//    qDebug() << "View() size:" << width() << " " << height();
+    qDebug() << "View() size:" << width() << " " << height();
     eventId = 1;
     nomouse = true;
     ttl=2000;
@@ -104,10 +104,18 @@ RC1::RC1(QWidget *parent) :
     oscin->registerPathObject(this);
 
     resetStat();
-    this->startTimer(10);
+    this->startTimer(40);
 
     fpsT.start();
     fcnt=0;
+    
+    repaint();
+    
+    tp = new Point();
+    tpn=0;
+    nTests=40;
+    tpx=1;
+    testMode=true;
 
     // setWindowState(Qt::WindowFullScreen);
 }
@@ -169,7 +177,44 @@ void RC1::resizeEvent(QResizeEvent *)
 void RC1::timerEvent(QTimerEvent *)
 {
     repaint();
-
+    
+    if(testMode) {
+        tpy=height()/2;
+        tpstep=width()/nTests;
+        
+        QDateTime ct = QDateTime::currentDateTime();
+        tpt=ct.toMSecsSinceEpoch();
+        tp->set(tpx,tpy,width(),height());
+        tp->setT(tpt);
+        tp->setTTL(2000);
+        tp->setState(Qt::TouchPointPressed);
+        tp->setGid(0);
+        ehand->processPoint(tp, this);
+        
+        qDebug() << "fired test: " << tpx << " " << tpy << " " << tpt;
+        
+        tp->set(tpx+1,tpy,width(),height());
+        tp->setT(tpt+1);
+        tp->setState(Qt::TouchPointMoved);
+        ehand->processPoint(tp, this);
+        
+        qDebug() << "fired test: " << tpx << " " << tpy << " " << tpt;
+        
+        tp->set(tpx+2,tpy,width(),height());
+        tp->setT(tpt+2);
+        tp->setState(Qt::TouchPointReleased);
+        ehand->processPoint(tp, this);
+        
+        tpx+=tpstep;
+        tpn++;
+        
+        if(tpn>nTests) {
+            testMode=false;
+        }
+        
+        qDebug() << "fired test: " << tpx << " " << tpy << " " << tpt;
+    }
+    
     /*
      * total chaos
      *

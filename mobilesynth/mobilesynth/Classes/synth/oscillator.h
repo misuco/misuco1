@@ -26,6 +26,7 @@ namespace synth {
             REVERSE_SAWTOOTH,
         };
         void set_wave_type(WaveType wave_type);
+        void set_wave_type(int w);
         
         void set_frequency(float frequency);
         void set_period_samples(long p);
@@ -36,8 +37,7 @@ namespace synth {
         
         // Returns the value at the specific time [0.0, 1.0].  The returned value
         // returned value is in the range [-1.0, 1.0].
-        virtual float GetValue() {};
-        float GetValue(int sample_num);
+        virtual float GetValue();
         
         // Start at the beginning of the period
         void Reset() { sample_num_ = 0; }

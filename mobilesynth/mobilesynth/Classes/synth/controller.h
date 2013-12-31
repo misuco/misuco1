@@ -98,7 +98,7 @@ namespace synth {
         
         KeyStack key_stack_;
         
-        Oscillator osc1_;
+//        Oscillator osc1_;
         
         bool osc_sync_;
         float sample_rate_;

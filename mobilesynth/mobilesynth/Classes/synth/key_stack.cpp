@@ -15,6 +15,7 @@ namespace synth {
             for(int j=0;j<kNumEnv;j++) {
                 envelopes[j][i]=new Envelope();
             }
+            oscs[i]=new Oscillator();
             cutoffs[i]=new FilterCutoff();
             cutoffs[i]->set_envelope(envelopes[1][i]);
             cutoffs[i]->set_cutoff(5000);
@@ -30,12 +31,9 @@ namespace synth {
         
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == note) {
-                period_samples_[i]=sample_rate_/freq;
-                float oldPos=pos_[i];
-                float divisor=freqs_[i]/freq;
-                float newPos=oldPos*divisor;
-                pos_[i]=(long)newPos;
-                freqs_[i]=freq;
+                // period_samples_[i]=sample_rate_/freq;
+                oscs[i]->set_frequency(freq);
+//                freqs_[i]=freq;
                 return false;
             }
         }
@@ -49,10 +47,14 @@ namespace synth {
         
         // put new note on top of stack
         notes_[size_] = note;
-        freqs_[size_] = freq;
+        oscs[size_]->set_frequency(freq);
+        oscs[size_]->set_pulse_width(osc_pw);
+        oscs[size_]->set_wave_type(osc_wave);
+        
+//        freqs_[size_] = freq;
 //        freqs1_[size_] = freq;
-        pos_[size_] = 0;
-        period_samples_[size_]=sample_rate_/freq;
+//        pos_[size_] = 0;
+//        period_samples_[size_]=sample_rate_/freq;
         
         for(int i=0;i<kNumEnv;i++) {
             envelopes[i][size_]->set_attack(env_a[i]);
@@ -100,10 +102,10 @@ namespace synth {
                 for (int j = i; j < size_ - 1; ++j) {
                     notes_[j] = notes_[j + 1];
                     //          count_[j] = count_[j + 1];
-                    freqs_[j] = freqs_[j + 1];
+//                    freqs_[j] = freqs_[j + 1];
 //                    freqs1_[j] = freqs1_[j + 1];
-                    period_samples_[j] = period_samples_[j+1];
-                    pos_[j] = pos_[j + 1];
+//                    period_samples_[j] = period_samples_[j+1];
+//                    pos_[j] = pos_[j + 1];
                     for(int k=0;k<kNumEnv;k++) {
                         envelopes[k][j]=(envelopes[k][j + 1]);
                     }
@@ -151,13 +153,13 @@ namespace synth {
         return size_;
     }
     
+    /*
     float KeyStack::GetFreq(int num) {
         if (num >= size_) {
             return 0;
         }
         return freqs_[num];
     }
-    /*
     float KeyStack::GetFreq1(int num) {
         if (num >= size_) {
             return 0;
@@ -177,6 +179,7 @@ namespace synth {
         }
         return notes_[num];
     }
+    /*
     long KeyStack::GetPos(int num) {
         if (num >= size_) {
             return 0;
@@ -199,12 +202,16 @@ namespace synth {
                 qDebug() << " manually set to 0 from " << pos_[num] << " since > " << period_samples_[num] << " at freq " << freqs_[num] << " at sr " << sample_rate_;
                 pos_[num]=0;
             }
-             */
+
         }
     }
-    
+    */
+
     void KeyStack::SetSampleRate(float s) {
         sample_rate_=s;
+        for(int i=0;i<kMaxSize;i++) {
+            oscs[i]->set_sample_rate(s);
+        }
     }
     
     static const int kMiddleAKey(49);

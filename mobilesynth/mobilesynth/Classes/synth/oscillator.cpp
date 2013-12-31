@@ -25,15 +25,43 @@ namespace synth {
         wave_type_ = wave_type;
     }
     
+    void Oscillator::set_wave_type(int w) {
+        switch (w) {
+            case 0:
+                wave_type_ = Oscillator::SINE;
+                break;
+            case 1:
+                wave_type_ = Oscillator::SQUARE;
+                break;
+            case 2:
+                wave_type_ = Oscillator::SAWTOOTH;
+                break;
+            case 3:
+                wave_type_ = Oscillator::TRIANGLE;
+                break;
+            default:
+                wave_type_ = Oscillator::REVERSE_SAWTOOTH;
+                break;
+        }
+    }
+
     void Oscillator::set_frequency(float frequency) {
+        
+        float oldPos=sample_num_;
+        float divisor=frequency_/frequency;
+        float newPos=oldPos*divisor;
+        sample_num_=(long)newPos;
+        
         frequency_ = frequency;
+        period_samples_=sample_rate_/frequency;
     }
     
-    void Oscillator::set_period_samples(long p) {
+/*    void Oscillator::set_period_samples(long p) {
         period_samples_ = p;
     }
+*/
     
-    float Oscillator::GetValue(int sample_num) {
+    float Oscillator::GetValue() {
         if (frequency_ == 0) {
             return 0.0f;
         }
@@ -48,7 +76,7 @@ namespace synth {
         if (period_samples_ == 0) {
             return 0.0f;
         }
-        float x = (sample_num / (float)period_samples_);
+        float x = (sample_num_ / (float)period_samples_);
         float value = 0;
         switch (wave_type_) {
             case SINE:
@@ -74,7 +102,10 @@ namespace synth {
                 assert(false);
                 break;
         }
-        //  sample_num_ = (sample_num_ + 1) % (long)period_samples;
+        sample_num_++;
+        if(sample_num_>= (long)period_samples_) {
+            sample_num_=0;
+        }
         return value;
     }
     

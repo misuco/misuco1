@@ -31,7 +31,7 @@ namespace synth {
         reset_routing();
     }
     void Controller::set_sample_rate(float sample_rate) {
-        osc1_.set_sample_rate(sample_rate);
+//        osc1_.set_sample_rate(sample_rate);
         sample_rate_=sample_rate;
         key_stack_.SetSampleRate(sample_rate);
     }
@@ -59,31 +59,16 @@ namespace synth {
      }*/
     
     void Controller::set_osc1_wave_type(Oscillator::WaveType wave_type) {
-        osc1_.set_wave_type(wave_type);
+//        osc1_.set_wave_type(wave_type);
     }
     
     void Controller::set_osc_pw(float p) {
-        osc1_.set_pulse_width(p);
+        key_stack_.setOscPW(p);
     }
     
     void Controller::set_osc1_wave_type_int(int w) {
-        switch (w) {
-            case 0:
-                osc1_.set_wave_type(Oscillator::SINE);
-                break;
-            case 1:
-                osc1_.set_wave_type(Oscillator::SQUARE);
-                break;
-            case 2:
-                osc1_.set_wave_type(Oscillator::SAWTOOTH);
-                break;
-            case 3:
-                osc1_.set_wave_type(Oscillator::TRIANGLE);
-                break;
-            default:
-                osc1_.set_wave_type(Oscillator::REVERSE_SAWTOOTH);
-                break;
-        }
+        key_stack_.setOscWave(w);
+
     }
     
     void Controller::set_modulation_amount(float amount) {
@@ -231,18 +216,18 @@ namespace synth {
             }*/
             
             //    key_frequency_.set_value(key_stack_.GetFreq(i));
-            osc1_.set_period_samples(key_stack_.GetPeriodSamples(i));
-            osc1_.set_frequency(key_stack_.GetFreq(i));
+//            osc1_.set_period_samples(key_stack_.GetPeriodSamples(i));
+//            osc1_.set_frequency(key_stack_.GetFreq(i));
+            
             
             //value += key_stack_.getFilter(i)->GetValue(osc1_.GetValue(key_stack_.GetPos(i)));
-            value+=osc1_.GetValue(key_stack_.GetPos(i));
-            
+            value+=key_stack_.getOsc(i)->GetValue();
             // Clip!
             value = fmaxf(-1.0f, value);
             value = fminf(1.0f, value);
             //    long period_samples = sample_rate_ / key_stack_.GetFreq(i);
             value*=key_stack_.getEnvelope(0, i)->GetValue();
-            key_stack_.SetPos(i, key_stack_.GetPos(i)+1 );
+//            key_stack_.SetPos(i, key_stack_.GetPos(i)+1 );
         }
         // Clip!
         value = fmaxf(-1.0f, value);

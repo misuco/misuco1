@@ -10,6 +10,7 @@
 
 #include "envelope.h"
 #include "filter.h"
+#include "oscillator.h"
 
 namespace synth {
     
@@ -57,19 +58,32 @@ namespace synth {
             return filters[i];
         }
         
+        Oscillator * getOsc(int i) {
+            return oscs[i];
+        }
+        
+        void setOscPW(float pw) {
+            osc_pw=pw;
+        }
+        
+        void setOscWave(int w) {
+            osc_wave=w;
+        }
+        
         void setADSR(int n, long a, long d, float s, long r) {env_a[n]=a;env_d[n]=d;env_s[n]=s;env_r[n]=r;};        
 //        void clear() { size_ = 0; }
         
     private:
         int size_;
         int notes_[kMaxSize];
-        float freqs_[kMaxSize];
+//        float freqs_[kMaxSize];
 //        float freqs1_[kMaxSize];
-        long pos_[kMaxSize];
-        long period_samples_[kMaxSize];
+//        long pos_[kMaxSize];
+//        long period_samples_[kMaxSize];
         Envelope * envelopes[kNumEnv][kMaxSize];
         Filter * filters[kMaxSize];
         FilterCutoff * cutoffs[kMaxSize];
+        Oscillator * oscs[kMaxSize];
         
         // Number of times the note at the position was pressed
         // int count_[kMaxSize];
@@ -79,6 +93,9 @@ namespace synth {
         long env_d[kNumEnv];
         float env_s[kNumEnv];
         long env_r[kNumEnv];
+        
+        float osc_pw;
+        int osc_wave;
     };
     
     float KeyToFrequency(int key);

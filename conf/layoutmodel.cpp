@@ -121,7 +121,7 @@ LayoutModel::LayoutModel()
                 midi2fpure[xdown] = freqdown;
             }
         }
-        qDebug() << "note " << x << " f " << midi2fpure[x];
+        // qDebug() << "note " << x << " f " << midi2fpure[x];
     }
     
     midi2TextEU = new QString[12];
@@ -719,31 +719,31 @@ void LayoutModel::setFactoryProg(int p)
     nrows=3;
     rowheightmax=9;
     
-    nseg[0]=10;
-    segwidthmax[0]=10;
-    rowheight[0]=2;
+    nseg[1]=10;
+    segwidthmax[1]=10;
+    rowheight[1]=2;
     
-    nseg[1]=1;
-    segwidthmax[1]=1;
-    rowheight[1]=1;
+    nseg[0]=1;
+    segwidthmax[0]=1;
+    rowheight[0]=1;
     
     // row 1: control basenote
-    for(int i=0;i<10;i++) {
+    for(int i=1;i<11;i++) {
         segtype[i]=6;
-        midinote[i]=i;
-        chan[i]=i;
+        midinote[i]=i-1;
+        chan[i]=i-1;
     }
     
     // row 2: info bar
-    segtype[10]=7;
-    midinote[10]=0;
-    chan[10]=0;
+    segtype[0]=7;
+    midinote[0]=0;
+    chan[0]=0;
     
     int calcnote;
     
     switch (p) {
         case 0:
-            segText[10]="MISUCO.ORG MICROTONAL SURFACE CTL";
+            segText[0]="MISUCO.ORG MICROTONAL SURFACE CTL";
             nsegs=15;
             nseg[2]=4;
             segwidthmax[2]=4;
@@ -756,6 +756,7 @@ void LayoutModel::setFactoryProg(int p)
                 note[i+11]=midi2f[calcnote];
                 segText[i+11]="";
                 segtype[i+11]=0;
+                ctly[i+11]=10;
                 calcnote+=factoryScaleValues[factoryScaleStart[6]+(i%factoryScaleLen[6])];
             }
             segText[11]="THE";
@@ -765,7 +766,7 @@ void LayoutModel::setFactoryProg(int p)
             break;
             
         case 1:
-            segText[10]="SIMPLE SCALE - ALL MY LITTLE DUCKS";
+            segText[0]="SIMPLE SCALE - ALL MY LITTLE DUCKS";
             nsegs=19;
             nseg[2]=8;
             segwidthmax[2]=8;
@@ -778,12 +779,13 @@ void LayoutModel::setFactoryProg(int p)
                 note[i+11]=midi2f[calcnote];
                 segText[i+11]=midi2TextDO[calcnote%12];
                 segtype[i+11]=0;
+                ctly[i+11]=10;
                 calcnote+=factoryScaleValues[factoryScaleStart[1]+(i%factoryScaleLen[1])];
             }
             break;
             
         case 2:
-            segText[10]="THE POWER OF INDIAN RAGAS";
+            segText[0]="THE POWER OF INDIAN RAGAS";
             nsegs=19;
             nseg[2]=8;
             segwidthmax[2]=8;
@@ -796,12 +798,13 @@ void LayoutModel::setFactoryProg(int p)
                 note[i+11]=midi2f[calcnote];
                 segText[i+11]=midi2TextIN[calcnote%12];
                 segtype[i+11]=0;
+                ctly[i+11]=10;
                 calcnote+=factoryScaleValues[factoryScaleStart[2]+(i%factoryScaleLen[2])];
             }
             break;
             
         case 3:
-            segText[10]="FULL PIANO SCALE";
+            segText[0]="FULL PIANO SCALE";
             nsegs=22;
             nseg[2]=13;
             segwidthmax[2]=13;
@@ -814,12 +817,13 @@ void LayoutModel::setFactoryProg(int p)
                 note[i+11]=midi2f[calcnote];
                 segText[i+11]=midi2TextEU[calcnote%12];
                 segtype[i+11]=0;
+                ctly[i+11]=10;
                 calcnote+=factoryScaleValues[factoryScaleStart[0]+(i%factoryScaleLen[0])];
             }
             break;
             
         case 4:
-            segText[10]="UNIQUE: FREQ TRANSISION AREAS";
+            segText[0]="UNIQUE: FREQ TRANSISION AREAS";
             nsegs=18;
             nseg[2]=7;
             segwidthmax[2]=7;
@@ -828,6 +832,7 @@ void LayoutModel::setFactoryProg(int p)
             // row 2: the scale
             calcnote=basenote;
             for(int i=0;i<nseg[2];i++) {
+                ctly[i+11]=10;
                 if(i%2==0) {
                     midinote[i+11]=calcnote;
                     note[i+11]=midi2f[calcnote];
@@ -843,7 +848,7 @@ void LayoutModel::setFactoryProg(int p)
             break;
             
         case 5:
-            segText[10]="TEMPERED VS. PURE SCALES";
+            segText[0]="TEMPERED VS. PURE SCALES";
             nrows=4;
             nsegs=35;
             nseg[2]=13;
@@ -860,18 +865,20 @@ void LayoutModel::setFactoryProg(int p)
                 note[i+11]=midi2f[calcnote];
                 segText[i+11]=midi2TextEU[calcnote%12];
                 segtype[i+11]=0;
+                ctly[i+11]=10;
                 
                 midinote[i+24]=calcnote;
                 note[i+24]=midi2fpure[calcnote];
                 segText[i+24]=midi2TextEU[calcnote%12];
                 segtype[i+24]=0;
+                ctly[i+24]=10;
                 calcnote+=factoryScaleValues[factoryScaleStart[0]+(i%factoryScaleLen[0])];
             }
             break;
             
         default:
             segText[10]="PLEASE SUPPORT: MISUCO.ORG";
-            nsegs=15;
+            nsegs=16;
             nseg[2]=5;
             segwidthmax[2]=5;
             rowheight[2]=6;
@@ -880,12 +887,15 @@ void LayoutModel::setFactoryProg(int p)
             calcnote=basenote;
             for(int i=0;i<nseg[2];i++) {
                 if(i%2==0) {
+                    segtype[i+11]=0;
                     midinote[i+11]=calcnote;
                     note[i+11]=midi2f[calcnote];
                     segText[i+11]=midi2TextEU[calcnote%12];
+                    ctly[i+11]=10;
                     calcnote+=factoryScaleValues[factoryScaleStart[p]+((i/2)%factoryScaleLen[p])];
                 } else {
                     segtype[i+11]=1;
+                    ctly[i+11]=10;
                     segText[i+11]="";
                 }
             }

@@ -36,7 +36,7 @@ RC1::RC1(QWidget *parent) :
     QGLWidget(parent)
 {
     setAttribute(Qt::WA_AcceptTouchEvents,true);
-    qDebug() << "View() size:" << width() << " " << height();
+    //qDebug() << "View() size:" << width() << " " << height();
     eventId = 1;
     nomouse = true;
     ttl=2000;
@@ -78,12 +78,12 @@ RC1::RC1(QWidget *parent) :
     painterOn[2]=false;
     painterOn[3]=false;
     painterOn[4]=false;
-    painterOn[5]=true;
+    painterOn[5]=false;
     painterOn[6]=false;
     painterOn[7]=false;
     painterOn[8]=false;
     painterOn[9]=false;
-    painterOn[10]=false;
+    painterOn[10]=true;
 
 //    setConfigSlideRC();
 //    setConfigPdjam2013();
@@ -104,18 +104,17 @@ RC1::RC1(QWidget *parent) :
     oscin->registerPathObject(this);
 
     resetStat();
-    this->startTimer(40);
+    this->startTimer(0);
 
     fpsT.start();
+    fps=50;
     fcnt=0;
-    
-    repaint();
-    
-    tp = new Point();
+        
+    // init test
     tpn=0;
-    nTests=40;
-    tpx=1;
-    testMode=true;
+    nTests=32;
+    tpx=0;
+    testMode=false;
 
     // setWindowState(Qt::WindowFullScreen);
 }
@@ -176,43 +175,46 @@ void RC1::resizeEvent(QResizeEvent *)
 
 void RC1::timerEvent(QTimerEvent *)
 {
+    
     repaint();
     
     if(testMode) {
         tpy=height()/2;
         tpstep=width()/nTests;
         
-        QDateTime ct = QDateTime::currentDateTime();
-        tpt=ct.toMSecsSinceEpoch();
-        tp->set(tpx,tpy,width(),height());
-        tp->setT(tpt);
-        tp->setTTL(2000);
-        tp->setState(Qt::TouchPointPressed);
-        tp->setGid(0);
-        ehand->processPoint(tp, this);
+        Point * p = storage->getPoint(0);
+        storage->next();
+        
+        tpt=QDateTime::currentMSecsSinceEpoch();
+        
+        p->set(tpx,tpy,width(),height());
+        p->setT(tpt);
+        p->setTTL(2000);
+        switch (tpn%4) {
+            case 0:
+                p->setState(Qt::TouchPointPressed);
+                break;
+                
+            case 3:
+                p->setState(Qt::TouchPointReleased);
+                break;
+                
+            default:
+                p->setState(Qt::TouchPointPressed);
+                break;
+        }
+        p->setGid(0);
+        ehand->processPoint(p, this);
         
         qDebug() << "fired test: " << tpx << " " << tpy << " " << tpt;
-        
-        tp->set(tpx+1,tpy,width(),height());
-        tp->setT(tpt+1);
-        tp->setState(Qt::TouchPointMoved);
-        ehand->processPoint(tp, this);
-        
-        qDebug() << "fired test: " << tpx << " " << tpy << " " << tpt;
-        
-        tp->set(tpx+2,tpy,width(),height());
-        tp->setT(tpt+2);
-        tp->setState(Qt::TouchPointReleased);
-        ehand->processPoint(tp, this);
         
         tpx+=tpstep;
         tpn++;
         
-        if(tpn>nTests) {
+        if(tpn>=nTests) {
             testMode=false;
         }
         
-        qDebug() << "fired test: " << tpx << " " << tpy << " " << tpt;
     }
     
     /*
@@ -234,9 +236,8 @@ bool RC1::event(QEvent *event)
             event->type()==QEvent::TouchUpdate ||
             event->type()==QEvent::TouchBegin ) {
 
-        QDateTime ct = QDateTime::currentDateTime();
-        long t=ct.toMSecsSinceEpoch();
-
+        long t=QDateTime::currentMSecsSinceEpoch();
+        
         nomouse=true;
         touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
         foreach (const QTouchEvent::TouchPoint &touchPoint, touchPoints) {
@@ -256,8 +257,7 @@ bool RC1::event(QEvent *event)
                     event->type()==QEvent::MouseButtonPress ||
                     event->type()==QEvent::MouseButtonRelease )) {
 
-        QDateTime ct = QDateTime::currentDateTime();
-        long t=ct.toMSecsSinceEpoch();
+        long t=QDateTime::currentMSecsSinceEpoch();
 
         const QMouseEvent * meve = static_cast<QMouseEvent *>(event);
 
@@ -538,8 +538,10 @@ void RC1::setConfigSlideRC()
 
 void RC1::setPPS(int p)
 {
+    int cornerrad=0;
     switch (p) {
         case 1:
+            ttl=2000;
             painterOn[0]=true;
             painterOn[1]=false;
             painterOn[2]=true;
@@ -550,7 +552,7 @@ void RC1::setPPS(int p)
             painterOn[7]=false;
             painterOn[8]=false;
             painterOn[9]=false;
-            painterOn[10]=false;
+//            painterOn[10]=false;
             
             for(int i=0;i<pointpainters[1]->getParamCount();i++) {
                 pointpainters[1]->setParam(i,0);
@@ -600,14 +602,15 @@ void RC1::setPPS(int p)
             prepainters[0]->setParam(7, 80);    // lBrushPsv
             prepainters[0]->setParam(8, 1);     // colorMode
             prepainters[0]->setParam(9, 0);     // chue
-            prepainters[0]->setParam(10, 10);   // cradx
-            prepainters[0]->setParam(11, 10);   // crady
+            prepainters[0]->setParam(10, cornerrad);   // cradx
+            prepainters[0]->setParam(11, cornerrad);   // crady
             prepainters[0]->setParam(12, 0);    // gradients
-            prepainters[0]->setParam(13, 1);    // painttext
+            prepainters[0]->setParam(13, 0);    // painttext
             
             break;
             
         case 0:
+            ttl=1000;
             painterOn[0]=true;
             painterOn[1]=false;
             painterOn[2]=true;
@@ -618,7 +621,7 @@ void RC1::setPPS(int p)
             painterOn[7]=false;
             painterOn[8]=false;
             painterOn[9]=false;
-            painterOn[10]=false;
+//            painterOn[10]=false;
             
             for(int i=0;i<pointpainters[1]->getParamCount();i++) {
                 pointpainters[1]->setParam(i,0);
@@ -656,7 +659,7 @@ void RC1::setPPS(int p)
             pointpainters[1]->setParam(68,-255);
             
             // shape circle
-            pointpainters[1]->setParam(117,1);
+            pointpainters[1]->setParam(117,0);
             
             prepainters[0]->setParam(0, 0);     // sPenAct
             prepainters[0]->setParam(1, 200);   // lPenAct
@@ -668,13 +671,14 @@ void RC1::setPPS(int p)
             prepainters[0]->setParam(7, 80);    // lBrushPsv
             prepainters[0]->setParam(8, 0);     // colorMode
             prepainters[0]->setParam(9, 0);     // chue
-            prepainters[0]->setParam(10, 10);   // cradx
-            prepainters[0]->setParam(11, 10);   // crady
+            prepainters[0]->setParam(10, cornerrad);   // cradx
+            prepainters[0]->setParam(11, cornerrad);   // crady
             prepainters[0]->setParam(12, 0);    // gradients
-            prepainters[0]->setParam(13, 1);    // painttext
+            prepainters[0]->setParam(13, 0);    // painttext
             break;
             
         case 2:
+            ttl=1000;
             painterOn[0]=true;
             painterOn[1]=true;
             painterOn[2]=true;
@@ -685,7 +689,7 @@ void RC1::setPPS(int p)
             painterOn[7]=false;
             painterOn[8]=false;
             painterOn[9]=false;
-            painterOn[10]=false;
+//            painterOn[10]=false;
             
             for(int j=0;j<5;j++) {
                 for(int i=0;i<pointpainters[1]->getParamCount();i++) {
@@ -755,14 +759,15 @@ void RC1::setPPS(int p)
             prepainters[0]->setParam(7, 80);    // lBrushPsv
             prepainters[0]->setParam(8, 1);     // colorMode
             prepainters[0]->setParam(9, 0);     // chue
-            prepainters[0]->setParam(10, 10);   // cradx
-            prepainters[0]->setParam(11, 10);   // crady
+            prepainters[0]->setParam(10, cornerrad);   // cradx
+            prepainters[0]->setParam(11, cornerrad);   // crady
             prepainters[0]->setParam(12, 1);    // gradients
-            prepainters[0]->setParam(13, 1);    // painttext
+            prepainters[0]->setParam(13, 0);    // painttext
             
             break;
             
         case 3:
+            ttl=500;
             painterOn[0]=true;
             painterOn[1]=true;
             painterOn[2]=true;
@@ -773,7 +778,7 @@ void RC1::setPPS(int p)
             painterOn[7]=true;
             painterOn[8]=true;
             painterOn[9]=false;
-            painterOn[10]=false;
+//            painterOn[10]=false;
             
             for(int i=0;i<9;i++) {
                 for(int j=0;j<pointpainters[i]->getParamCount();j++) {
@@ -828,10 +833,10 @@ void RC1::setPPS(int p)
             prepainters[0]->setParam(7, 80);    // lBrushPsv
             prepainters[0]->setParam(8, 1);     // colorMode
             prepainters[0]->setParam(9, 0);     // chue
-            prepainters[0]->setParam(10, 10);   // cradx
-            prepainters[0]->setParam(11, 10);   // crady
+            prepainters[0]->setParam(10, cornerrad);   // cradx
+            prepainters[0]->setParam(11, cornerrad);   // crady
             prepainters[0]->setParam(12, 1);    // gradients
-            prepainters[0]->setParam(13, 1);    // painttext
+            prepainters[0]->setParam(13, 0);    // painttext
             break;
             
         default:

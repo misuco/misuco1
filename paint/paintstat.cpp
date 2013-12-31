@@ -62,7 +62,8 @@ void PaintStat::paint(RC1 *rc1, QPainter *pnt)
     fpss.append(rc1->getFpsT()->toString());
     fpss.append(" on ");
     fpss.append(platform_os);
-    pnt->drawText(10,linehight,fpss);
+    pnt->drawText(1,fontsize,fpss);
+    /*
     fpss.sprintf("%d touchs | %d begin | %d move | %d end | %d trans",
                  evstat->getToucheventcount(),
                  evstat->getTouchbegincount(),
@@ -76,6 +77,7 @@ void PaintStat::paint(RC1 *rc1, QPainter *pnt)
                  evstat->getOscnoteoffcount(),
                  evstat->getAlreadyoncount());
     pnt->drawText(10,3*linehight,fpss);
+     */
 }
 
 int PaintStat::getParamCount() {

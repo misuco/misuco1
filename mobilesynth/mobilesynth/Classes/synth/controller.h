@@ -77,7 +77,7 @@ namespace synth {
         void set_modulation_destination(ModulationDestination dest);
         void set_modulation_amount(float amount);
         void set_modulation_frequency(float frequency);
-        
+        void set_osc_pw(float p);
         void set_filter_cutoff(float frequency);
         
         // [0.0, 1.0]
@@ -109,6 +109,8 @@ namespace synth {
         Oscillator modulation_osc_;
         MutableParameter modulation_amount_;
         LFO modulation_;
+        long modulation_osc_pos_;
+        long modulation_osc_period_;
         
         QAudioFormat * format;
         int channelBytes;

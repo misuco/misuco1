@@ -104,8 +104,6 @@ private:
     QList<quint16> tuioSources;
     
     // test facilities
-    
-    Point * tp;
     long tpt;
     int tpn;
     int nTests;

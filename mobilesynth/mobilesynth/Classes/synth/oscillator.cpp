@@ -12,7 +12,8 @@ namespace synth {
     : wave_type_(SINE),
     frequency_(0),
     sample_rate_(kDefaultSampleRate),
-    sample_num_(0) { }
+    sample_num_(0),
+    pulse_width_(0.5){ }
     
     Oscillator::~Oscillator() { }
     
@@ -54,7 +55,7 @@ namespace synth {
                 value = sinf(2.0f * M_PI * x);
                 break;
             case SQUARE:
-                if (sample_num < (period_samples_ / 2)) {
+                if (x < (pulse_width_)) {
                     value = 1.0f;
                 } else {
                     value = -1.0f;
@@ -76,4 +77,9 @@ namespace synth {
         //  sample_num_ = (sample_num_ + 1) % (long)period_samples;
         return value;
     }
+    
+    void Oscillator::set_pulse_width(float p) {
+        pulse_width_ = p;
+    }
+    
 }  // namespace synth

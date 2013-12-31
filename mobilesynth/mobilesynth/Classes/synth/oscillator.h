@@ -29,6 +29,7 @@ namespace synth {
         
         void set_frequency(float frequency);
         void set_period_samples(long p);
+        void set_pulse_width(float p);
         
         // Override the default sample rate
         void set_sample_rate(long sample_rate);
@@ -48,6 +49,7 @@ namespace synth {
         WaveType wave_type_;
         float frequency_;
         long period_samples_;
+        float pulse_width_;
         long sample_rate_;  
         long sample_num_;
     };

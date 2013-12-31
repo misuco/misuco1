@@ -223,9 +223,17 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                     }
                     pnt->drawPolygon(points2,4);
                 }
-            } else {
+            } else if (lay->getSegtype(iseg)==0) {
                 //                pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
                 pnt->drawRoundedRect(xpaint,ypaint,xpaint1-1,ypaint1, cradx, crady);
+            } else {
+                //                pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
+                if(xpaint1>ypaint1) {
+                    pnt->drawEllipse(xpaint,ypaint,xpaint1,ypaint1);
+                } else {
+                    pnt->drawEllipse(xpaint,ypaint,xpaint1,ypaint1);
+                    
+                }
             }
             
             if(painttext>0) {

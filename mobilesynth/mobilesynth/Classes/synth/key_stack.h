@@ -16,8 +16,8 @@ namespace synth {
     class KeyStack {
     public:
         // We can't push more notes on the stack than this
-        static const int kMaxSize = 32;
-        static const int kNumEnv = 2;
+        static const int kMaxSize = 4;
+        static const int kNumEnv = 1;
         
         KeyStack();
         ~KeyStack();
@@ -38,8 +38,8 @@ namespace synth {
         
         int GetSize();
         float GetFreq(int num);
-        float GetFreq1(int num);
-        void SetFreq1(int num, float value);
+/*        float GetFreq1(int num);
+        void SetFreq1(int num, float value);*/
         long GetPos(int num);
         long GetPeriodSamples(int num);
         void SetPos(int num,long value);
@@ -64,7 +64,7 @@ namespace synth {
         int size_;
         int notes_[kMaxSize];
         float freqs_[kMaxSize];
-        float freqs1_[kMaxSize];
+//        float freqs1_[kMaxSize];
         long pos_[kMaxSize];
         long period_samples_[kMaxSize];
         Envelope * envelopes[kNumEnv][kMaxSize];

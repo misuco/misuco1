@@ -26,20 +26,31 @@ namespace synth {
     KeyStack::~KeyStack() { }
     
     bool KeyStack::NoteOn(int note, float freq) {
-        assert(size_ < kMaxSize);
+        // qDebug() << "key stack note on " << note << " f: " << freq << " size: " << size_;
+        
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == note) {
-                //        freqs1_[i]=freqs_[i];
+                period_samples_[i]=sample_rate_/freq;
+                float oldPos=pos_[i];
+                float divisor=freqs_[i]/freq;
+                float newPos=oldPos*divisor;
+                pos_[i]=(long)newPos;
                 freqs_[i]=freq;
-                period_samples_[i]=sample_rate_/freqs_[i];
-                //      count_[i]++;
-                //        qDebug() << "pitch "  << freq << " " << freqs1_[i];
                 return false;
             }
         }
+        
+        
+        // if stack full, clear bottom of stack
+        // => kill oldest note
+        if(size_ >= kMaxSize) {
+            NoteClear(notes_[0]);
+        }
+        
+        // put new note on top of stack
         notes_[size_] = note;
         freqs_[size_] = freq;
-        freqs1_[size_] = freq;
+//        freqs1_[size_] = freq;
         pos_[size_] = 0;
         period_samples_[size_]=sample_rate_/freq;
         
@@ -90,7 +101,7 @@ namespace synth {
                     notes_[j] = notes_[j + 1];
                     //          count_[j] = count_[j + 1];
                     freqs_[j] = freqs_[j + 1];
-                    freqs1_[j] = freqs1_[j + 1];
+//                    freqs1_[j] = freqs1_[j + 1];
                     period_samples_[j] = period_samples_[j+1];
                     pos_[j] = pos_[j + 1];
                     for(int k=0;k<kNumEnv;k++) {
@@ -126,10 +137,6 @@ namespace synth {
     }
     
     int KeyStack::size() {
-        /*int count = 0;
-         for (int i = 0; i < size_; ++i) {
-         count += count_[i];
-         }*/
         return size_;
     }
     
@@ -150,7 +157,7 @@ namespace synth {
         }
         return freqs_[num];
     }
-    
+    /*
     float KeyStack::GetFreq1(int num) {
         if (num >= size_) {
             return 0;
@@ -163,7 +170,7 @@ namespace synth {
             freqs1_[num]=value;
         }
     }
-    
+    */
     int KeyStack::GetNote(int num) {
         if (num >= size_) {
             return 0;

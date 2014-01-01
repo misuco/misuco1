@@ -24,11 +24,14 @@ PointPaintSphere::PointPaintSphere()
 
 void PointPaintSphere::paint(Point *point, RC1 *v, QPainter *pnt)
 {
-    int rad=v->getLayout()->getWidth()*(v->getNow()-point->getT())/v->getTtl();
-//    qDebug() << v->getNow() << " " << point->getT() << " " << rad;
-    pnt->setBrush(Qt::NoBrush);
-    pnt->setPen(Qt::white);
-    pnt->drawEllipse(point->getX()-rad,point->getY()-rad, rad*2, rad*2);
+    if(point->getHue()>=0) {
+        float age=(float)(v->getNow()-point->getT())/(float)v->getTtl();
+        int rad=(float)v->getLayout()->getWidth()*age;
+        //    qDebug() << v->getNow() << " " << point->getT() << " " << rad;
+        pnt->setBrush(Qt::NoBrush);
+        pnt->setPen(QColor::fromHsl(point->getHue(), 230, 200-200.0*age ));
+        pnt->drawEllipse(point->getX()-rad,point->getY()-rad, rad*2, rad*2);
+    }
 }
 
 int PointPaintSphere::getParamCount()

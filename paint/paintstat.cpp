@@ -25,6 +25,7 @@ PaintStat::PaintStat()
     platform_os="Unknown System";
     fontDiv=64;
     lineDiv=36;
+    font="Sans";
 #ifdef Q_OS_MAC
     platform_os="Mac";
     fontDiv=32;
@@ -34,6 +35,7 @@ PaintStat::PaintStat()
     platform_os="iOS";
     fontDiv=24;
     lineDiv=14;
+    font="Futura";
 #endif
 #ifdef Q_OS_WIN
     platform_os="Win";
@@ -55,14 +57,14 @@ void PaintStat::paint(RC1 *rc1, QPainter *pnt)
     int linehight=rc1->getLayout()->getWidth()/lineDiv;
 
     EventStat * evstat = rc1->getEvstat();
-    pnt->setPen(Qt::black);
-    pnt->setFont(QFont("Sans",fontsize,5));
+    pnt->setPen(Qt::gray);
+    pnt->setFont(QFont(font,fontsize,linehight));
     QString fpss;
     fpss.sprintf("rc1.c1audio.com : %d fps@", rc1->getFps());
     fpss.append(rc1->getFpsT()->toString());
     fpss.append(" on ");
     fpss.append(platform_os);
-    pnt->drawText(1,fontsize,fpss);
+    pnt->drawText(10,fontsize,fpss);
     /*
     fpss.sprintf("%d touchs | %d begin | %d move | %d end | %d trans",
                  evstat->getToucheventcount(),

@@ -174,13 +174,14 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     xrel=xrel/(double)layout->getSegwidthpx(iseg);
                     // 3b. calculate frequency difference
                     double fdiff=layout->getNote(iseg+1)-layout->getNote(iseg-1);
-                    float mndiff=layout->getMidiNote(iseg+1)-layout->getMidiNote(iseg-1);
+                    float mndiff=layout->getMidiNote(iseg+1)%12-layout->getMidiNote(iseg-1)%12;
                     // 3c. calculate relative frequency
                     double frel=fdiff*xrel;
                     frel+=layout->getNote(iseg-1);
-                    
-                    layout->setSegH(iseg, xrel*256);    // store value for painter
-                    p->setHue(mndiff+xrel*30);
+                    float hue=(float)(layout->getMidiNote(iseg-1)%12)+(mndiff*(float)xrel);
+                    hue*=30;
+                    layout->setSegH(iseg, hue);    // store value for painter
+                    p->setHue(hue);
                     
                     if(note[evptr]>0) {
                         snd->pitch(layout->getChan(iseg),ieventout[evptr],frel);
@@ -205,6 +206,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         }
         
     } else if( p->getState() == Qt::TouchPointReleased ) {
+        p->setHue(-1);
         act[evptr]=false;
         layout->decPressed(isegb[evptr]);
         if(layout->getSegtype(iseg)==0 || layout->getSegtype(iseg)==1) {

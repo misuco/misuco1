@@ -58,7 +58,7 @@ RC1::RC1(QWidget *parent) :
 
     nPointPainters=9;
     pointpainters=new IPointPaint*[nPointPainters];
-    pointpainters[0]=new PointPaintShape();
+    pointpainters[0]=new PointPaintSphere();
     pointpainters[1]=new PointPaintShape();
     pointpainters[2]=new PointPaintShape();
     pointpainters[3]=new PointPaintShape();
@@ -74,7 +74,7 @@ RC1::RC1(QWidget *parent) :
 
     painterOn=new bool[nPrePainters+nPointPainters+nPostPainters];
     painterOn[0]=true;
-    painterOn[1]=false;
+    painterOn[1]=true;
     painterOn[2]=false;
     painterOn[3]=false;
     painterOn[4]=false;
@@ -535,10 +535,41 @@ void RC1::setConfigSlideRC()
     layout->setSegH(1,100);
     layout->setSegH(2,200);
 }
+void RC1::setPPSmin(int p) {
+    ttl=1000;
+    int cornerrad=10;
+    
+    painterOn[0]=true;
+    painterOn[1]=true;
+    painterOn[2]=false;
+    painterOn[3]=false;
+    painterOn[4]=false;
+    painterOn[5]=false;
+    painterOn[6]=false;
+    painterOn[7]=false;
+    painterOn[8]=false;
+    painterOn[9]=false;
+    painterOn[10]=true;
+    
+    prepainters[0]->setParam(0, 210);   // sPenAct
+    prepainters[0]->setParam(1, 180);   // lPenAct
+    prepainters[0]->setParam(2, 0);   // sPenPsv
+    prepainters[0]->setParam(3, 80);    // lPenPsv
+    prepainters[0]->setParam(4, 180);   // sBrushAct
+    prepainters[0]->setParam(5, 80);   // lBrushAct
+    prepainters[0]->setParam(6, 0);   // sBrushPsv
+    prepainters[0]->setParam(7, 0);    // lBrushPsv
+    prepainters[0]->setParam(8, 1);     // colorMode
+    prepainters[0]->setParam(9, 0);     // chue
+    prepainters[0]->setParam(10, cornerrad);   // cradx
+    prepainters[0]->setParam(11, cornerrad);   // crady
+    prepainters[0]->setParam(12, 1);    // gradients
+    prepainters[0]->setParam(13, 0);    // painttext
+}
 
 void RC1::setPPS(int p)
 {
-    int cornerrad=0;
+    int cornerrad=10;
     switch (p) {
         case 1:
             ttl=2000;
@@ -891,7 +922,7 @@ return evstat;
 
 void RC1::setProg(int p)
 {
-    setPPS(p);
+    setPPSmin(p);
     layout->setFactoryProg(p);
     sender->pc(0, p);
 }

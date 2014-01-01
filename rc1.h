@@ -118,6 +118,7 @@ private:
     void setConfigPdjam2013();
     void setConfigSlideRC();
     void setPPS(int);
+    void setPPSmin(int);
 };
 
 #endif // VIEW_H

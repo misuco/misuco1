@@ -38,6 +38,7 @@ private:
     quint16 ncols;
     quint16 nrows;
     QString platform_os;
+    QString font;
     int fontDiv;
     int lineDiv;
 };

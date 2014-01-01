@@ -26,7 +26,7 @@ SenderDebug::SenderDebug()
 
 void SenderDebug::cc(int c, int voiceId, int cc, double v1)
 {
-    qDebug() << "SenderDebug::cc(" << c << "," << voiceId << "," << cc << "," << v1 << ")";
+//    qDebug() << "SenderDebug::cc(" << c << "," << voiceId << "," << cc << "," << v1 << ")";
 }
 
 void SenderDebug::pc(int c, int v1)
@@ -37,4 +37,9 @@ void SenderDebug::pc(int c, int v1)
 void SenderDebug::note(int c, int voiceId, double v1, int v2)
 {
     qDebug() << "SenderDebug::note(" << c << "," << voiceId << "," << v1 << "," << v2 << ")";
+}
+
+void SenderDebug::pitch(int c, int voiceId, double v1)
+{
+    qDebug() << "SenderDebug::note(" << c << "," << voiceId << "," << v1  << ")";
 }

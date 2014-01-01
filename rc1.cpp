@@ -181,7 +181,7 @@ void RC1::timerEvent(QTimerEvent *)
     if(secTimer) {
         secTimer=false;
         repaint();
-        qDebug() << "fps:" << fps;
+//        qDebug() << "fps:" << fps;
     } else {
         repaint(0,100,width(),height()-100);
     }

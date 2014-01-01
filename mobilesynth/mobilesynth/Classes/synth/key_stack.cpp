@@ -27,13 +27,14 @@ namespace synth {
     KeyStack::~KeyStack() { }
     
     bool KeyStack::NoteOn(int note, float freq) {
-        // qDebug() << "key stack note on " << note << " f: " << freq << " size: " << size_;
+        qDebug() << "key stack note on " << note << " f: " << freq << " size: " << size_;
         
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == note) {
                 // period_samples_[i]=sample_rate_/freq;
                 oscs[i]->set_frequency(freq);
 //                freqs_[i]=freq;
+                qDebug() << "F   stack note on " << note << " f: " << freq << " size: " << size_;
                 return false;
             }
         }
@@ -43,6 +44,7 @@ namespace synth {
         // => kill oldest note
         if(size_ >= kMaxSize) {
             NoteClear(notes_[0]);
+            qDebug() << "key stack full, NoteClear " << notes_[0];
         }
         
         // put new note on top of stack
@@ -66,15 +68,18 @@ namespace synth {
         //  count_[size_] = 1;
         size_++;
         //    qDebug() << "new note "  << size_;
+        qDebug() << "T   stack note on " << note << " f: " << freq << " size: " << size_;
         return true;
     }
     
     bool KeyStack::NoteOff(int note) {
+        qDebug() << "key stack note off " << note << " size: " << size_;
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == note) {
                 for(int k=0;k<kNumEnv;k++) {
                     envelopes[k][i]->NoteOff();
                 }
+                qDebug() << "T   stack note off " << note << " size: " << size_;
                 return true;
             }
         }
@@ -82,10 +87,12 @@ namespace synth {
         // to be flaky, so we don't worry if we were asked to remove something that
         // was not on the stack.  The controller also calls our clear() method when
         // no touch events are left as a fallback.
+        qDebug() << "F   stack note off " << note << " size: " << size_;
         return false;
     }
     
     bool KeyStack::NoteClear(int note) {
+        qDebug() << "-  NoteClear " << note;
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == note) {
                 //      count_[i]--;
@@ -119,6 +126,7 @@ namespace synth {
                 filters[size_-1]=fi;
                 size_--;
                 //      }
+                qDebug() << "-T NoteClear " << note;
                 return true;
             }
         }
@@ -126,6 +134,7 @@ namespace synth {
         // to be flaky, so we don't worry if we were asked to remove something that
         // was not on the stack.  The controller also calls our clear() method when
         // no touch events are left as a fallback.
+        qDebug() << "-F NoteClear " << note;
         return false;
     }
     

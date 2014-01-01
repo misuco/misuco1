@@ -94,6 +94,7 @@ private:
     int fps;
     int fcnt;
     QTime fpsT;
+    bool secTimer;
 
     // emulated touch point id for mouse events
     int eventId;

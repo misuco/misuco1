@@ -35,7 +35,7 @@ PaintStat::PaintStat()
     platform_os="iOS";
     fontDiv=24;
     lineDiv=14;
-    font="Futura";
+    font="Avenir";
 #endif
 #ifdef Q_OS_WIN
     platform_os="Win";

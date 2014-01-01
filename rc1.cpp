@@ -109,6 +109,7 @@ RC1::RC1(QWidget *parent) :
     fpsT.start();
     fps=50;
     fcnt=0;
+    secTimer=true;
         
     // init test
     tpn=0;
@@ -127,6 +128,7 @@ void RC1::paintEvent(QPaintEvent *event)
         fpsT.restart();
         fps=fcnt;
         fcnt=0;
+        secTimer=true;
 //        qDebug() << "fps: " << fps;
     }
 
@@ -176,8 +178,14 @@ void RC1::resizeEvent(QResizeEvent *)
 void RC1::timerEvent(QTimerEvent *)
 {
     
-    repaint();
-    
+    if(secTimer) {
+        secTimer=false;
+        repaint();
+        qDebug() << "fps:" << fps;
+    } else {
+        repaint(0,100,width(),height()-100);
+    }
+
     if(testMode) {
         tpy=height()/2;
         tpstep=width()/nTests;
@@ -536,7 +544,7 @@ void RC1::setConfigSlideRC()
     layout->setSegH(2,200);
 }
 void RC1::setPPSmin(int p) {
-    ttl=1000;
+    ttl=500;
     int cornerrad=10;
     
     painterOn[0]=true;
@@ -552,11 +560,11 @@ void RC1::setPPSmin(int p) {
     painterOn[10]=true;
     
     prepainters[0]->setParam(0, 210);   // sPenAct
-    prepainters[0]->setParam(1, 180);   // lPenAct
+    prepainters[0]->setParam(1, 120);   // lPenAct
     prepainters[0]->setParam(2, 0);   // sPenPsv
     prepainters[0]->setParam(3, 80);    // lPenPsv
     prepainters[0]->setParam(4, 180);   // sBrushAct
-    prepainters[0]->setParam(5, 80);   // lBrushAct
+    prepainters[0]->setParam(5, 20);   // lBrushAct
     prepainters[0]->setParam(6, 0);   // sBrushPsv
     prepainters[0]->setParam(7, 0);    // lBrushPsv
     prepainters[0]->setParam(8, 1);     // colorMode

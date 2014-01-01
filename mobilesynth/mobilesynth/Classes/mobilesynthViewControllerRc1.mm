@@ -146,11 +146,11 @@ static float GetFrequencyForNote(int note) {
         return noErr;
     }
     int samples = outputBuffer->mDataByteSize / sizeof(SInt32);
-    float buffer[samples];
-    controller_->GetFloatSamples(buffer, samples);
-    for (int i = 0; i < samples; ++i) {
+//    float buffer[samples];
+    controller_->GetInt32Sapmles(data, samples);
+/*    for (int i = 0; i < samples; ++i) {
         data[i] = buffer[i] * 16777216L;
-    }
+    }*/
     return noErr;
 }
 

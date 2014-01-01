@@ -151,6 +151,12 @@ namespace synth {
         }
     }
     
+    void Controller::GetInt32Sapmles(long* buffer, int size) {
+        for (int i = 0; i < size; ++i) {
+            buffer[i] = GetSample()* 16777216L;
+        }
+    }
+    
     void Controller::setADSR(int n, long a, long d, float s, long r) {
         key_stack_.setADSR(n,a,d,s,r);
     }

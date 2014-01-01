@@ -87,6 +87,7 @@ namespace synth {
         float GetSample();
         
         void GetFloatSamples(float* buffer, int size);
+        void GetInt32Sapmles(long* buffer, int size);
         void GetCharSamples(char *buffer, int size);
         
         void setFormat(QAudioFormat * f);

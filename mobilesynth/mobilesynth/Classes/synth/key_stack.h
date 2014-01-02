@@ -18,7 +18,7 @@ namespace synth {
     public:
         // We can't push more notes on the stack than this
         static const int kMaxSize = 4;
-        static const int kNumEnv = 1;
+        static const int kNumEnv = 2;
         
         KeyStack();
         ~KeyStack();

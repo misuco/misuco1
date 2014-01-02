@@ -13,7 +13,9 @@ namespace synth {
     frequency_(0),
     sample_rate_(kDefaultSampleRate),
     sample_num_(0),
-    pulse_width_(0.5){ }
+    sample_num_norm_(0),
+    pulse_width_(0.5),
+    rise_(true){ }
     
     Oscillator::~Oscillator() { }
     
@@ -46,20 +48,13 @@ namespace synth {
     }
 
     void Oscillator::set_frequency(float frequency) {
-        
-        float oldPos=sample_num_;
-        float divisor=frequency_/frequency;
-        float newPos=oldPos*divisor;
-        sample_num_=(long)newPos;
-        
-        frequency_ = frequency;
-        period_samples_=sample_rate_/frequency;
+        if(frequency_==0 ) {
+            frequency_ = frequency;
+            calc_steps();
+            calc_edges();
+        }
+        frequency_new_ = frequency;
     }
-    
-/*    void Oscillator::set_period_samples(long p) {
-        period_samples_ = p;
-    }
-*/
     
     float Oscillator::GetValue() {
         if (frequency_ == 0) {
@@ -76,41 +71,82 @@ namespace synth {
         if (period_samples_ == 0) {
             return 0.0f;
         }
-        float x = (sample_num_ / (float)period_samples_);
-        float value = 0;
         switch (wave_type_) {
             case SINE:
-                value = sinf(2.0f * M_PI * x);
+                value = sinf(sample_num_norm_);
                 break;
             case SQUARE:
-                if (x < (pulse_width_)) {
+                if (sample_num_norm_ < (pulse_width_)) {
                     value = 1.0f;
                 } else {
                     value = -1.0f;
                 }
                 break;
             case TRIANGLE:
-                value = (2.0f * fabs(2.0f * x - 2.0f * floorf(x) - 1.0f) - 1.0f);
+//                value = (2.0f * fabs(2.0f * x - 2.0f * floorf(x) - 1.0f) - 1.0f);
+                if(rise_) {
+                    value+=rise_val_;
+                    if(value>=1.0) {
+                        value=1.0;
+                        rise_=false;
+                    }
+                } else {
+                    value-=fall_val_;
+                    if(value<=-1.0) {
+                        value=-1.0;
+                        rise_=true;
+                    }
+                }
                 break;
             case SAWTOOTH:
-                value = 2.0f * (x - floorf(x) - 0.5f);
+                value = 2.0f * (sample_num_norm_ - floorf(sample_num_norm_) - 0.5f);
                 break;
             case REVERSE_SAWTOOTH:
-                value = 2.0f * (floorf(x) - x + 0.5f);
+                value = 2.0f * (floorf(sample_num_norm_) - sample_num_norm_ + 0.5f);
                 break;
             default:
                 assert(false);
                 break;
         }
         sample_num_++;
+        sample_num_norm_+=sample_step_norm_;
         if(sample_num_>= (long)period_samples_) {
             sample_num_=0;
+            sample_num_norm_=0;
+            rise_=true;
+            value=0;
+            if(frequency_!=frequency_new_) {
+                frequency_=frequency_new_;
+                calc_edges();
+                calc_steps();
+            }
         }
         return value;
     }
     
     void Oscillator::set_pulse_width(float p) {
         pulse_width_ = p;
+        calc_edges();
+    }
+    
+    void Oscillator::calc_edges() {
+        rise_val_=4.0/period_samples_*pulse_width_;
+        if(rise_val_>1.0) {
+            rise_val_=1.0;
+        }
+        fall_val_=4.0/period_samples_*(1-pulse_width_);
+        if(fall_val_>1.0) {
+            fall_val_=1.0;
+        }
+    }
+    
+    void Oscillator::calc_steps() {
+        period_samples_=sample_rate_/frequency_;
+        if(wave_type_==SINE) {
+            sample_step_norm_ = (2.0f * M_PI / (float)period_samples_);
+        } else {
+            sample_step_norm_ = (1.0 / (float)period_samples_);
+        }
     }
     
 }  // namespace synth

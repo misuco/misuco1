@@ -27,14 +27,12 @@ namespace synth {
     KeyStack::~KeyStack() { }
     
     bool KeyStack::NoteOn(int note, float freq) {
-        qDebug() << "key stack note on " << note << " f: " << freq << " size: " << size_;
+        //qDebug() << "key stack note on " << note << " f: " << freq << " size: " << size_;
         
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == note) {
-                // period_samples_[i]=sample_rate_/freq;
                 oscs[i]->set_frequency(freq);
-//                freqs_[i]=freq;
-                qDebug() << "F   stack note on " << note << " f: " << freq << " size: " << size_;
+                //qDebug() << "F   stack note on " << note << " f: " << freq << " size: " << size_;
                 return false;
             }
         }
@@ -44,7 +42,7 @@ namespace synth {
         // => kill oldest note
         if(size_ >= kMaxSize) {
             NoteClear(notes_[0]);
-            qDebug() << "key stack full, NoteClear " << notes_[0];
+            //qDebug() << "key stack full, NoteClear " << notes_[0];
         }
         
         // put new note on top of stack
@@ -52,12 +50,7 @@ namespace synth {
         oscs[size_]->set_frequency(freq);
         oscs[size_]->set_pulse_width(osc_pw);
         oscs[size_]->set_wave_type(osc_wave);
-        
-//        freqs_[size_] = freq;
-//        freqs1_[size_] = freq;
-//        pos_[size_] = 0;
-//        period_samples_[size_]=sample_rate_/freq;
-        
+
         for(int i=0;i<kNumEnv;i++) {
             envelopes[i][size_]->set_attack(env_a[i]);
             envelopes[i][size_]->set_decay(env_d[i]);
@@ -65,21 +58,19 @@ namespace synth {
             envelopes[i][size_]->set_release(env_r[i]);
             envelopes[i][size_]->NoteOn();
         }
-        //  count_[size_] = 1;
         size_++;
-        //    qDebug() << "new note "  << size_;
-        qDebug() << "T   stack note on " << note << " f: " << freq << " size: " << size_;
+        //qDebug() << "T   stack note on " << note << " f: " << freq << " size: " << size_;
         return true;
     }
     
     bool KeyStack::NoteOff(int note) {
-        qDebug() << "key stack note off " << note << " size: " << size_;
+        //qDebug() << "key stack note off " << note << " size: " << size_;
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == note) {
                 for(int k=0;k<kNumEnv;k++) {
                     envelopes[k][i]->NoteOff();
                 }
-                qDebug() << "T   stack note off " << note << " size: " << size_;
+                //qDebug() << "T   stack note off " << note << " size: " << size_;
                 return true;
             }
         }
@@ -87,43 +78,40 @@ namespace synth {
         // to be flaky, so we don't worry if we were asked to remove something that
         // was not on the stack.  The controller also calls our clear() method when
         // no touch events are left as a fallback.
-        qDebug() << "F   stack note off " << note << " size: " << size_;
+        //qDebug() << "F   stack note off " << note << " size: " << size_;
         return false;
     }
     
     bool KeyStack::NoteClear(int note) {
-        qDebug() << "-  NoteClear " << note;
+        //qDebug() << "-  NoteClear " << note;
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == note) {
-                //      count_[i]--;
-                //      if (count_[i] == 0) {
                 // Remove this element from the stack -- copy all elements above
                 Envelope * ex[kNumEnv];
                 Filter * fi;
                 FilterCutoff * cu;
+                Oscillator * osc;
                 for(int k=0;k<kNumEnv;k++) {
                     ex[k]=envelopes[k][i];
                 }
                 fi=filters[i];
                 cu=cutoffs[i];
+                osc=oscs[i];
                 for (int j = i; j < size_ - 1; ++j) {
                     notes_[j] = notes_[j + 1];
-                    //          count_[j] = count_[j + 1];
-//                    freqs_[j] = freqs_[j + 1];
-//                    freqs1_[j] = freqs1_[j + 1];
-//                    period_samples_[j] = period_samples_[j+1];
-//                    pos_[j] = pos_[j + 1];
                     for(int k=0;k<kNumEnv;k++) {
                         envelopes[k][j]=(envelopes[k][j + 1]);
                     }
                     filters[j]=(filters[j + 1]);
                     cutoffs[j]=(cutoffs[j + 1]);
+                    oscs[j]=(oscs[j + 1]);
                 }
                 for(int k=0;k<kNumEnv;k++) {
                     envelopes[k][size_-1]=ex[k];
                 }
                 cutoffs[size_-1]=cu;
                 filters[size_-1]=fi;
+                oscs[size_-1]=osc;
                 size_--;
                 //      }
                 qDebug() << "-T NoteClear " << note;
@@ -134,7 +122,7 @@ namespace synth {
         // to be flaky, so we don't worry if we were asked to remove something that
         // was not on the stack.  The controller also calls our clear() method when
         // no touch events are left as a fallback.
-        qDebug() << "-F NoteClear " << note;
+        // qDebug() << "-F NoteClear " << note;
         return false;
     }
     
@@ -162,59 +150,12 @@ namespace synth {
         return size_;
     }
     
-    /*
-    float KeyStack::GetFreq(int num) {
-        if (num >= size_) {
-            return 0;
-        }
-        return freqs_[num];
-    }
-    float KeyStack::GetFreq1(int num) {
-        if (num >= size_) {
-            return 0;
-        }
-        return freqs1_[num];
-    }
-    
-    void KeyStack::SetFreq1(int num, float value) {
-        if (num < size_) {
-            freqs1_[num]=value;
-        }
-    }
-    */
     int KeyStack::GetNote(int num) {
         if (num >= size_) {
             return 0;
         }
         return notes_[num];
     }
-    /*
-    long KeyStack::GetPos(int num) {
-        if (num >= size_) {
-            return 0;
-        }
-        return pos_[num];
-    }
-    long KeyStack::GetPeriodSamples(int num) {
-        if (num >= size_) {
-            return 0;
-        }
-        return period_samples_[num];
-    }
-    void KeyStack::SetPos(int num,long value) {
-        if (num < size_) {
-            pos_[num]=value%period_samples_[num];
-            /*            if(pos_[num]==0) {
-             qDebug() << "snap while setPos";
-             }
-            if(pos_[num]>period_samples_[num]) {
-                qDebug() << " manually set to 0 from " << pos_[num] << " since > " << period_samples_[num] << " at freq " << freqs_[num] << " at sr " << sample_rate_;
-                pos_[num]=0;
-            }
-
-        }
-    }
-    */
 
     void KeyStack::SetSampleRate(float s) {
         sample_rate_=s;
@@ -222,14 +163,5 @@ namespace synth {
             oscs[i]->set_sample_rate(s);
         }
     }
-    
-    static const int kMiddleAKey(49);
-    static const float kNotesPerOctave = 12.0f;
-    static const float kMiddleAFrequency = 440.0f;
-    /*
-    float KeyToFrequency(int key) {
-        return kMiddleAFrequency * powf(2, (key - kMiddleAKey) / kNotesPerOctave);
-    }
-    */
     
 }  // namespace synth

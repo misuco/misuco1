@@ -68,7 +68,6 @@ namespace synth {
     
     void Controller::set_osc1_wave_type_int(int w) {
         key_stack_.setOscWave(w);
-
     }
     
     void Controller::set_modulation_amount(float amount) {
@@ -76,13 +75,6 @@ namespace synth {
     }
     
     void Controller::set_modulation_frequency(float frequency) {
-        /*
-        float oldPos=modulation_osc_pos_;
-        float divisor=frequency/modulation_frequency_.GetValue();
-        float newPos=oldPos*divisor;
-        modulation_osc_pos_=(long)newPos;
-        modulation_osc_period_=sample_rate_/frequency;
-         */
         modulation_frequency_.set_value(frequency);
         modulation_osc_.set_frequency(frequency);
     }
@@ -213,28 +205,14 @@ namespace synth {
         //modulation_osc_pos_=(modulation_osc_pos_++)%modulation_osc_period_;
         
         for(int i=0;i<key_stack_.GetSize();i++) {
-/*             if(key_stack_.GetFreq(i)!=key_stack_.GetFreq1(i)) {
-               float oldPos=key_stack_.GetPos(i);
-                float divisor=key_stack_.GetFreq1(i)/key_stack_.GetFreq(i);
-                float newPos=oldPos*divisor;
-                long newPosL=(long)newPos;
-                key_stack_.SetPos(i, newPosL);
-                key_stack_.SetFreq1(i, key_stack_.GetFreq(i));
-            }*/
             
-            //    key_frequency_.set_value(key_stack_.GetFreq(i));
-//            osc1_.set_period_samples(key_stack_.GetPeriodSamples(i));
-//            osc1_.set_frequency(key_stack_.GetFreq(i));
+            value += key_stack_.getFilter(i)->GetValue(key_stack_.getOsc(i)->GetValue());
+            // value+=key_stack_.getOsc(i)->GetValue();
             
-            
-            //value += key_stack_.getFilter(i)->GetValue(osc1_.GetValue(key_stack_.GetPos(i)));
-            value+=key_stack_.getOsc(i)->GetValue();
             // Clip!
             value = fmaxf(-1.0f, value);
             value = fminf(1.0f, value);
-            //    long period_samples = sample_rate_ / key_stack_.GetFreq(i);
             value*=key_stack_.getEnvelope(0, i)->GetValue();
-//            key_stack_.SetPos(i, key_stack_.GetPos(i)+1 );
         }
         // Clip!
         value = fmaxf(-1.0f, value);

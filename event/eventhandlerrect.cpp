@@ -203,6 +203,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             rc1->getLayout()->setNoct(layout->getChan(iseg));
         } else if(layout->getSegtype(iseg)==6) {
             rc1->setProg(layout->getChan(iseg));
+        } else if(layout->getSegtype(iseg)==7) {
+            QDesktopServices::openUrl(QUrl("http://misuco.org/"));
         }
         
     } else if( p->getState() == Qt::TouchPointReleased ) {

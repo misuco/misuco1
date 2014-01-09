@@ -850,7 +850,7 @@ void LayoutModel::setFactoryProg(int p)
         case 5:
             segText[0]="TEMPERED VS. PURE SCALES";
             nrows=4;
-            nsegs=35;
+            nsegs=37;
             nseg[2]=13;
             nseg[3]=13;
             segwidthmax[2]=13;
@@ -876,6 +876,38 @@ void LayoutModel::setFactoryProg(int p)
             }
             break;
             
+        case 6:
+            segText[0]="MATRIX";
+            nrows=6;
+            nsegs=75;
+            nseg[2]=16;
+            nseg[3]=16;
+            nseg[4]=16;
+            nseg[5]=16;
+            segwidthmax[2]=16;
+            segwidthmax[3]=16;
+            segwidthmax[4]=16;
+            segwidthmax[5]=16;
+            rowheightmax=18;
+            rowheight[0]=2;
+            rowheight[1]=4;
+            rowheight[2]=3;
+            rowheight[3]=3;
+            rowheight[4]=3;
+            rowheight[5]=3;
+            
+            // row 2: the scale
+            calcnote=basenote-36;
+            for(int i=0;i<nsegs-11;i++) {
+                midinote[i+11]=calcnote;
+                note[i+11]=midi2f[calcnote];
+                segText[i+11]=midi2TextEU[calcnote%12];
+                segtype[i+11]=0;
+                ctly[i+11]=10;
+                calcnote+=factoryScaleValues[factoryScaleStart[5]+(i%factoryScaleLen[5])];
+            }
+            break;
+            
         default:
             segText[10]="PLEASE SUPPORT: MISUCO.ORG";
             nsegs=16;
@@ -884,7 +916,7 @@ void LayoutModel::setFactoryProg(int p)
             rowheight[2]=6;
             
             // row 2: the scale
-            calcnote=basenote;
+            calcnote=basenote+p;
             for(int i=0;i<nseg[2];i++) {
                 if(i%2==0) {
                     segtype[i+11]=0;

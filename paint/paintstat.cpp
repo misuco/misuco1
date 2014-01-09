@@ -33,8 +33,8 @@ PaintStat::PaintStat()
 #endif
 #ifdef Q_OS_IOS
     platform_os="iOS";
-    fontDiv=24;
-    lineDiv=14;
+    fontDiv=32;
+    lineDiv=16;
     font="Avenir";
 #endif
 #ifdef Q_OS_WIN
@@ -60,11 +60,12 @@ void PaintStat::paint(RC1 *rc1, QPainter *pnt)
     pnt->setPen(Qt::gray);
     pnt->setFont(QFont(font,fontsize,linehight));
     QString fpss;
-    fpss.sprintf("rc1.c1audio.com : %d fps@", rc1->getFps());
+    fpss.sprintf("misuco.org : %d fps@", rc1->getFps());
     fpss.append(rc1->getFpsT()->toString());
     fpss.append(" on ");
     fpss.append(platform_os);
-    pnt->drawText(10,fontsize,fpss);
+//    pnt->drawText(10,fontsize,fpss);
+    pnt->drawText(0,0,rc1->getLayout()->getSegwidthpx(0),rc1->getLayout()->getRowheightpx(0),Qt::AlignCenter,fpss);
     /*
     fpss.sprintf("%d touchs | %d begin | %d move | %d end | %d trans",
                  evstat->getToucheventcount(),

@@ -40,12 +40,6 @@ namespace synth {
         key_stack_.NoteOn(note, freq);
     }
     
-    /*    void Controller::NoteOnFrequency(float frequency) {
-     //  key_frequency_.set_value(frequency);
-     //  volume_envelope()->NoteOn();
-     //  filter_envelope()->NoteOn();
-     }
-     */
     void Controller::NoteOff(int note) {
         key_stack_.NoteOff(note);
         /*        if (key_stack_.size() == 0) {
@@ -62,8 +56,8 @@ namespace synth {
 //        osc1_.set_wave_type(wave_type);
     }
     
-    void Controller::set_osc_pw(float p) {
-        key_stack_.setOscPW(p);
+    void Controller::set_osc_pw(int note, float p) {
+        key_stack_.setOscPW(note, p);
     }
     
     void Controller::set_osc1_wave_type_int(int w) {

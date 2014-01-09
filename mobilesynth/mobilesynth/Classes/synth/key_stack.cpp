@@ -113,8 +113,7 @@ namespace synth {
                 filters[size_-1]=fi;
                 oscs[size_-1]=osc;
                 size_--;
-                //      }
-                qDebug() << "-T NoteClear " << note;
+                //qDebug() << "-T NoteClear " << note;
                 return true;
             }
         }
@@ -125,7 +124,7 @@ namespace synth {
         // qDebug() << "-F NoteClear " << note;
         return false;
     }
-    
+    /*
     bool KeyStack::IsNoteInStack(int note) {
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == note) {
@@ -134,7 +133,7 @@ namespace synth {
         }
         return false;
     }
-    
+    */
     int KeyStack::size() {
         return size_;
     }
@@ -162,6 +161,16 @@ namespace synth {
         for(int i=0;i<kMaxSize;i++) {
             oscs[i]->set_sample_rate(s);
         }
+    }
+    
+    void KeyStack::setOscPW(int note, float pw) {
+        for (int i = 0; i < size_; ++i) {
+            if (notes_[i] == note) {
+                oscs[i]->set_pulse_width(pw);
+                i=size_;
+            }
+        }
+        osc_pw=pw;
     }
     
 }  // namespace synth

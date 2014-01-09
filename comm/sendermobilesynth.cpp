@@ -13,7 +13,7 @@ SenderMobileSynth::SenderMobileSynth(RC1 * rc1)
 void SenderMobileSynth::cc(int c, int voiceId, int cc, double v1)
 {
     if(cc==10) {
-        sy->set_osc_pw(v1);
+        sy->set_osc_pw(voiceId,v1);
     }
 
 }

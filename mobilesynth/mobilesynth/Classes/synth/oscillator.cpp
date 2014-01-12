@@ -12,8 +12,8 @@ namespace synth {
     : wave_type_(SINE),
     frequency_(0),
     sample_rate_(kDefaultSampleRate),
-    sample_num_(0),
     sample_num_norm_(0),
+    sample_num_(0),
     pulse_width_(0.5),
     rise_(true){ }
     
@@ -30,13 +30,13 @@ namespace synth {
     void Oscillator::set_wave_type(int w) {
         switch (w) {
             case 0:
-                wave_type_ = Oscillator::SINE;
-                break;
-            case 1:
                 wave_type_ = Oscillator::SQUARE;
                 break;
-            case 2:
+            case 1:
                 wave_type_ = Oscillator::SAWTOOTH;
+                break;
+            case 2:
+                wave_type_ = Oscillator::SINE;
                 break;
             case 3:
                 wave_type_ = Oscillator::TRIANGLE;
@@ -50,10 +50,36 @@ namespace synth {
     void Oscillator::set_frequency(float frequency) {
         if(frequency_==0 ) {
             frequency_ = frequency;
-            calc_steps();
-            calc_edges();
+            calc_all();
         }
         frequency_new_ = frequency;
+    }
+    
+    void Oscillator::set_mod_f(float mod) {
+        if(mod<-1) {
+            mod_f_new_=-1;
+        } else if(mod>1) {
+            mod_f_new_=1;
+        } else {
+            mod_f_new_=mod;
+        }
+    }
+    
+    void Oscillator::set_mod_pw(float mod) {
+        mod_pw_new_=mod;
+    }
+    
+    void Oscillator::calc_all() {
+        if(mod_f_>0) {
+            frequency_mod_=frequency_*(1+mod_f_);
+        } else if(mod_f_<0) {
+            frequency_mod_=frequency_/(1+mod_f_);
+        } else {
+            frequency_mod_=frequency_;
+            
+        }
+        calc_steps();
+        calc_edges();
     }
     
     float Oscillator::GetValue() {
@@ -115,10 +141,21 @@ namespace synth {
             sample_num_norm_=0;
             rise_=true;
             value=0;
+            bool recal_freq_mod=false;
             if(frequency_!=frequency_new_) {
                 frequency_=frequency_new_;
-                calc_edges();
-                calc_steps();
+                recal_freq_mod=true;
+            }
+            if(mod_f_!=mod_f_new_) {
+                mod_f_=mod_f_new_;
+                recal_freq_mod=true;
+            }
+            if(mod_pw_!=mod_pw_new_) {
+                mod_pw_=mod_pw_new_;
+                recal_freq_mod=true;
+            }
+            if(recal_freq_mod) {
+                calc_all();
             }
         }
         return value;
@@ -130,18 +167,28 @@ namespace synth {
     }
     
     void Oscillator::calc_edges() {
-        rise_val_=4.0/period_samples_*pulse_width_;
+        if(mod_pw_>0) {
+            pulse_width_mod_=pulse_width_*(1+mod_pw_);
+        } else if(mod_pw_<0) {
+            pulse_width_mod_=pulse_width_/(1+mod_pw_);
+        } else {
+            pulse_width_mod_=pulse_width_;
+        }
+        if(pulse_width_mod_<0.02) {
+            pulse_width_mod_=0.02;
+        }
+        rise_val_=4.0/period_samples_*pulse_width_mod_;
         if(rise_val_>1.0) {
             rise_val_=1.0;
         }
-        fall_val_=4.0/period_samples_*(1-pulse_width_);
+        fall_val_=4.0/period_samples_*(1-pulse_width_mod_);
         if(fall_val_>1.0) {
             fall_val_=1.0;
         }
     }
     
     void Oscillator::calc_steps() {
-        period_samples_=sample_rate_/frequency_;
+        period_samples_=sample_rate_/frequency_mod_;
         if(wave_type_==SINE) {
             sample_step_norm_ = (2.0f * M_PI / (float)period_samples_);
         } else {

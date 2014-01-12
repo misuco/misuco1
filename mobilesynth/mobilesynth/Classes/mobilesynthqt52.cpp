@@ -21,7 +21,7 @@ mobileSynthQT52::mobileSynthQT52()
     syctl = new synth::Controller();
     syctl->set_modulation_amount(0.7);
     syctl->set_modulation_frequency(0.3);
-    syctl->set_modulation_source(synth::Controller::LFO_SRC_TRIANGLE);
+//    syctl->set_modulation_source(synth::Controller::LFO_SRC_TRIANGLE);
     syctl->set_modulation_destination(synth::Controller::LFO_DEST_FILTER);
     syctl->set_osc1_wave_type(synth::Oscillator::SAWTOOTH);
     syctl->set_filter_cutoff(2000);

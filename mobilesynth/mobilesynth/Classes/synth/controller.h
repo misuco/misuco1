@@ -62,21 +62,26 @@ namespace synth {
         void set_osc1_wave_type(Oscillator::WaveType wave_type);
         void set_osc1_wave_type_int(int w);
         
-        enum ModulationSource {
+/*        enum ModulationSource {
             LFO_SRC_SQUARE,
             LFO_SRC_TRIANGLE,
             LFO_SRC_SAWTOOTH,
             LFO_SRC_REVERSE_SAWTOOTH,
-        };
+        };*/
+        
         enum ModulationDestination {
-            LFO_DEST_WAVE,  // Tremelo
+            LFO_DEST_NONE,
+            LFO_DEST_AMP,  // Tremelo
+            LFO_DEST_PW,  // Vibrato
             LFO_DEST_PITCH,  // Vibrato
             LFO_DEST_FILTER,
         };
-        void set_modulation_source(ModulationSource source);
+//        void set_modulation_source(ModulationSource source);
         void set_modulation_destination(ModulationDestination dest);
         void set_modulation_amount(float amount);
         void set_modulation_frequency(float frequency);
+        void set_modulation_amount(int i, float amount);
+        void set_modulation_frequency(int i, float frequency);
         void set_osc_pw(int note, float p);
         void set_filter_cutoff(float frequency);
         
@@ -95,7 +100,7 @@ namespace synth {
     private:
         // Invoked when one of the routing parameters changes, such as the source
         // or destination of modulation.
-        void reset_routing();
+        // void reset_routing();
         
         KeyStack key_stack_;
         
@@ -104,14 +109,12 @@ namespace synth {
         bool osc_sync_;
         float sample_rate_;
         
-        ModulationSource modulation_source_;
+//        ModulationSource modulation_source_;
         ModulationDestination modulation_destination_;
-        MutableParameter modulation_frequency_;
-        Oscillator modulation_osc_;
-        MutableParameter modulation_amount_;
-        LFO modulation_;
-        long modulation_osc_pos_;
-        long modulation_osc_period_;
+//        MutableParameter modulation_frequency_;
+//        Oscillator modulation_osc_;
+//        MutableParameter modulation_amount_;
+//        LFO modulation_;
         
         QAudioFormat * format;
         int channelBytes;

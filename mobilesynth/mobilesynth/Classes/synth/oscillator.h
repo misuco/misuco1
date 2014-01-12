@@ -29,6 +29,8 @@ namespace synth {
         void set_wave_type(int w);
         
         void set_frequency(float frequency);
+        void set_mod_f(float mod);
+        void set_mod_pw(float mod);
         void set_period_samples(long p);
         void set_pulse_width(float p);
         
@@ -49,8 +51,14 @@ namespace synth {
         WaveType wave_type_;
         float frequency_;
         float frequency_new_;
+        float mod_f_;
+        float mod_f_new_;
+        float mod_pw_;
+        float mod_pw_new_;
+        float frequency_mod_;   // the frequency including all modulations
         long period_samples_;
         float pulse_width_;
+        float pulse_width_mod_; // the pw including modulation
         long sample_rate_;  
         long sample_num_;
         float sample_num_norm_;
@@ -60,6 +68,7 @@ namespace synth {
         float fall_val_;
         bool rise_;
         float value;
+        void calc_all();
         void calc_edges();
         void calc_steps();
         

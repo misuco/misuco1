@@ -115,10 +115,10 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
     
     for(int y = 0; y < lay->getNrows(); y++) {
         ypaint1=lay->getRowheightpx(y);
-        xpaint=0;
+        xpaint=1;
         
         for (int x = 0; x < lay->getNseg(y); x ++) {
-            xpaint1=lay->getSegwidthpx(iseg);
+            xpaint1=lay->getSegwidthpx(iseg)-1;
             if(colorMode==1 ) {
                 col=32*(lay->getMidiNote(iseg)%12);
             } else if(colorMode==2 ){

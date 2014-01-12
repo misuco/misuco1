@@ -16,19 +16,18 @@
 namespace synth {
     
     Controller::Controller()
-    : modulation_source_(LFO_SRC_SQUARE),
-    modulation_destination_(LFO_DEST_WAVE),
-    modulation_frequency_(0.0f),
-    modulation_amount_(0.0f) {
-        modulation_osc_.set_frequency(modulation_frequency_.GetValue());
-        modulation_.set_oscillator(&modulation_osc_);
-        modulation_.set_level(&modulation_amount_);
+    : //modulation_source_(LFO_SRC_TRIANGLE),
+    modulation_destination_(LFO_DEST_NONE) //,
+//    modulation_frequency_(2.0f),
+//    modulation_amount_(0.0f)
+    {
+//        modulation_osc_.set_frequency(modulation_frequency_.GetValue());
+//        modulation_.set_oscillator(&modulation_osc_);
+//        modulation_.set_level(&modulation_amount_);
         key_stack_.setADSR(0, 1000, 1000, 0.8, 80000);
         key_stack_.setADSR(1, 80000,   0,   1, 80000);
         format=0;
-        modulation_osc_pos_=0;
-        modulation_osc_period_=0;
-        reset_routing();
+//        reset_routing();
     }
     void Controller::set_sample_rate(float sample_rate) {
 //        osc1_.set_sample_rate(sample_rate);
@@ -65,24 +64,31 @@ namespace synth {
     }
     
     void Controller::set_modulation_amount(float amount) {
-        modulation_amount_.set_value(amount);
+        key_stack_.setModAmtInit(amount);
+    }
+    
+    void Controller::set_modulation_amount(int i, float amount) {
+        key_stack_.setModAmt(i, amount);
     }
     
     void Controller::set_modulation_frequency(float frequency) {
-        modulation_frequency_.set_value(frequency);
-        modulation_osc_.set_frequency(frequency);
+        key_stack_.setLfoFreqInit(frequency);
     }
     
-    void Controller::set_modulation_source(ModulationSource src) {
+    void Controller::set_modulation_frequency(int i, float frequency) {
+        key_stack_.setLfoFreq(i, frequency);
+    }
+    
+/*    void Controller::set_modulation_source(ModulationSource src) {
         modulation_source_ = src;
         reset_routing();
-    }
+    }*/
     
     void Controller::set_modulation_destination(ModulationDestination dest) {
         modulation_destination_ = dest;
-        reset_routing();
+//        reset_routing();
     }
-    
+    /*
     void Controller::reset_routing() {
         switch (modulation_source_) {
             case LFO_SRC_SQUARE:
@@ -100,30 +106,8 @@ namespace synth {
             default:
                 assert(false);
         }
-        
-        // Reset the destinations
-        //volume_.set_modulation(NULL);
-        //filter_cutoff_.set_modulation(NULL);
-        //  combined_osc_.set_frequency_modulation(NULL);
-        
-        // Route modulation into the correct pipeline
-        switch (modulation_destination_) {
-            case LFO_DEST_WAVE:
-                // Modulate the volume (tremelo)
-                //      volume_.set_modulation(&modulation_);
-                break;
-            case LFO_DEST_PITCH:
-                // Modulate the frequency (vibrato)
-                //      combined_osc_.set_frequency_modulation(&modulation_);
-                break;
-            case LFO_DEST_FILTER:
-                // Modulate the cutoff frequency
-                // filter_cutoff_.set_modulation(&modulation_);
-                break;
-            default:
-                assert(false);
-        }
     }
+     */
     
     void Controller::set_filter_cutoff(float frequency) {
     }
@@ -194,19 +178,36 @@ namespace synth {
     float Controller::GetSample() {
         
         float value=0;
-        
-        //float mod_value=modulation_osc_.GetValue(modulation_osc_pos_);
-        //modulation_osc_pos_=(modulation_osc_pos_++)%modulation_osc_period_;
+        float amp_mod=1;
+        float mod_value=0;
         
         for(int i=0;i<key_stack_.GetSize();i++) {
+            switch (modulation_destination_) {
+                case LFO_DEST_AMP:
+                    amp_mod-=(key_stack_.getLfo(i)->GetValue()+1)/2*key_stack_.getModAmt(i);
+                    break;
+                case LFO_DEST_PW:
+                    mod_value=key_stack_.getLfo(i)->GetValue()*key_stack_.getModAmt(i);
+                    key_stack_.getOsc(i)->set_mod_pw(mod_value);
+                    break;
+                case LFO_DEST_PITCH:
+                    mod_value=key_stack_.getLfo(i)->GetValue()*key_stack_.getModAmt(i);
+                    key_stack_.getOsc(i)->set_mod_f(mod_value);
+                    break;
+                case LFO_DEST_FILTER:
+                    break;
+                case LFO_DEST_NONE:
+                    break;
+            }
             
             value += key_stack_.getFilter(i)->GetValue(key_stack_.getOsc(i)->GetValue());
             // value+=key_stack_.getOsc(i)->GetValue();
             
             // Clip!
+            value*=key_stack_.getEnvelope(0, i)->GetValue();
+            value*=amp_mod;
             value = fmaxf(-1.0f, value);
             value = fminf(1.0f, value);
-            value*=key_stack_.getEnvelope(0, i)->GetValue();
         }
         // Clip!
         value = fmaxf(-1.0f, value);

@@ -62,6 +62,26 @@ namespace synth {
             return oscs[i];
         }
         
+        Oscillator * getLfo(int i) {
+            return lfos[i];
+        }
+        
+        float getModAmt(int i) {
+            return mod_amt_[i];
+        }
+        
+        void setModAmt(int i, float v );
+        
+        void setModAmtInit(float v ) {
+            mod_amt_init_=v;
+        }
+        
+        void setLfoFreq(int note, float v );
+        
+        void setLfoFreqInit(float v ) {
+            lfo_freq_init_=v;
+        }
+        
         void setOscPW(int note, float pw);
         
         void setOscWave(int w) {
@@ -77,6 +97,7 @@ namespace synth {
         Filter * filters[kMaxSize];
         FilterCutoff * cutoffs[kMaxSize];
         Oscillator * oscs[kMaxSize];
+        Oscillator * lfos[kMaxSize];
         
         // Number of times the note at the position was pressed
         // int count_[kMaxSize];
@@ -87,6 +108,9 @@ namespace synth {
         float env_s[kNumEnv];
         long env_r[kNumEnv];
         
+        float mod_amt_[kMaxSize];
+        float mod_amt_init_;
+        float lfo_freq_init_;
         float osc_pw;
         int osc_wave;
     };

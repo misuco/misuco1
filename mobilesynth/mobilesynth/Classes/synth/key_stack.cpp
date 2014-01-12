@@ -16,12 +16,17 @@ namespace synth {
                 envelopes[j][i]=new Envelope();
             }
             oscs[i]=new Oscillator();
+            lfos[i]=new Oscillator();
+            lfos[i]->set_frequency(2.0);
+            mod_amt_[i]=0;
             cutoffs[i]=new FilterCutoff();
             cutoffs[i]->set_envelope(envelopes[1][i]);
             cutoffs[i]->set_cutoff(5000);
             filters[i]=new ResonantFilter();
             filters[i]->set_cutoff(cutoffs[i]);
         }
+        mod_amt_init_=0;
+        lfo_freq_init_=2.0;
     }
     
     KeyStack::~KeyStack() { }
@@ -50,6 +55,8 @@ namespace synth {
         oscs[size_]->set_frequency(freq);
         oscs[size_]->set_pulse_width(osc_pw);
         oscs[size_]->set_wave_type(osc_wave);
+        lfos[size_]->set_frequency(lfo_freq_init_);
+        mod_amt_[size_]=mod_amt_init_;
 
         for(int i=0;i<kNumEnv;i++) {
             envelopes[i][size_]->set_attack(env_a[i]);
@@ -91,12 +98,15 @@ namespace synth {
                 Filter * fi;
                 FilterCutoff * cu;
                 Oscillator * osc;
+                Oscillator * lfo;
+                float mod_amt = mod_amt_[i];
                 for(int k=0;k<kNumEnv;k++) {
                     ex[k]=envelopes[k][i];
                 }
                 fi=filters[i];
                 cu=cutoffs[i];
                 osc=oscs[i];
+                lfo=lfos[i];
                 for (int j = i; j < size_ - 1; ++j) {
                     notes_[j] = notes_[j + 1];
                     for(int k=0;k<kNumEnv;k++) {
@@ -105,6 +115,8 @@ namespace synth {
                     filters[j]=(filters[j + 1]);
                     cutoffs[j]=(cutoffs[j + 1]);
                     oscs[j]=(oscs[j + 1]);
+                    lfos[j]=(lfos[j + 1]);
+                    mod_amt_[j]=(mod_amt_[j + 1]);
                 }
                 for(int k=0;k<kNumEnv;k++) {
                     envelopes[k][size_-1]=ex[k];
@@ -112,6 +124,8 @@ namespace synth {
                 cutoffs[size_-1]=cu;
                 filters[size_-1]=fi;
                 oscs[size_-1]=osc;
+                lfos[size_-1]=lfo;
+                mod_amt_[size_-1]=mod_amt;
                 size_--;
                 //qDebug() << "-T NoteClear " << note;
                 return true;
@@ -160,6 +174,7 @@ namespace synth {
         sample_rate_=s;
         for(int i=0;i<kMaxSize;i++) {
             oscs[i]->set_sample_rate(s);
+            lfos[i]->set_sample_rate(s);
         }
     }
     
@@ -171,6 +186,24 @@ namespace synth {
             }
         }
         osc_pw=pw;
+    }
+    
+    void KeyStack::setModAmt(int note, float v ) {
+        for (int i = 0; i < size_; ++i) {
+            if (notes_[i] == note) {
+                mod_amt_[i]=v;
+                i=size_;
+            }
+        }
+    }
+    
+    void KeyStack::setLfoFreq(int note, float v ) {
+        for (int i = 0; i < size_; ++i) {
+            if (notes_[i] == note) {
+                lfos[i]->set_frequency(v);
+                i=size_;
+            }
+        }
     }
     
 }  // namespace synth

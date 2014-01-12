@@ -756,7 +756,8 @@ void LayoutModel::setFactoryProg(int p)
                 note[i+11]=midi2f[calcnote];
                 segText[i+11]="";
                 segtype[i+11]=0;
-                ctly[i+11]=10;
+                ctlx[i+11]=11;
+                ctly[i+11]=12;
                 calcnote+=factoryScaleValues[factoryScaleStart[6]+(i%factoryScaleLen[6])];
             }
             segText[11]="THE";
@@ -779,7 +780,8 @@ void LayoutModel::setFactoryProg(int p)
                 note[i+11]=midi2f[calcnote];
                 segText[i+11]=midi2TextDO[calcnote%12];
                 segtype[i+11]=0;
-                ctly[i+11]=10;
+                ctlx[i+11]=11;
+                ctly[i+11]=12;
                 calcnote+=factoryScaleValues[factoryScaleStart[1]+(i%factoryScaleLen[1])];
             }
             break;
@@ -798,7 +800,8 @@ void LayoutModel::setFactoryProg(int p)
                 note[i+11]=midi2f[calcnote];
                 segText[i+11]=midi2TextIN[calcnote%12];
                 segtype[i+11]=0;
-                ctly[i+11]=10;
+                ctlx[i+11]=11;
+                ctly[i+11]=12;
                 calcnote+=factoryScaleValues[factoryScaleStart[2]+(i%factoryScaleLen[2])];
             }
             break;
@@ -817,7 +820,8 @@ void LayoutModel::setFactoryProg(int p)
                 note[i+11]=midi2f[calcnote];
                 segText[i+11]=midi2TextEU[calcnote%12];
                 segtype[i+11]=0;
-                ctly[i+11]=10;
+                ctlx[i+11]=11;
+                ctly[i+11]=12;
                 calcnote+=factoryScaleValues[factoryScaleStart[0]+(i%factoryScaleLen[0])];
             }
             break;
@@ -838,11 +842,15 @@ void LayoutModel::setFactoryProg(int p)
                     note[i+11]=midi2f[calcnote];
                     segText[i+11]=midi2TextEU[calcnote%12];
                     segtype[i+11]=0;
+                    ctlx[i+11]=11;
+                    ctly[i+11]=12;
                     calcnote+=factoryScaleValues[factoryScaleStart[3]+((i/2)%factoryScaleLen[3])];
                 } else {
                     segtype[i+11]=1;
                     segText[i+11]="";
                     segtype[i+11]=1;
+                    ctlx[i+11]=11;
+                    ctly[i+11]=12;
                 }
             }
             break;
@@ -865,13 +873,15 @@ void LayoutModel::setFactoryProg(int p)
                 note[i+11]=midi2f[calcnote];
                 segText[i+11]=midi2TextEU[calcnote%12];
                 segtype[i+11]=0;
-                ctly[i+11]=10;
+                ctlx[i+11]=11;
+                ctly[i+11]=12;
                 
                 midinote[i+24]=calcnote;
                 note[i+24]=midi2fpure[calcnote];
                 segText[i+24]=midi2TextEU[calcnote%12];
                 segtype[i+24]=0;
-                ctly[i+24]=10;
+                ctlx[i+24]=11;
+                ctly[i+24]=12;
                 calcnote+=factoryScaleValues[factoryScaleStart[0]+(i%factoryScaleLen[0])];
             }
             break;
@@ -903,7 +913,8 @@ void LayoutModel::setFactoryProg(int p)
                 note[i+11]=midi2f[calcnote];
                 segText[i+11]=midi2TextEU[calcnote%12];
                 segtype[i+11]=0;
-                ctly[i+11]=10;
+                ctlx[i+11]=11;
+                ctly[i+11]=12;
                 calcnote+=factoryScaleValues[factoryScaleStart[5]+(i%factoryScaleLen[5])];
             }
             break;
@@ -923,11 +934,13 @@ void LayoutModel::setFactoryProg(int p)
                     midinote[i+11]=calcnote;
                     note[i+11]=midi2f[calcnote];
                     segText[i+11]=midi2TextEU[calcnote%12];
-                    ctly[i+11]=10;
+                    ctlx[i+11]=11;
+                    ctly[i+11]=12;
                     calcnote+=factoryScaleValues[factoryScaleStart[p]+((i/2)%factoryScaleLen[p])];
                 } else {
                     segtype[i+11]=1;
-                    ctly[i+11]=10;
+                    ctlx[i+11]=11;
+                    ctly[i+11]=12;
                     segText[i+11]="";
                 }
             }

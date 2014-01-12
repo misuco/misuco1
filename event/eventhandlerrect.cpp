@@ -125,7 +125,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 if(p->getY()!=ccval2[evptr]) {
                     ccval2[evptr]=p->getY();
                     double yrel=p->getY()-(ysum-layout->getRowheightpx(iy));
-                    yrel=yrel/(double)layout->getRowheightpx(iy);
+                    yrel=1-(yrel/(double)layout->getRowheightpx(iy));
                     //                ysum+=layout->getRowheightpx(iy);
                     if(useCCCVal==true) {
                         cccval2=yrel/cccvalAvg+(cccvalAvg-1)*cccval2/cccvalAvg;
@@ -193,20 +193,27 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     note[evptr]=frel;
                 }
             }
-        } else if(layout->getSegtype(iseg)==2) {
-            rc1->getLayout()->setFactoryLayout(layout->getChan(iseg));
-        } else if(layout->getSegtype(iseg)==3) {
-            rc1->getLayout()->setBasenote(layout->getMidiNote(iseg));
-        } else if(layout->getSegtype(iseg)==4) {
-            rc1->getLayout()->setBasescale(layout->getChan(iseg));
-        } else if(layout->getSegtype(iseg)==5) {
-            rc1->getLayout()->setNoct(layout->getChan(iseg));
-        } else if(layout->getSegtype(iseg)==6) {
-            rc1->setProg(layout->getChan(iseg));
-        } else if(layout->getSegtype(iseg)==7) {
-            QDesktopServices::openUrl(QUrl("http://misuco.org/"));
+        } else {
+            if(note[evptr]>0) {
+                snd->note(chan[evptr],ieventout[evptr],note[evptr],0);
+                note[evptr]=-1;
+                layout->decPressed(isegb[evptr]);
+                isegb[evptr]=-1;
+            }
+            if(layout->getSegtype(iseg)==2) {
+                rc1->getLayout()->setFactoryLayout(layout->getChan(iseg));
+            } else if(layout->getSegtype(iseg)==3) {
+                rc1->getLayout()->setBasenote(layout->getMidiNote(iseg));
+            } else if(layout->getSegtype(iseg)==4) {
+                rc1->getLayout()->setBasescale(layout->getChan(iseg));
+            } else if(layout->getSegtype(iseg)==5) {
+                rc1->getLayout()->setNoct(layout->getChan(iseg));
+            } else if(layout->getSegtype(iseg)==6) {
+                rc1->setProg(layout->getChan(iseg));
+            } else if(layout->getSegtype(iseg)==7) {
+                QDesktopServices::openUrl(QUrl("http://misuco.org/"));
+            }
         }
-        
     } else if( p->getState() == Qt::TouchPointReleased ) {
         p->setHue(-1);
         act[evptr]=false;

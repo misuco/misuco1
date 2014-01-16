@@ -92,12 +92,12 @@ namespace synth {
         
     private:
         int size_;
-        int notes_[kMaxSize];
-        Envelope * envelopes[kNumEnv][kMaxSize];
-        Filter * filters[kMaxSize];
-        FilterCutoff * cutoffs[kMaxSize];
-        Oscillator * oscs[kMaxSize];
-        Oscillator * lfos[kMaxSize];
+        int notes_[kMaxSize+1];
+        Envelope * envelopes[kNumEnv][kMaxSize+1];
+        Filter * filters[kMaxSize+1];
+        FilterCutoff * cutoffs[kMaxSize+1];
+        Oscillator * oscs[kMaxSize+1];
+        Oscillator * lfos[kMaxSize+1];
         
         // Number of times the note at the position was pressed
         // int count_[kMaxSize];
@@ -108,7 +108,7 @@ namespace synth {
         float env_s[kNumEnv];
         long env_r[kNumEnv];
         
-        float mod_amt_[kMaxSize];
+        float mod_amt_[kMaxSize+1];
         float mod_amt_init_;
         float lfo_freq_init_;
         float osc_pw;

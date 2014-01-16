@@ -12,9 +12,9 @@ namespace synth {
     : wave_type_(SINE),
     frequency_(0),
     sample_rate_(kDefaultSampleRate),
+    pulse_width_(0.5),
     sample_num_norm_(0),
     sample_num_(0),
-    pulse_width_(0.5),
     rise_(true){ }
     
     Oscillator::~Oscillator() { }
@@ -83,17 +83,14 @@ namespace synth {
     }
     
     float Oscillator::GetValue() {
+        /*
         if (frequency_ == 0) {
             return 0.0f;
         }
-        //  float freq = frequency_->GetValue();
+         */
         if (frequency_ < 0.01f) {
             return 0.0f;
         }
-        /*
-         long period_samples = sample_rate_ / frequency_;
-         sample_num = sample_num % (long)period_samples;
-         */
         if (period_samples_ == 0) {
             return 0.0f;
         }
@@ -102,7 +99,7 @@ namespace synth {
                 value = sinf(sample_num_norm_);
                 break;
             case SQUARE:
-                if (sample_num_norm_ < (pulse_width_)) {
+                if (sample_num_norm_ < (pulse_width_mod_)) {
                     value = 1.0f;
                 } else {
                     value = -1.0f;
@@ -167,24 +164,35 @@ namespace synth {
     }
     
     void Oscillator::calc_edges() {
-        if(mod_pw_>0) {
-            pulse_width_mod_=pulse_width_*(1+mod_pw_);
-        } else if(mod_pw_<0) {
-            pulse_width_mod_=pulse_width_/(1+mod_pw_);
+        if(mod_pw_!=0) {
+            pulse_width_mod_=(pulse_width_+pulse_width_*mod_pw_)/2;
         } else {
             pulse_width_mod_=pulse_width_;
         }
-        if(pulse_width_mod_<0.02) {
-            pulse_width_mod_=0.02;
+
+        if(pulse_width_mod_<sample_num_norm_) {
+            pulse_width_mod_=sample_num_norm_;
+            rise_val_=1.0;
+            fall_val_=2.0/period_samples_;
+        } else if(pulse_width_mod_>=1.0) {
+            pulse_width_mod_=1.0-sample_num_norm_;
+            rise_val_=1.0/period_samples_;
+            fall_val_=2.0;
+        } else {
+            rise_val_=2.0/(period_samples_*pulse_width_mod_);
+            fall_val_=2.0/(period_samples_*(1-pulse_width_mod_));
         }
-        rise_val_=4.0/period_samples_*pulse_width_mod_;
+        /*
+        rise_val_=1.0/(1+(period_samples_*pulse_width_mod_/4));
         if(rise_val_>1.0) {
             rise_val_=1.0;
         }
-        fall_val_=4.0/period_samples_*(1-pulse_width_mod_);
+        fall_val_=1.0/(1+(period_samples_*(2-pulse_width_mod_)/4));
+        //fall_val_=4.0/period_samples_*(1-pulse_width_mod_);
         if(fall_val_>1.0) {
             fall_val_=1.0;
         }
+         */
     }
     
     void Oscillator::calc_steps() {

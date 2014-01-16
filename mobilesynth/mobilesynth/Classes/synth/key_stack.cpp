@@ -18,6 +18,9 @@ namespace synth {
             oscs[i]=new Oscillator();
             lfos[i]=new Oscillator();
             lfos[i]->set_frequency(2.0);
+            lfos[i]->set_wave_type(1);
+            lfos[i]->set_pulse_width(0.5);
+
             mod_amt_[i]=0;
             cutoffs[i]=new FilterCutoff();
             cutoffs[i]->set_envelope(envelopes[1][i]);
@@ -27,6 +30,7 @@ namespace synth {
         }
         mod_amt_init_=0;
         lfo_freq_init_=2.0;
+        osc_pw=0.5;
     }
     
     KeyStack::~KeyStack() { }
@@ -90,42 +94,44 @@ namespace synth {
     }
     
     bool KeyStack::NoteClear(int note) {
-        //qDebug() << "-  NoteClear " << note;
+//        qDebug() << "-  NoteClear " << note << " size " << size_;
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == note) {
                 // Remove this element from the stack -- copy all elements above
-                Envelope * ex[kNumEnv];
+/*                Envelope * ex[kNumEnv];
                 Filter * fi;
                 FilterCutoff * cu;
                 Oscillator * osc;
-                Oscillator * lfo;
-                float mod_amt = mod_amt_[i];
+                Oscillator * lfo;*/
+                mod_amt_[size_] = mod_amt_[i];
                 for(int k=0;k<kNumEnv;k++) {
-                    ex[k]=envelopes[k][i];
+                    envelopes[k][kMaxSize]=envelopes[k][i];
                 }
-                fi=filters[i];
-                cu=cutoffs[i];
-                osc=oscs[i];
-                lfo=lfos[i];
-                for (int j = i; j < size_ - 1; ++j) {
+                filters[kMaxSize]=filters[i];
+                cutoffs[kMaxSize]=cutoffs[i];
+                oscs[kMaxSize]=oscs[i];
+                lfos[kMaxSize]=lfos[i];
+                for (int j = i; j < size_-1; ++j) {
                     notes_[j] = notes_[j + 1];
                     for(int k=0;k<kNumEnv;k++) {
-                        envelopes[k][j]=(envelopes[k][j + 1]);
+                        envelopes[k][j]=envelopes[k][j + 1];
                     }
-                    filters[j]=(filters[j + 1]);
-                    cutoffs[j]=(cutoffs[j + 1]);
-                    oscs[j]=(oscs[j + 1]);
-                    lfos[j]=(lfos[j + 1]);
-                    mod_amt_[j]=(mod_amt_[j + 1]);
+                    filters[j]=filters[j + 1];
+                    cutoffs[j]=cutoffs[j + 1];
+                    oscs[j]=oscs[j + 1];
+                    lfos[j]=lfos[j + 1];
+                    mod_amt_[j]=mod_amt_[j + 1];
                 }
+
                 for(int k=0;k<kNumEnv;k++) {
-                    envelopes[k][size_-1]=ex[k];
+                    envelopes[k][size_-1]=envelopes[k][kMaxSize];
                 }
-                cutoffs[size_-1]=cu;
-                filters[size_-1]=fi;
-                oscs[size_-1]=osc;
-                lfos[size_-1]=lfo;
-                mod_amt_[size_-1]=mod_amt;
+                cutoffs[size_-1]=cutoffs[kMaxSize];
+                filters[size_-1]=filters[kMaxSize];
+                oscs[size_-1]=oscs[kMaxSize];
+                lfos[size_-1]=lfos[kMaxSize];
+                mod_amt_[size_-1]=mod_amt_[kMaxSize];
+
                 size_--;
                 //qDebug() << "-T NoteClear " << note;
                 return true;

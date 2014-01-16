@@ -215,6 +215,7 @@ namespace synth {
         // Adjust volume
         for(int i=0;i<key_stack_.GetSize();i++) {
             if(key_stack_.getEnvelope(0, i)->released()) {
+                //qDebug() << " controller: clear note " << i;
                 key_stack_.NoteClear(key_stack_.GetNote(i));
             }
         }

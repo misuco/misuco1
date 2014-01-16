@@ -191,7 +191,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
             
             if(lay->getSegtype(iseg)==1) {
                 if(gradients) {
-                    pnt->drawRect(xpaint,ypaint+crady,xpaint1,ypaint1-2*crady);
+                    pnt->drawRect(xpaint,ypaint+crady,xpaint1-1,ypaint1-2*crady);
                 } else {
                     if(lightB>0) {
                         pnt->setBrush(QColor::fromHsl(col1,satB,lightB));

@@ -70,6 +70,8 @@ namespace synth {
             return mod_amt_[i];
         }
         
+        void setFilterCutoff(int note, float f);
+        void setFilterRes(int note, float f);
         void setModAmt(int i, float v );
         
         void setModAmtInit(float v ) {
@@ -94,7 +96,7 @@ namespace synth {
         int size_;
         int notes_[kMaxSize+1];
         Envelope * envelopes[kNumEnv][kMaxSize+1];
-        Filter * filters[kMaxSize+1];
+        ResonantFilter * filters[kMaxSize+1];
         FilterCutoff * cutoffs[kMaxSize+1];
         Oscillator * oscs[kMaxSize+1];
         Oscillator * lfos[kMaxSize+1];

@@ -80,13 +80,13 @@ namespace synth {
         void set_modulation_destination(ModulationDestination dest);
         void set_modulation_amount(float amount);
         void set_modulation_frequency(float frequency);
-        void set_modulation_amount(int i, float amount);
-        void set_modulation_frequency(int i, float frequency);
-        void set_osc_pw(int note, float p);
-        void set_filter_cutoff(float frequency);
+        void set_modulation_amount(int voice, float amount);
+        void set_modulation_frequency(int voice, float frequency);
+        void set_osc_pw(int voice, float p);
+        void set_filter_cutoff(int voice, float frequency);
         
         // [0.0, 1.0]
-        void set_filter_resonance(float value);
+        void set_filter_resonance(int voice,float value);
         
         // Get a single sample
         float GetSample();

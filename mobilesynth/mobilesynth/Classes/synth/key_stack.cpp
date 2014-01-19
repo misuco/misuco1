@@ -17,7 +17,7 @@ namespace synth {
             }
             oscs[i]=new Oscillator();
             lfos[i]=new Oscillator();
-            lfos[i]->set_frequency(2.0);
+            lfos[i]->set_frequency(0);
             lfos[i]->set_wave_type(1);
             lfos[i]->set_pulse_width(0.5);
 
@@ -27,9 +27,10 @@ namespace synth {
             cutoffs[i]->set_cutoff(5000);
             filters[i]=new ResonantFilter();
             filters[i]->set_cutoff(cutoffs[i]);
+            filters[i]->set_resonance(0.3);
         }
         mod_amt_init_=0;
-        lfo_freq_init_=2.0;
+        lfo_freq_init_=0;
         osc_pw=0.5;
     }
     
@@ -184,9 +185,30 @@ namespace synth {
         }
     }
     
-    void KeyStack::setOscPW(int note, float pw) {
+    void KeyStack::setFilterCutoff(int voice, float f) {
         for (int i = 0; i < size_; ++i) {
-            if (notes_[i] == note) {
+            if (notes_[i] == voice) {
+                float fcf=f*8192;
+                cutoffs[i]->set_cutoff(fcf);
+                i=size_;
+//                qDebug() << "voice " << voice << " f " << f << " fcf " << fcf;
+            }
+        }
+    }
+    
+    void KeyStack::setFilterRes(int voice, float f) {
+        for (int i = 0; i < size_; ++i) {
+            if (notes_[i] == voice) {
+                float frs=f;
+                filters[i]->set_resonance(frs);
+                i=size_;
+            }
+        }
+    }
+    
+    void KeyStack::setOscPW(int voice, float pw) {
+        for (int i = 0; i < size_; ++i) {
+            if (notes_[i] == voice) {
                 oscs[i]->set_pulse_width(pw);
                 i=size_;
             }
@@ -194,18 +216,18 @@ namespace synth {
         osc_pw=pw;
     }
     
-    void KeyStack::setModAmt(int note, float v ) {
+    void KeyStack::setModAmt(int voice, float v ) {
         for (int i = 0; i < size_; ++i) {
-            if (notes_[i] == note) {
+            if (notes_[i] == voice) {
                 mod_amt_[i]=v;
                 i=size_;
             }
         }
     }
     
-    void KeyStack::setLfoFreq(int note, float v ) {
+    void KeyStack::setLfoFreq(int voice, float v ) {
         for (int i = 0; i < size_; ++i) {
-            if (notes_[i] == note) {
+            if (notes_[i] == voice) {
                 lfos[i]->set_frequency(v);
                 i=size_;
             }

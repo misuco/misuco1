@@ -118,7 +118,11 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
         xpaint=1;
         
         for (int x = 0; x < lay->getNseg(y); x ++) {
-            xpaint1=lay->getSegwidthpx(iseg)-1;
+            xpaint1=lay->getSegwidthpx(iseg);
+            
+            int xpaint1_1=xpaint1-1;
+            int ypaint1_1=ypaint1-1;
+            int ypaint1_2=ypaint1-2*crady;
             if(colorMode==1 ) {
                 col=32*(lay->getMidiNote(iseg)%12);
             } else if(colorMode==2 ){
@@ -191,7 +195,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
             
             if(lay->getSegtype(iseg)==1) {
                 if(gradients) {
-                    pnt->drawRect(xpaint,ypaint+crady,xpaint1-1,ypaint1-2*crady);
+                    pnt->drawRect(xpaint,ypaint+crady,xpaint1_1,ypaint1_2);
                 } else {
                     if(lightB>0) {
                         pnt->setBrush(QColor::fromHsl(col1,satB,lightB));
@@ -202,7 +206,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                     QPoint points1[4] = {
                         QPoint(xpaint, ypaint+crady),
                         QPoint(xpaint+xpaint1-2, ypaint+crady),
-                        QPoint(xpaint, ypaint+ypaint1-2*crady),
+                        QPoint(xpaint, ypaint+ypaint1_2),
                         QPoint(xpaint, ypaint+crady)
                     };
                     
@@ -211,8 +215,8 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                     
                     QPoint points2[4] = {
                         QPoint(xpaint+xpaint1-1, ypaint+crady),
-                        QPoint(xpaint+xpaint1-1, ypaint+ypaint1-2*crady),
-                        QPoint(xpaint, ypaint+ypaint1-2*crady),
+                        QPoint(xpaint+xpaint1-1, ypaint+ypaint1_2),
+                        QPoint(xpaint, ypaint+ypaint1_2),
                         QPoint(xpaint+xpaint1-1, ypaint+crady)
                     };
                     
@@ -225,15 +229,15 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 }
             } else if (lay->getSegtype(iseg)==0 || lay->getSegtype(iseg)==7) {
                 //                pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
-                pnt->drawRoundedRect(xpaint,ypaint,xpaint1-1,ypaint1, cradx, crady);
+                pnt->drawRoundedRect(xpaint,ypaint,xpaint1_1,ypaint1_1, cradx, crady);
             } else {
                 //                pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
                 if(xpaint1>ypaint1) {
                     int move=(xpaint1-ypaint1)/2;
-                    pnt->drawEllipse(xpaint+move,ypaint,ypaint1,ypaint1);
+                    pnt->drawEllipse(xpaint+move,ypaint,ypaint1_1,ypaint1_1);
                 } else {
                     int move=(ypaint1-xpaint1)/2;
-                    pnt->drawEllipse(xpaint,ypaint+move,xpaint1,xpaint1);
+                    pnt->drawEllipse(xpaint,ypaint+move,xpaint1_1,xpaint1_1);
                 }
             }
             

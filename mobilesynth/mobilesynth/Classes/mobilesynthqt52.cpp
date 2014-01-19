@@ -24,8 +24,8 @@ mobileSynthQT52::mobileSynthQT52()
 //    syctl->set_modulation_source(synth::Controller::LFO_SRC_TRIANGLE);
     syctl->set_modulation_destination(synth::Controller::LFO_DEST_FILTER);
     syctl->set_osc1_wave_type(synth::Oscillator::SAWTOOTH);
-    syctl->set_filter_cutoff(2000);
-    syctl->set_filter_resonance(0.9);
+//    syctl->set_filter_cutoff(2000);
+//    syctl->set_filter_resonance(0.9);
     syctl->set_sample_rate(DataSampleRateHz);
 
     m_format.setSampleRate(DataSampleRateHz);

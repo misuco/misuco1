@@ -12,6 +12,11 @@ SenderMobileSynth::SenderMobileSynth(RC1 * rc1)
 
 void SenderMobileSynth::cc(int c, int voiceId, int cc, double v1)
 {
+    if(cc==12) {
+        sy->set_filter_cutoff(voiceId,v1);
+    } else if(cc==11) {
+        sy->set_filter_resonance(voiceId,v1);
+    }
     /*
     if(cc==10) {
         sy->set_osc_pw(voiceId,v1);

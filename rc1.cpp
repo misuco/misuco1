@@ -100,9 +100,12 @@ RC1::RC1(QWidget *parent) :
     
     setProg(0);
 
+    /* OSC Server disabled for demo version
     oscin = new QOscServer(3333,this);
     oscin->registerPathObject(this);
-
+    */
+    
+    
     resetStat();
     this->startTimer(0);
 
@@ -559,20 +562,20 @@ void RC1::setPPSmin(int p) {
     painterOn[9]=false;
     painterOn[10]=true;
     
-    prepainters[0]->setParam(0, 210);   // sPenAct
-    prepainters[0]->setParam(1, 120);   // lPenAct
-    prepainters[0]->setParam(2, 0);   // sPenPsv
-    prepainters[0]->setParam(3, 80);    // lPenPsv
-    prepainters[0]->setParam(4, 180);   // sBrushAct
-    prepainters[0]->setParam(5, 20);   // lBrushAct
-    prepainters[0]->setParam(6, 0);   // sBrushPsv
-    prepainters[0]->setParam(7, 0);    // lBrushPsv
-    prepainters[0]->setParam(8, 1);     // colorMode
-    prepainters[0]->setParam(9, 0);     // chue
-    prepainters[0]->setParam(10, cornerrad);   // cradx
-    prepainters[0]->setParam(11, cornerrad);   // crady
-    prepainters[0]->setParam(12, 1);    // gradients
-    prepainters[0]->setParam(13, 0);    // painttext
+    prepainters[0]->setParam(0, 210);       // sPenAct
+    prepainters[0]->setParam(1, 0);       // lPenAct
+    prepainters[0]->setParam(2, 0);         // sPenPsv
+    prepainters[0]->setParam(3, 0);         // lPenPsv
+    prepainters[0]->setParam(4, 220);       // sBrushAct
+    prepainters[0]->setParam(5, 140);       // lBrushAct
+    prepainters[0]->setParam(6, 180);       // sBrushPsv
+    prepainters[0]->setParam(7, 60);        // lBrushPsv
+    prepainters[0]->setParam(8, 1);         // colorMode
+    prepainters[0]->setParam(9, 0);         // chue
+    prepainters[0]->setParam(10, cornerrad);// cradx
+    prepainters[0]->setParam(11, cornerrad);// crady
+    prepainters[0]->setParam(12, 1);        // gradients
+    prepainters[0]->setParam(13, 0);        // painttext
 }
 
 void RC1::setPPS(int p)

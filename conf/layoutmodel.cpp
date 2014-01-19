@@ -145,7 +145,7 @@ LayoutModel::LayoutModel()
     midi2TextIN[3]="RE'";
     midi2TextIN[4]="GA";
     midi2TextIN[5]="MA";
-    midi2TextIN[6]="MA'#";
+    midi2TextIN[6]="MA'";
     midi2TextIN[7]="PA";
     midi2TextIN[8]="PA'";
     midi2TextIN[9]="DA";
@@ -201,14 +201,13 @@ LayoutModel::LayoutModel()
     factoryScaleValues[18]=1;
     
     factoryScaleStart[2]=20;
-    factoryScaleLen[2]=7;
-    factoryScaleValues[20]=2;
-    factoryScaleValues[21]=1;
-    factoryScaleValues[22]=2;
+    factoryScaleLen[2]=6;
+    factoryScaleValues[20]=1;
+    factoryScaleValues[21]=2;
+    factoryScaleValues[22]=3;
     factoryScaleValues[23]=2;
-    factoryScaleValues[24]=2;
-    factoryScaleValues[25]=2;
-    factoryScaleValues[26]=1;
+    factoryScaleValues[24]=3;
+    factoryScaleValues[25]=1;
     
     factoryScaleStart[3]=27;
     factoryScaleLen[3]=5;
@@ -889,15 +888,15 @@ void LayoutModel::setFactoryProg(int p)
         case 6:
             segText[0]="MATRIX";
             nrows=6;
-            nsegs=75;
-            nseg[2]=16;
-            nseg[3]=16;
-            nseg[4]=16;
-            nseg[5]=16;
-            segwidthmax[2]=16;
-            segwidthmax[3]=16;
-            segwidthmax[4]=16;
-            segwidthmax[5]=16;
+            nsegs=51;
+            nseg[2]=10;
+            nseg[3]=10;
+            nseg[4]=10;
+            nseg[5]=10;
+            segwidthmax[2]=10;
+            segwidthmax[3]=10;
+            segwidthmax[4]=10;
+            segwidthmax[5]=10;
             rowheightmax=18;
             rowheight[0]=2;
             rowheight[1]=4;
@@ -921,9 +920,9 @@ void LayoutModel::setFactoryProg(int p)
             
         default:
             segText[10]="PLEASE SUPPORT: MISUCO.ORG";
-            nsegs=16;
-            nseg[2]=5;
-            segwidthmax[2]=5;
+            nsegs=18;
+            nseg[2]=7;
+            segwidthmax[2]=7;
             rowheight[2]=6;
             
             // row 2: the scale

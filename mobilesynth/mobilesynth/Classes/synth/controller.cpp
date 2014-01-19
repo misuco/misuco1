@@ -55,8 +55,8 @@ namespace synth {
 //        osc1_.set_wave_type(wave_type);
     }
     
-    void Controller::set_osc_pw(int note, float p) {
-        key_stack_.setOscPW(note, p);
+    void Controller::set_osc_pw(int voice, float p) {
+        key_stack_.setOscPW(voice, p);
     }
     
     void Controller::set_osc1_wave_type_int(int w) {
@@ -67,16 +67,16 @@ namespace synth {
         key_stack_.setModAmtInit(amount);
     }
     
-    void Controller::set_modulation_amount(int i, float amount) {
-        key_stack_.setModAmt(i, amount);
+    void Controller::set_modulation_amount(int voice, float amount) {
+        key_stack_.setModAmt(voice, amount);
     }
     
     void Controller::set_modulation_frequency(float frequency) {
         key_stack_.setLfoFreqInit(frequency);
     }
     
-    void Controller::set_modulation_frequency(int i, float frequency) {
-        key_stack_.setLfoFreq(i, frequency);
+    void Controller::set_modulation_frequency(int voice, float frequency) {
+        key_stack_.setLfoFreq(voice, frequency);
     }
     
 /*    void Controller::set_modulation_source(ModulationSource src) {
@@ -109,10 +109,12 @@ namespace synth {
     }
      */
     
-    void Controller::set_filter_cutoff(float frequency) {
+    void Controller::set_filter_cutoff(int voice, float frequency) {
+        key_stack_.setFilterCutoff(voice, frequency);
     }
     
-    void Controller::set_filter_resonance(float value) {
+    void Controller::set_filter_resonance(int voice, float value) {
+        key_stack_.setFilterRes(voice, value);
     }
     
     void Controller::GetFloatSamples(float* buffer, int size) {

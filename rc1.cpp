@@ -56,17 +56,18 @@ RC1::RC1(QWidget *parent) :
     prepainters=new IPaint*[nPrePainters];
     prepainters[0]=new PaintBgShapes();
 
-    nPointPainters=9;
+    nPointPainters=1;
     pointpainters=new IPointPaint*[nPointPainters];
     pointpainters[0]=new PointPaintSphere();
-    pointpainters[1]=new PointPaintShape();
+//    pointpainters[0]=new PointPaintShape();
+/*    pointpainters[1]=new PointPaintShape();
     pointpainters[2]=new PointPaintShape();
     pointpainters[3]=new PointPaintShape();
     pointpainters[4]=new PointPaintShape();
     pointpainters[5]=new PointPaintShape();
     pointpainters[6]=new PointPaintShape();
     pointpainters[7]=new PointPaintShape();
-    pointpainters[8]=new PointPaintShape();
+    pointpainters[8]=new PointPaintShape(); */
 
     nPostPainters=1;
     postpainters=new IPaint*[nPostPainters];
@@ -75,15 +76,7 @@ RC1::RC1(QWidget *parent) :
     painterOn=new bool[nPrePainters+nPointPainters+nPostPainters];
     painterOn[0]=true;
     painterOn[1]=true;
-    painterOn[2]=false;
-    painterOn[3]=false;
-    painterOn[4]=false;
-    painterOn[5]=false;
-    painterOn[6]=false;
-    painterOn[7]=false;
-    painterOn[8]=false;
-    painterOn[9]=false;
-    painterOn[10]=true;
+    painterOn[2]=true;
 
 //    setConfigSlideRC();
 //    setConfigPdjam2013();
@@ -456,111 +449,14 @@ void RC1::setConfigTransistions() {
     layout->setScale(62,8,3,true);
 }
 
-void RC1::setConfigPdjam2013()
-{
-    painterOn[6]=false;
-    for(int i=0;i<32;i++) {
-        layout->getSegText(i)->clear();
-    }
-    layout->getSegText(0)->append("he");
-    layout->getSegText(1)->append("jo");
-    layout->getSegText(2)->append("hej");
-    layout->getSegText(3)->append("oo");
-    layout->getSegText(4)->append("ajo");
-    layout->getSegText(5)->append("hej");
-    layout->getSegText(6)->append("awe");
-    layout->getSegText(7)->append("io");
 
-    layout->getSegText(8)->append("he");
-    layout->getSegText(9)->append("jo");
-    layout->getSegText(10)->append("hej");
-    layout->getSegText(11)->append("oo");
-    layout->getSegText(12)->append("hej");
-    layout->getSegText(13)->append("hej");
-    layout->getSegText(14)->append("awe");
-    layout->getSegText(15)->append("ioe");
-    layout->getSegText(16)->append("ajo");
-    layout->getSegText(17)->append("hej");
-    layout->getSegText(18)->append("awe");
-    layout->getSegText(19)->append("io");
-    layout->getSegText(20)->append("ajo");
-    layout->getSegText(21)->append("hej");
-    layout->getSegText(22)->append("awe");
-    layout->getSegText(23)->append("ioe");
-    layout->getSegText(24)->append("ajo");
-    layout->getSegText(25)->append("hej");
-    layout->getSegText(26)->append("awe");
-    layout->getSegText(27)->append("io");
-    layout->getSegText(28)->append("ajo");
-    layout->getSegText(29)->append("hej");
-    layout->getSegText(30)->append("awe");
-    layout->getSegText(31)->append("io");
-
-    layout->setSegH(0,8*255/8);
-    layout->setSegH(1,8*255/8);
-    layout->setSegH(2,6*255/8);
-    layout->setSegH(3,4*255/8);
-    layout->setSegH(4,6*255/8);
-    layout->setSegH(5,4*255/8);
-    layout->setSegH(6,6*255/8);
-    layout->setSegH(7,6*255/8);
-
-    layout->setSegH(8,8*255/8);
-    layout->setSegH(9,8*255/8);
-    layout->setSegH(10,6*255/8);
-    layout->setSegH(11,4*255/8);
-    layout->setSegH(12,8*255/8);
-    layout->setSegH(13,2*255/8);
-    layout->setSegH(14,1*255/8);
-    layout->setSegH(15,1*255/8);
-
-    layout->setSegH(16,4*255/8);
-    layout->setSegH(17,4*255/8);
-    layout->setSegH(18,6*255/8);
-    layout->setSegH(19,6*255/8);
-    layout->setSegH(20,2*255/8);
-    layout->setSegH(21,1*255/8);
-    layout->setSegH(22,1*255/8);
-    layout->setSegH(23,1*255/8);
-    layout->setSegH(24,4*255/8);
-    layout->setSegH(25,2*255/8);
-    layout->setSegH(26,2*255/8);
-    layout->setSegH(27,2*255/8);
-    layout->setSegH(28,1*255/8);
-    layout->setSegH(29,0*255/8);
-    layout->setSegH(30,1*255/8);
-    layout->setSegH(31,1*255/8);
-}
-
-void RC1::setConfigSlideRC()
-{
-    painterOn[6]=false;
-    layout->setXY(3,1);
-    for(int i=0;i<3;i++) {
-        layout->getSegText(i)->clear();
-    }
-    layout->getSegText(0)->append("Go");
-    layout->getSegText(1)->append("Previous");
-    layout->getSegText(2)->append("Next");
-    layout->setSegH(0,0);
-    layout->setSegH(1,100);
-    layout->setSegH(2,200);
-}
 void RC1::setPPSmin(int p) {
     ttl=500;
     int cornerrad=10;
     
     painterOn[0]=true;
     painterOn[1]=true;
-    painterOn[2]=false;
-    painterOn[3]=false;
-    painterOn[4]=false;
-    painterOn[5]=false;
-    painterOn[6]=false;
-    painterOn[7]=false;
-    painterOn[8]=false;
-    painterOn[9]=false;
-    painterOn[10]=true;
+    painterOn[2]=true;
     
     prepainters[0]->setParam(0, 210);       // sPenAct
     prepainters[0]->setParam(1, 0);       // lPenAct
@@ -576,314 +472,6 @@ void RC1::setPPSmin(int p) {
     prepainters[0]->setParam(11, cornerrad);// crady
     prepainters[0]->setParam(12, 1);        // gradients
     prepainters[0]->setParam(13, 0);        // painttext
-}
-
-void RC1::setPPS(int p)
-{
-    int cornerrad=10;
-    switch (p) {
-        case 1:
-            ttl=2000;
-            painterOn[0]=true;
-            painterOn[1]=false;
-            painterOn[2]=true;
-            painterOn[3]=false;
-            painterOn[4]=false;
-            painterOn[5]=false;
-            painterOn[6]=false;
-            painterOn[7]=false;
-            painterOn[8]=false;
-            painterOn[9]=false;
-//            painterOn[10]=false;
-            
-            for(int i=0;i<pointpainters[1]->getParamCount();i++) {
-                pointpainters[1]->setParam(i,0);
-            }
-            // init x/y
-            pointpainters[1]->setParam(1,1);
-            pointpainters[1]->setParam(11,1);
-            
-            // radius 5 constant
-            pointpainters[1]->setParam(18,5);
-            pointpainters[1]->setParam(27,5);
-            
-            // grow width
-            pointpainters[1]->setParam(23,100);
-            // grow height
-            pointpainters[1]->setParam(32,100);
-            
-            // color brush constant
-            pointpainters[1]->setParam(72,0);
-            pointpainters[1]->setParam(77,255);  // change hue with time
-            pointpainters[1]->setParam(81,127);
-            pointpainters[1]->setParam(90,140);
-            pointpainters[1]->setParam(99,250);
-            
-            // fade brush out
-            pointpainters[1]->setParam(104,-250);
-            
-            // color pen constant
-            pointpainters[1]->setParam(36,255);
-            pointpainters[1]->setParam(45,255);
-            pointpainters[1]->setParam(54,255);
-            pointpainters[1]->setParam(63,0);   // pen alpha constant 0
-            
-            // fade pen out
-            // pointpainters[1]->setParam(68,-255);
-            
-            // shape circle
-            pointpainters[1]->setParam(117,0);
-            
-            prepainters[0]->setParam(0, 160);   // sPenAct
-            prepainters[0]->setParam(1, 0);   // lPenAct
-            prepainters[0]->setParam(2, 160);   // sPenPsv
-            prepainters[0]->setParam(3, 0);    // lPenPsv
-            prepainters[0]->setParam(4, 160);   // sBrushAct
-            prepainters[0]->setParam(5, 200);   // lBrushAct
-            prepainters[0]->setParam(6, 160);   // sBrushPsv
-            prepainters[0]->setParam(7, 80);    // lBrushPsv
-            prepainters[0]->setParam(8, 1);     // colorMode
-            prepainters[0]->setParam(9, 0);     // chue
-            prepainters[0]->setParam(10, cornerrad);   // cradx
-            prepainters[0]->setParam(11, cornerrad);   // crady
-            prepainters[0]->setParam(12, 0);    // gradients
-            prepainters[0]->setParam(13, 0);    // painttext
-            
-            break;
-            
-        case 0:
-            ttl=1000;
-            painterOn[0]=true;
-            painterOn[1]=false;
-            painterOn[2]=true;
-            painterOn[3]=false;
-            painterOn[4]=false;
-            painterOn[5]=false;
-            painterOn[6]=false;
-            painterOn[7]=false;
-            painterOn[8]=false;
-            painterOn[9]=false;
-//            painterOn[10]=false;
-            
-            for(int i=0;i<pointpainters[1]->getParamCount();i++) {
-                pointpainters[1]->setParam(i,0);
-            }
-            // init x/y
-            pointpainters[1]->setParam(1,1);
-            pointpainters[1]->setParam(11,1);
-            
-            // radius 5 constant
-            pointpainters[1]->setParam(18,5);
-            pointpainters[1]->setParam(27,5);
-            
-            // grow width
-            pointpainters[1]->setParam(23,100);
-            // grow height
-            pointpainters[1]->setParam(32,100);
-            
-            // color brush constant
-            pointpainters[1]->setParam(72,0);
-            pointpainters[1]->setParam(77,255);
-            pointpainters[1]->setParam(81,127);
-            pointpainters[1]->setParam(90,140);
-            pointpainters[1]->setParam(99,0);     // brush alpha constant 0
-            
-            // fade brush out
-            // pointpainters[1]->setParam(104,-250);
-            
-            // color pen constant
-            pointpainters[1]->setParam(36,255);
-            pointpainters[1]->setParam(45,255);
-            pointpainters[1]->setParam(54,255);
-            pointpainters[1]->setParam(63,255);
-            
-            // fade pen out
-            pointpainters[1]->setParam(68,-255);
-            
-            // shape circle
-            pointpainters[1]->setParam(117,0);
-            
-            prepainters[0]->setParam(0, 0);     // sPenAct
-            prepainters[0]->setParam(1, 200);   // lPenAct
-            prepainters[0]->setParam(2, 0);     // sPenPsv
-            prepainters[0]->setParam(3, 0);     // lPenPsv
-            prepainters[0]->setParam(4, 0);     // sBrushAct
-            prepainters[0]->setParam(5, 200);   // lBrushAct
-            prepainters[0]->setParam(6, 0);     // sBrushPsv
-            prepainters[0]->setParam(7, 80);    // lBrushPsv
-            prepainters[0]->setParam(8, 0);     // colorMode
-            prepainters[0]->setParam(9, 0);     // chue
-            prepainters[0]->setParam(10, cornerrad);   // cradx
-            prepainters[0]->setParam(11, cornerrad);   // crady
-            prepainters[0]->setParam(12, 0);    // gradients
-            prepainters[0]->setParam(13, 0);    // painttext
-            break;
-            
-        case 2:
-            ttl=1000;
-            painterOn[0]=true;
-            painterOn[1]=true;
-            painterOn[2]=true;
-            painterOn[3]=false;
-            painterOn[4]=false;
-            painterOn[5]=true;
-            painterOn[6]=false;
-            painterOn[7]=false;
-            painterOn[8]=false;
-            painterOn[9]=false;
-//            painterOn[10]=false;
-            
-            for(int j=0;j<5;j++) {
-                for(int i=0;i<pointpainters[1]->getParamCount();i++) {
-                    pointpainters[j]->setParam(i,0);
-                }
-                // init x/y
-                pointpainters[j]->setParam(1,1);
-                pointpainters[j]->setParam(11,1);
-                
-                // radius 5 constant
-                pointpainters[j]->setParam(18,5);
-                pointpainters[j]->setParam(27,5);
-                
-                // radius by time
-                pointpainters[j]->setParam(23,80);
-                pointpainters[j]->setParam(32,50);
-                
-                // color pen constant
-                pointpainters[j]->setParam(36,255);
-                pointpainters[j]->setParam(45,255);
-                pointpainters[j]->setParam(54,255);
-                pointpainters[j]->setParam(63,255);
-                // fade pen out
-                pointpainters[j]->setParam(68,-255);
-                
-                // color brush constant
-                pointpainters[j]->setParam(72,0);
-                pointpainters[j]->setParam(81,0);
-                pointpainters[j]->setParam(90,0);
-                pointpainters[j]->setParam(99,250);
-                // fade brush out
-                pointpainters[j]->setParam(104,-250);
-                
-                // rotation constan 45
-                pointpainters[j]->setParam(108,45);
-                // rotate once per lt
-                pointpainters[j]->setParam(113,360);
-                
-                // shape constan 1 (rect)
-                pointpainters[j]->setParam(117,1);
-            }
-            
-            // shape circle
-            pointpainters[4]->setParam(117,0);
-            // brush hue by time
-            pointpainters[4]->setParam(77,255);
-            // brush saturation constant
-            pointpainters[4]->setParam(81,150);
-            // brush light constant
-            pointpainters[4]->setParam(90,120);
-            
-            // shape circle
-            pointpainters[1]->setParam(117,0);
-            // grow width
-            pointpainters[1]->setParam(23,50);
-            // grow height
-            pointpainters[1]->setParam(32,100);
-            
-            
-            prepainters[0]->setParam(0, 160);   // sPenAct
-            prepainters[0]->setParam(1, 200);   // lPenAct
-            prepainters[0]->setParam(2, 160);   // sPenPsv
-            prepainters[0]->setParam(3, 50);    // lPenPsv
-            prepainters[0]->setParam(4, 160);   // sBrushAct
-            prepainters[0]->setParam(5, 200);   // lBrushAct
-            prepainters[0]->setParam(6, 160);   // sBrushPsv
-            prepainters[0]->setParam(7, 80);    // lBrushPsv
-            prepainters[0]->setParam(8, 1);     // colorMode
-            prepainters[0]->setParam(9, 0);     // chue
-            prepainters[0]->setParam(10, cornerrad);   // cradx
-            prepainters[0]->setParam(11, cornerrad);   // crady
-            prepainters[0]->setParam(12, 1);    // gradients
-            prepainters[0]->setParam(13, 0);    // painttext
-            
-            break;
-            
-        case 3:
-            ttl=500;
-            painterOn[0]=true;
-            painterOn[1]=true;
-            painterOn[2]=true;
-            painterOn[3]=true;
-            painterOn[4]=true;
-            painterOn[5]=true;
-            painterOn[6]=true;
-            painterOn[7]=true;
-            painterOn[8]=true;
-            painterOn[9]=false;
-//            painterOn[10]=false;
-            
-            for(int i=0;i<9;i++) {
-                for(int j=0;j<pointpainters[i]->getParamCount();j++) {
-                    pointpainters[i]->setParam(j,0);
-                }
-                // init x/y
-                pointpainters[i]->setParam(1,1);
-                pointpainters[i]->setParam(11,1);
-                
-                // radius 5 constant
-                pointpainters[i]->setParam(18,5);
-                pointpainters[i]->setParam(27,5);
-                
-                // color brush constant
-                pointpainters[i]->setParam(72,0);
-                pointpainters[i]->setParam(80,1);       // hue by context
-                pointpainters[i]->setParam(81,127);
-                pointpainters[i]->setParam(90,140);
-                pointpainters[i]->setParam(99,255);     // brush alpha constant 255
-                
-                // color pen constant
-                pointpainters[i]->setParam(36,0);
-                pointpainters[i]->setParam(45,0);
-                pointpainters[i]->setParam(54,0);
-                pointpainters[i]->setParam(63,0);
-                
-                pointpainters[i]->setParam(113,720);    // rotate by lifetime
-                pointpainters[i]->setParam(117,2);      // shape triangle
-            }
-            pointpainters[0]->setParam(6, 1);   // x*wt
-            pointpainters[1]->setParam(6, -1);   // x*wt
-            pointpainters[2]->setParam(16, 1);   // y*wt
-            pointpainters[3]->setParam(16, -1);   // y*ht
-            
-            pointpainters[4]->setParam(6, 1);   // x*wt
-            pointpainters[4]->setParam(16, -1);   // y*ht
-            pointpainters[5]->setParam(6, 1);   // x*wt
-            pointpainters[5]->setParam(16, 1);   // y*ht
-            pointpainters[6]->setParam(6, -1);   // x*wt
-            pointpainters[6]->setParam(16, -1);   // x*wt
-            pointpainters[7]->setParam(6, -1);   // y*wt
-            pointpainters[7]->setParam(16, 1);   // y*ht
-
-            
-            prepainters[0]->setParam(0, 160);   // sPenAct
-            prepainters[0]->setParam(1, 200);   // lPenAct
-            prepainters[0]->setParam(2, 160);   // sPenPsv
-            prepainters[0]->setParam(3, 50);    // lPenPsv
-            prepainters[0]->setParam(4, 160);   // sBrushAct
-            prepainters[0]->setParam(5, 200);   // lBrushAct
-            prepainters[0]->setParam(6, 160);   // sBrushPsv
-            prepainters[0]->setParam(7, 80);    // lBrushPsv
-            prepainters[0]->setParam(8, 1);     // colorMode
-            prepainters[0]->setParam(9, 0);     // chue
-            prepainters[0]->setParam(10, cornerrad);   // cradx
-            prepainters[0]->setParam(11, cornerrad);   // crady
-            prepainters[0]->setParam(12, 1);    // gradients
-            prepainters[0]->setParam(13, 0);    // painttext
-            break;
-            
-        default:
-            break;
-    }
 }
 
 Storage *RC1::getStorage() const

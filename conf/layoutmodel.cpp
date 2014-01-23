@@ -99,10 +99,28 @@ LayoutModel::LayoutModel()
      
      */
     
-    midi2fpure = new double[127];
+
+    float freq_c5 = freq_a / 5 * 3; // 264.00 hz @ 60
+    float freq_c4 = freq_c5 / 2;    // 132.00 hz @ 48
+    float freq_c3 = freq_c4 / 2;    //  66.00 hz @ 36
+    float freq_c2 = freq_c3 / 2;    //  33.00 hz @ 24
+    float freq_c1 = freq_c2 / 2;    //  17.50 hz @ 12
+    float freq_c0 = freq_c1 / 2;    //   8.75 hz @ 12
+
+    midi2fpure = new double[132];
     int pure_m[] = {1,16,9,6,5,4,45,3,8,5,16,15,2};
     int pure_d[] = {1,15,8,5,4,3,32,2,5,3,9,8,1};
-    float freq_c = freq_a / 5 * 3; // 264 hz
+
+    int x=0;
+    for(int i=0;i<10;i++) {
+        for(int j=0;j<12;j++) {
+            midi2fpure[x] = freq_c0 * pure_m[j] / pure_d[j];
+            x++;
+        }
+        freq_c0*=2;
+    }
+
+    /*
     for (int x = 60; x < 72; ++x)
     {
         float freq=freq_c * pure_m[x%12] / pure_d[x%12];
@@ -123,6 +141,7 @@ LayoutModel::LayoutModel()
         }
         // qDebug() << "note " << x << " f " << midi2fpure[x];
     }
+    */
     
     midi2TextEU = new QString[12];
     midi2TextEU[0]="C";
@@ -199,7 +218,9 @@ LayoutModel::LayoutModel()
     factoryScaleValues[16]=2;
     factoryScaleValues[17]=2;
     factoryScaleValues[18]=1;
-    
+    //
+    factoryScaleValues[19]=1;
+
     factoryScaleStart[2]=20;
     factoryScaleLen[2]=6;
     factoryScaleValues[20]=1;
@@ -208,7 +229,9 @@ LayoutModel::LayoutModel()
     factoryScaleValues[23]=2;
     factoryScaleValues[24]=3;
     factoryScaleValues[25]=1;
-    
+    //
+    factoryScaleValues[26]=1;
+
     factoryScaleStart[3]=27;
     factoryScaleLen[3]=5;
     factoryScaleValues[27]=2;
@@ -259,7 +282,7 @@ LayoutModel::LayoutModel()
     factoryScaleValues[54]=4;
     factoryScaleValues[55]=2;
     
-    setFactoryProg(0);
+    // setFactoryProg(0);
     
     //    setScale(36,127,0,false);
     //    setXY(8,4);

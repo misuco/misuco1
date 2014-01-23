@@ -29,6 +29,7 @@ public:
     void noteOn(int vid, float f);
     void noteOff(int vid);
 
+    synth::Controller * getSyctl() {return syctl;}
 public slots:
     void pullTimerExpired();
 

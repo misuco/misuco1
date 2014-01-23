@@ -1,6 +1,6 @@
 #include "sendermobilesynth.h"
 
-#ifndef Q_OS_IOSx
+#ifdef Q_OS_IOSx
 
 SenderMobileSynth::SenderMobileSynth(RC1 * rc1)
 {
@@ -98,7 +98,11 @@ SenderMobileSynth::SenderMobileSynth(RC1 * rc1)
 
 void SenderMobileSynth::cc(int c, int voiceId, int cc, double v1)
 {
-
+    if(cc==12) {
+        sy->getSyctl()->set_filter_cutoff(voiceId,v1);
+    } else if(cc==11) {
+        sy->getSyctl()->set_filter_resonance(voiceId,v1);
+    }
 }
 
 void SenderMobileSynth::pc(int c, int v1)

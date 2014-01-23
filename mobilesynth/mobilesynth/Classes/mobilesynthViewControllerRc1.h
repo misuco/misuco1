@@ -5,7 +5,7 @@
 //  Created by Allen Porter on 12/7/08.
 //  Copyright thebends 2008. All rights reserved.
 //
-#ifndef Q_OS_IOSx
+#ifdef Q_OS_IOSx
 
 #import <UIKit/UIKit.h>
 #import "AudioOutput.h"

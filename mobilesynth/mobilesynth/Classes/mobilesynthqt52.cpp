@@ -46,6 +46,7 @@ mobileSynthQT52::mobileSynthQT52()
     //delete m_audioOutput;
     //m_audioOutput = 0;
     m_audioOutput = new QAudioOutput(m_device, m_format, this);
+    m_audioOutput->setBufferSize(2048);
 //    connect(m_audioOutput, SIGNAL(notify()), SLOT(notified()));
 //    connect(m_audioOutput, SIGNAL(stateChanged(QAudio::State)), SLOT(handleStateChanged(QAudio::State)));
     this->start();
@@ -56,7 +57,7 @@ mobileSynthQT52::mobileSynthQT52()
     // way 2: pull mode
     connect(m_pullTimer, SIGNAL(timeout()), SLOT(pullTimerExpired()));
     m_output=m_audioOutput->start();
-    m_pullTimer->start(20);
+    m_pullTimer->start(5);
 
 }
 

@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtWidgets>
 #include <QTimer>
 #include <QtGlobal>
+#include "conf/layoutxml.h"
 #include "rc1.h"
 #include "event/eventhandlerrect.h"
 #include "comm/senderdebug.h"
@@ -84,14 +85,14 @@ RC1::RC1(QWidget *parent) :
 
 //    layout->setRaga(0,0);
     
-//    layout->setFactoryLayout(1);
+    layout->setFactoryLayout(1);
     
 //    layout->setXY(9, 2);
 //    layout->setScale(50, 18, 1, true);
     
 //    setPPS0();
     
-    setProg(0);
+//    setProg(0);
 
     /* OSC Server disabled for demo version
     oscin = new QOscServer(3333,this);
@@ -112,6 +113,11 @@ RC1::RC1(QWidget *parent) :
     nTests=32;
     tpx=0;
     testMode=false;
+
+    layoutxml lxml;
+    lxml.setLayoutModel(layout);
+    lxml.writeXml();
+    lxml.readXml();
 
     // setWindowState(Qt::WindowFullScreen);
 }

@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class LayoutModel
 {
+    friend class layoutxml;
 public:
     LayoutModel();
     void calcGeo(int w, int h);
@@ -30,8 +31,9 @@ public:
     int getHeight() const;
 
     int getNrows() const;
-
     int getRowheightpx(int i) const;
+    int getRowheightmax() {return rowheightmax;}
+    int getRowheight(int i) {return rowheight[i];}
     int getNseg(int i) const;
     int getNsegs() const;
     int getSegwidth(int i) const;
@@ -46,8 +48,11 @@ public:
     int getSegtype(int i) const;
     QString * getSegText(int i) const;
     int getSegH(int i) const;
+
     void incPressed(int i);
     void decPressed(int i);
+
+
     void setXY(int x, int y);
     void setScale(int start, int n, int step, bool withTransistion);
     void setFactoryLayout(int i);

@@ -39,7 +39,7 @@ RC1::RC1(QWidget *parent) :
     setAttribute(Qt::WA_AcceptTouchEvents,true);
     //qDebug() << "View() size:" << width() << " " << height();
     eventId = 1;
-    nomouse = true;
+    nomouse = false;
     ttl=2000;
 
     storage=new Storage();

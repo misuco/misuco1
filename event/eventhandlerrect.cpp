@@ -104,7 +104,9 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 rc1->getEvstat()->incTransitioncount();
             }
             isegb[evptr]=iseg;
-            layout->incPressed(isegb[evptr]);
+            if(layout->getSegtype(iseg)!=3) {
+                layout->incPressed(isegb[evptr]);
+            }
         }
         
         if(layout->getSegtype(iseg)==0 || layout->getSegtype(iseg)==1) {
@@ -139,8 +141,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         
         if(layout->getSegtype(iseg)==0) {
             //            double v1=layout->getNote(iseg);
-            double v1=layout->getNote(iseg);
-            p->setHue(30*(layout->getMidiNote(iseg)%12));
+            double v1=layout->getValue(iseg);
+            p->setHue(30*(layout->getValueInt(iseg)%12));
             if(note[evptr]!=v1) {
                 if(transitionMode) {
                     if(note[evptr]>0) {
@@ -173,12 +175,12 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     double xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg));
                     xrel=xrel/(double)layout->getSegwidthpx(iseg);
                     // 3b. calculate frequency difference
-                    double fdiff=layout->getNote(iseg+1)-layout->getNote(iseg-1);
-                    float mndiff=layout->getMidiNote(iseg+1)%12-layout->getMidiNote(iseg-1)%12;
+                    double fdiff=layout->getValue(iseg+1)-layout->getValue(iseg-1);
+                    float mndiff=layout->getValueInt(iseg+1)%12-layout->getValueInt(iseg-1)%12;
                     // 3c. calculate relative frequency
                     double frel=fdiff*xrel;
-                    frel+=layout->getNote(iseg-1);
-                    float hue=(float)(layout->getMidiNote(iseg-1)%12)+(mndiff*(float)xrel);
+                    frel+=layout->getValue(iseg-1);
+                    float hue=(float)(layout->getValueInt(iseg-1)%12)+(mndiff*(float)xrel);
                     hue*=30;
                     layout->setSegH(iseg, hue);    // store value for painter
                     p->setHue(hue);
@@ -194,30 +196,77 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 }
             }
         } else {
+            // turn off note if moved out of note into functional field
+            bool movedin=false;
             if(note[evptr]>0) {
                 snd->note(chan[evptr],ieventout[evptr],note[evptr],0);
                 note[evptr]=-1;
                 layout->decPressed(isegb[evptr]);
                 isegb[evptr]=-1;
+                movedin=true;
             }
             if(layout->getSegtype(iseg)==2) {
-                rc1->getLayout()->setFactoryLayout(layout->getChan(iseg));
+                // button
+                if(layout->getChan(iseg)==0) {
+                    rc1->getLayout()->setFactoryLayout(layout->getValueInt(iseg));
+                } else if(layout->getChan(iseg)==1) {
+                    rc1->getLayout()->setBasenote(layout->getValueInt(iseg));
+                } else if(layout->getChan(iseg)==2) {
+                    rc1->getLayout()->setBasescale(layout->getValueInt(iseg));
+                } else if(layout->getChan(iseg)==3) {
+                    rc1->getLayout()->setNoct(layout->getValueInt(iseg));
+                } else if(layout->getChan(iseg)==4) {
+                    rc1->setProg(layout->getValueInt(iseg));
+                } else if(layout->getChan(iseg)==5) {
+                    QDesktopServices::openUrl(QUrl(*layout->getSegText(iseg)));
+                }
             } else if(layout->getSegtype(iseg)==3) {
-                rc1->getLayout()->setBasenote(layout->getMidiNote(iseg));
-            } else if(layout->getSegtype(iseg)==4) {
-                rc1->getLayout()->setBasescale(layout->getChan(iseg));
-            } else if(layout->getSegtype(iseg)==5) {
-                rc1->getLayout()->setNoct(layout->getChan(iseg));
+                // toggle button
+                 if( p->getState() == Qt::TouchPointPressed ) {
+                     //qDebug() << " seg type 8 " << isegb[evptr];
+                     if(layout->getPressed(isegb[evptr])>0) {
+                         layout->decPressed(isegb[evptr]);
+                         layout->setBscale(isegb[evptr],false);
+                         //qDebug() << " bscale off " << isegb[evptr];
+                     } else {
+                         layout->incPressed(isegb[evptr]);
+                         layout->setBscale(isegb[evptr],true);
+                         //qDebug() << " bscale on " << isegb[evptr];
+                     }
+                 }
             } else if(layout->getSegtype(iseg)==6) {
-                rc1->setProg(layout->getChan(iseg));
-            } else if(layout->getSegtype(iseg)==7) {
-                QDesktopServices::openUrl(QUrl("http://misuco.org/d401"));
+                // x-double-slider
+                double xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg));
+                xrel=xrel/(double)layout->getSegwidthpx(iseg);
+                int xrelquant=0;    // quantized by steps
+                if(layout->getCtlx(iseg)>0) {
+                    xrelquant=0.5+xrel*(double)layout->getCtlx(iseg);
+                    xrel=(double)xrelquant/(double)layout->getCtlx(iseg);
+                }
+                if(xrel>layout->getValue(iseg+1)) {
+                    layout->setValue(iseg+1,xrel);
+                    layout->setValueInt(iseg+1,xrelquant);
+                } else if(xrel<layout->getValue(iseg)) {
+                    layout->setValue(iseg,xrel);
+                    layout->setValueInt(iseg,xrelquant);
+                } else if(xrel<layout->getValue(iseg+1) && xrel>layout->getValue(iseg)) {
+                    if(layout->getValue(iseg+1)-xrel < xrel - layout->getValue(iseg)) {
+                        layout->setValue(iseg+1,xrel);
+                        layout->setValueInt(iseg+1,xrelquant);
+                    } else {
+                        layout->setValue(iseg,xrel);
+                        layout->setValueInt(iseg,xrelquant);
+                    }
+                }
+                qDebug() << "x-double-slider " << layout->getValueInt(iseg) << " : " << layout->getValueInt(iseg+1);
             }
         }
     } else if( p->getState() == Qt::TouchPointReleased ) {
         p->setHue(-1);
         act[evptr]=false;
-        layout->decPressed(isegb[evptr]);
+        if(layout->getSegtype(iseg)!=3) {
+            layout->decPressed(isegb[evptr]);
+        }
         if(layout->getSegtype(iseg)==0 || layout->getSegtype(iseg)==1) {
             snd->note(chan[evptr],ieventout[evptr],note[evptr],0);
             note[evptr]=-1;

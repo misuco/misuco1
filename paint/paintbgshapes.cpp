@@ -124,7 +124,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
             int ypaint1_1=ypaint1-1;
             int ypaint1_2=ypaint1-2*crady;
             if(colorMode==1 ) {
-                col=32*(lay->getMidiNote(iseg)%12);
+                col=32*(lay->getValueInt(iseg)%12);
             } else if(colorMode==2 ){
                 col=lay->getSegH(iseg);
             }
@@ -149,8 +149,8 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
             int col2=chue;
             if(lay->getSegtype(iseg)==1) {
                 if(colorMode==1 ) {
-                    col1=(lay->getMidiNote(iseg-1)%12)*32;
-                    col2=(lay->getMidiNote(iseg+1)%12)*32;
+                    col1=(lay->getValueInt(iseg-1)%12)*32;
+                    col2=(lay->getValueInt(iseg+1)%12)*32;
                 } else if(colorMode==2 ) {
                     col1=lay->getSegH(iseg-1);
                     col2=lay->getSegH(iseg+1);
@@ -227,10 +227,10 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                     }
                     pnt->drawPolygon(points2,4);
                 }
-            } else if (lay->getSegtype(iseg)==0 || lay->getSegtype(iseg)==7) {
+            } else if (lay->getSegtype(iseg)==0 ) {
                 //                pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
                 pnt->drawRoundedRect(xpaint,ypaint,xpaint1_1,ypaint1_1, cradx, crady);
-            } else {
+            } else if (lay->getSegtype(iseg)==2) {
                 //                pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
                 if(xpaint1>ypaint1) {
                     int move=(xpaint1-ypaint1)/2;
@@ -239,14 +239,25 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                     int move=(ypaint1-xpaint1)/2;
                     pnt->drawEllipse(xpaint,ypaint+move,xpaint1_1,xpaint1_1);
                 }
+            } else if (lay->getSegtype(iseg)!=7)   {
+                pnt->drawRect(xpaint,ypaint,xpaint1_1,ypaint1_1);
             }
-            
-            if(painttext>0) {
-                pnt->setPen(QColor::fromHsl((col+180)%360,100,100));
-                pnt->setFont(QFont("Ubuntu",20));
-                pnt->drawText(xpaint,ypaint,xpaint1,ypaint1,Qt::AlignCenter,*lay->getSegText(iseg));
+            if(lay->getSegtype(iseg)==6) {
+                pnt->setBrush(Qt::gray);
+                int xv1=lay->getValue(iseg)*xpaint1_1;
+                int xv2=lay->getValue(iseg+1)*xpaint1_1;
+                pnt->drawEllipse(xpaint+xv1,ypaint,ypaint1_1,ypaint1_1);
+                pnt->drawEllipse(xpaint-ypaint1_1+xv2,ypaint,ypaint1_1,ypaint1_1);
+                pnt->drawRect(xv1,ypaint+ypaint1_1/4,xv2-xv1,ypaint1_1/2);
             }
-            
+            if (lay->getSegtype(iseg)!=7)   {
+                if(painttext>0) {
+                    pnt->setPen(QColor::fromHsl((col+180)%360,100,100));
+                    pnt->setFont(QFont("Ubuntu",20));
+                    pnt->drawText(xpaint,ypaint,xpaint1,ypaint1,Qt::AlignCenter,*lay->getSegText(iseg));
+                }
+            }
+
             xpaint+=xpaint1;
             iseg++;
         }

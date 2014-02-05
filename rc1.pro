@@ -141,7 +141,8 @@ OTHER_FILES += \
     mobilesynth/mobilesynth/Info.plist \
     mobilesynth/mobilesynth/mobilesynth_Prefix.pch \
     mobilesynth/mobilesynth/mobilesynth.xcodeproj \
-    Info.plist
+    Info.plist \
+    misuco.xml
 
 OBJECTIVE_SOURCES += \
     mobilesynth/mobilesynth/Classes/mobilesynthViewControllerRc1.mm \

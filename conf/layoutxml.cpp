@@ -80,14 +80,18 @@ void layoutxml::writeXml()
             xml.writeStartElement("seg");
             att.sprintf("%d",layout->getSegwidth(i));
             xml.writeAttribute("segwidth", att);
-            att.sprintf("%lf",layout->getNote(i));
-            xml.writeAttribute("note", att);
-            att.sprintf("%d",layout->getMidiNote(i));
-            xml.writeAttribute("midinote", att);
+            att.sprintf("%lf",layout->getValue(i));
+            xml.writeAttribute("value", att);
+            att.sprintf("%d",layout->getValueInt(i));
+            xml.writeAttribute("valueint", att);
             att.sprintf("%d",layout->getCtlx(i));
             xml.writeAttribute("ctlx", att);
             att.sprintf("%d",layout->getCtly(i));
             xml.writeAttribute("ctly", att);
+            att.sprintf("%d",layout->getChan(i));
+            xml.writeAttribute("chan", att);
+            att.sprintf("%d",layout->getPressed(i));
+            xml.writeAttribute("pressed", att);
             att.sprintf("%d",layout->getSegtype(i));
             xml.writeAttribute("segtype", att);
             xml.writeAttribute("segtext", *layout->getSegText(i));
@@ -115,7 +119,9 @@ void layoutxml::readLayout() {
         if (xmlr.name() == "row") {
             if(row>0) {
                 layout->nseg[row-1]=nrowseg;
+                //qDebug() << "set nrowseg " << nrowseg << " for row " << row-1;
             }
+            layout->segwidthmax[row]=xmlr.attributes().value("segwidthmax").toString().toInt();
             layout->rowheight[row]=xmlr.attributes().value("height").toString().toInt();
             row++;
             nrowseg=0;
@@ -124,14 +130,17 @@ void layoutxml::readLayout() {
 //                qDebug() << "xmlr seg name " << xmlr.name();
                 if (xmlr.name() == "seg") {
                     layout->segwidth[seg]=xmlr.attributes().value("segwidth").toString().toInt();
-                    layout->note[seg]=xmlr.attributes().value("note").toString().toDouble();
-                    layout->midinote[seg]=xmlr.attributes().value("midinote").toString().toInt();
+                    layout->value[seg]=xmlr.attributes().value("value").toString().toDouble();
+                    layout->valueint[seg]=xmlr.attributes().value("valueint").toString().toInt();
                     layout->ctlx[seg]=xmlr.attributes().value("ctlx").toString().toInt();
                     layout->ctly[seg]=xmlr.attributes().value("ctly").toString().toInt();
                     layout->segtype[seg]=xmlr.attributes().value("segtype").toString().toInt();
+                    layout->pressed[seg]=xmlr.attributes().value("pressed").toString().toInt();
+                    layout->chan[seg]=xmlr.attributes().value("chan").toString().toInt();
                     layout->segText[seg].clear();
                     layout->segText[seg].append(xmlr.attributes().value("segtext").toString());
                     layout->segH[seg]=xmlr.attributes().value("segh").toString().toInt();
+//                    qDebug()<< "segH " << layout->segH[seg] << " for seg " << seg;
                     seg++;
                     nrowseg++;
                     xmlr.skipCurrentElement();
@@ -147,6 +156,7 @@ void layoutxml::readLayout() {
     layout->nseg[row-1]=nrowseg;
     layout->nrows=row;
     layout->nsegs=seg;
+    layout->calcGeo(layout->width,layout->height);
 
 //    qDebug() << xmlr.error();
 //    qDebug() << xmlr.errorString();

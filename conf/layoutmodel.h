@@ -39,8 +39,8 @@ public:
     int getSegwidth(int i) const;
     int getSegwidthmax(int i) const;
     int getSegwidthpx(int i) const;
-    double getNote(int i) const;
-    int getMidiNote(int i) const;
+    double getValue(int i) const;
+    int getValueInt(int i) const;
     int getCtlx(int i) const;
     int getCtly(int i) const;
     int getChan(int i) const;
@@ -52,22 +52,27 @@ public:
     void incPressed(int i);
     void decPressed(int i);
 
+    void setValue(int i, double v) const;
+    void setValueInt(int i, int v) const;
 
-    void setXY(int x, int y);
+/*    void setXY(int x, int y);
     void setScale(int start, int n, int step, bool withTransistion);
     void setFactoryLayout(int i);
-    void setFactoryProg(int i);
+    void setFactoryProg(int i);*/
     void setSegH(int i, int v);
     void setAllCtlx(int v);
     void setAllCtly(int v);    
-    void setRaga(int i, int b);
+//    void setRaga(int i, int b);
     int getBasenote() const;
     void setBasenote(int value);
     int getBasescale() const;
     void setBasescale(int value);
-
-    int getNoct() const;
-    void setNoct(int value);
+    void setBscale(int n, bool value);
+    int getTopoct() const;
+    void setTopoct(int value);
+    int getBaseoct() const;
+    void setBaseoct(int value);
+    void updateLayout();
 
 private:
     int nrows;
@@ -82,8 +87,8 @@ private:
     int *segwidthmax;
     int *segwidthpx;
     int *segtype;       // segmenttyp: 0=note, 1=transition, 2=layout
-    double *note;
-    int *midinote;
+    double *value;
+    int *valueint;
     double *midi2f;
     double *midi2fpure;
     int *ctlx;
@@ -99,12 +104,17 @@ private:
     int height;
 
     int basenote;
-    int basescale;
-    int noct;
-    int * factoryScaleValues;
+//    int basescale;
+    int topoct;
+    int baseoct;
+    int scaleStartSeg;
+
+/*    int * factoryScaleValues;
     int * factoryScaleStart;
     int * factoryScaleLen;
-    int nFactoryScales;
+    int nFactoryScales;*/
+
+    bool bscale[11];
     void setAll(int n, int * d, int v);
 
 };

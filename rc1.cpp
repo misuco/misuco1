@@ -85,7 +85,7 @@ RC1::RC1(QWidget *parent) :
 
 //    layout->setRaga(0,0);
     
-    layout->setFactoryLayout(1);
+    //layout->setFactoryLayout(1);
     
 //    layout->setXY(9, 2);
 //    layout->setScale(50, 18, 1, true);
@@ -350,18 +350,19 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
                 painterOn[dl.at(0).toInt()]=dl.at(1).toBool();
             }
         }
-
+/*
         if(path=="/lxy") {
             if(dl.size()==2) {
-                layout->setXY(dl.at(0).toInt(),dl.at(1).toInt());
+                //layout->setXY(dl.at(0).toInt(),dl.at(1).toInt());
             }
         }
 
         if(path=="/lsc") {
             if(dl.size()==3) {
-                layout->setScale(dl.at(0).toInt(),dl.at(1).toInt(),dl.at(2).toInt(),false);
+                //layout->setScale(dl.at(0).toInt(),dl.at(1).toInt(),dl.at(2).toInt(),false);
             }
         }
+*/
 
         if(path=="/ltx") {
             if(dl.size()==2) {
@@ -450,11 +451,12 @@ void RC1::resetStat()
 
     fps=0;
 }
+/*
 void RC1::setConfigTransistions() {
     layout->setXY(15,1);
     layout->setScale(62,8,3,true);
 }
-
+*/
 
 void RC1::setPPSmin(int p) {
     ttl=500;
@@ -524,7 +526,7 @@ EventStat *RC1::getEvstat() const
 {
 return evstat;
 }
-
+/*
 void RC1::setProg(int p)
 {
     setPPSmin(p);
@@ -532,3 +534,4 @@ void RC1::setProg(int p)
     sender->pc(0, p);
 }
 
+*/

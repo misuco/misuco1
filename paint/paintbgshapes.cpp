@@ -244,6 +244,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
             }
             if(lay->getSegtype(iseg)==6) {
                 pnt->setBrush(Qt::gray);
+                pnt->setPen(Qt::NoPen);
                 int xv1=lay->getValue(iseg)*xpaint1_1;
                 int xv2=lay->getValue(iseg+1)*xpaint1_1;
                 pnt->drawEllipse(xpaint+xv1,ypaint,ypaint1_1,ypaint1_1);

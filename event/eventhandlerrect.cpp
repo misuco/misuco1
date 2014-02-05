@@ -207,10 +207,14 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             }
             if(layout->getSegtype(iseg)==2) {
                 // button
+                layout->setBasenote(layout->getValueInt(iseg));
+                layout->updateLayout();
+/*
                 if(layout->getChan(iseg)==0) {
                     rc1->getLayout()->setFactoryLayout(layout->getValueInt(iseg));
                 } else if(layout->getChan(iseg)==1) {
                     rc1->getLayout()->setBasenote(layout->getValueInt(iseg));
+                    layout->updateLayout();
                 } else if(layout->getChan(iseg)==2) {
                     rc1->getLayout()->setBasescale(layout->getValueInt(iseg));
                 } else if(layout->getChan(iseg)==3) {
@@ -220,6 +224,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 } else if(layout->getChan(iseg)==5) {
                     QDesktopServices::openUrl(QUrl(*layout->getSegText(iseg)));
                 }
+                */
+
             } else if(layout->getSegtype(iseg)==3) {
                 // toggle button
                  if( p->getState() == Qt::TouchPointPressed ) {
@@ -227,10 +233,12 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                      if(layout->getPressed(isegb[evptr])>0) {
                          layout->decPressed(isegb[evptr]);
                          layout->setBscale(isegb[evptr],false);
+                         layout->updateLayout();
                          //qDebug() << " bscale off " << isegb[evptr];
                      } else {
                          layout->incPressed(isegb[evptr]);
                          layout->setBscale(isegb[evptr],true);
+                         layout->updateLayout();
                          //qDebug() << " bscale on " << isegb[evptr];
                      }
                  }
@@ -258,7 +266,10 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                         layout->setValueInt(iseg,xrelquant);
                     }
                 }
-                qDebug() << "x-double-slider " << layout->getValueInt(iseg) << " : " << layout->getValueInt(iseg+1);
+                layout->setBasenote(layout->getValueInt(iseg));
+                layout->setTopoct(layout->getValueInt(iseg+1));
+                layout->updateLayout();
+//                qDebug() << "x-double-slider " << layout->getValueInt(iseg) << " : " << layout->getValueInt(iseg+1);
             }
         }
     } else if( p->getState() == Qt::TouchPointReleased ) {

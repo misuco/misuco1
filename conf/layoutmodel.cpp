@@ -190,8 +190,11 @@ LayoutModel::LayoutModel()
     
 //    basescale=0;
     basenote=0;
-    noct=2;
-    baseoct=2;
+    topoct=2;
+    baseoct=3;
+    scaleStartSeg=24;
+    scaleRow=3;
+
 /*
     nFactoryScales=10;
     factoryScaleStart=new int[nFactoryScales];
@@ -534,22 +537,31 @@ void LayoutModel::updateLayout()
         valueint[seg]=calcnote;
         value[seg]=midi2f[calcnote];
         segText[seg]=midi2TextEU[calcnote%12];
+        segwidth[seg]=1;
         for(int j=0;j<11;j++) {
             if(bscale[j]) {
                 seg++;
                 segtype[seg]=1;
                 segText[seg]="";
+                segwidth[seg]=1;
                 seg++;
                 segtype[seg]=0;
+                segwidth[seg]=1;
                 int thisnote=calcnote+j+1;
                 valueint[seg]=thisnote;
                 value[seg]=midi2f[thisnote];
                 segText[seg]=midi2TextEU[thisnote%12];
             }
         }
+        seg++;
+        segtype[seg]=1;
+        segText[seg]="";
+        seg++;
     }
-    nseg[scaleRow]=seg+1;
-    nsegs=scaleStartSeg+seg+1;
+    nseg[scaleRow]=seg-scaleStartSeg;
+    segwidthmax[scaleRow]=seg-scaleStartSeg;
+    nsegs=seg;
+    calcGeo(width,height);
 
 /*
     for(int i=0;i<nseg[3];i++) {

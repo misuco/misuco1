@@ -104,10 +104,12 @@ private:
     int height;
 
     int basenote;
-//    int basescale;
     int topoct;
     int baseoct;
+
+    // here we declare from which part the scale keyboard starts
     int scaleStartSeg;
+    int scaleRow;
 
 /*    int * factoryScaleValues;
     int * factoryScaleStart;

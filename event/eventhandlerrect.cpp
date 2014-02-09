@@ -266,7 +266,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                         layout->setValueInt(iseg,xrelquant);
                     }
                 }
-                layout->setBasenote(layout->getValueInt(iseg));
+                layout->setBaseoct(layout->getValueInt(iseg));
                 layout->setTopoct(layout->getValueInt(iseg+1));
                 layout->updateLayout();
 //                qDebug() << "x-double-slider " << layout->getValueInt(iseg) << " : " << layout->getValueInt(iseg+1);

@@ -45,6 +45,9 @@ LayoutModel::LayoutModel()
     for(int i=0;i<11;i++) {
         bscale[i]=false;
     }
+    bscale[4]=true;
+    bscale[7]=true;
+
     segtype = new int[nsegsmax];
     setAll(nsegsmax,segtype,0);
     
@@ -190,7 +193,7 @@ LayoutModel::LayoutModel()
     
 //    basescale=0;
     basenote=0;
-    topoct=2;
+    topoct=6;
     baseoct=3;
     scaleStartSeg=24;
     scaleRow=3;
@@ -558,9 +561,9 @@ void LayoutModel::updateLayout()
         segText[seg]="";
         seg++;
     }
-    nseg[scaleRow]=seg-scaleStartSeg;
-    segwidthmax[scaleRow]=seg-scaleStartSeg;
-    nsegs=seg;
+    nseg[scaleRow]=1+seg-scaleStartSeg;
+    segwidthmax[scaleRow]=1+seg-scaleStartSeg;
+    nsegs=1+seg;
     calcGeo(width,height);
 
 /*

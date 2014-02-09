@@ -118,6 +118,7 @@ RC1::RC1(QWidget *parent) :
     lxml.setLayoutModel(layout);
     lxml.writeXml();
     lxml.readXml();
+    layout->updateLayout();
 
     // setWindowState(Qt::WindowFullScreen);
 }

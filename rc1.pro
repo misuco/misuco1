@@ -53,7 +53,8 @@ SOURCES += main.cpp\
     mobilesynth/mobilesynth/Classes/synth/parameter.cpp \
     comm/sendermobilesynth.cpp \
     mobilesynth/mobilesynth/Classes/mobilesynthqt52.cpp \
-    conf/layoutxml.cpp
+    conf/layoutxml.cpp \
+    comm/senderoscxy.cpp
 
 HEADERS  += \
     storage.h \
@@ -101,7 +102,8 @@ HEADERS  += \
     comm/sendermobilesynth.h \
     mobilesynth/mobilesynth/Classes/mobilesynthviewcontrollerrc1.hpp \
     mobilesynth/mobilesynth/Classes/mobilesynthqt52.h \
-    conf/layoutxml.h
+    conf/layoutxml.h \
+    comm/senderoscxy.h
 
 OTHER_FILES += \
     android/res/values-ru/strings.xml \

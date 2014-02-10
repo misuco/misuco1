@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "comm/senderoscpuredata.h"
 #include "comm/sendersupercollider.h"
 #include "comm/sendermobilesynth.h"
+#include "comm/senderoscxy.h"
 #include "paint/paintbgshapes.h"
 #include "paint/pointpaintshape.h"
 #include "paint/pointpaintsphere.h"
@@ -44,7 +45,8 @@ RC1::RC1(QWidget *parent) :
 
     storage=new Storage();
     layout=new LayoutModel();
-    sender=new SenderMobileSynth(this);
+    sender = new SenderOscXY(this);
+//    sender=new SenderMobileSynth(this);
 //    sender=new SenderSuperCollider(this);
 //    sender=new SenderOscPuredata(this);
 //    sender=new SenderDebug();
@@ -114,11 +116,11 @@ RC1::RC1(QWidget *parent) :
     tpx=0;
     testMode=false;
 
-    layoutxml lxml;
-    lxml.setLayoutModel(layout);
-    lxml.writeXml();
-    lxml.readXml();
-    layout->updateLayout();
+//    layoutxml lxml;
+//    lxml.setLayoutModel(layout);
+//    lxml.writeXml();
+//    lxml.readXml();
+//    layout->updateLayout();
 
     // setWindowState(Qt::WindowFullScreen);
 }

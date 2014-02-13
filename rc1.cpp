@@ -62,15 +62,6 @@ RC1::RC1(QWidget *parent) :
     nPointPainters=1;
     pointpainters=new IPointPaint*[nPointPainters];
     pointpainters[0]=new PointPaintSphere();
-//    pointpainters[0]=new PointPaintShape();
-/*    pointpainters[1]=new PointPaintShape();
-    pointpainters[2]=new PointPaintShape();
-    pointpainters[3]=new PointPaintShape();
-    pointpainters[4]=new PointPaintShape();
-    pointpainters[5]=new PointPaintShape();
-    pointpainters[6]=new PointPaintShape();
-    pointpainters[7]=new PointPaintShape();
-    pointpainters[8]=new PointPaintShape(); */
 
     nPostPainters=1;
     postpainters=new IPaint*[nPostPainters];
@@ -81,26 +72,10 @@ RC1::RC1(QWidget *parent) :
     painterOn[1]=true;
     painterOn[2]=true;
 
-//    setConfigSlideRC();
-//    setConfigPdjam2013();
-//    setConfigTransistions();
-
-//    layout->setRaga(0,0);
-    
-    //layout->setFactoryLayout(1);
-    
-//    layout->setXY(9, 2);
-//    layout->setScale(50, 18, 1, true);
-    
-//    setPPS0();
-    
-//    setProg(0);
-
     /* OSC Server disabled for demo version
     oscin = new QOscServer(3333,this);
     oscin->registerPathObject(this);
     */
-    
     
     resetStat();
     this->startTimer(0);
@@ -116,11 +91,11 @@ RC1::RC1(QWidget *parent) :
     tpx=0;
     testMode=false;
 
-//    layoutxml lxml;
-//    lxml.setLayoutModel(layout);
+    layoutxml lxml;
+    lxml.setLayoutModel(layout);
 //    lxml.writeXml();
-//    lxml.readXml();
-//    layout->updateLayout();
+    lxml.readXml();
+    layout->updateLayout();
 
     // setWindowState(Qt::WindowFullScreen);
 }
@@ -251,7 +226,7 @@ bool RC1::event(QEvent *event)
 
         long t=QDateTime::currentMSecsSinceEpoch();
         
-        nomouse=true;
+        // nomouse=true;
         touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
         foreach (const QTouchEvent::TouchPoint &touchPoint, touchPoints) {
             //            qDebug() << sEvent << ": x:" << touchPoint.pos().x() << " y:" << touchPoint.pos().y() << " t: " << t1.tv_sec << "." << t1.tv_usec;

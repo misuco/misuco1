@@ -103,7 +103,8 @@ HEADERS  += \
     mobilesynth/mobilesynth/Classes/mobilesynthviewcontrollerrc1.hpp \
     mobilesynth/mobilesynth/Classes/mobilesynthqt52.h \
     conf/layoutxml.h \
-    comm/senderoscxy.h
+    comm/senderoscxy.h \
+    platform.h
 
 OTHER_FILES += \
     android/res/values-ru/strings.xml \

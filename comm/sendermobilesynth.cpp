@@ -1,6 +1,7 @@
+#include "platform.h"
 #include "sendermobilesynth.h"
 
-#ifdef Q_OS_IOSx
+#ifdef RC1_IOS
 
 SenderMobileSynth::SenderMobileSynth(RC1 * rc1)
 {

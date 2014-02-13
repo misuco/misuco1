@@ -5,8 +5,8 @@
 //  Created by Allen Porter on 12/20/08.
 //  Copyright 2008 thebends. All rights reserved.
 //
-
-#ifdef Q_OS_IOSx
+#include "platform.h"
+#ifdef RC1_IOS
 
 #import "AudioOutput.h"
 #import <AudioUnit/AudioUnitProperties.h>

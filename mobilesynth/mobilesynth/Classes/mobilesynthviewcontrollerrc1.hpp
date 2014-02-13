@@ -1,4 +1,6 @@
-#ifdef Q_OS_IOSx
+#include "platform.h"
+
+#ifdef RC1_IOS
 
 #ifndef MOBILESYNTHVIEWCONTROLLERRC1_HPP
 #define MOBILESYNTHVIEWCONTROLLERRC1_HPP

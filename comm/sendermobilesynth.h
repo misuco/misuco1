@@ -1,9 +1,10 @@
 #ifndef SENDERMOBILESYNTH_H
 #define SENDERMOBILESYNTH_H
 
+#include "platform.h"
 #include "rc1.h"
 #include "isender.h"
-#ifdef Q_OS_IOSx
+#ifdef RC1_IOS
 #include "../mobilesynth/mobilesynth/Classes/mobilesynthviewcontrollerrc1.hpp"
 #include "../mobilesynth/mobilesynth/Classes/synth/controller.h"
 #else
@@ -21,7 +22,7 @@ public:
     virtual void setDestination(QHostAddress a,int p);
     
 private:
-#ifdef Q_OS_IOSx
+#ifdef RC1_IOS
     mobilesynthview::Widget * syco;
     synth::Controller * sy;
 #else

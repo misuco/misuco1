@@ -45,8 +45,10 @@ LayoutModel::LayoutModel()
     for(int i=0;i<11;i++) {
         bscale[i]=false;
     }
+    /*
     bscale[4]=true;
     bscale[7]=true;
+    */
 
     segtype = new int[nsegsmax];
     setAll(nsegsmax,segtype,0);
@@ -250,12 +252,10 @@ int LayoutModel::getValueInt(int i) const
     return valueint[i];
 }
 
-
 int LayoutModel::getSegwidthpx(int i) const
 {
     return segwidthpx[i];
 }
-
 
 int LayoutModel::getSegwidthmax(int i) const
 {
@@ -304,24 +304,6 @@ void LayoutModel::setValueInt(int i, int v) const
     valueint[i]=v;
 }
 
-/*
-void LayoutModel::setXY(int x, int y)
-{
-    if(y<=nrowsmax && x*y<=nsegsmax) {
-        nrows=y;
-        nsegs=x*y;
-        rowheightmax=nrows;
-        for(int i=0;i<y;i++) {
-            nseg[i]=x;
-            segwidthmax[i]=x;
-            rowheight[i]=1;
-        }
-        setAll(nsegs,segwidth,1);
-        calcGeo(width,height);
-    }
-}
-*/
-
 int LayoutModel::getBasenote() const
 {
     return basenote;
@@ -330,40 +312,11 @@ int LayoutModel::getBasenote() const
 void LayoutModel::setBasenote(int value)
 {
     basenote = value;
-//    setFactoryLayout(0);
 }
-/*
-int LayoutModel::getBasescale() const
-{
-    return basescale;
-}
-
-void LayoutModel::setBasescale(int value)
-{
-    basescale = value;
-    setFactoryLayout(0);
-}
-*/
 
 void LayoutModel::setBscale(int n, bool value)
 {
     bscale[n]=value;
-/*
-    int scaleN=0;
-
-    factoryScaleLen[0]=1;
-    factoryScaleValues[0]=0;
-
-    for(int i=0;i<11;i++) {
-        if(bscale[i]) {
-            scaleN++;
-            factoryScaleLen[0]++;
-        }
-        factoryScaleValues[scaleN]++;
-    }
-//    basescale=0;
-//    setFactoryLayout(0);
-*/
 }
 
 int LayoutModel::getTopoct() const
@@ -374,7 +327,6 @@ int LayoutModel::getTopoct() const
 void LayoutModel::setTopoct(int value)
 {
     topoct = value;
-//    setFactoryLayout(0);
 }
 
 int LayoutModel::getBaseoct() const
@@ -397,6 +349,7 @@ void LayoutModel::updateLayout()
         value[seg]=midi2f[calcnote];
         segText[seg]=midi2TextEU[calcnote%12];
         segwidth[seg]=1;
+        segtype[seg]=0;
         for(int j=0;j<11;j++) {
             if(bscale[j]) {
                 seg++;
@@ -413,13 +366,24 @@ void LayoutModel::updateLayout()
             }
         }
         seg++;
-        segtype[seg]=1;
-        segText[seg]="";
-        seg++;
+        if(i<topoct) {
+            segtype[seg]=1;
+            segText[seg]="";
+            seg++;
+        }
     }
-    nseg[scaleRow]=1+seg-scaleStartSeg;
-    segwidthmax[scaleRow]=1+seg-scaleStartSeg;
-    nsegs=1+seg;
+    /*
+    int calcnote=basenote+(topoct+1)*12;
+    valueint[seg]=calcnote;
+    value[seg]=midi2f[calcnote];
+    segText[seg]=midi2TextEU[calcnote%12];
+    segwidth[seg]=1;
+    segtype[seg]=0;
+    seg++;*/
+
+    nseg[scaleRow]=seg-scaleStartSeg;
+    segwidthmax[scaleRow]=seg-scaleStartSeg;
+    nsegs=seg;
     calcGeo(width,height);
 }
 

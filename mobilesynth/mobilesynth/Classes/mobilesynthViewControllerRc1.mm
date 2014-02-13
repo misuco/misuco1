@@ -6,7 +6,8 @@
 //  Copyright thebends 2008. All rights reserved.
 //
 
-#ifdef Q_OS_IOSx
+#include "platform.h"
+#ifdef RC1_IOS
 
 #include "mobilesynthviewcontrollerrc1.hpp"
 #import "mobilesynthViewControllerRc1.h"

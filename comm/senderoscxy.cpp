@@ -48,7 +48,7 @@ void SenderOscXY::cc(int c, int voiceId, int cc, double v1)
 {
 
     if(cc==1) x=v1;
-    if(cc==2) x=v1;
+    if(cc==2) y=v1;
 
     QVariantList v;
     v.append(x);

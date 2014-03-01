@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QResizeEvent>
 #include <QEvent>
 #include <QTime>
+#include <QNetworkAccessManager>
 
 #include "storage.h"
 #include "eventstat.h"
@@ -51,11 +52,15 @@ public:
     long getNow();
     int getFps();
     QTime *getFpsT();
+    QImage *getBgImage();
 
     long getTtl() const;
     void setTtl(long value);
     
 //    void setProg(int);
+
+public slots:
+    void replyFinished(QNetworkReply * r);
 
 protected:
     /*  QGLWidget implementation */
@@ -75,6 +80,7 @@ private:
     IPaint ** prepainters;
     IPointPaint ** pointpainters;
     IPaint ** postpainters;
+
     // painter switch
     bool * painterOn;
     // event statistic
@@ -89,6 +95,11 @@ private:
 
     long now;
     long ttl;   // time to live for points
+
+    // background image
+    QImage bgImageOri;
+    QImage bgImage;
+    QNetworkAccessManager * netxs;
 
     // frame statistic
     int fps;

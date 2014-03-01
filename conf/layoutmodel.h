@@ -100,6 +100,7 @@ private:
     QString * midi2TextIN;
     QString * midi2TextDO;
     int * segH;         // segment color hue
+
     int width;
     int height;
 

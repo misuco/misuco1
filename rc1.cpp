@@ -20,6 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtWidgets>
 #include <QTimer>
 #include <QtGlobal>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+
 #include "conf/layoutxml.h"
 #include "rc1.h"
 #include "event/eventhandlerrect.h"
@@ -29,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "comm/sendermobilesynth.h"
 #include "comm/senderoscxy.h"
 #include "paint/paintbgshapes.h"
+#include "paint/paintbgbitmap.h"
 #include "paint/pointpaintshape.h"
 #include "paint/pointpaintsphere.h"
 #include "paint/paintstat.h"
@@ -57,7 +61,8 @@ RC1::RC1(QWidget *parent) :
 
     nPrePainters=1;
     prepainters=new IPaint*[nPrePainters];
-    prepainters[0]=new PaintBgShapes();
+//    prepainters[0]=new PaintBgShapes();
+    prepainters[0]=new PaintBgBitmap();
 
     nPointPainters=1;
     pointpainters=new IPointPaint*[nPointPainters];
@@ -91,11 +96,19 @@ RC1::RC1(QWidget *parent) :
     tpx=0;
     testMode=false;
 
-    layoutxml lxml;
-    lxml.setLayoutModel(layout);
+    bgImage.load("./init.jpg");
+
+    netxs = new QNetworkAccessManager(this);
+    connect(netxs, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(replyFinished(QNetworkReply*)));
+
+    netxs->get(QNetworkRequest(QUrl("http://x21.ch/rc1/init.jpg")));
+
+//    layoutxml lxml;
+//    lxml.setLayoutModel(layout);
 //    lxml.writeXml();
-    lxml.readXml();
-    layout->updateLayout();
+//    lxml.readXml();
+//    layout->updateLayout();
 
     // setWindowState(Qt::WindowFullScreen);
 }
@@ -149,6 +162,7 @@ void RC1::resizeEvent(QResizeEvent *)
 {
     //qDebug() << "resize event";
     layout->calcGeo(width(),height());
+    bgImage=bgImageOri.scaled(width(),height());
     for(int i=0;i<storage->getLen();i++) {
         storage->getPoint(i)->setWidth(width());
         storage->getPoint(i)->setHeight(height());
@@ -485,6 +499,11 @@ QTime * RC1::getFpsT()
     return &fpsT;
 }
 
+QImage *RC1::getBgImage()
+{
+    return &bgImage;
+}
+
 long RC1::getTtl() const
 {
     return ttl;
@@ -493,6 +512,24 @@ long RC1::getTtl() const
 void RC1::setTtl(long value)
 {
     ttl = value;
+}
+
+void RC1::replyFinished(QNetworkReply * r)
+{
+    if(r->error()==QNetworkReply::NoError) {
+        QByteArray data=r->readAll();
+        QFile out("./init.jpg");
+        if(out.open(QIODevice::WriteOnly)) {
+            out.write(data);
+            out.close();
+        }
+        bgImageOri.load("./init.jpg");
+        bgImage=bgImageOri.scaled(width(),height());
+//        bgImage.loadFromData(data);
+        r->deleteLater();
+    } else {
+        qDebug() << "error reading background from www";
+    }
 }
 
 ISender * RC1::getSender() const

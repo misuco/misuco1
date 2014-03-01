@@ -30,8 +30,8 @@ void PointPaintSphere::paint(Point *point, RC1 *v, QPainter *pnt)
         //    qDebug() << v->getNow() << " " << point->getT() << " " << rad;
         pnt->setBrush(Qt::NoBrush);
         pnt->setPen(QColor::fromHsl(point->getHue(), 230, 200-200.0*age ));
-//        pnt->drawEllipse(point->getX()-rad/2,point->getY()-rad/2, rad, rad);
-        pnt->drawRoundedRect(point->getX()-rad/2,point->getY()-rad/2, rad, rad, 10 , 10);
+        pnt->drawEllipse(point->getX()-rad/2,point->getY()-rad/2, rad, rad);
+//        pnt->drawRoundedRect(point->getX()-rad/2,point->getY()-rad/2, rad, rad, 10 , 10);
     }
 }
 

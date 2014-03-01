@@ -54,7 +54,8 @@ SOURCES += main.cpp\
     comm/sendermobilesynth.cpp \
     mobilesynth/mobilesynth/Classes/mobilesynthqt52.cpp \
     conf/layoutxml.cpp \
-    comm/senderoscxy.cpp
+    comm/senderoscxy.cpp \
+    paint/paintbgbitmap.cpp
 
 HEADERS  += \
     storage.h \
@@ -104,7 +105,8 @@ HEADERS  += \
     mobilesynth/mobilesynth/Classes/mobilesynthqt52.h \
     conf/layoutxml.h \
     comm/senderoscxy.h \
-    platform.h
+    platform.h \
+    paint/paintbgbitmap.h
 
 OTHER_FILES += \
     android/res/values-ru/strings.xml \
@@ -150,3 +152,5 @@ OTHER_FILES += \
 OBJECTIVE_SOURCES += \
     mobilesynth/mobilesynth/Classes/mobilesynthViewControllerRc1.mm \
     mobilesynth/mobilesynth/Classes/AudioOutput.m \
+
+RESOURCES +=

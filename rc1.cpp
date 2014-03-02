@@ -22,7 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtGlobal>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QDir>
 
+#include "platform.h"
 #include "conf/layoutxml.h"
 #include "rc1.h"
 #include "event/eventhandlerrect.h"
@@ -78,9 +80,9 @@ RC1::RC1(QWidget *parent) :
     painterOn[2]=true;
 
     /* OSC Server disabled for demo version
+    */
     oscin = new QOscServer(3333,this);
     oscin->registerPathObject(this);
-    */
     
     resetStat();
     this->startTimer(0);
@@ -96,7 +98,21 @@ RC1::RC1(QWidget *parent) :
     tpx=0;
     testMode=false;
 
-    bgImage.load("./init.jpg");
+#ifdef RC1_IOS
+    QString curDir=QDir::currentPath();
+    int found=curDir.lastIndexOf("/");
+    storagePath=curDir.left(found+1);
+    storagePath+="Documents";
+    QDir dir;
+    dir.mkdir(storagePath);
+    qDebug() << "new path " << storagePath;
+    storagePath+="/";
+#else
+    storagePath="./";
+#endif
+
+    bgImageOri.load(storagePath+"init.jpg");
+    bgImage=bgImageOri.scaled(width(),height());
 
     netxs = new QNetworkAccessManager(this);
     connect(netxs, SIGNAL(finished(QNetworkReply*)),
@@ -294,6 +310,15 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
     if(ignoreIndex==-1) {
         QList<QVariant> dl=data.toList();
 
+        if(path=="/loadbg") {
+            if(dl.size()==1) {
+                QString loadurl=dl.at(0).toString();
+                if(loadurl!="") {
+                    netxs->get(QNetworkRequest(QUrl(loadurl)));
+                }
+            }
+        }
+
         if(path=="/fs") {
             if(dl.size()==1) {
                 if(dl.at(0).toInt()>0) {
@@ -304,13 +329,13 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
             }
         }
 
-        if(path=="/ign") {
+        if(path=="/ignore") {
             if(dl.size()==1) {
                 ignoreAddr.append(QHostAddress(dl.at(0).toString()));
             }
         }
 
-        if(path=="/lst") {
+        if(path=="/listen") {
             if(dl.size()==1) {
                 int i=ignoreAddr.indexOf(QHostAddress(dl.at(0).toString()));
                 if(i>=0) {
@@ -319,7 +344,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
             }
         }
 
-        if(path=="/dst") {
+        if(path=="/dest") {
             if(dl.size()==2) {
                 sender->setDestination(QHostAddress(dl.at(0).toString()),dl.at(1).toInt());
             }
@@ -337,11 +362,6 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
             }
         }
 
-        if(path=="/pnt") {
-            if(dl.size()==2) {
-                painterOn[dl.at(0).toInt()]=dl.at(1).toBool();
-            }
-        }
 /*
         if(path=="/lxy") {
             if(dl.size()==2) {
@@ -354,7 +374,6 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
                 //layout->setScale(dl.at(0).toInt(),dl.at(1).toInt(),dl.at(2).toInt(),false);
             }
         }
-*/
 
         if(path=="/ltx") {
             if(dl.size()==2) {
@@ -374,7 +393,8 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
                 layout->setAllCtly(dl.at(0).toInt());
             }
         }
-
+*/
+/*
         if(path=="/tuio/2Dcur") {
             qDebug() << "got /tuio/2Dcur signal " << path << " data " << data << " source " << host->toString();
             if(dl.size()>0) {
@@ -435,6 +455,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
                 }
             }
         }
+        */
     }
 }
 
@@ -518,12 +539,12 @@ void RC1::replyFinished(QNetworkReply * r)
 {
     if(r->error()==QNetworkReply::NoError) {
         QByteArray data=r->readAll();
-        QFile out("./init.jpg");
+        QFile out(storagePath+"init.jpg");
         if(out.open(QIODevice::WriteOnly)) {
             out.write(data);
             out.close();
         }
-        bgImageOri.load("./init.jpg");
+        bgImageOri.load(storagePath+"init.jpg");
         bgImage=bgImageOri.scaled(width(),height());
 //        bgImage.loadFromData(data);
         r->deleteLater();

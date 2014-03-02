@@ -97,6 +97,7 @@ private:
     long ttl;   // time to live for points
 
     // background image
+    QString storagePath;
     QImage bgImageOri;
     QImage bgImage;
     QNetworkAccessManager * netxs;

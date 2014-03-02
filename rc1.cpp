@@ -51,8 +51,8 @@ RC1::RC1(QWidget *parent) :
 
     storage=new Storage();
     layout=new LayoutModel();
-    sender = new SenderOscXY(this);
-//    sender=new SenderMobileSynth(this);
+//    sender = new SenderOscXY(this);
+    sender=new SenderMobileSynth(this);
 //    sender=new SenderSuperCollider(this);
 //    sender=new SenderOscPuredata(this);
 //    sender=new SenderDebug();
@@ -63,8 +63,8 @@ RC1::RC1(QWidget *parent) :
 
     nPrePainters=1;
     prepainters=new IPaint*[nPrePainters];
-//    prepainters[0]=new PaintBgShapes();
-    prepainters[0]=new PaintBgBitmap();
+    prepainters[0]=new PaintBgShapes();
+//    prepainters[0]=new PaintBgBitmap();
 
     nPointPainters=1;
     pointpainters=new IPointPaint*[nPointPainters];
@@ -117,8 +117,12 @@ RC1::RC1(QWidget *parent) :
     netxs = new QNetworkAccessManager(this);
     connect(netxs, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(replyFinished(QNetworkReply*)));
-
+/*
+    pendingConfigFile="init.jpg";
     netxs->get(QNetworkRequest(QUrl("http://x21.ch/rc1/init.jpg")));
+*/
+    pendingConfigFile="init.xml";
+    netxs->get(QNetworkRequest(QUrl("http://x21.ch/rc1/init.xml")));
 
 //    layoutxml lxml;
 //    lxml.setLayoutModel(layout);
@@ -188,13 +192,13 @@ void RC1::resizeEvent(QResizeEvent *)
 void RC1::timerEvent(QTimerEvent *)
 {
     
-    if(secTimer) {
-        secTimer=false;
-        repaint();
+//    if(secTimer) {
+//        secTimer=false;
+        update();
 //        qDebug() << "fps:" << fps;
-    } else {
-        repaint(0,100,width(),height()-100);
-    }
+//    } else {
+//        repaint(0,100,width(),height()-100);
+//    }
 
     if(testMode) {
         tpy=height()/2;
@@ -539,14 +543,21 @@ void RC1::replyFinished(QNetworkReply * r)
 {
     if(r->error()==QNetworkReply::NoError) {
         QByteArray data=r->readAll();
-        QFile out(storagePath+"init.jpg");
+        QFile out(storagePath+pendingConfigFile);
         if(out.open(QIODevice::WriteOnly)) {
             out.write(data);
             out.close();
         }
-        bgImageOri.load(storagePath+"init.jpg");
-        bgImage=bgImageOri.scaled(width(),height());
-//        bgImage.loadFromData(data);
+        if(pendingConfigFile=="init.jpg") {
+            bgImageOri.load(storagePath+"init.jpg");
+            bgImage=bgImageOri.scaled(width(),height());
+        }
+        if(pendingConfigFile=="init.xml") {
+            layoutxml lxml;
+            lxml.setLayoutModel(layout);
+            lxml.readXml(storagePath+"init.xml");
+            layout->updateLayout();
+        }
         r->deleteLater();
     } else {
         qDebug() << "error reading background from www";

@@ -96,11 +96,13 @@ private:
     long now;
     long ttl;   // time to live for points
 
-    // background image
+    // network config
+    QNetworkAccessManager * netxs;
     QString storagePath;
+    QString pendingConfigFile;
+    // background image
     QImage bgImageOri;
     QImage bgImage;
-    QNetworkAccessManager * netxs;
 
     // frame statistic
     int fps;

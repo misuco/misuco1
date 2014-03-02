@@ -10,8 +10,8 @@ class layoutxml
 public:
     layoutxml();
     void setLayoutModel(LayoutModel* l) {layout=l;}
-    void readXml();
-    void writeXml();
+    void readXml(QString filename);
+    void writeXml(QString filename);
 
 private:
     QXmlStreamWriter xml;

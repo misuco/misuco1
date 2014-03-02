@@ -6,9 +6,9 @@ layoutxml::layoutxml()
 {
 }
 
-void layoutxml::readXml()
+void layoutxml::readXml(QString filename)
 {
-    QFile file("./misuco.xml");
+    QFile file(filename);
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
         /*
         QMessageBox::warning(this, tr("QXmlStream Bookmarks"),
@@ -29,9 +29,9 @@ void layoutxml::readXml()
     file.close();
 }
 
-void layoutxml::writeXml()
+void layoutxml::writeXml(QString filename)
 {
-    QFile file("./backup.xml");
+    QFile file(filename);
     file.open(QIODevice::WriteOnly);
 
     xml.setDevice(&file);

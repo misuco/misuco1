@@ -108,6 +108,8 @@ private:
     int topoct;
     int baseoct;
 
+    // here we declare the bscale-start
+    int bscaleStartSeg;
     // here we declare from which part the scale keyboard starts
     int scaleStartSeg;
     int scaleRow;

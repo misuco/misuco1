@@ -31,7 +31,7 @@ PaintBgShapes::PaintBgShapes()
     sBrushPsv=160;
     lBrushPsv=80;
     
-    colorMode=1;
+    colorMode=2;
     chue=0;
     
     cradx=10;

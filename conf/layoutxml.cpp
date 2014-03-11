@@ -24,7 +24,7 @@ void layoutxml::readXml(QString filename)
         if (xmlr.name() == "misuco" && xmlr.attributes().value("version") == "1.0")
             readLayout();
         else
-            xmlr.raiseError(QObject::tr("The file is not an XBEL version 1.0 file."));
+            xmlr.raiseError(QObject::tr("The file is not a MISUCO version 1.0 file."));
     }
     file.close();
 }

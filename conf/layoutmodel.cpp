@@ -139,6 +139,7 @@ LayoutModel::LayoutModel()
     basenote=0;
     topoct=6;
     baseoct=3;
+    bscaleStartSeg=0;
     scaleStartSeg=24;
     scaleRow=3;
 
@@ -341,15 +342,23 @@ void LayoutModel::setBaseoct(int value)
 
 void LayoutModel::updateLayout()
 {
+    int seg;
+    int calcnote=basenote+(baseoct+(topoct-baseoct)/2)*12;
+    for(seg=bscaleStartSeg;seg<bscaleStartSeg+11;seg++) {
+        value[seg]=midi2f[++calcnote];
+        segH[seg]=(calcnote%12)*32;
+    }
+
     // row 4: the scale
-    int seg=scaleStartSeg;
+    seg=scaleStartSeg;
     for(int i=baseoct;i<=topoct;i++) {
-        int calcnote=basenote+i*12;
+        calcnote=basenote+i*12;
         valueint[seg]=calcnote;
         value[seg]=midi2f[calcnote];
         segText[seg]=midi2TextEU[calcnote%12];
         segwidth[seg]=1;
         segtype[seg]=0;
+        segH[seg]=(calcnote%12)*32;
         for(int j=0;j<11;j++) {
             if(bscale[j]) {
                 seg++;
@@ -363,6 +372,9 @@ void LayoutModel::updateLayout()
                 valueint[seg]=thisnote;
                 value[seg]=midi2f[thisnote];
                 segText[seg]=midi2TextEU[thisnote%12];
+//                segText[seg].sprintf("%d\n%d",midi2TextEU[thisnote%12],(int)value[seg]);
+                segH[seg]=(thisnote%12)*32;
+//                qDebug() << seg << " segh " << segH[seg];
             }
         }
         seg++;

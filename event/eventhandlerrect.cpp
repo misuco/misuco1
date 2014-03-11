@@ -240,6 +240,11 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                          layout->setBscale(isegb[evptr],true);
                          layout->updateLayout();
                          //qDebug() << " bscale on " << isegb[evptr];
+
+                         // play note if not yet selected
+                         note[evptr]=layout->getValue(iseg);
+                         snd->note(chan[evptr],ieventout[evptr],note[evptr],veldef);
+                         qDebug() << "snd->note(" << chan[evptr] << " " << ieventout[evptr] << " " << note[evptr];
                      }
                  }
             } else if(layout->getSegtype(iseg)==6) {
@@ -278,7 +283,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         if(layout->getSegtype(iseg)!=3) {
             layout->decPressed(isegb[evptr]);
         }
-        if(layout->getSegtype(iseg)==0 || layout->getSegtype(iseg)==1) {
+        if(layout->getSegtype(iseg)==0 || layout->getSegtype(iseg)==1 || layout->getSegtype(iseg)==3) {
             snd->note(chan[evptr],ieventout[evptr],note[evptr],0);
             note[evptr]=-1;
             isegb[evptr]=-1;

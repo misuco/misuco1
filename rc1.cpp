@@ -38,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "paint/pointpaintshape.h"
 #include "paint/pointpaintsphere.h"
 #include "paint/paintstat.h"
+#include "paint/paintblocker.h"
 
 
 RC1::RC1(QWidget *parent) :
@@ -48,6 +49,11 @@ RC1::RC1(QWidget *parent) :
     eventId = 1;
     nomouse = false;
     ttl=2000;
+
+    blockerOn=true;
+    blockerTimeout=1;
+    blockerTimeLeft=blockerTimeout;
+    blockerPainter=new PaintBlocker();
 
     storage=new Storage();
     layout=new LayoutModel();
@@ -66,21 +72,19 @@ RC1::RC1(QWidget *parent) :
     prepainters[0]=new PaintBgShapes();
 //    prepainters[0]=new PaintBgBitmap();
 
-    nPointPainters=1;
-    pointpainters=new IPointPaint*[nPointPainters];
-    pointpainters[0]=new PointPaintSphere();
+    nPointPainters=0;
+//    pointpainters=new IPointPaint*[nPointPainters];
+//    pointpainters[0]=new PointPaintSphere();
 
-    nPostPainters=1;
-    postpainters=new IPaint*[nPostPainters];
-    postpainters[0]=new PaintStat();
+    nPostPainters=0;
+//    postpainters=new IPaint*[nPostPainters];
+//    postpainters[0]=new PaintStat();
 
     painterOn=new bool[nPrePainters+nPointPainters+nPostPainters];
     painterOn[0]=true;
-    painterOn[1]=true;
-    painterOn[2]=true;
+//    painterOn[1]=false;
+//    painterOn[2]=false;
 
-    /* OSC Server disabled for demo version
-    */
     oscin = new QOscServer(3333,this);
     oscin->registerPathObject(this);
     
@@ -146,35 +150,41 @@ void RC1::paintEvent(QPaintEvent *event)
     }
 
     QPainter painter(this);
-    int k=0;
-    for(int i=0;i<nPrePainters;i++) {
-        if(painterOn[k]) {
-            prepainters[i]->paint(this,&painter);
+
+    if(blockerOn) {
+        blockerPainter->paint(this,&painter);
+    } else {
+        int k=0;
+        for(int i=0;i<nPrePainters;i++) {
+            if(painterOn[k]) {
+                prepainters[i]->paint(this,&painter);
+            }
+            k++;
         }
-        k++;
-    }
-    for(int i=storage->getLen()-1;i>0;i--) {
-        Point * p = storage->getPoint(i);
-        if(p!=NULL) {
-            int lifetime=now-p->getT();
-            if(lifetime >0 && lifetime< ttl) {
-                if(p->getX()>=0 && p->getY()>=0) {
-                    for(int j=0;j<nPointPainters;j++) {
-                        if(painterOn[j+k]) {
-                            pointpainters[j]->paint(p,this,&painter);
+        for(int i=storage->getLen()-1;i>0;i--) {
+            Point * p = storage->getPoint(i);
+            if(p!=NULL) {
+                int lifetime=now-p->getT();
+                if(lifetime >0 && lifetime< ttl) {
+                    if(p->getX()>=0 && p->getY()>=0) {
+                        for(int j=0;j<nPointPainters;j++) {
+                            if(painterOn[j+k]) {
+                                pointpainters[j]->paint(p,this,&painter);
+                            }
                         }
                     }
                 }
             }
         }
-    }
-    k+=nPointPainters;
-    for(int i=0;i<nPostPainters;i++) {
-        if(painterOn[k]) {
-            postpainters[i]->paint(this,&painter);
+        k+=nPointPainters;
+        for(int i=0;i<nPostPainters;i++) {
+            if(painterOn[k]) {
+                postpainters[i]->paint(this,&painter);
+            }
+            k++;
         }
-        k++;
     }
+
     fcnt++;
 }
 
@@ -192,13 +202,16 @@ void RC1::resizeEvent(QResizeEvent *)
 void RC1::timerEvent(QTimerEvent *)
 {
     
-//    if(secTimer) {
-//        secTimer=false;
-        update();
-//        qDebug() << "fps:" << fps;
-//    } else {
-//        repaint(0,100,width(),height()-100);
-//    }
+    if(secTimer) {
+        secTimer=false;
+        if(blockerOn) {
+            blockerTimeLeft--;
+            if(blockerTimeLeft<=0) {
+                blockerOn=false;
+            }
+        }
+    }
+    update();
 
     if(testMode) {
         tpy=height()/2;
@@ -553,6 +566,7 @@ void RC1::replyFinished(QNetworkReply * r)
             bgImage=bgImageOri.scaled(width(),height());
         }
         if(pendingConfigFile=="init.xml") {
+            qDebug() << "setup init.xml";
             layoutxml lxml;
             lxml.setLayoutModel(layout);
             lxml.readXml(storagePath+"init.xml");

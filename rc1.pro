@@ -55,7 +55,8 @@ SOURCES += main.cpp\
     mobilesynth/mobilesynth/Classes/mobilesynthqt52.cpp \
     conf/layoutxml.cpp \
     comm/senderoscxy.cpp \
-    paint/paintbgbitmap.cpp
+    paint/paintbgbitmap.cpp \
+    paint/paintblocker.cpp
 
 HEADERS  += \
     storage.h \
@@ -106,7 +107,8 @@ HEADERS  += \
     conf/layoutxml.h \
     comm/senderoscxy.h \
     platform.h \
-    paint/paintbgbitmap.h
+    paint/paintbgbitmap.h \
+    paint/paintblocker.h
 
 OTHER_FILES += \
     android/res/values-ru/strings.xml \

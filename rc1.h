@@ -53,6 +53,7 @@ public:
     int getFps();
     QTime *getFpsT();
     QImage *getBgImage();
+    int getBlockerTimeLeft() {return blockerTimeLeft;}
 
     long getTtl() const;
     void setTtl(long value);
@@ -103,6 +104,14 @@ private:
     // background image
     QImage bgImageOri;
     QImage bgImage;
+
+    // blocker
+    QImage bgBlockerOri;
+    QImage bgBlocker;
+    bool blockerOn;
+    int blockerTimeout;
+    int blockerTimeLeft;
+    IPaint * blockerPainter;
 
     // frame statistic
     int fps;

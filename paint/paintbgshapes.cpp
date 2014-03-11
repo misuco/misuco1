@@ -249,7 +249,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 int xv2=lay->getValue(iseg+1)*xpaint1_1;
                 pnt->drawEllipse(xpaint+xv1,ypaint,ypaint1_1,ypaint1_1);
                 pnt->drawEllipse(xpaint-ypaint1_1+xv2,ypaint,ypaint1_1,ypaint1_1);
-                pnt->drawRect(xv1,ypaint+ypaint1_1/4,xv2-xv1,ypaint1_1/2);
+                pnt->drawEllipse(xv1,ypaint+ypaint1_1/4,xv2-xv1,ypaint1_1/2);
             }
             if (lay->getSegtype(iseg)!=7)   {
                 if(painttext>0) {

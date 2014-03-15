@@ -114,6 +114,8 @@ void layoutxml::readLayout() {
     int nrowseg=0;
 
     layout->rowheightmax=xmlr.attributes().value("rowheightmax").toString().toInt();
+    layout->scaleRow=xmlr.attributes().value("scalerow").toString().toInt();
+    layout->bscaleRow=xmlr.attributes().value("bscalerow").toString().toInt();
     while (xmlr.readNextStartElement()) {
 //        qDebug() << "xmlr row name " << xmlr.name();
         if (xmlr.name() == "row") {
@@ -123,6 +125,12 @@ void layoutxml::readLayout() {
             }
             layout->segwidthmax[row]=xmlr.attributes().value("segwidthmax").toString().toInt();
             layout->rowheight[row]=xmlr.attributes().value("height").toString().toInt();
+            if(row==layout->scaleRow) {
+                layout->scaleStartSeg=seg;
+            }
+            if(row==layout->bscaleRow) {
+                layout->bscaleStartSeg=seg;
+            }
             row++;
             nrowseg=0;
 

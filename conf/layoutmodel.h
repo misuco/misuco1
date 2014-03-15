@@ -72,6 +72,7 @@ public:
     void setTopoct(int value);
     int getBaseoct() const;
     void setBaseoct(int value);
+    void setTransMode(bool t);
     void updateLayout();
 
 private:
@@ -101,6 +102,8 @@ private:
     QString * midi2TextDO;
     int * segH;         // segment color hue
 
+    bool transMode;     // transistion areas between segments
+
     int width;
     int height;
 
@@ -110,6 +113,7 @@ private:
 
     // here we declare the bscale-start
     int bscaleStartSeg;
+    int bscaleRow;
     // here we declare from which part the scale keyboard starts
     int scaleStartSeg;
     int scaleRow;

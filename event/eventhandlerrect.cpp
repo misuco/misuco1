@@ -232,19 +232,27 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                      //qDebug() << " seg type 8 " << isegb[evptr];
                      if(layout->getPressed(isegb[evptr])>0) {
                          layout->decPressed(isegb[evptr]);
-                         layout->setBscale(isegb[evptr],false);
+                         if(layout->getChan(isegb[evptr])==0) {
+                             layout->setBscale(isegb[evptr],false);
+                         } else if(layout->getChan(isegb[evptr])==1) {
+                             layout->setTransMode(false);
+                         }
                          layout->updateLayout();
                          //qDebug() << " bscale off " << isegb[evptr];
                      } else {
                          layout->incPressed(isegb[evptr]);
-                         layout->setBscale(isegb[evptr],true);
-                         layout->updateLayout();
-                         //qDebug() << " bscale on " << isegb[evptr];
+                         if(layout->getChan(isegb[evptr])==0) {
+                             layout->setBscale(isegb[evptr],true);
+                             //qDebug() << " bscale on " << isegb[evptr];
 
-                         // play note if not yet selected
-                         note[evptr]=layout->getValue(iseg);
-                         snd->note(chan[evptr],ieventout[evptr],note[evptr],veldef);
-                         qDebug() << "snd->note(" << chan[evptr] << " " << ieventout[evptr] << " " << note[evptr];
+                             // play note if not yet selected
+                             note[evptr]=layout->getValue(iseg);
+                             snd->note(chan[evptr],ieventout[evptr],note[evptr],veldef);
+                             //qDebug() << "snd->note(" << chan[evptr] << " " << ieventout[evptr] << " " << note[evptr];
+                         } else if(layout->getChan(isegb[evptr])==1) {
+                             layout->setTransMode(true);
+                         }
+                         layout->updateLayout();
                      }
                  }
             } else if(layout->getSegtype(iseg)==6) {

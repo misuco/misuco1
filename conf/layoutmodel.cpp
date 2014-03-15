@@ -140,8 +140,10 @@ LayoutModel::LayoutModel()
     topoct=6;
     baseoct=3;
     bscaleStartSeg=0;
-    scaleStartSeg=24;
-    scaleRow=3;
+    bscaleRow=0;
+    scaleStartSeg=25;
+    scaleRow=4;
+    transMode=false;
 
     //define one simple segment
     rowheightmax=1;
@@ -340,6 +342,11 @@ void LayoutModel::setBaseoct(int value)
     baseoct=value;
 }
 
+void LayoutModel::setTransMode(bool t)
+{
+    transMode=t;
+}
+
 void LayoutModel::updateLayout()
 {
     int seg;
@@ -361,10 +368,12 @@ void LayoutModel::updateLayout()
         segH[seg]=(calcnote%12)*32;
         for(int j=0;j<11;j++) {
             if(bscale[j]) {
-                seg++;
-                segtype[seg]=1;
-                segText[seg]="";
-                segwidth[seg]=1;
+                if(transMode) {
+                    seg++;
+                    segtype[seg]=1;
+                    segText[seg]="";
+                    segwidth[seg]=1;
+                }
                 seg++;
                 segtype[seg]=0;
                 segwidth[seg]=1;
@@ -378,7 +387,7 @@ void LayoutModel::updateLayout()
             }
         }
         seg++;
-        if(i<topoct) {
+        if(i<topoct && transMode) {
             segtype[seg]=1;
             segText[seg]="";
             seg++;

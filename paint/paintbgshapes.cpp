@@ -247,9 +247,29 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 pnt->setPen(Qt::NoPen);
                 int xv1=lay->getValue(iseg)*xpaint1_1;
                 int xv2=lay->getValue(iseg+1)*xpaint1_1;
+                /*
                 pnt->drawEllipse(xpaint+xv1,ypaint,ypaint1_1,ypaint1_1);
                 pnt->drawEllipse(xpaint-ypaint1_1+xv2,ypaint,ypaint1_1,ypaint1_1);
                 pnt->drawEllipse(xv1,ypaint+ypaint1_1/4,xv2-xv1,ypaint1_1/2);
+                */
+                QPoint points1[5] = {
+                    QPoint(xv1, ypaint+1),
+                    QPoint(xv2, ypaint+1),
+                    QPoint(xv2, ypaint+ypaint1_1),
+                    QPoint(xv1, ypaint+ypaint1_1),
+                    QPoint(xv1, ypaint+crady)
+                };
+                pnt->drawPolygon(points1,5);
+                pnt->setPen(QColor::fromHsl((col+180)%360,100,100));
+                pnt->setFont(QFont("Ubuntu",20));
+                xv1=0;
+                QString text;
+                int sseg=xpaint1/lay->getCtlx(iseg);
+                for(int i=0;i<lay->getCtlx(iseg);i++) {
+                    text.sprintf("%d",i);
+                    pnt->drawText(xv1,ypaint,sseg,ypaint1,Qt::AlignCenter,text);
+                    xv1+=sseg;
+                }
             }
             if (lay->getSegtype(iseg)!=7)   {
                 if(painttext>0) {

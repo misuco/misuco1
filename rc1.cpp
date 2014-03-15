@@ -125,8 +125,9 @@ RC1::RC1(QWidget *parent) :
     pendingConfigFile="init.jpg";
     netxs->get(QNetworkRequest(QUrl("http://x21.ch/rc1/init.jpg")));
 */
-    pendingConfigFile="init.xml";
-    netxs->get(QNetworkRequest(QUrl("http://x21.ch/rc1/init.xml")));
+//    pendingConfigFile="scales.xml";
+    netxs->get(QNetworkRequest(QUrl(RC1_INIT_XML_URL)));
+    netxs->get(QNetworkRequest(QUrl(RC1_SCALES_XML_URL)));
 
 //    layoutxml lxml;
 //    lxml.setLayoutModel(layout);
@@ -554,8 +555,16 @@ void RC1::setTtl(long value)
 
 void RC1::replyFinished(QNetworkReply * r)
 {
+//    qDebug() << "received " << r->url();
     if(r->error()==QNetworkReply::NoError) {
+        r->url();
         QByteArray data=r->readAll();
+        if(r->url().toString()==RC1_INIT_XML_URL) {
+            pendingConfigFile="init.xml";
+        }
+        if(r->url().toString()==RC1_SCALES_XML_URL) {
+            pendingConfigFile="scales.xml";
+        }
         QFile out(storagePath+pendingConfigFile);
         if(out.open(QIODevice::WriteOnly)) {
             out.write(data);
@@ -565,12 +574,15 @@ void RC1::replyFinished(QNetworkReply * r)
             bgImageOri.load(storagePath+"init.jpg");
             bgImage=bgImageOri.scaled(width(),height());
         }
-        if(pendingConfigFile=="init.xml") {
-            qDebug() << "setup init.xml";
+        if(r->url().toString()==RC1_INIT_XML_URL) {
+//            qDebug() << "setup init.xml";
             layoutxml lxml;
             lxml.setLayoutModel(layout);
             lxml.readXml(storagePath+"init.xml");
             layout->updateLayout();
+        }
+        if(r->url().toString()==RC1_SCALES_XML_URL) {
+            scaletab.readXml(storagePath+"scales.xml");
         }
         r->deleteLater();
     } else {

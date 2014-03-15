@@ -29,11 +29,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "storage.h"
 #include "eventstat.h"
 #include "conf/layoutmodel.h"
+#include "conf/scales.h"
 #include "comm/isender.h"
 #include "event/ieventhandler.h"
 #include "paint/ipaint.h"
 #include "paint/ipointpaint.h"
 #include "comm/libofqf/qosctypes.h"
+
+#define RC1_INIT_XML_URL "http://x21.ch/rc1/init.xml"
+#define RC1_SCALES_XML_URL "http://x21.ch/rc1/scales.xml"
 
 class IPaint;
 class IPointPaint;
@@ -81,6 +85,7 @@ private:
     IPaint ** prepainters;
     IPointPaint ** pointpainters;
     IPaint ** postpainters;
+    Scales scaletab;
 
     // painter switch
     bool * painterOn;

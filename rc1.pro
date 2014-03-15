@@ -56,7 +56,8 @@ SOURCES += main.cpp\
     conf/layoutxml.cpp \
     comm/senderoscxy.cpp \
     paint/paintbgbitmap.cpp \
-    paint/paintblocker.cpp
+    paint/paintblocker.cpp \
+    conf/scales.cpp
 
 HEADERS  += \
     storage.h \
@@ -108,7 +109,8 @@ HEADERS  += \
     comm/senderoscxy.h \
     platform.h \
     paint/paintbgbitmap.h \
-    paint/paintblocker.h
+    paint/paintblocker.h \
+    conf/scales.h
 
 OTHER_FILES += \
     android/res/values-ru/strings.xml \
@@ -149,7 +151,8 @@ OTHER_FILES += \
     mobilesynth/mobilesynth/mobilesynth_Prefix.pch \
     mobilesynth/mobilesynth/mobilesynth.xcodeproj \
     Info.plist \
-    misuco.xml
+    misuco.xml \
+    scales.xml
 
 OBJECTIVE_SOURCES += \
     mobilesynth/mobilesynth/Classes/mobilesynthViewControllerRc1.mm \

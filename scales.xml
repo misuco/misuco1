@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE misucoscales>
+<misucoscales version="1.0" rowheightmax="12">
+<scale id="0" name="prime" />
+<scale id="1" name="kleine sekunde" />
+<scale id="2" name="sekunde" />
+<scale id="4" name="kleine terz" />
+<scale id="8" name="terz" />
+<scale id="72" name="Major" />
+</misucoscales>

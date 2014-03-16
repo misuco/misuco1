@@ -55,7 +55,12 @@ private:
 
     int veldef;         // default velovity
 
+    bool layResize;      // is layout resize going on?
+    int layResizePnt;   // is layout resize going on?
+    int layResizeDiff;   // how much has layout been resized?
+
     void init();
+    double calcYrel(int y, int ysum, int height);
 };
 
 #endif // EVENTHANDLERRECT_H

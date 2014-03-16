@@ -108,7 +108,10 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 layout->incPressed(isegb[evptr]);
             }
         }
-        
+        if(layout->getSegtype(iseg)!=11) {
+            layResize=false;
+        }
+
         if(layout->getSegtype(iseg)==0 || layout->getSegtype(iseg)==1) {
             if(layout->getCtlx(iseg)>0) {
                 if(p->getX()!=ccval1[evptr]) {
@@ -126,7 +129,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             if(layout->getCtly(iseg)>0) {
                 if(p->getY()!=ccval2[evptr]) {
                     ccval2[evptr]=p->getY();
-                    double yrel=p->getY()-(ysum-layout->getRowheightpx(iy));
+                    //double yrel=p->getY()-(ysum-layout->getRowheightpx(iy));
+                    double yrel=calcYrel(p->getY(),ysum,layout->getRowheightpx(iy));
                     yrel=1-(yrel/(double)layout->getRowheightpx(iy));
                     //                ysum+=layout->getRowheightpx(iy);
                     if(useCCCVal==true) {
@@ -293,22 +297,76 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                         layout->setValueInt(iseg,newwaveform);
                         switch(newwaveform) {
                         case 0:
-                            layout->getSegText(iseg)->sprintf("⊓");
+                            layout->getSegText(iseg)->sprintf("SQR");
                             break;
                         case 1:
-                            layout->getSegText(iseg)->sprintf("⋀");
+                            layout->getSegText(iseg)->sprintf("SAW");
                             break;
                         case 2:
-                            layout->getSegText(iseg)->sprintf("∩");
+                            layout->getSegText(iseg)->sprintf("SIN");
                             break;
                         case 3:
-                            layout->getSegText(iseg)->sprintf("⊿");
+                            layout->getSegText(iseg)->sprintf("TRI");
                                 break;
                         case 4:
-                            layout->getSegText(iseg)->sprintf("⋇");
+                            layout->getSegText(iseg)->sprintf("NOI");
                                 break;
                         }
                         snd->cc(0,0,200,newwaveform);
+                    }
+                }
+            } else if(layout->getSegtype(iseg)==11) {
+                if( p->getState() == Qt::TouchPointMoved ) {
+                    if(!layResize) {
+                        layResize=true;
+                        layResizeDiff=p->getY();
+                    } else {
+                        int moved=p->getY()-layResizeDiff;
+                        while(moved>0) {
+                            int index=layResizePnt%iy;
+                            layout->setRowheightpx(index,layout->getRowheightpx(index)+1);
+                            layout->setRowheightpx(iy+1,layout->getRowheightpx(iy+1)-1);
+                            moved--;
+                            layResizePnt++;
+                        }
+                        while(moved<0) {
+                            int index=layResizePnt%iy;
+                            layout->setRowheightpx(index,layout->getRowheightpx(index)-1);
+                            layout->setRowheightpx(iy+1,layout->getRowheightpx(iy+1)+1);
+                            moved++;
+                            layResizePnt--;
+                        }
+                        layResizeDiff=p->getY();
+
+
+                        /*
+                         *
+                         *
+                         * ----------------
+                        if(moved>=iy) {
+                            int heightnew=layout->getRowheightpx(0)+1;
+                            int heightnewmax=layout->getHeight()/(iy+2);
+                            // qDebug() << "heightnewmax " << heightnewmax;
+                            if(heightnew<heightnewmax) {
+                                for(int i=0;i<iy;i++) {
+                                    layout->setRowheightpx(i,heightnew);
+                                }
+                            }
+                            int scaelheightnew=layout->getHeight()-iy*heightnew-layout->getRowheightpx(iy);
+                            layout->setRowheightpx(iy+1,scaelheightnew);
+                            layResizeDiff=p->getY();
+                        } else if(moved<=iy*-1) {
+                            int heightnew=layout->getRowheightpx(0)-1;
+                            if(heightnew>1) {
+                                for(int i=0;i<iy;i++) {
+                                    layout->setRowheightpx(i,heightnew);
+                                }
+                            }
+                            int scaelheightnew=layout->getHeight()-iy*heightnew-layout->getRowheightpx(iy);
+                            layout->setRowheightpx(iy+1,scaelheightnew);
+                            layResizeDiff=p->getY();
+                        }
+                        */
                     }
                 }
             }
@@ -316,6 +374,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
     } else if( p->getState() == Qt::TouchPointReleased ) {
         p->setHue(-1);
         act[evptr]=false;
+        layResize=false;
         if(layout->getSegtype(iseg)!=3) {
             layout->decPressed(isegb[evptr]);
         }
@@ -347,6 +406,9 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
 void EventHandlerRect::init()
 {
     veldef = 1;
+    layResize=false;
+    layResizeDiff=0;
+    layResizePnt=0;
     
     ieventoutnext=1;
     
@@ -381,4 +443,9 @@ void EventHandlerRect::init()
         isegb[i]=-1;
         evptr_stack[i]=-1;
     }
+}
+
+double EventHandlerRect::calcYrel(int y, int ysum, int height)
+{
+    return y-(ysum-height);
 }

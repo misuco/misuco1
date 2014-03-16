@@ -73,6 +73,7 @@ public:
     int getBaseoct() const;
     void setBaseoct(int value);
     void setTransMode(bool t);
+    void setRowheightpx(int i, int v);
     void updateLayout();
 
 private:

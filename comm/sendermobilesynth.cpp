@@ -13,13 +13,12 @@ SenderMobileSynth::SenderMobileSynth(RC1 * rc1)
 
 void SenderMobileSynth::cc(int c, int voiceId, int cc, double v1)
 {
-    if(cc==12) {
+    if(cc==8) {
         sy->set_filter_cutoff(voiceId,v1);
-    } else if(cc==11) {
+    } else if(cc==16) {
         sy->set_filter_resonance(voiceId,v1);
-    }
-    if(cc==200) {
-        sy->getSyctl()->set_osc1_wave_type_int(v1);
+    } else if(cc==200) {
+        sy->set_osc1_wave_type_int(v1);
     }
     /*
     if(cc==10) {
@@ -94,7 +93,6 @@ void SenderMobileSynth::setDestination(QHostAddress a, int p)
 
 #else
 
-
 SenderMobileSynth::SenderMobileSynth(RC1 * rc1)
 {
     sy= new mobileSynthQT52();
@@ -102,12 +100,11 @@ SenderMobileSynth::SenderMobileSynth(RC1 * rc1)
 
 void SenderMobileSynth::cc(int c, int voiceId, int cc, double v1)
 {
-    if(cc==12) {
+    if(cc==8) {
         sy->getSyctl()->set_filter_cutoff(voiceId,v1);
-    } else if(cc==11) {
+    } else if(cc==16) {
         sy->getSyctl()->set_filter_resonance(voiceId,v1);
-    }
-    if(cc==200) {
+    } else if(cc==200) {
         sy->getSyctl()->set_osc1_wave_type_int(v1);
     }
 }

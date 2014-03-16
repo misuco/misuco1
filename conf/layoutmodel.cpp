@@ -22,8 +22,8 @@
 
 LayoutModel::LayoutModel()
 {
-    width=200;
-    height=200;
+    width=1;
+    height=1;
     nrowsmax=16;
     nsegsmax=16*16;
     nseg = new int[nrowsmax];
@@ -157,23 +157,30 @@ LayoutModel::LayoutModel()
     ctlx[0]=1;
     ctly[0]=2;
     segH[0]=100;
+    calcGeo(200,200);
     updateLayout();
 }
 
 void LayoutModel::calcGeo(int w, int h)
 {
     // qDebug() << "Cacl geo " << w << " " << h;
+    bool aspect_change=false;
+    if(height!=h) {
+        aspect_change=true;
+    }
     width=w;
     height=h;
     int i=0;
     int rowheightsum=0;
     for(int y=0;y<nrows;y++) {
-        rowheightpx[y]=height*rowheight[y]/rowheightmax;
-        rowheightsum+=rowheightpx[y];
-        // additional pixels may occur due to rounding differences
-        // -> add additional pixels to last row
-        if(y==nrows-1 && rowheightsum<height) {
-            rowheightpx[y]+=rowheightsum-height;
+        if(aspect_change) {
+            rowheightpx[y]=height*rowheight[y]/rowheightmax;
+            rowheightsum+=rowheightpx[y];
+            // additional pixels may occur due to rounding differences
+            // -> add additional pixels to last row
+            if(y==nrows-1 && rowheightsum<height) {
+                rowheightpx[y]+=rowheightsum-height;
+            }
         }
         int segwidthsum=0;
         for(int x=0;x<nseg[y];x++) {
@@ -345,6 +352,11 @@ void LayoutModel::setBaseoct(int value)
 void LayoutModel::setTransMode(bool t)
 {
     transMode=t;
+}
+
+void LayoutModel::setRowheightpx(int i, int v)
+{
+    rowheightpx[i]=v;
 }
 
 void LayoutModel::updateLayout()

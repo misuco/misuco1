@@ -128,7 +128,7 @@ namespace synth {
                 value = 2.0f * (sample_num_norm_ - floorf(sample_num_norm_) - 0.5f);
                 break;
             case NOISE:
-                value = -1.0f + (float)rand()/(float)RAND_MAX;
+                value = -1.0f + (float)rand()/((float)RAND_MAX/2.0f);
                 break;
             case REVERSE_SAWTOOTH:
                 value = 2.0f * (floorf(sample_num_norm_) - sample_num_norm_ + 0.5f);

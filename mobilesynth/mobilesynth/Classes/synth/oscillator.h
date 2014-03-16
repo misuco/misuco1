@@ -24,6 +24,7 @@ namespace synth {
             TRIANGLE,
             SAWTOOTH,
             REVERSE_SAWTOOTH,
+            NOISE,
         };
         void set_wave_type(WaveType wave_type);
         void set_wave_type(int w);

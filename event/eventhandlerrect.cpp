@@ -232,16 +232,16 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                      //qDebug() << " seg type 8 " << isegb[evptr];
                      if(layout->getPressed(isegb[evptr])>0) {
                          layout->decPressed(isegb[evptr]);
-                         if(layout->getChan(isegb[evptr])==0) {
+                         if(layout->getChan(iseg)==0) {
                              layout->setBscale(isegb[evptr],false);
-                         } else if(layout->getChan(isegb[evptr])==1) {
+                         } else if(layout->getChan(iseg)==1) {
                              layout->setTransMode(false);
                          }
                          layout->updateLayout();
                          //qDebug() << " bscale off " << isegb[evptr];
                      } else {
                          layout->incPressed(isegb[evptr]);
-                         if(layout->getChan(isegb[evptr])==0) {
+                         if(layout->getChan(iseg)==0) {
                              layout->setBscale(isegb[evptr],true);
                              //qDebug() << " bscale on " << isegb[evptr];
 
@@ -249,7 +249,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                              note[evptr]=layout->getValue(iseg);
                              snd->note(chan[evptr],ieventout[evptr],note[evptr],veldef);
                              //qDebug() << "snd->note(" << chan[evptr] << " " << ieventout[evptr] << " " << note[evptr];
-                         } else if(layout->getChan(isegb[evptr])==1) {
+                         } else if(layout->getChan(iseg)==1) {
                              layout->setTransMode(true);
                          }
                          layout->updateLayout();
@@ -283,6 +283,34 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 layout->setTopoct(layout->getValueInt(iseg+1));
                 layout->updateLayout();
 //                qDebug() << "x-double-slider " << layout->getValueInt(iseg) << " : " << layout->getValueInt(iseg+1);
+            } else if(layout->getSegtype(iseg)==10) {
+                if( p->getState() == Qt::TouchPointPressed ) {
+                    if(layout->getChan(iseg)==0) {
+                        int newwaveform=layout->getValueInt(iseg)+1;
+                        if(newwaveform>4) {
+                            newwaveform=0;
+                        }
+                        layout->setValueInt(iseg,newwaveform);
+                        switch(newwaveform) {
+                        case 0:
+                            layout->getSegText(iseg)->sprintf("⊓");
+                            break;
+                        case 1:
+                            layout->getSegText(iseg)->sprintf("⋀");
+                            break;
+                        case 2:
+                            layout->getSegText(iseg)->sprintf("∩");
+                            break;
+                        case 3:
+                            layout->getSegText(iseg)->sprintf("⊿");
+                                break;
+                        case 4:
+                            layout->getSegText(iseg)->sprintf("⋇");
+                                break;
+                        }
+                        snd->cc(0,0,200,newwaveform);
+                    }
+                }
             }
         }
     } else if( p->getState() == Qt::TouchPointReleased ) {

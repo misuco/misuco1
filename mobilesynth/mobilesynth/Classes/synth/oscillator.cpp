@@ -41,6 +41,9 @@ namespace synth {
             case 3:
                 wave_type_ = Oscillator::TRIANGLE;
                 break;
+            case 4:
+                wave_type_ = Oscillator::NOISE;
+                break;
             default:
                 wave_type_ = Oscillator::REVERSE_SAWTOOTH;
                 break;
@@ -123,6 +126,9 @@ namespace synth {
                 break;
             case SAWTOOTH:
                 value = 2.0f * (sample_num_norm_ - floorf(sample_num_norm_) - 0.5f);
+                break;
+            case NOISE:
+                value = -1.0f + (float)rand()/(float)RAND_MAX;
                 break;
             case REVERSE_SAWTOOTH:
                 value = 2.0f * (floorf(sample_num_norm_) - sample_num_norm_ + 0.5f);

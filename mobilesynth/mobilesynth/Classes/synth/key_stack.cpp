@@ -16,10 +16,14 @@ namespace synth {
                 envelopes[j][i]=new Envelope();
             }
             oscs[i]=new Oscillator();
+            oscs[i]->set_mod_f(0);
+            oscs[i]->set_mod_pw(0);
             lfos[i]=new Oscillator();
             lfos[i]->set_frequency(0);
             lfos[i]->set_wave_type(1);
             lfos[i]->set_pulse_width(0.5);
+            lfos[i]->set_mod_f(0);
+            lfos[i]->set_mod_pw(0);
 
             mod_amt_[i]=0;
             cutoffs[i]=new FilterCutoff();
@@ -60,7 +64,11 @@ namespace synth {
         oscs[size_]->set_frequency(freq);
         oscs[size_]->set_pulse_width(osc_pw);
         oscs[size_]->set_wave_type(osc_wave);
+        oscs[size_]->set_mod_f(0);
+        oscs[size_]->set_mod_pw(0);
         lfos[size_]->set_frequency(lfo_freq_init_);
+        lfos[size_]->set_mod_f(0);
+        lfos[size_]->set_mod_pw(0);
         mod_amt_[size_]=mod_amt_init_;
 
         for(int i=0;i<kNumEnv;i++) {

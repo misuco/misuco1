@@ -30,8 +30,9 @@
         <seg segwidth="1" value="0.200000" valueint="2" ctlx="10" ctly="0" segtype="6" chan="0" pressed="0" segtext="" segh="65"/>
         <seg segwidth="0" value="0.500000" valueint="5" ctlx="10" ctly="0" segtype="7" chan="0" pressed="0" segtext="" segh="75"/>
     </row>
-    <row height="1" segwidthmax="1">
+    <row height="1" segwidthmax="2">
         <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="0" segtype="3" chan="1" pressed="0" segtext="TM" segh="75"/>
+        <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="0" segtype="10" chan="0" pressed="0" segtext="⊓" segh="75"/>
     </row>
 
     <row height="9" segwidthmax="47">

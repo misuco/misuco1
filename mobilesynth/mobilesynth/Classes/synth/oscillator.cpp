@@ -4,6 +4,7 @@
 #include "synth/oscillator.h"
 #include <assert.h>
 #include <math.h>
+#include <stdlib.h>
 #include "synth/parameter.h"
 
 namespace synth {
@@ -129,6 +130,7 @@ namespace synth {
                 break;
             case NOISE:
                 value = -1.0f + (float)rand()/((float)RAND_MAX/2.0f);
+
                 break;
             case REVERSE_SAWTOOTH:
                 value = 2.0f * (floorf(sample_num_norm_) - sample_num_norm_ + 0.5f);

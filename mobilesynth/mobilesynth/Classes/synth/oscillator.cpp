@@ -211,5 +211,5 @@ namespace synth {
             sample_step_norm_ = (1.0 / (float)period_samples_);
         }
     }
-    
+
 }  // namespace synth

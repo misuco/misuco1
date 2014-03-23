@@ -19,6 +19,7 @@ void layoutxml::readXml(QString filename)
         return;
         qDebug("cannot read file");
     }
+    qDebug() << " opened " << filename;
     xmlr.setDevice(&file);
     if (xmlr.readNextStartElement()) {
         if (xmlr.name() == "misuco" && xmlr.attributes().value("version") == "1.0")
@@ -117,7 +118,7 @@ void layoutxml::readLayout() {
     layout->scaleRow=xmlr.attributes().value("scalerow").toString().toInt();
     layout->bscaleRow=xmlr.attributes().value("bscalerow").toString().toInt();
     while (xmlr.readNextStartElement()) {
-//        qDebug() << "xmlr row name " << xmlr.name();
+        qDebug() << "xmlr row name " << xmlr.name();
         if (xmlr.name() == "row") {
             if(row>0) {
                 layout->nseg[row-1]=nrowseg;
@@ -168,5 +169,5 @@ void layoutxml::readLayout() {
 
 //    qDebug() << xmlr.error();
 //    qDebug() << xmlr.errorString();
-//    qDebug() << "nrows " << row << " nsegs " << seg;
+    qDebug() << "nrows " << row << " nsegs " << seg;
 }

@@ -38,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define RC1_INIT_XML_URL "http://x21.ch/rc1/init.xml"
 #define RC1_SCALES_XML_URL "http://x21.ch/rc1/scales.xml"
+#define NPROGMEM 11
 
 class IPaint;
 class IPointPaint;
@@ -49,6 +50,7 @@ class RC1 : public QGLWidget, PathObject
 
 public:
     explicit RC1(QWidget *parent = 0);
+    ~RC1();
     Storage *getStorage() const;
     LayoutModel *getLayout() const;
     ISender *getSender() const;
@@ -61,6 +63,8 @@ public:
 
     long getTtl() const;
     void setTtl(long value);
+
+    void setActProgmem(int);
     
 //    void setProg(int);
 
@@ -131,7 +135,18 @@ private:
     // lists, required to manage tuio
     QList<quint32> tuioAlive;
     QList<quint16> tuioSources;
-    
+
+    // memory
+    struct prog {
+        int basenote;
+        int baseoct;
+        int topoct;
+        bool bscale[11];
+    };
+
+    prog progmem[NPROGMEM];
+    int actProgmen;
+
     // test facilities
     long tpt;
     int tpn;
@@ -143,11 +158,10 @@ private:
     
     void resetStat();
 
-//    void setConfigTransistions();
-//    void setConfigPdjam2013();
-//    void setConfigSlideRC();
     void setPPS(int);
     void setPPSmin(int);
+    void readProgmemXml(QString filename);
+    void writeProgmemXml(QString filename);
 };
 
 #endif // VIEW_H

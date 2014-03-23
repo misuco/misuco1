@@ -242,7 +242,22 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
             } else if (lay->getSegtype(iseg)!=7)   {
                 pnt->drawRect(xpaint,ypaint,xpaint1_1,ypaint1_1);
             }
-            if(lay->getSegtype(iseg)==6) {
+            if(lay->getSegtype(iseg)==4) {
+                pnt->setBrush(Qt::gray);
+                pnt->setPen(Qt::NoPen);
+                int sseg=xpaint1/lay->getCtlx(iseg);
+                int xv1=lay->getValueInt(iseg)*sseg;
+                pnt->drawEllipse(xpaint+xv1,ypaint,ypaint1_1,ypaint1_1);
+                pnt->setPen(QColor::fromHsl((col+180)%360,100,100));
+                pnt->setFont(QFont("Ubuntu",20));
+                xv1=0;
+                QString text;
+                for(int i=0;i<lay->getCtlx(iseg);i++) {
+                    text.sprintf("%d",i);
+                    pnt->drawText(xv1,ypaint,sseg,ypaint1,Qt::AlignLeft,text);
+                    xv1+=sseg;
+                }
+            } else if(lay->getSegtype(iseg)==6) {
                 pnt->setBrush(Qt::gray);
                 pnt->setPen(Qt::NoPen);
                 int xv1=lay->getValue(iseg)*xpaint1_1;

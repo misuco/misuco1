@@ -163,17 +163,19 @@ LayoutModel::LayoutModel()
 
 void LayoutModel::calcGeo(int w, int h)
 {
-    // qDebug() << "Cacl geo " << w << " " << h;
+    /*
     bool aspect_change=false;
     if(height!=h) {
         aspect_change=true;
     }
+    */
+    // qDebug() << "Cacl geo " << w << " " << h << " " << width << " " << height;
     width=w;
     height=h;
     int i=0;
     int rowheightsum=0;
     for(int y=0;y<nrows;y++) {
-        if(aspect_change) {
+        // if(aspect_change) {
             rowheightpx[y]=height*rowheight[y]/rowheightmax;
             rowheightsum+=rowheightpx[y];
             // additional pixels may occur due to rounding differences
@@ -181,7 +183,7 @@ void LayoutModel::calcGeo(int w, int h)
             if(y==nrows-1 && rowheightsum<height) {
                 rowheightpx[y]+=rowheightsum-height;
             }
-        }
+        // }
         int segwidthsum=0;
         for(int x=0;x<nseg[y];x++) {
             segwidthpx[i]=width*segwidth[i]/segwidthmax[y];
@@ -322,6 +324,11 @@ int LayoutModel::getBasenote() const
 void LayoutModel::setBasenote(int value)
 {
     basenote = value;
+}
+
+bool LayoutModel::getBscale(int n)
+{
+    return bscale[n];
 }
 
 void LayoutModel::setBscale(int n, bool value)

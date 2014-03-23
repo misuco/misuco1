@@ -121,21 +121,20 @@ RC1::RC1(QWidget *parent) :
     netxs = new QNetworkAccessManager(this);
     connect(netxs, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(replyFinished(QNetworkReply*)));
-/*
-    pendingConfigFile="init.jpg";
-    netxs->get(QNetworkRequest(QUrl("http://x21.ch/rc1/init.jpg")));
-*/
-//    pendingConfigFile="scales.xml";
+
     netxs->get(QNetworkRequest(QUrl(RC1_INIT_XML_URL)));
     netxs->get(QNetworkRequest(QUrl(RC1_SCALES_XML_URL)));
 
-//    layoutxml lxml;
-//    lxml.setLayoutModel(layout);
-//    lxml.writeXml();
-//    lxml.readXml();
-//    layout->updateLayout();
+    actProgmen=0;
+    readProgmemXml(storagePath+"prog.xml");
+    setActProgmem(0);
 
-    // setWindowState(Qt::WindowFullScreen);
+    //setWindowState(Qt::WindowFullScreen);
+}
+
+RC1::~RC1()
+{
+    writeProgmemXml(storagePath+"prog.xml");
 }
 
 void RC1::paintEvent(QPaintEvent *event)
@@ -185,7 +184,6 @@ void RC1::paintEvent(QPaintEvent *event)
             k++;
         }
     }
-
     fcnt++;
 }
 
@@ -193,16 +191,18 @@ void RC1::resizeEvent(QResizeEvent *)
 {
     //qDebug() << "resize event";
     layout->calcGeo(width(),height());
+
+    /*
     bgImage=bgImageOri.scaled(width(),height());
     for(int i=0;i<storage->getLen();i++) {
         storage->getPoint(i)->setWidth(width());
         storage->getPoint(i)->setHeight(height());
     }
+    */
 }
 
 void RC1::timerEvent(QTimerEvent *)
 {
-    
     if(secTimer) {
         secTimer=false;
         if(blockerOn) {
@@ -477,6 +477,26 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
     }
 }
 
+void RC1::setActProgmem(int n)
+{
+    // store current setup
+    progmem[actProgmen].basenote=layout->getBasenote();
+    progmem[actProgmen].baseoct=layout->getBaseoct();
+    progmem[actProgmen].topoct=layout->getTopoct();
+    for(int i=0;i<11;i++) {
+        progmem[actProgmen].bscale[i]=layout->getBscale(i);
+    }
+    // restore new setup
+    actProgmen=n;
+    layout->setBasenote(progmem[n].basenote);
+    layout->setTopoct(progmem[n].topoct);
+    layout->setBaseoct(progmem[n].baseoct);
+    for(int i=0;i<11;i++) {
+        layout->setBscale(i,progmem[n].bscale[i]);
+    }
+    layout->updateLayout();
+}
+
 void RC1::resetStat()
 {
 
@@ -575,7 +595,7 @@ void RC1::replyFinished(QNetworkReply * r)
             bgImage=bgImageOri.scaled(width(),height());
         }
         if(r->url().toString()==RC1_INIT_XML_URL) {
-//            qDebug() << "setup init.xml";
+            qDebug() << "setup init.xml";
             layoutxml lxml;
             lxml.setLayoutModel(layout);
             lxml.readXml(storagePath+"init.xml");
@@ -608,3 +628,99 @@ void RC1::setProg(int p)
 }
 
 */
+
+void RC1::readProgmemXml(QString filename)
+{
+    QXmlStreamReader xmlr;
+    QFile file(filename);
+    if(!file.exists()) {
+        for(int i=0;i<NPROGMEM;i++) {
+            progmem[i].basenote=i;
+            progmem[i].baseoct=3;
+            progmem[i].topoct=5;
+            for(int j=0;j<11;j++) {
+                progmem[i].bscale[j]=false;
+            }
+            progmem[i].bscale[5]=true;
+        }
+        writeProgmemXml(filename);
+    }
+    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+        return;
+        qDebug("cannot read file");
+    }
+    xmlr.setDevice(&file);
+    if (xmlr.readNextStartElement()) {
+        if (xmlr.name() == "misucoprogmem" && xmlr.attributes().value("version") == "1.0") {
+
+            int row=0;
+
+            while (xmlr.readNextStartElement() && row<NPROGMEM) {
+                if (xmlr.name() == "prog") {
+                    progmem[row].basenote=xmlr.attributes().value("basenote").toString().toInt();
+                    progmem[row].baseoct=xmlr.attributes().value("baseoct").toString().toInt();
+                    progmem[row].topoct=xmlr.attributes().value("topoct").toString().toInt();
+                    progmem[row].bscale[0]=(bool)xmlr.attributes().value("bscale0").toString().toInt();
+                    progmem[row].bscale[1]=(bool)xmlr.attributes().value("bscale1").toString().toInt();
+                    progmem[row].bscale[2]=(bool)xmlr.attributes().value("bscale2").toString().toInt();
+                    progmem[row].bscale[3]=(bool)xmlr.attributes().value("bscale3").toString().toInt();
+                    progmem[row].bscale[4]=(bool)xmlr.attributes().value("bscale4").toString().toInt();
+                    progmem[row].bscale[5]=(bool)xmlr.attributes().value("bscale5").toString().toInt();
+                    progmem[row].bscale[6]=(bool)xmlr.attributes().value("bscale6").toString().toInt();
+                    progmem[row].bscale[7]=(bool)xmlr.attributes().value("bscale7").toString().toInt();
+                    progmem[row].bscale[8]=(bool)xmlr.attributes().value("bscale8").toString().toInt();
+                    progmem[row].bscale[9]=(bool)xmlr.attributes().value("bscale9").toString().toInt();
+                    progmem[row].bscale[10]=(bool)xmlr.attributes().value("bscale10").toString().toInt();
+                    xmlr.skipCurrentElement();
+                    row++;
+                } else {
+                    xmlr.skipCurrentElement();
+                }
+            }
+        } else {
+            xmlr.raiseError(QObject::tr("The file is not a MISUCO version 1.0 file."));
+        }
+    }
+    file.close();
+}
+
+void RC1::writeProgmemXml(QString filename)
+{
+    QXmlStreamWriter xml;
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly);
+
+    xml.setDevice(&file);
+    QString att;
+    QString attname;
+
+    xml.writeStartDocument();
+    xml.writeDTD("<!DOCTYPE misuco>");
+    xml.writeStartElement("misucoprogmem");
+    xml.writeAttribute("version", "1.0");
+
+    for (int row = 0; row < NPROGMEM; row++) {
+        xml.writeStartElement("prog");
+
+        att.sprintf("%d",progmem[row].basenote);
+        xml.writeAttribute("basenote",att);
+
+        att.sprintf("%d",progmem[row].baseoct);
+        xml.writeAttribute("baseoct",att);
+
+        att.sprintf("%d",progmem[row].topoct);
+        xml.writeAttribute("topoct",att);
+
+        for(int j=0;j<11;j++) {
+            att.sprintf("%d",(int)progmem[row].bscale[j]);
+            attname.sprintf("bscale%d",j);
+            xml.writeAttribute(attname,att);
+        }
+
+        xml.writeEndElement();
+    }
+    xml.writeEndDocument();
+
+    file.close();
+
+}

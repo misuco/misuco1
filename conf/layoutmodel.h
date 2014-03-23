@@ -67,6 +67,7 @@ public:
     void setBasenote(int value);
     int getBasescale() const;
     void setBasescale(int value);
+    bool getBscale(int n);
     void setBscale(int n, bool value);
     int getTopoct() const;
     void setTopoct(int value);

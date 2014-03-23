@@ -210,26 +210,13 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 movedin=true;
             }
             if(layout->getSegtype(iseg)==2) {
-                // button
-                layout->setBasenote(layout->getValueInt(iseg));
-                layout->updateLayout();
-/*
                 if(layout->getChan(iseg)==0) {
-                    rc1->getLayout()->setFactoryLayout(layout->getValueInt(iseg));
-                } else if(layout->getChan(iseg)==1) {
-                    rc1->getLayout()->setBasenote(layout->getValueInt(iseg));
+                    // basenote button
+                    layout->setBasenote(layout->getValueInt(iseg));
                     layout->updateLayout();
-                } else if(layout->getChan(iseg)==2) {
-                    rc1->getLayout()->setBasescale(layout->getValueInt(iseg));
-                } else if(layout->getChan(iseg)==3) {
-                    rc1->getLayout()->setNoct(layout->getValueInt(iseg));
-                } else if(layout->getChan(iseg)==4) {
-                    rc1->setProg(layout->getValueInt(iseg));
-                } else if(layout->getChan(iseg)==5) {
-                    QDesktopServices::openUrl(QUrl(*layout->getSegText(iseg)));
+                } else if(layout->getChan(iseg)==1) {
+                    rc1->setActProgmem(layout->getValueInt(iseg));
                 }
-                */
-
             } else if(layout->getSegtype(iseg)==3) {
                 // toggle button
                  if( p->getState() == Qt::TouchPointPressed ) {
@@ -259,6 +246,22 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                          layout->updateLayout();
                      }
                  }
+            } else if(layout->getSegtype(iseg)==4) {
+                // x-slider
+                double xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg));
+                xrel=xrel/(double)layout->getSegwidthpx(iseg);
+                int xrelquant=0;    // quantized by steps
+                if(layout->getCtlx(iseg)>0) {
+                    xrelquant=0.5+xrel*(double)layout->getCtlx(iseg);
+                    //xrel=(double)xrelquant/(double)layout->getCtlx(iseg);
+                }
+                layout->setValueInt(iseg,xrelquant);
+                if(layout->getChan(iseg)==0) {
+                    layout->setBasenote(layout->getValueInt(iseg));
+                    layout->updateLayout();
+                } else if(layout->getChan(iseg)==1) {
+                    rc1->setActProgmem(layout->getValueInt(iseg));
+                }
             } else if(layout->getSegtype(iseg)==6) {
                 // x-double-slider
                 double xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg));
@@ -313,6 +316,27 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                                 break;
                         }
                         snd->cc(0,0,200,newwaveform);
+                    } else if(layout->getChan(iseg)==1) {
+                        int newenv=layout->getValueInt(iseg)+1;
+                        if(newenv>3) {
+                            newenv=0;
+                        }
+                        layout->setValueInt(iseg,newenv);
+                        switch(newenv) {
+                        case 0:
+                            layout->getSegText(iseg)->sprintf("-__");
+                            break;
+                        case 1:
+                            layout->getSegText(iseg)->sprintf("--_");
+                            break;
+                        case 2:
+                            layout->getSegText(iseg)->sprintf("---");
+                            break;
+                        case 3:
+                            layout->getSegText(iseg)->sprintf("_-_");
+                                break;
+                        }
+                        snd->cc(0,0,201,newenv);
                     }
                 }
             } else if(layout->getSegtype(iseg)==11) {

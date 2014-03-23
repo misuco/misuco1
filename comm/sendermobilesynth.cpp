@@ -106,6 +106,21 @@ void SenderMobileSynth::cc(int c, int voiceId, int cc, double v1)
         sy->getSyctl()->set_filter_resonance(voiceId,v1);
     } else if(cc==200) {
         sy->getSyctl()->set_osc1_wave_type_int(v1);
+    } else if(cc==201) {
+        switch((int)v1) {
+        case 0:
+            sy->getSyctl()->setADSR(0,50,50,0.1,50);
+            break;
+        case 1:
+            sy->getSyctl()->setADSR(0,50,100000,0.1,500000);
+            break;
+        case 2:
+            sy->getSyctl()->setADSR(0,50,50,1,50000);
+            break;
+        case 3:
+            sy->getSyctl()->setADSR(0,50000,50,1,50000);
+            break;
+        }
     }
 }
 

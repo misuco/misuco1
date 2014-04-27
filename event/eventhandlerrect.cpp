@@ -216,6 +216,25 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     layout->updateLayout();
                 } else if(layout->getChan(iseg)==1) {
                     rc1->setActProgmem(layout->getValueInt(iseg));
+                } else if(layout->getChan(iseg)==2) {
+                    if(layout->getPressed(iseg)>0) {
+                        layout->setRowheight(0,0);
+                        layout->setRowheight(1,0);
+                        layout->setRowheight(2,0);
+                        layout->setRowheight(3,0);
+                        layout->setRowheight(4,10);
+                        layout->setRowheight(5,50);
+                        layout->decPressed(iseg);
+                    } else {
+                        layout->setRowheight(0,10);
+                        layout->setRowheight(1,10);
+                        layout->setRowheight(2,10);
+                        layout->setRowheight(3,10);
+                        layout->setRowheight(4,10);
+                        layout->setRowheight(5,10);
+                        layout->incPressed(iseg);
+                    }
+                    layout->calcGeo(layout->getWidth(),layout->getHeight());
                 }
             } else if(layout->getSegtype(iseg)==3) {
                 // toggle button

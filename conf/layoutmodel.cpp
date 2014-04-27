@@ -334,6 +334,7 @@ bool LayoutModel::getBscale(int n)
 void LayoutModel::setBscale(int n, bool value)
 {
     bscale[n]=value;
+    pressed[n+bscaleStartSeg]=value;
 }
 
 int LayoutModel::getTopoct() const
@@ -364,6 +365,11 @@ void LayoutModel::setTransMode(bool t)
 void LayoutModel::setRowheightpx(int i, int v)
 {
     rowheightpx[i]=v;
+}
+
+void LayoutModel::setRowheight(int i, int v)
+{
+    rowheight[i]=v;
 }
 
 void LayoutModel::updateLayout()

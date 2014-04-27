@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE misuco>
-<misuco version="1.0" rowheightmax="150" bscalerow="0" scalerow="5" >
+<misuco version="1.0" rowheightmax="60" bscalerow="0" scalerow="5" >
     <row height="10" segwidthmax="11">
         <seg segwidth="1" value="523.251131" valueint="0" ctlx="0" ctly="0" segtype="3" chan="0" pressed="0" segtext="1" segh="10"/>
         <seg segwidth="1" value="554.365262" valueint="1" ctlx="0" ctly="0" segtype="3" chan="0" pressed="0" segtext="2" segh="20"/>
@@ -39,7 +39,7 @@
         <seg segwidth="10" value="0.000000" valueint="0" ctlx="10" ctly="0" segtype="4" chan="1" pressed="0" segtext="" segh="0"/>
         <seg segwidth="1" value="0.000000" valueint="9" ctlx="0" ctly="0" segtype="2" chan="2" pressed="0" segtext="^" segh="288"/>
     </row>
-    <row height="100" segwidthmax="47">
+    <row height="10" segwidthmax="47">
         <seg segwidth="1" value="261.625565" valueint="60" ctlx="16" ctly="8" segtype="0" chan="0" pressed="0" segtext="C" segh="145"/>
         <seg segwidth="1" value="0.000000" valueint="0" ctlx="16" ctly="8" segtype="1" chan="0" pressed="0" segtext="" segh="155"/>
         <seg segwidth="1" value="277.182631" valueint="61" ctlx="16" ctly="8" segtype="0" chan="0" pressed="0" segtext="C#" segh="165"/>

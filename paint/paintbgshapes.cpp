@@ -21,15 +21,15 @@
 
 PaintBgShapes::PaintBgShapes()
 {
-    sPenAct=160;
-    lPenAct=200;
-    sBrushAct=160;
-    lBrushAct=200;
+    sPenAct=120;
+    lPenAct=120;
+    sBrushAct=120;
+    lBrushAct=120;
     
-    sPenPsv=160;
-    lPenPsv=50;
-    sBrushPsv=160;
-    lBrushPsv=80;
+    sPenPsv=120;
+    lPenPsv=120;
+    sBrushPsv=0;
+    lBrushPsv=0;
     
     colorMode=2;
     chue=0;
@@ -51,6 +51,9 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
     int ypaint=0;
     int xpaint1=0;
     int ypaint1=0;
+
+    int fontl=120;
+
     /*
     int avg_cnt=0;
     int sum_r=0;
@@ -137,12 +140,14 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
             int lightB=lBrushPsv;
             int satP=sPenPsv;
             int satB=sBrushPsv;
+            fontl=120;
             
             if(lay->getPressed(iseg) > 0) {
                 lightP=lPenAct;
                 lightB=lBrushAct;
                 satP=sPenAct;
                 satB=sBrushAct;
+                fontl=0;
             }
             
             //            int col1=lay->getSegH(iseg-1);
@@ -253,7 +258,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 int xv1=lay->getValueInt(iseg)*sseg;
 //                pnt->drawEllipse(xpaint+xv1,ypaint,ypaint1_1,ypaint1_1);
                 pnt->drawRect(xpaint+xv1,ypaint,sseg,ypaint1_1);
-                pnt->setPen(QColor::fromHsl((col+180)%360,100,100));
+                pnt->setPen(QColor::fromHsl(col,120,fontl));
               //  pnt->setFont(QFont(lay->getFont(),lay->getFontsize()));
                 xv1=0;
                 QString text;
@@ -280,7 +285,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                     QPoint(xv1, ypaint+crady)
                 };
                 pnt->drawPolygon(points1,5);
-                pnt->setPen(QColor::fromHsl((col+180)%360,100,100));
+                pnt->setPen(QColor::fromHsl(col,120,fontl));
                // pnt->setFont(QFont(lay->getFont(),lay->getFontsize()));
                 xv1=0;
                 QString text;
@@ -293,7 +298,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
             }
             if (lay->getSegtype(iseg)!=7)   {
                 if(painttext>0) {
-                    pnt->setPen(QColor::fromHsl((col+180)%360,100,100));
+                    pnt->setPen(QColor::fromHsl(col,120,fontl));
 //                    pnt->drawText(xpaint,ypaint,xpaint1,ypaint1,Qt::AlignCenter,*lay->getSegText(iseg));
                     pnt->drawText(xpaint,ypaint,xpaint1,ypaint1,Qt::AlignLeft,*lay->getSegText(iseg));
                 }

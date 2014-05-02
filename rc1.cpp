@@ -514,18 +514,19 @@ void RC1::setPPSmin(int p) {
     int cornerrad=10;
     
     painterOn[0]=true;
-    painterOn[1]=true;
-    painterOn[2]=true;
+//    painterOn[1]=true;
+//    painterOn[2]=true;
+
     
-    prepainters[0]->setParam(0, 210);       // sPenAct
-    prepainters[0]->setParam(1, 0);       // lPenAct
-    prepainters[0]->setParam(2, 0);         // sPenPsv
-    prepainters[0]->setParam(3, 0);         // lPenPsv
-    prepainters[0]->setParam(4, 220);       // sBrushAct
-    prepainters[0]->setParam(5, 140);       // lBrushAct
-    prepainters[0]->setParam(6, 180);       // sBrushPsv
-    prepainters[0]->setParam(7, 60);        // lBrushPsv
-    prepainters[0]->setParam(8, 1);         // colorMode
+    prepainters[0]->setParam(0, 120);       // sPenAct
+    prepainters[0]->setParam(1, 120);       // lPenAct
+    prepainters[0]->setParam(2, 120);         // sPenPsv
+    prepainters[0]->setParam(3, 120);         // lPenPsv
+    prepainters[0]->setParam(4, 120);       // sBrushAct
+    prepainters[0]->setParam(5, 120);       // lBrushAct
+    prepainters[0]->setParam(6, 0);       // sBrushPsv
+    prepainters[0]->setParam(7, 0);        // lBrushPsv
+    prepainters[0]->setParam(8, 2);         // colorMode
     prepainters[0]->setParam(9, 0);         // chue
     prepainters[0]->setParam(10, cornerrad);// cradx
     prepainters[0]->setParam(11, cornerrad);// crady

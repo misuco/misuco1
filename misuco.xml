@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE misuco>
 <misuco version="1.0" rowheightmax="60" bscalerow="0" scalerow="5" >
-    <row height="10" segwidthmax="11">
+    <row height="10" segwidthmax="12">
         <seg segwidth="1" value="523.251131" valueint="0" ctlx="0" ctly="0" segtype="3" chan="0" pressed="0" segtext="1" segh="164"/>
         <seg segwidth="1" value="554.365262" valueint="1" ctlx="0" ctly="0" segtype="3" chan="0" pressed="0" segtext="2" segh="196"/>
         <seg segwidth="1" value="587.329536" valueint="2" ctlx="0" ctly="0" segtype="3" chan="0" pressed="0" segtext="3" segh="229"/>

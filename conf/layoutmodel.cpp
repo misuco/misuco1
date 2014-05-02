@@ -24,6 +24,8 @@ LayoutModel::LayoutModel()
 {
     width=1;
     height=1;
+    fontsize=1;
+    font="Arial";
     nrowsmax=16;
     nsegsmax=16*16;
     nseg = new int[nrowsmax];
@@ -195,6 +197,7 @@ void LayoutModel::calcGeo(int w, int h)
             i++;
         }
     }
+    fontsize=height/nrows/5;
 }
 
 int LayoutModel::getHeight() const
@@ -372,13 +375,27 @@ void LayoutModel::setRowheight(int i, int v)
     rowheight[i]=v;
 }
 
+int LayoutModel::note2hue(int note)
+{
+    float calccol=(float)((note+4)%12)*30;
+    return (int)calccol%360;
+}
+int LayoutModel::getFontsize() const
+{
+    return fontsize;
+}
+QString LayoutModel::getFont() const
+{
+    return font;
+}
+
 void LayoutModel::updateLayout()
 {
     int seg;
     int calcnote=basenote+(baseoct+(topoct-baseoct)/2)*12;
     for(seg=bscaleStartSeg;seg<bscaleStartSeg+11;seg++) {
         value[seg]=midi2f[++calcnote];
-        segH[seg]=(calcnote%12)*32;
+        segH[seg]=note2hue(calcnote);
     }
 
     // row 4: the scale
@@ -390,7 +407,7 @@ void LayoutModel::updateLayout()
         segText[seg]=midi2TextEU[calcnote%12];
         segwidth[seg]=1;
         segtype[seg]=0;
-        segH[seg]=(calcnote%12)*32;
+        segH[seg]=note2hue(calcnote);
         for(int j=0;j<11;j++) {
             if(bscale[j]) {
                 if(transMode) {
@@ -407,7 +424,7 @@ void LayoutModel::updateLayout()
                 value[seg]=midi2f[thisnote];
                 segText[seg]=midi2TextEU[thisnote%12];
 //                segText[seg].sprintf("%d\n%d",midi2TextEU[thisnote%12],(int)value[seg]);
-                segH[seg]=(thisnote%12)*32;
+                segH[seg]=note2hue(thisnote);
 //                qDebug() << seg << " segh " << segH[seg];
             }
         }

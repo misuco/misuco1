@@ -78,6 +78,11 @@ public:
     void setRowheight(int i, int v);
     void updateLayout();
 
+    int note2hue(int note);
+
+    int getFontsize() const;
+    QString getFont() const;
+
 private:
     int nrows;
     int nsegs;          // total number of active segments
@@ -109,6 +114,8 @@ private:
 
     int width;
     int height;
+    int fontsize;
+    QString font;
 
     int basenote;
     int topoct;

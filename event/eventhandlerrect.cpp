@@ -104,7 +104,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 rc1->getEvstat()->incTransitioncount();
             }
             isegb[evptr]=iseg;
-            if(layout->getSegtype(iseg)!=3) {
+            if(layout->getSegtype(iseg)!=2 && layout->getSegtype(iseg)!=3) {
                 layout->incPressed(isegb[evptr]);
             }
         }
@@ -217,14 +217,16 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 } else if(layout->getChan(iseg)==1) {
                     rc1->setActProgmem(layout->getValueInt(iseg));
                 } else if(layout->getChan(iseg)==2) {
-                    if(layout->getPressed(iseg)>0) {
+                    //qDebug() << " segtype 2 chan 2 pressed " << layout->getPressed(iseg) ;
+                    if(layout->getPressed(iseg)==0) {
                         layout->setRowheight(0,0);
                         layout->setRowheight(1,0);
                         layout->setRowheight(2,0);
                         layout->setRowheight(3,0);
                         layout->setRowheight(4,10);
                         layout->setRowheight(5,50);
-                        layout->decPressed(iseg);
+                        layout->incPressed(iseg);
+                        layout->incPressed(iseg);
                     } else {
                         layout->setRowheight(0,10);
                         layout->setRowheight(1,10);
@@ -232,7 +234,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                         layout->setRowheight(3,10);
                         layout->setRowheight(4,10);
                         layout->setRowheight(5,10);
-                        layout->incPressed(iseg);
+                        layout->decPressed(iseg);
                     }
                     layout->calcGeo(layout->getWidth(),layout->getHeight());
                 }
@@ -271,7 +273,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 xrel=xrel/(double)layout->getSegwidthpx(iseg);
                 int xrelquant=0;    // quantized by steps
                 if(layout->getCtlx(iseg)>0) {
-                    xrelquant=0.5+xrel*(double)layout->getCtlx(iseg);
+                    xrelquant=xrel*(double)layout->getCtlx(iseg);
                     //xrel=(double)xrelquant/(double)layout->getCtlx(iseg);
                 }
                 layout->setValueInt(iseg,xrelquant);
@@ -418,7 +420,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         p->setHue(-1);
         act[evptr]=false;
         layResize=false;
-        if(layout->getSegtype(iseg)!=3) {
+        if(layout->getSegtype(iseg)!=3 && layout->getSegtype(iseg)!=2) {
             layout->decPressed(isegb[evptr]);
         }
         if(layout->getSegtype(iseg)==0 || layout->getSegtype(iseg)==1 || layout->getSegtype(iseg)==3) {

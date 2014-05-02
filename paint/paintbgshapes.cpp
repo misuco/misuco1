@@ -61,6 +61,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
     pnt->setBrush(Qt::black);
     pnt->drawRect(0,0,view->width(),view->height());
     
+
     /*
      for(int y = 0; y < lay->getNrows(); y++) {
      for (int x = 0; x < lay->getNseg(y); x ++) {
@@ -112,6 +113,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
     
     iseg=0;
     pnt->setBrush(Qt::NoBrush);
+    pnt->setFont(QFont(lay->getFont(),lay->getFontsize()));
     
     for(int y = 0; y < lay->getNrows(); y++) {
         ypaint1=lay->getRowheightpx(y);
@@ -228,10 +230,11 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                     pnt->drawPolygon(points2,4);
                 }
             } else if (lay->getSegtype(iseg)==0 ) {
-                //                pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
-                pnt->drawRoundedRect(xpaint,ypaint,xpaint1_1,ypaint1_1, cradx, crady);
+                pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
+                //pnt->drawRoundedRect(xpaint,ypaint,xpaint1_1,ypaint1_1, cradx, crady);
             } else if (lay->getSegtype(iseg)==2) {
-                //                pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
+                pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
+                /*
                 if(xpaint1>ypaint1) {
                     int move=(xpaint1-ypaint1)/2;
                     pnt->drawEllipse(xpaint+move,ypaint,ypaint1_1,ypaint1_1);
@@ -239,6 +242,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                     int move=(ypaint1-xpaint1)/2;
                     pnt->drawEllipse(xpaint,ypaint+move,xpaint1_1,xpaint1_1);
                 }
+                */
             } else if (lay->getSegtype(iseg)!=7)   {
                 pnt->drawRect(xpaint,ypaint,xpaint1_1,ypaint1_1);
             }
@@ -247,14 +251,15 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 pnt->setPen(Qt::NoPen);
                 int sseg=xpaint1/lay->getCtlx(iseg);
                 int xv1=lay->getValueInt(iseg)*sseg;
-                pnt->drawEllipse(xpaint+xv1,ypaint,ypaint1_1,ypaint1_1);
+//                pnt->drawEllipse(xpaint+xv1,ypaint,ypaint1_1,ypaint1_1);
+                pnt->drawRect(xpaint+xv1,ypaint,sseg,ypaint1_1);
                 pnt->setPen(QColor::fromHsl((col+180)%360,100,100));
-                pnt->setFont(QFont("Ubuntu",20));
+              //  pnt->setFont(QFont(lay->getFont(),lay->getFontsize()));
                 xv1=0;
                 QString text;
                 for(int i=0;i<lay->getCtlx(iseg);i++) {
                     text.sprintf("%d",i);
-                    pnt->drawText(xv1,ypaint,sseg,ypaint1,Qt::AlignLeft,text);
+                    pnt->drawText(xv1,ypaint,sseg,ypaint1,Qt::AlignCenter,text);
                     xv1+=sseg;
                 }
             } else if(lay->getSegtype(iseg)==6) {
@@ -276,7 +281,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 };
                 pnt->drawPolygon(points1,5);
                 pnt->setPen(QColor::fromHsl((col+180)%360,100,100));
-                pnt->setFont(QFont("Ubuntu",20));
+               // pnt->setFont(QFont(lay->getFont(),lay->getFontsize()));
                 xv1=0;
                 QString text;
                 int sseg=xpaint1/lay->getCtlx(iseg);
@@ -289,8 +294,8 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
             if (lay->getSegtype(iseg)!=7)   {
                 if(painttext>0) {
                     pnt->setPen(QColor::fromHsl((col+180)%360,100,100));
-                    pnt->setFont(QFont("Ubuntu",20));
-                    pnt->drawText(xpaint,ypaint,xpaint1,ypaint1,Qt::AlignCenter,*lay->getSegText(iseg));
+//                    pnt->drawText(xpaint,ypaint,xpaint1,ypaint1,Qt::AlignCenter,*lay->getSegText(iseg));
+                    pnt->drawText(xpaint,ypaint,xpaint1,ypaint1,Qt::AlignLeft,*lay->getSegText(iseg));
                 }
             }
 

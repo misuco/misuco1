@@ -58,10 +58,10 @@ RC1::RC1(QWidget *parent) :
     storage=new Storage();
     layout=new LayoutModel();
 //    sender = new SenderOscXY(this);
-    sender=new SenderMobileSynth(this);
+//    sender=new SenderMobileSynth(this);
 //    sender=new SenderSuperCollider(this);
 //    sender=new SenderOscPuredata(this);
-//    sender=new SenderDebug();
+    sender=new SenderDebug();
     ehand=new EventHandlerRect();
     evstat=new EventStat();
 

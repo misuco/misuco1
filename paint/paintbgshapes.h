@@ -39,8 +39,10 @@ private:
     quint8 lPenPsv;
     quint8 sBrushAct;
     quint8 lBrushAct;
+    quint8 lBrushActNote;
     quint8 sBrushPsv;
     quint8 lBrushPsv;
+    quint8 lBrushPsvNote;
     quint8 colorMode;
     quint8 chue;
     quint8 cradx;

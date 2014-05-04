@@ -326,7 +326,9 @@ int LayoutModel::getBasenote() const
 
 void LayoutModel::setBasenote(int value)
 {
+    pressed[12+basenote]=0;
     basenote = value;
+    pressed[12+basenote]=1;
 }
 
 bool LayoutModel::getBscale(int n)
@@ -345,9 +347,11 @@ int LayoutModel::getTopoct() const
     return topoct;
 }
 
-void LayoutModel::setTopoct(int value)
+void LayoutModel::setTopoct(int v)
 {
-    topoct = value;
+    topoct = v;
+//    valueint[24] = v;
+//    value[24] = 0.1f*(float)v;
 }
 
 int LayoutModel::getBaseoct() const
@@ -355,9 +359,11 @@ int LayoutModel::getBaseoct() const
     return baseoct;
 }
 
-void LayoutModel::setBaseoct(int value)
+void LayoutModel::setBaseoct(int v)
 {
-    baseoct=value;
+    baseoct=v;
+//    valueint[23] = v;
+//    value[23] = 0.1f*(float)v;
 }
 
 void LayoutModel::setTransMode(bool t)
@@ -397,6 +403,10 @@ void LayoutModel::updateLayout()
         value[seg]=midi2f[++calcnote];
         segH[seg]=note2hue(calcnote);
     }
+    valueint[24]=baseoct;
+    //value[24]=0.1f*(float)baseoct;
+    valueint[25]=topoct;
+    //value[25]=0.1f*(float)topoct;
 
     // row 4: the scale
     seg=scaleStartSeg;

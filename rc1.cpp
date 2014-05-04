@@ -51,7 +51,7 @@ RC1::RC1(QWidget *parent) :
     ttl=2000;
 
     blockerOn=true;
-    blockerTimeout=1;
+    blockerTimeout=10;
     blockerTimeLeft=blockerTimeout;
     blockerPainter=new PaintBlocker();
 
@@ -274,56 +274,63 @@ void RC1::timerEvent(QTimerEvent *)
 
 bool RC1::event(QEvent *event)
 {
-    QList<QTouchEvent::TouchPoint> touchPoints;
-    if( event->type()==QEvent::TouchEnd ||
+    if(blockerOn) {
+        if( event->type()==QEvent::MouseButtonPress ||
+            event->type()==QEvent::TouchBegin ) {
+            blockerOn=false;
+        }
+    } else {
+        QList<QTouchEvent::TouchPoint> touchPoints;
+        if( event->type()==QEvent::TouchEnd ||
             event->type()==QEvent::TouchUpdate ||
             event->type()==QEvent::TouchBegin ) {
 
-        long t=QDateTime::currentMSecsSinceEpoch();
-        
-        // nomouse=true;
-        touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
-        foreach (const QTouchEvent::TouchPoint &touchPoint, touchPoints) {
-            //            qDebug() << sEvent << ": x:" << touchPoint.pos().x() << " y:" << touchPoint.pos().y() << " t: " << t1.tv_sec << "." << t1.tv_usec;
+            long t=QDateTime::currentMSecsSinceEpoch();
+
+            // nomouse=true;
+            touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
+            foreach (const QTouchEvent::TouchPoint &touchPoint, touchPoints) {
+                //            qDebug() << sEvent << ": x:" << touchPoint.pos().x() << " y:" << touchPoint.pos().y() << " t: " << t1.tv_sec << "." << t1.tv_usec;
+                evstat->incToucheventcount();
+                Point * p = storage->getPoint(0);
+                p->set(touchPoint.pos().x(),touchPoint.pos().y(),this->width(),this->height());
+                p->setT(t);
+                p->setGid(touchPoint.id());
+                p->setState(touchPoint.state());
+                storage->next();
+                ehand->processPoint(p,this);
+            }
+            return true;
+        } else if( !nomouse && (
+                        event->type()==QEvent::MouseMove ||
+                        event->type()==QEvent::MouseButtonPress ||
+                        event->type()==QEvent::MouseButtonRelease )) {
+
+            long t=QDateTime::currentMSecsSinceEpoch();
+
+            const QMouseEvent * meve = static_cast<QMouseEvent *>(event);
+
+            Qt::TouchPointState state;
+
+            if(event->type()==QEvent::MouseMove) {
+                state=Qt::TouchPointMoved;
+            } else if(event->type()==QEvent::MouseButtonPress) {
+                state=Qt::TouchPointPressed;
+                eventId++;
+            } else if(event->type()==QEvent::MouseButtonRelease) {
+                state=Qt::TouchPointReleased;
+            }
+            //        qDebug() << sEvent << ": x:" << meve->pos().x() << " y:" << meve->pos().y() << " t: " << t1.tv_sec << "." << t1.tv_usec;
             evstat->incToucheventcount();
             Point * p = storage->getPoint(0);
-            p->set(touchPoint.pos().x(),touchPoint.pos().y(),this->width(),this->height());
+            p->set(meve->pos().x(),meve->pos().y(),this->width(),this->height());
             p->setT(t);
-            p->setGid(touchPoint.id());
-            p->setState(touchPoint.state());
+            p->setGid(eventId);
+            p->setState(state);
             storage->next();
             ehand->processPoint(p,this);
+            return true;
         }
-        return true;
-    } else if( !nomouse && (
-                    event->type()==QEvent::MouseMove ||
-                    event->type()==QEvent::MouseButtonPress ||
-                    event->type()==QEvent::MouseButtonRelease )) {
-
-        long t=QDateTime::currentMSecsSinceEpoch();
-
-        const QMouseEvent * meve = static_cast<QMouseEvent *>(event);
-
-        Qt::TouchPointState state;
-
-        if(event->type()==QEvent::MouseMove) {
-            state=Qt::TouchPointMoved;
-        } else if(event->type()==QEvent::MouseButtonPress) {
-            state=Qt::TouchPointPressed;
-            eventId++;
-        } else if(event->type()==QEvent::MouseButtonRelease) {
-            state=Qt::TouchPointReleased;
-        }
-        //        qDebug() << sEvent << ": x:" << meve->pos().x() << " y:" << meve->pos().y() << " t: " << t1.tv_sec << "." << t1.tv_usec;
-        evstat->incToucheventcount();
-        Point * p = storage->getPoint(0);
-        p->set(meve->pos().x(),meve->pos().y(),this->width(),this->height());
-        p->setT(t);
-        p->setGid(eventId);
-        p->setState(state);
-        storage->next();
-        ehand->processPoint(p,this);
-        return true;
     }
     return QWidget::event(event);
 }

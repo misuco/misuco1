@@ -215,11 +215,13 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
 //                isegb[evptr]=iseg;
                 movedin=true;
             }
-            isegb[evptr]=iseg;
+            //isegb[evptr]=iseg;
             if(layout->getSegtype(iseg)==2) {
                 // push button
                 if(layout->getChan(iseg)==0) {
                     // basenote button
+                    layout->decPressed(isegb[evptr]);
+                    layout->incPressed(iseg);
                     layout->setBasenote(layout->getValueInt(iseg));
                     layout->updateLayout();
                 } else if(layout->getChan(iseg)==1) {
@@ -227,21 +229,21 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 } else if(layout->getChan(iseg)==2) {
                     //qDebug() << " segtype 2 chan 2 pressed " << layout->getPressed(iseg) ;
                     if(layout->getPressed(iseg)==0) {
-                        layout->setRowheight(0,0);
-                        layout->setRowheight(1,0);
-                        layout->setRowheight(2,0);
-                        layout->setRowheight(3,0);
-                        layout->setRowheight(4,10);
-                        layout->setRowheight(5,50);
-                        layout->incPressed(iseg);
-                        layout->incPressed(iseg);
-                    } else {
                         layout->setRowheight(0,10);
                         layout->setRowheight(1,10);
                         layout->setRowheight(2,10);
                         layout->setRowheight(3,10);
                         layout->setRowheight(4,10);
                         layout->setRowheight(5,10);
+                        layout->incPressed(iseg);
+                        layout->incPressed(iseg);
+                    } else {
+                        layout->setRowheight(0,0);
+                        layout->setRowheight(1,0);
+                        layout->setRowheight(2,0);
+                        layout->setRowheight(3,0);
+                        layout->setRowheight(4,10);
+                        layout->setRowheight(5,50);
                         layout->decPressed(iseg);
                     }
                     layout->calcGeo(layout->getWidth(),layout->getHeight());
@@ -298,17 +300,30 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 xrel=xrel/(double)layout->getSegwidthpx(iseg);
                 int xrelquant=0;    // quantized by steps
                 if(layout->getCtlx(iseg)>0) {
-                    xrelquant=0.5+xrel*(double)layout->getCtlx(iseg);
+                    xrelquant=xrel*(double)layout->getCtlx(iseg);
                     xrel=(double)xrelquant/(double)layout->getCtlx(iseg);
                 }
-                if(xrel>layout->getValue(iseg+1)) {
+                qDebug() << "x-double-slider " << xrel  << " : " << xrelquant;
+                qDebug() << "x-double-slider " << layout->getValueInt(iseg) << " : " << layout->getValueInt(iseg+1);
+
+                if(xrelquant>layout->getValueInt(iseg+1)) {
                     layout->setValue(iseg+1,xrel);
                     layout->setValueInt(iseg+1,xrelquant);
-                } else if(xrel<layout->getValue(iseg)) {
+                } else if(xrelquant<layout->getValueInt(iseg)) {
                     layout->setValue(iseg,xrel);
                     layout->setValueInt(iseg,xrelquant);
-                } else if(xrel<layout->getValue(iseg+1) && xrel>layout->getValue(iseg)) {
-                    if(layout->getValue(iseg+1)-xrel < xrel - layout->getValue(iseg)) {
+                } else if(xrelquant<=layout->getValueInt(iseg+1) && xrelquant>=layout->getValueInt(iseg)) {
+                    int padDiff=layout->getValueInt(iseg+1)-layout->getValueInt(iseg)+1;
+                    qDebug() << "pad diff " << padDiff;
+                    if( padDiff<=2 ) {
+                        if(xrelquant==layout->getValueInt(iseg+1)) {
+                            layout->setValue(iseg,xrel);
+                            layout->setValueInt(iseg,xrelquant);
+                        } else if(xrelquant==layout->getValueInt(iseg)) {
+                            layout->setValue(iseg+1,xrel);
+                            layout->setValueInt(iseg+1,xrelquant);
+                        }
+                    } else if(layout->getValueInt(iseg+1)-xrelquant < xrelquant - layout->getValueInt(iseg)) {
                         layout->setValue(iseg+1,xrel);
                         layout->setValueInt(iseg+1,xrelquant);
                     } else {
@@ -317,9 +332,9 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     }
                 }
                 layout->setBaseoct(layout->getValueInt(iseg));
-                layout->setTopoct(layout->getValueInt(iseg+1)-1);
+                layout->setTopoct(layout->getValueInt(iseg+1));
                 layout->updateLayout();
-                // qDebug() << "x-double-slider " << layout->getValueInt(iseg) << " : " << layout->getValueInt(iseg+1) -1;
+                qDebug() << "x-double-slider " << layout->getValueInt(iseg) << " : " << layout->getValueInt(iseg+1);
             } else if(layout->getSegtype(iseg)==10) {
                 if( p->getState() == Qt::TouchPointPressed ) {
                     if(layout->getChan(iseg)==0) {
@@ -367,30 +382,53 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                                 break;
                         }
                         snd->cc(0,0,201,newenv);
+                    } else if(layout->getChan(iseg)==2) {
+                        int newenv=layout->getValueInt(iseg)+1;
+                        if(newenv>3) {
+                            newenv=0;
+                        }
+                        layout->setValueInt(iseg,newenv);
+                        switch(newenv) {
+                        case 0:
+                            layout->getSegText(iseg)->sprintf("MOD1");
+                            break;
+                        case 1:
+                            layout->getSegText(iseg)->sprintf("MOD2");
+                            break;
+                        case 2:
+                            layout->getSegText(iseg)->sprintf("MOD3");
+                            break;
+                        case 3:
+                            layout->getSegText(iseg)->sprintf("MOD4");
+                                break;
+                        }
+                        snd->cc(0,0,202,newenv);
                     }
                 }
             } else if(layout->getSegtype(iseg)==12) {
-                QString link = "";
-                QString digit;
-                digit.sprintf("%d",layout->getBasenote()+1);
-                link.append(digit);
-                for(int i=0;i<11;i++) {
-                    if(layout->getBscale(i)) {
-                        int currnote=layout->getBasenote()+i+1;
-                        if(currnote>11) {
-                            digit.sprintf("%d-",currnote%12+1);
-                            digit.append(link);
-                            link=digit;
-                        } else {
-                            digit.sprintf("-%d",currnote+1);
-                            link.append(digit);
+                if( p->getState() == Qt::TouchPointPressed || movedin) {
+                    QString link = "";
+                    QString digit;
+                    digit.sprintf("%d",layout->getBasenote()+1);
+                    link.append(digit);
+                    for(int i=0;i<11;i++) {
+                        if(layout->getBscale(i)) {
+                            int currnote=layout->getBasenote()+i+1;
+                            if(currnote>11) {
+                                digit.sprintf("%d-",currnote%12+1);
+                                digit.append(link);
+                                link=digit;
+                            } else {
+                                digit.sprintf("-%d",currnote+1);
+                                link.append(digit);
+                            }
                         }
                     }
+                    digit=link;
+                    link="http://misuco.org/scalex/";
+                    link.append(digit);
+                    QDesktopServices::openUrl(QUrl(link));
                 }
-                digit=link;
-                link="http://misuco.org/scalex/";
-                link.append(digit);
-                QDesktopServices::openUrl(QUrl(link));
             } else if(layout->getSegtype(iseg)==11) {
                 if( p->getState() == Qt::TouchPointMoved ) {
                     if(!layResize) {
@@ -446,6 +484,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     }
                 }
             }
+            isegb[evptr]=iseg;
         }
     } else if( p->getState() == Qt::TouchPointReleased ) {
         p->setHue(-1);

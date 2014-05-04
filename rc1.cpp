@@ -60,8 +60,8 @@ RC1::RC1(QWidget *parent) :
 //    sender = new SenderOscXY(this);
 //    sender=new SenderMobileSynth(this);
 //    sender=new SenderSuperCollider(this);
-//    sender=new SenderOscPuredata(this);
-    sender=new SenderDebug();
+    sender=new SenderOscPuredata(this);
+//    sender=new SenderDebug();
     ehand=new EventHandlerRect();
     evstat=new EventStat();
 
@@ -122,12 +122,19 @@ RC1::RC1(QWidget *parent) :
     connect(netxs, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(replyFinished(QNetworkReply*)));
 
-    netxs->get(QNetworkRequest(QUrl(RC1_INIT_XML_URL)));
-    netxs->get(QNetworkRequest(QUrl(RC1_SCALES_XML_URL)));
+    //netxs->get(QNetworkRequest(QUrl(RC1_INIT_XML_URL)));
+    //netxs->get(QNetworkRequest(QUrl(RC1_SCALES_XML_URL)));
+
+    layoutxml lxml;
+    lxml.setLayoutModel(layout);
+    lxml.readXml(":/conf/misuco.xml");
+    layout->updateLayout();
 
     actProgmen=0;
     readProgmemXml(storagePath+"prog.xml");
     setActProgmem(0);
+
+
 
     //setWindowState(Qt::WindowFullScreen);
 }

@@ -158,4 +158,5 @@ OBJECTIVE_SOURCES += \
     mobilesynth/mobilesynth/Classes/mobilesynthViewControllerRc1.mm \
     mobilesynth/mobilesynth/Classes/AudioOutput.m \
 
-RESOURCES +=
+RESOURCES += \
+    res.qrc

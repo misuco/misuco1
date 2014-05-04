@@ -97,17 +97,21 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
     if( p->getState() == Qt::TouchPointPressed ||
        p->getState() == Qt::TouchPointMoved ) {
         
+
         if(isegb[evptr]!=iseg) {
-            if(isegb[evptr]!=-1) {
-                layout->decPressed(isegb[evptr]);
-                // increase statistics for transitions
-                rc1->getEvstat()->incTransitioncount();
-            }
-            isegb[evptr]=iseg;
-            if(layout->getSegtype(iseg)!=2 && layout->getSegtype(iseg)!=3) {
-                layout->incPressed(isegb[evptr]);
+            if(layout->getSegtype(iseg)<2) {
+                if(isegb[evptr]!=-1) {
+                    layout->decPressed(isegb[evptr]);
+                    qDebug() << "event " << evptr << "decPressed " << isegb[evptr];
+                    // increase statistics for transitions
+                    rc1->getEvstat()->incTransitioncount();
+                }
+                layout->incPressed(iseg);
+                qDebug() << "event " << evptr << "incPressed " << iseg;
+                isegb[evptr]=iseg;
             }
         }
+
         if(layout->getSegtype(iseg)!=11) {
             layResize=false;
         }
@@ -145,7 +149,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         
         if(layout->getSegtype(iseg)==0) {
             //            double v1=layout->getNote(iseg);
-            double v1=layout->getValue(iseg);
+            //             double v1=layout->getValue(iseg);
+            double v1=layout->getValueInt(iseg);
             p->setHue(30*(layout->getValueInt(iseg)%12));
             if(note[evptr]!=v1) {
                 if(transitionMode) {
@@ -206,10 +211,13 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 snd->note(chan[evptr],ieventout[evptr],note[evptr],0);
                 note[evptr]=-1;
                 layout->decPressed(isegb[evptr]);
-                isegb[evptr]=-1;
+                qDebug() << "event " << evptr << " decpressed " << isegb[evptr] << " if moved from note- into control-field " << iseg;
+//                isegb[evptr]=iseg;
                 movedin=true;
             }
+            isegb[evptr]=iseg;
             if(layout->getSegtype(iseg)==2) {
+                // push button
                 if(layout->getChan(iseg)==0) {
                     // basenote button
                     layout->setBasenote(layout->getValueInt(iseg));
@@ -240,22 +248,23 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 }
             } else if(layout->getSegtype(iseg)==3) {
                 // toggle button
-                 if( p->getState() == Qt::TouchPointPressed ) {
-                     //qDebug() << " seg type 8 " << isegb[evptr];
-                     if(layout->getPressed(isegb[evptr])>0) {
-                         layout->decPressed(isegb[evptr]);
+                 if( p->getState() == Qt::TouchPointPressed || movedin) {
+                     //
+                     qDebug() << " seg type 3 " << iseg << " pressed " << layout->getPressed(iseg);
+                     if(layout->getPressed(iseg)>0) {
+                         layout->decPressed(iseg);
                          if(layout->getChan(iseg)==0) {
-                             layout->setBscale(isegb[evptr],false);
+                             layout->setBscale(iseg,false);
+                             qDebug() << " bscale off " << iseg;
                          } else if(layout->getChan(iseg)==1) {
                              layout->setTransMode(false);
                          }
                          layout->updateLayout();
-                         //qDebug() << " bscale off " << isegb[evptr];
                      } else {
-                         layout->incPressed(isegb[evptr]);
+                         layout->incPressed(iseg);
                          if(layout->getChan(iseg)==0) {
-                             layout->setBscale(isegb[evptr],true);
-                             //qDebug() << " bscale on " << isegb[evptr];
+                             layout->setBscale(iseg,true);
+                             qDebug() << " bscale on " << iseg;
 
                              // play note if not yet selected
                              note[evptr]=layout->getValue(iseg);
@@ -308,9 +317,9 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     }
                 }
                 layout->setBaseoct(layout->getValueInt(iseg));
-                layout->setTopoct(layout->getValueInt(iseg+1));
+                layout->setTopoct(layout->getValueInt(iseg+1)-1);
                 layout->updateLayout();
-//                qDebug() << "x-double-slider " << layout->getValueInt(iseg) << " : " << layout->getValueInt(iseg+1);
+                // qDebug() << "x-double-slider " << layout->getValueInt(iseg) << " : " << layout->getValueInt(iseg+1) -1;
             } else if(layout->getSegtype(iseg)==10) {
                 if( p->getState() == Qt::TouchPointPressed ) {
                     if(layout->getChan(iseg)==0) {
@@ -360,6 +369,28 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                         snd->cc(0,0,201,newenv);
                     }
                 }
+            } else if(layout->getSegtype(iseg)==12) {
+                QString link = "";
+                QString digit;
+                digit.sprintf("%d",layout->getBasenote()+1);
+                link.append(digit);
+                for(int i=0;i<11;i++) {
+                    if(layout->getBscale(i)) {
+                        int currnote=layout->getBasenote()+i+1;
+                        if(currnote>11) {
+                            digit.sprintf("%d-",currnote%12+1);
+                            digit.append(link);
+                            link=digit;
+                        } else {
+                            digit.sprintf("-%d",currnote+1);
+                            link.append(digit);
+                        }
+                    }
+                }
+                digit=link;
+                link="http://misuco.org/scalex/";
+                link.append(digit);
+                QDesktopServices::openUrl(QUrl(link));
             } else if(layout->getSegtype(iseg)==11) {
                 if( p->getState() == Qt::TouchPointMoved ) {
                     if(!layResize) {
@@ -420,7 +451,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         p->setHue(-1);
         act[evptr]=false;
         layResize=false;
-        if(layout->getSegtype(iseg)!=3 && layout->getSegtype(iseg)!=2) {
+        if(layout->getSegtype(iseg)<2) {
             layout->decPressed(isegb[evptr]);
         }
         if(layout->getSegtype(iseg)==0 || layout->getSegtype(iseg)==1 || layout->getSegtype(iseg)==3) {
@@ -462,7 +493,7 @@ void EventHandlerRect::init()
     cccval1=0;
     cccval2=0;
     
-    transitionMode=true;
+    transitionMode=false;
     ntp=32;
     
     act=new bool[ntp];

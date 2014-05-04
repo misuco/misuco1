@@ -98,16 +98,16 @@ LayoutModel::LayoutModel()
     
     midi2TextEU = new QString[12];
     midi2TextEU[0]="C";
-    midi2TextEU[1]="C#";
+    midi2TextEU[1]="c";
     midi2TextEU[2]="D";
-    midi2TextEU[3]="D#";
+    midi2TextEU[3]="d";
     midi2TextEU[4]="E";
     midi2TextEU[5]="F";
-    midi2TextEU[6]="F#";
+    midi2TextEU[6]="f";
     midi2TextEU[7]="G";
-    midi2TextEU[8]="G#";
+    midi2TextEU[8]="g";
     midi2TextEU[9]="A";
-    midi2TextEU[10]="A#";
+    midi2TextEU[10]="a";
     midi2TextEU[11]="B";
     
     midi2TextIN = new QString[12];
@@ -197,7 +197,7 @@ void LayoutModel::calcGeo(int w, int h)
             i++;
         }
     }
-    fontsize=height/nrows/5;
+    fontsize=height/nrows/3;
 }
 
 int LayoutModel::getHeight() const

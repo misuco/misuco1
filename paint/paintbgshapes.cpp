@@ -128,26 +128,12 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
     
     for(int y = 0; y < lay->getNrows(); y++) {
         ypaint1=lay->getRowheightpx(y);
-        crady=ypaint1/5;
-        cradx=ypaint1/5;
+        crady=ypaint1/7;
+        cradx=ypaint1/7;
         xpaint=1;
-
 
         for (int x = 0; x < lay->getNseg(y); x ++) {
 
-            // row header
-            if(x==0 && painttext>0 && editMode) {
-                if(y==0) {
-                    pnt->setPen(Qt::darkGray);
-                    pnt->setFont(QFont(lay->getFont(),lay->getFontsize()/2));
-                    pnt->drawText(0,ypaint,lay->getWidth(),ypaint1,Qt::AlignLeft,"scale");
-                }
-                if(y==1) {
-                    pnt->setPen(Qt::darkGray);
-                    pnt->setFont(QFont(lay->getFont(),lay->getFontsize()/2));
-                    pnt->drawText(0,ypaint,lay->getWidth(),ypaint1,Qt::AlignLeft,"base note");
-                }
-            }
 
             // init font
             textAlign=Qt::AlignCenter;
@@ -268,9 +254,9 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                     pnt->drawPolygon(points2,4);
                 }
             } else if (lay->getSegtype(iseg)==0 ) {
-                //pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
                 pnt->setBrush(QColor::fromHsl(col,130,lightBNote));
-                pnt->drawRoundedRect(xpaint,ypaint,xpaint1,ypaint1, cradx, crady);
+                pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
+                //pnt->drawRoundedRect(xpaint,ypaint,xpaint1,ypaint1, cradx, crady);
             } else if (lay->getSegtype(iseg)==2) {
 //                pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
                 pnt->drawRoundedRect(xpaint,ypaint,xpaint1,ypaint1, cradx, crady);
@@ -290,7 +276,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                     fontl=0;
                 }
                 if(lay->getSegtype(iseg)==4 || lay->getSegtype(iseg)==6 ) {
-                    pnt->setBrush(Qt::darkGray);
+                    pnt->setBrush(QColor::fromRgb(30,30,30,255));
                     pnt->setPen(Qt::NoPen);
                 }
                 pnt->drawRoundedRect(xpaint,ypaint,xpaint1_1,ypaint1_1, cradx, crady);
@@ -308,10 +294,12 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
               //  pnt->setFont(QFont(lay->getFont(),lay->getFontsize()));
                 xv1=0;
                 QString text;
-                for(int i=0;i<lay->getCtlx(iseg);i++) {
+                pnt->setBrush(Qt::darkGray);
+                for(int i=1;i<=lay->getCtlx(iseg);i++) {
                     text.sprintf("%d",i);
                     pnt->setPen(Qt::NoPen);
-                    pnt->drawRoundedRect(xv1+cradx,ypaint+crady,xsseg,ysseg,cradx,crady);
+                    //pnt->drawRoundedRect(xv1+cradx,ypaint+crady,xsseg,ysseg,cradx,crady);
+                    pnt->drawRect(xv1+cradx,ypaint+crady,xsseg,ysseg);
                     pnt->setPen(QColor::fromHsl(col,120,0));
                     pnt->drawText(xv1,ypaint,sseg,ypaint1,Qt::AlignCenter,text);
                     xv1+=sseg;
@@ -335,10 +323,12 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
 
                 xv1=0;
                 QString text;
-                for(int i=0;i<lay->getCtlx(iseg);i++) {
+                pnt->setBrush(Qt::darkGray);
+                for(int i=1;i<=lay->getCtlx(iseg);i++) {
                     text.sprintf("%d",i);
                     pnt->setPen(Qt::NoPen);
-                    pnt->drawRoundedRect(xv1+cradx,ypaint+crady,xsseg,ysseg,cradx,crady);
+                    //pnt->drawRoundedRect(xv1+cradx,ypaint+crady,xsseg,ysseg,cradx,crady);
+                    pnt->drawRect(xv1+cradx,ypaint+crady,xsseg,ysseg);
                     pnt->setPen(QColor::fromHsl(col,120,0));
                     pnt->drawText(xv1,ypaint,sseg,ypaint1,Qt::AlignCenter,text);
                     xv1+=sseg;
@@ -353,6 +343,23 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                     pnt->drawText(xpaint,ypaint,xpaint1,ypaint1,textAlign,*lay->getSegText(iseg));
                 }
             }
+
+
+            // row header
+            if(x==0 && painttext>0 && editMode) {
+                if(y==0) {
+                    pnt->setPen(Qt::darkGray);
+                    pnt->setFont(QFont(lay->getFont(),lay->getFontsize()/2));
+                    pnt->drawText(0,ypaint,lay->getWidth(),ypaint1,Qt::AlignLeft,"scale");
+                }
+                if(y==1) {
+                    pnt->setPen(Qt::darkGray);
+                    pnt->setFont(QFont(lay->getFont(),lay->getFontsize()/2));
+                    pnt->drawText(0,ypaint,lay->getWidth(),ypaint1,Qt::AlignLeft,"base note");
+                }
+            }
+
+
             xpaint+=xpaint1;
             iseg++;
         }

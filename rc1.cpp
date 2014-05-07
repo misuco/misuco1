@@ -497,6 +497,8 @@ void RC1::setActProgmem(int n)
     progmem[actProgmen].basenote=layout->getBasenote();
     progmem[actProgmen].baseoct=layout->getBaseoct();
     progmem[actProgmen].topoct=layout->getTopoct();
+    progmem[actProgmen].sound=layout->getValueInt(26); // the sound segment
+
     for(int i=0;i<11;i++) {
         progmem[actProgmen].bscale[i]=layout->getBscale(i);
     }
@@ -505,6 +507,8 @@ void RC1::setActProgmem(int n)
     layout->setBasenote(progmem[n].basenote);
     layout->setTopoct(progmem[n].topoct);
     layout->setBaseoct(progmem[n].baseoct);
+    layout->setValueInt(26,progmem[n].sound);
+    sender->pc(0,progmem[n].sound);
     for(int i=0;i<11;i++) {
         layout->setBscale(i,progmem[n].bscale[i]);
     }
@@ -653,6 +657,7 @@ void RC1::readProgmemXml(QString filename)
             progmem[i].basenote=i;
             progmem[i].baseoct=3;
             progmem[i].topoct=5;
+            progmem[i].sound=i;
             for(int j=0;j<11;j++) {
                 progmem[i].bscale[j]=false;
             }
@@ -686,6 +691,7 @@ void RC1::readProgmemXml(QString filename)
                     progmem[row].bscale[8]=(bool)xmlr.attributes().value("bscale8").toString().toInt();
                     progmem[row].bscale[9]=(bool)xmlr.attributes().value("bscale9").toString().toInt();
                     progmem[row].bscale[10]=(bool)xmlr.attributes().value("bscale10").toString().toInt();
+                    progmem[row].sound=(int)xmlr.attributes().value("sound").toString().toInt();
                     xmlr.skipCurrentElement();
                     row++;
                 } else {
@@ -725,6 +731,9 @@ void RC1::writeProgmemXml(QString filename)
 
         att.sprintf("%d",progmem[row].topoct);
         xml.writeAttribute("topoct",att);
+
+        att.sprintf("%d",progmem[row].sound);
+        xml.writeAttribute("sound",att);
 
         for(int j=0;j<11;j++) {
             att.sprintf("%d",(int)progmem[row].bscale[j]);

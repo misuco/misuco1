@@ -41,6 +41,7 @@ private:
     int * ccstate;       // current ccval;
     quint8 onNoteCnt;   // count of on Notes
     void sendOsc(QString path, QVariant list);
+    int x,y;
 };
 
 #endif // SENDEROSCPUREDATA_H

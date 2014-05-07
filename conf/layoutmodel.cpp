@@ -56,10 +56,10 @@ LayoutModel::LayoutModel()
     setAll(nsegsmax,segtype,0);
     
     ctlx=new int[nsegsmax];
-    setAll(nsegsmax,ctlx,16);
+    setAll(nsegsmax,ctlx,1);
     
     ctly=new int[nsegsmax];
-    setAll(nsegsmax,ctly,8);
+    setAll(nsegsmax,ctly,2);
     
     chan=new int[nsegsmax];
     setAll(nsegsmax,chan,0);
@@ -197,7 +197,7 @@ void LayoutModel::calcGeo(int w, int h)
             i++;
         }
     }
-    fontsize=height/nrows/3;
+    fontsize=height/nrows/5;
 }
 
 int LayoutModel::getHeight() const
@@ -433,6 +433,8 @@ void LayoutModel::updateLayout()
                 valueint[seg]=thisnote;
                 value[seg]=midi2f[thisnote];
                 segText[seg]=midi2TextEU[thisnote%12];
+                ctlx[seg]=1;
+                ctly[seg]=2;
 //                segText[seg].sprintf("%d\n%d",midi2TextEU[thisnote%12],(int)value[seg]);
                 segH[seg]=note2hue(thisnote);
 //                qDebug() << seg << " segh " << segH[seg];

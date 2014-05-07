@@ -293,6 +293,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     layout->updateLayout();
                 } else if(layout->getChan(iseg)==1) {
                     rc1->setActProgmem(layout->getValueInt(iseg));
+                } else if(layout->getChan(iseg)==2) {
+                    snd->pc(0,layout->getValueInt(iseg));
                 }
             } else if(layout->getSegtype(iseg)==6) {
                 // x-double-slider

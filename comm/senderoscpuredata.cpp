@@ -32,6 +32,7 @@ SenderOscPuredata::SenderOscPuredata(RC1 *rc1)
     prog=0;
     onNoteCnt=0;
     this->rc1=rc1;
+    x=0;y=0;
 }
 
 void SenderOscPuredata::note(int c, int voiceId, double fr, int vel)
@@ -79,6 +80,8 @@ void SenderOscPuredata::pc(int c, int v1)
 
 void SenderOscPuredata::cc(int c, int voiceId, int cc, double v1)
 {
+    qDebug() <<  "SenderOscPuredata::cc c "  << c << " cc " << cc << " v1 " << v1;
+    /*
     // translate value to midi
     int v1mid=(double)127*v1;
 
@@ -91,6 +94,15 @@ void SenderOscPuredata::cc(int c, int voiceId, int cc, double v1)
         v.append(c);
         sendOsc("/cc",v);
     }
+    */
+
+    if(cc==1) x=v1*127.0f;
+    if(cc==2) y=v1*127.0f;
+
+    QVariantList v;
+    v.append(x);
+    v.append(y);
+    sendOsc("/xy",v);
 }
 
 void SenderOscPuredata::sendOsc(QString path, QVariant list)

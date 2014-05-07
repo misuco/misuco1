@@ -142,6 +142,7 @@ private:
         int baseoct;
         int topoct;
         bool bscale[11];
+        int sound;
     };
 
     prog progmem[NPROGMEM];

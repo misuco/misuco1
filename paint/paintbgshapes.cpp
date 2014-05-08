@@ -131,6 +131,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
         crady=ypaint1/7;
         cradx=ypaint1/7;
         xpaint=1;
+        int xrow_header=0;
 
         for (int x = 0; x < lay->getNseg(y); x ++) {
 
@@ -288,6 +289,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 int xsseg=sseg-2*cradx;
                 int ysseg=ypaint1-2*crady;
                 int xv1=lay->getValueInt(iseg)*sseg;
+                xrow_header=xv1;
 //                pnt->drawEllipse(xpaint+xv1,ypaint,ypaint1_1,ypaint1_1);
 //                pnt->drawRect(xpaint+xv1,ypaint,sseg,ypaint1_1);
                 pnt->drawRoundedRect(xpaint+xv1,ypaint,sseg,ypaint1_1,cradx,crady);
@@ -319,6 +321,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 //int xv2=lay->getValue(iseg+1)*xpaint1_1;
                 int xv1=(lay->getValueInt(iseg))*sseg;
                 int xv2=(lay->getValueInt(iseg+1)+1)*sseg;
+                xrow_header=xv1;
                 pnt->drawRoundedRect(xv1, ypaint, xv2-xv1,ypaint1_1,cradx,crady);
 
                 xv1=0;
@@ -340,7 +343,11 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
             if (lay->getSegtype(iseg)!=0 && lay->getSegtype(iseg)!=7)   {
                 if(painttext>0 && (editMode|lay->getSegtype(iseg)==2) ) {
                     pnt->setPen(QColor::fromHsl(col,120,fontl));
-                    pnt->drawText(xpaint,ypaint,xpaint1,ypaint1,textAlign,*lay->getSegText(iseg));
+                    if(lay->getSegtype(iseg)==4 | lay->getSegtype(iseg)==6) {
+                        pnt->drawText(xrow_header,ypaint,xpaint1,ypaint1,textAlign,*lay->getSegText(iseg));
+                    } else {
+                        pnt->drawText(xpaint,ypaint,xpaint1,ypaint1,textAlign,*lay->getSegText(iseg));
+                    }
                 }
             }
 
@@ -350,12 +357,12 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 if(y==0) {
                     pnt->setPen(Qt::darkGray);
                     pnt->setFont(QFont(lay->getFont(),lay->getFontsize()/2));
-                    pnt->drawText(0,ypaint,lay->getWidth(),ypaint1,Qt::AlignLeft,"scale");
+                    pnt->drawText(xrow_header,ypaint,lay->getWidth(),ypaint1,Qt::AlignLeft,"scale");
                 }
                 if(y==1) {
                     pnt->setPen(Qt::darkGray);
                     pnt->setFont(QFont(lay->getFont(),lay->getFontsize()/2));
-                    pnt->drawText(0,ypaint,lay->getWidth(),ypaint1,Qt::AlignLeft,"base note");
+                    pnt->drawText(xrow_header,ypaint,lay->getWidth(),ypaint1,Qt::AlignLeft,"base note");
                 }
             }
 

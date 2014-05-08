@@ -410,6 +410,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             } else if(layout->getSegtype(iseg)==12) {
                 if( p->getState() == Qt::TouchPointPressed || movedin) {
                     QString link = "";
+                    QString link_pre = "";
                     QString digit;
                     digit.sprintf("%d",layout->getBasenote()+1);
                     link.append(digit);
@@ -417,9 +418,12 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                         if(layout->getBscale(i)) {
                             int currnote=layout->getBasenote()+i+1;
                             if(currnote>11) {
-                                digit.sprintf("%d-",currnote%12+1);
-                                digit.append(link);
-                                link=digit;
+                                if(link_pre.length()==0) {
+                                    digit.sprintf("%d",currnote%12+1);
+                                } else {
+                                    digit.sprintf("-%d",currnote%12+1);
+                                }
+                                link_pre.append(digit);
                             } else {
                                 digit.sprintf("-%d",currnote+1);
                                 link.append(digit);
@@ -428,6 +432,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     }
                     digit=link;
                     link="http://misuco.org/scalex/";
+                    link.append(link_pre);
                     link.append(digit);
                     QDesktopServices::openUrl(QUrl(link));
                 }

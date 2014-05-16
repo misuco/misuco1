@@ -57,7 +57,8 @@ SOURCES += main.cpp\
     comm/senderoscxy.cpp \
     paint/paintbgbitmap.cpp \
     paint/paintblocker.cpp \
-    conf/scales.cpp
+    conf/scales.cpp \
+    mobilesynth/mobilesynth/Classes/synth/waveform.cpp
 
 HEADERS  += \
     storage.h \
@@ -110,7 +111,8 @@ HEADERS  += \
     platform.h \
     paint/paintbgbitmap.h \
     paint/paintblocker.h \
-    conf/scales.h
+    conf/scales.h \
+    mobilesynth/mobilesynth/Classes/synth/waveform.h
 
 OTHER_FILES += \
     android/res/values-ru/strings.xml \

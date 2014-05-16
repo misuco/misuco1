@@ -11,6 +11,8 @@ using namespace std;
 namespace synth {
     
     KeyStack::KeyStack() : size_(0) {
+        waveform_=new waveform();
+
         for(int i=0;i<kMaxSize;i++) {
             for(int j=0;j<kNumEnv;j++) {
                 envelopes[j][i]=new Envelope();
@@ -18,9 +20,11 @@ namespace synth {
             oscs[i]=new Oscillator();
             oscs[i]->set_mod_f(0);
             oscs[i]->set_mod_pw(0);
+            oscs[i]->set_waveform(waveform_);
             lfos[i]=new Oscillator();
             lfos[i]->set_frequency(0);
             lfos[i]->set_wave_type(1);
+            lfos[i]->set_waveform(waveform_);
             lfos[i]->set_pulse_width(0.5);
             lfos[i]->set_mod_f(0);
             lfos[i]->set_mod_pw(0);
@@ -31,11 +35,12 @@ namespace synth {
             cutoffs[i]->set_cutoff(5000);
             filters[i]=new ResonantFilter();
             filters[i]->set_cutoff(cutoffs[i]);
-            filters[i]->set_resonance(0.3);
+            filters[i]->set_resonance(0);
         }
         mod_amt_init_=0;
         lfo_freq_init_=0;
         osc_pw=0.5;
+        filter_res_=0;
     }
     
     KeyStack::~KeyStack() { }
@@ -46,6 +51,7 @@ namespace synth {
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == note) {
                 oscs[i]->set_frequency(freq);
+                cutoffs[i]->set_cutoff(freq);
                 //qDebug() << "F   stack note on " << note << " f: " << freq << " size: " << size_;
                 return false;
             }
@@ -67,8 +73,11 @@ namespace synth {
         oscs[size_]->set_mod_f(0);
         oscs[size_]->set_mod_pw(0);
         lfos[size_]->set_frequency(lfo_freq_init_);
+        lfos[size_]->set_pulse_width(osc_pw);
+        lfos[size_]->set_wave_type(lfo_wave);
         lfos[size_]->set_mod_f(0);
         lfos[size_]->set_mod_pw(0);
+        cutoffs[size_]->set_cutoff(freq);
         mod_amt_[size_]=mod_amt_init_;
 
         for(int i=0;i<kNumEnv;i++) {
@@ -196,10 +205,10 @@ namespace synth {
     void KeyStack::setFilterCutoff(int voice, float f) {
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == voice) {
-                float fcf=f*8192;
+                float fcf=f*oscs[i]->get_frequency()*4;
                 cutoffs[i]->set_cutoff(fcf);
                 i=size_;
-//                qDebug() << "voice " << voice << " f " << f << " fcf " << fcf;
+                qDebug() << "setFilterCutoff v " << voice << " f " << f << " fcf " << fcf;
             }
         }
     }
@@ -207,11 +216,15 @@ namespace synth {
     void KeyStack::setFilterRes(int voice, float f) {
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == voice) {
-                float frs=f;
+                float frs=f*filter_res_;
                 filters[i]->set_resonance(frs);
                 i=size_;
             }
         }
+    }
+    
+    void KeyStack::setFilterRes(float f) {
+        filter_res_=f;
     }
     
     void KeyStack::setOscPW(int voice, float pw) {
@@ -237,6 +250,16 @@ namespace synth {
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == voice) {
                 lfos[i]->set_frequency(v);
+                i=size_;
+            }
+        }
+    }
+    
+    
+    void KeyStack::setLfoModFreq(int voice, float v ) {
+        for (int i = 0; i < size_; ++i) {
+            if (notes_[i] == voice) {
+                lfos[i]->set_mod_f(v);
                 i=size_;
             }
         }

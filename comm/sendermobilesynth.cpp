@@ -13,13 +13,53 @@ SenderMobileSynth::SenderMobileSynth(RC1 * rc1)
 
 void SenderMobileSynth::cc(int c, int voiceId, int cc, double v1)
 {
-    if(cc==8) {
+//    qDebug() << "SenderMobileSynth::cc " << voiceId << " cc " << cc << " v1 " << v1;
+
+    if(cc==2) {
+//        qDebug() << "SenderMobileSynth::cc " << voiceId << " cc " << cc << " v1 " << v1;
         sy->set_filter_cutoff(voiceId,v1);
-    } else if(cc==16) {
+    } else if(cc==1) {
         sy->set_filter_resonance(voiceId,v1);
+    } else if(cc==3) {
+        sy->set_modulation_amount(voiceId, v1);
+    } else if(cc==4) {
+        sy->set_modulation_mod_f(voiceId, v1);
     } else if(cc==200) {
         sy->set_osc1_wave_type_int(v1);
+    } else if(cc==201) {
+        sy->set_lfo_wave_type_int(v1);
+    } else if(cc==202) {
+        sy->set_modulation_destination(v1);
+    } else if(cc==203) {
+        switch ((int)v1%4) {
+            case 0:
+                sy->setADSR(0, 10, 300, 0.5, 500);
+                //            sy->set_modulation_destination(synth::Controller::LFO_DEST_NONE);
+                break;
+                
+            case 1:
+                sy->setADSR(0, 10, 5000, 0, 5000);
+                //            sy->set_modulation_destination(synth::Controller::LFO_DEST_AMP);
+                break;
+                
+            case 2:
+                sy->setADSR(0, 10, 300, 0.5, 40000);
+                //            sy->set_modulation_destination(synth::Controller::LFO_DEST_PW);
+                break;
+                
+            case 3:
+                sy->setADSR(0, 40000, 10, 1, 80000);
+                //            sy->set_modulation_destination(synth::Controller::LFO_DEST_PITCH);
+                break;
+                
+            default:
+                break;
+        }
+    } else if(cc==204) {
+        qDebug() << "SenderMobileSynth::cc " << voiceId << " cc " << cc << " v1 " << v1;
+        sy->set_filter_resonance(v1);
     }
+    
     /*
     if(cc==10) {
         sy->set_osc_pw(voiceId,v1);
@@ -36,7 +76,7 @@ void SenderMobileSynth::cc(int c, int voiceId, int cc, double v1)
 void SenderMobileSynth::pc(int c, int v1)
 {
 //    sy->pc(v1);
-    sy->set_osc1_wave_type_int(v1%2);
+    sy->set_osc1_wave_type_int(v1%5);
     sy->set_modulation_destination(synth::Controller::LFO_DEST_NONE);
     switch (v1%4) {
         case 0:

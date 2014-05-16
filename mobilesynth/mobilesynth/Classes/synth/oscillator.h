@@ -8,6 +8,7 @@
 
 #include "synth/parameter.h"
 #include "synth/lag_processor.h"
+#include "synth/waveform.h"
 
 namespace synth {
     
@@ -25,16 +26,20 @@ namespace synth {
             SAWTOOTH,
             REVERSE_SAWTOOTH,
             NOISE,
+            WAVETABLE,
         };
         void set_wave_type(WaveType wave_type);
         void set_wave_type(int w);
         
         void set_frequency(float frequency);
+        float get_frequency() {return frequency_new_;}
         void set_mod_f(float mod);
         void set_mod_pw(float mod);
         void set_period_samples(long p);
         void set_pulse_width(float p);
-        
+
+        void set_waveform(waveform * w);
+
         // Override the default sample rate
         void set_sample_rate(long sample_rate);
         
@@ -50,6 +55,7 @@ namespace synth {
         
     private:
         WaveType wave_type_;
+        waveform * waveform_;
         float frequency_;
         float frequency_new_;
         float mod_f_;
@@ -62,6 +68,7 @@ namespace synth {
         float pulse_width_mod_; // the pw including modulation
         long sample_rate_;  
         long sample_num_;
+        float sample_num_trans_;
         float sample_num_norm_;
         float sample_step_norm_;
         

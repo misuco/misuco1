@@ -32,25 +32,36 @@
         <seg segwidth="1" value="0.200000" valueint="2" ctlx="10" ctly="0" segtype="6" chan="0" pressed="0" segtext="octave range" segh="65"/>
         <seg segwidth="0" value="0.500000" valueint="5" ctlx="10" ctly="0" segtype="7" chan="0" pressed="0" segtext="" segh="75"/>
     </row>
+    
 <!--
+ <row height="0" segwidthmax="10">
+ <seg segwidth="10" value="0.000000" valueint="0" ctlx="16" ctly="0" segtype="4" chan="2" pressed="0" segtext="sound" segh="0"/>
+ </row>
+ 
+ <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="0" segtype="3" chan="1" pressed="0" segtext="TM" segh="75"/>
+ 
     <row height="0" segwidthmax="6">
-        <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="0" segtype="3" chan="1" pressed="0" segtext="TM" segh="75"/>
         <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="0" segtype="10" chan="0" pressed="0" segtext="SQU" segh="75"/>
-        <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="0" segtype="10" chan="1" pressed="0" segtext="SQU" segh="75"/>
-        <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="0" segtype="10" chan="2" pressed="0" segtext="SQU" segh="75"/>
+        <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="0" segtype="10" chan="1" pressed="0" segtext="LFOSQU" segh="75"/>
+        <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="0" segtype="10" chan="2" pressed="0" segtext="NONE" segh="75"/>
         <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="0" segtype="10" chan="3" pressed="0" segtext="-__" segh="75"/>
-        <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="0" segtype="10" chan="4" pressed="0" segtext="MODX" segh="75"/>
-        <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="0" segtype="10" chan="5" pressed="0" segtext="MODY" segh="75"/>
+        <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="0" segtype="10" chan="4" pressed="0" segtext="X:NONE" segh="75"/>
+        <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="0" segtype="10" chan="5" pressed="0" segtext="Y:NONE" segh="75"/>
     </row>
--->
-    <row height="0" segwidthmax="10">
-        <seg segwidth="10" value="0.000000" valueint="0" ctlx="16" ctly="0" segtype="4" chan="2" pressed="0" segtext="sound" segh="0"/>
-    </row>
+ -->
 
-    <row height="10" segwidthmax="11">
-        <seg segwidth="10" value="0.000000" valueint="0" ctlx="10" ctly="0" segtype="4" chan="1" pressed="0" segtext="memory" segh="0"/>
-        <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="0" segtype="2" chan="2" pressed="0" segtext="edit" segh="0"/>
-    </row>
+
+<row height="0" segwidthmax="12">
+    <seg segwidth="5" value="0.000000" valueint="0" ctlx="5" ctly="0" segtype="4" chan="3" pressed="0" segtext="wawe" segh="0"/>
+    <seg segwidth="4" value="0.000000" valueint="0" ctlx="4" ctly="0" segtype="4" chan="4" pressed="0" segtext="envelope" segh="0"/>
+    <seg segwidth="3" value="0.000000" valueint="0" ctlx="3" ctly="0" segtype="4" chan="5" pressed="0" segtext="xymod" segh="0"/>
+</row>
+
+<row height="10" segwidthmax="11">
+    <seg segwidth="10" value="0.000000" valueint="0" ctlx="10" ctly="0" segtype="4" chan="1" pressed="0" segtext="memory" segh="0"/>
+    <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="0" segtype="2" chan="2" pressed="0" segtext="edit" segh="0"/>
+</row>
+
     <row height="50" segwidthmax="1">
         <seg segwidth="1" value="261.625565" valueint="60" ctlx="16" ctly="8" segtype="0" chan="0" pressed="0" segtext="C" segh="145"/>
     </row>

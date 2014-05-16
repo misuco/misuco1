@@ -2,4 +2,7 @@
     <qresource prefix="/conf">
         <file>misuco.xml</file>
     </qresource>
+    <qresource prefix="/wav">
+        <file>waves/guitar1m.wav</file>
+    </qresource>
 </RCC>

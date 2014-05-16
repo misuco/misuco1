@@ -25,7 +25,7 @@ namespace synth {
 //        modulation_.set_oscillator(&modulation_osc_);
 //        modulation_.set_level(&modulation_amount_);
         key_stack_.setADSR(0, 1000, 1000, 0.8, 80000);
-        key_stack_.setADSR(1, 80000,   0,   1, 80000);
+        key_stack_.setADSR(1, 0,   0,   1, 1000);
         format=0;
 //        reset_routing();
     }
@@ -63,6 +63,10 @@ namespace synth {
         key_stack_.setOscWave(w);
     }
     
+    void Controller::set_lfo_wave_type_int(int w) {
+        key_stack_.setLfoWave(w);
+    }
+    
     void Controller::set_modulation_amount(float amount) {
         key_stack_.setModAmtInit(amount);
     }
@@ -79,6 +83,10 @@ namespace synth {
         key_stack_.setLfoFreq(voice, frequency);
     }
     
+    void Controller::set_modulation_mod_f(int voice, float frequency) {
+        key_stack_.setLfoModFreq(voice, frequency);
+    }
+    
 /*    void Controller::set_modulation_source(ModulationSource src) {
         modulation_source_ = src;
         reset_routing();
@@ -86,7 +94,32 @@ namespace synth {
     
     void Controller::set_modulation_destination(ModulationDestination dest) {
         modulation_destination_ = dest;
-//        reset_routing();
+        //        reset_routing();
+    }
+    
+    void Controller::set_modulation_destination(int dest) {
+        switch (dest) {
+            case 1:
+                modulation_destination_ = LFO_DEST_AMP;
+                break;
+                
+            case 2:
+                modulation_destination_ = LFO_DEST_FILTER;
+                break;
+                
+            case 3:
+                modulation_destination_ = LFO_DEST_PITCH;
+                break;
+                
+            case 4:
+                modulation_destination_ = LFO_DEST_PW;
+                break;
+                
+            default:
+                modulation_destination_ = LFO_DEST_NONE;
+                break;
+        }
+        //        reset_routing();
     }
     /*
     void Controller::reset_routing() {
@@ -115,6 +148,10 @@ namespace synth {
     
     void Controller::set_filter_resonance(int voice, float value) {
         key_stack_.setFilterRes(voice, value);
+    }
+    
+    void Controller::set_filter_resonance(float value) {
+        key_stack_.setFilterRes(value);
     }
     
     void Controller::GetFloatSamples(float* buffer, int size) {

@@ -148,9 +148,12 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         }
         
         if(layout->getSegtype(iseg)==0) {
-            //            double v1=layout->getNote(iseg);
-            //             double v1=layout->getValue(iseg);
-            double v1=layout->getValueInt(iseg);
+            double v1;
+            if(rc1->getMidimode()) {
+                v1=layout->getValueInt(iseg);
+            } else {
+                v1=layout->getValue(iseg);
+            }
             p->setHue(30*(layout->getValueInt(iseg)%12));
             if(note[evptr]!=v1) {
                 if(transitionMode) {
@@ -295,6 +298,15 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     rc1->setActProgmem(layout->getValueInt(iseg));
                 } else if(layout->getChan(iseg)==2) {
                     snd->pc(0,layout->getValueInt(iseg));
+                } else if(layout->getChan(iseg)==3) {
+                    // waveform
+                    snd->cc(0, 0, 200, layout->getValueInt(iseg));
+                } else if(layout->getChan(iseg)==4) {
+                    // envelope
+                    snd->cc(0,0,203,layout->getValueInt(iseg));
+                } else if(layout->getChan(iseg)==5) {
+                    // resonance
+                    snd->cc(0,0,204,layout->getValueInt(iseg));
                 }
             } else if(layout->getSegtype(iseg)==6) {
                 // x-double-slider
@@ -341,29 +353,78 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 if( p->getState() == Qt::TouchPointPressed ) {
                     if(layout->getChan(iseg)==0) {
                         int newwaveform=layout->getValueInt(iseg)+1;
+                        if(newwaveform>5) {
+                            newwaveform=0;
+                        }
+                        layout->setValueInt(iseg,newwaveform);
+                        switch(newwaveform) {
+                            case 0:
+                                layout->getSegText(iseg)->sprintf("SQR");
+                                break;
+                            case 1:
+                                layout->getSegText(iseg)->sprintf("SAW");
+                                break;
+                            case 2:
+                                layout->getSegText(iseg)->sprintf("SIN");
+                                break;
+                            case 3:
+                                layout->getSegText(iseg)->sprintf("TRI");
+                                break;
+                            case 4:
+                                layout->getSegText(iseg)->sprintf("NOI");
+                                break;
+                            case 5:
+                                layout->getSegText(iseg)->sprintf("WTAB");
+                                break;
+                        }
+                        snd->cc(0,0,200,newwaveform);
+                    } else if(layout->getChan(iseg)==1) {
+                        int newwaveform=layout->getValueInt(iseg)+1;
                         if(newwaveform>4) {
                             newwaveform=0;
                         }
                         layout->setValueInt(iseg,newwaveform);
                         switch(newwaveform) {
-                        case 0:
-                            layout->getSegText(iseg)->sprintf("SQR");
-                            break;
-                        case 1:
-                            layout->getSegText(iseg)->sprintf("SAW");
-                            break;
-                        case 2:
-                            layout->getSegText(iseg)->sprintf("SIN");
-                            break;
-                        case 3:
-                            layout->getSegText(iseg)->sprintf("TRI");
+                            case 0:
+                                layout->getSegText(iseg)->sprintf("LFOSQR");
                                 break;
-                        case 4:
-                            layout->getSegText(iseg)->sprintf("NOI");
+                            case 1:
+                                layout->getSegText(iseg)->sprintf("LFOSAW");
+                                break;
+                            case 2:
+                                layout->getSegText(iseg)->sprintf("LFOSIN");
+                                break;
+                            case 3:
+                                layout->getSegText(iseg)->sprintf("LFOTRI");
+                                break;
+                            case 4:
+                                layout->getSegText(iseg)->sprintf("LFONOI");
                                 break;
                         }
-                        snd->cc(0,0,200,newwaveform);
-                    } else if(layout->getChan(iseg)==1) {
+                        snd->cc(0,0,201,newwaveform);
+                    } else if(layout->getChan(iseg)==2) {
+                        int newwaveform=layout->getValueInt(iseg)+1;
+                        if(newwaveform>3) {
+                            newwaveform=0;
+                        }
+                        layout->setValueInt(iseg,newwaveform);
+                        switch(newwaveform) {
+                            case 0:
+                                layout->getSegText(iseg)->sprintf("NONE");
+                                break;
+                            case 1:
+                                layout->getSegText(iseg)->sprintf("AMP");
+                                break;
+                            case 2:
+                                layout->getSegText(iseg)->sprintf("FREQ");
+                                break;
+                            case 3:
+                                layout->getSegText(iseg)->sprintf("FILT");
+                                break;
+                        }
+                        snd->cc(0,0,202,newwaveform);
+
+                    } else if(layout->getChan(iseg)==3) {
                         int newenv=layout->getValueInt(iseg)+1;
                         if(newenv>3) {
                             newenv=0;
@@ -383,28 +444,49 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                             layout->getSegText(iseg)->sprintf("_-_");
                                 break;
                         }
-                        snd->cc(0,0,201,newenv);
-                    } else if(layout->getChan(iseg)==2) {
+                        snd->cc(0,0,203,newenv);
+                    } else if(layout->getChan(iseg)==4) {
                         int newenv=layout->getValueInt(iseg)+1;
                         if(newenv>3) {
                             newenv=0;
                         }
                         layout->setValueInt(iseg,newenv);
                         switch(newenv) {
-                        case 0:
-                            layout->getSegText(iseg)->sprintf("MOD1");
-                            break;
-                        case 1:
-                            layout->getSegText(iseg)->sprintf("MOD2");
-                            break;
-                        case 2:
-                            layout->getSegText(iseg)->sprintf("MOD3");
-                            break;
-                        case 3:
-                            layout->getSegText(iseg)->sprintf("MOD4");
+                            case 0:
+                                layout->getSegText(iseg)->sprintf("XMOD1");
+                                break;
+                            case 1:
+                                layout->getSegText(iseg)->sprintf("XMOD2");
+                                break;
+                            case 2:
+                                layout->getSegText(iseg)->sprintf("XMOD3");
+                                break;
+                            case 3:
+                                layout->getSegText(iseg)->sprintf("XMOD4");
                                 break;
                         }
-                        snd->cc(0,0,202,newenv);
+                        //snd->cc(0,0,202,newenv);
+                    } else if(layout->getChan(iseg)==5) {
+                        int newenv=layout->getValueInt(iseg)+1;
+                        if(newenv>3) {
+                            newenv=0;
+                        }
+                        layout->setValueInt(iseg,newenv);
+                        switch(newenv) {
+                            case 0:
+                                layout->getSegText(iseg)->sprintf("YMOD1");
+                                break;
+                            case 1:
+                                layout->getSegText(iseg)->sprintf("YMOD2");
+                                break;
+                            case 2:
+                                layout->getSegText(iseg)->sprintf("YMOD3");
+                                break;
+                            case 3:
+                                layout->getSegText(iseg)->sprintf("YMOD4");
+                                break;
+                        }
+                        //snd->cc(0,0,202,newenv);
                     }
                 }
             } else if(layout->getSegtype(iseg)==12) {

@@ -6,6 +6,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include "synth/parameter.h"
+#include <QDebug>
 
 namespace synth {
     
@@ -16,7 +17,9 @@ namespace synth {
     pulse_width_(0.5),
     sample_num_norm_(0),
     sample_num_(0),
-    rise_(true){ }
+    rise_(true){
+
+    }
     
     Oscillator::~Oscillator() { }
     
@@ -45,6 +48,9 @@ namespace synth {
             case 4:
                 wave_type_ = Oscillator::NOISE;
                 break;
+            case 5:
+                wave_type_ = Oscillator::WAVETABLE;
+                break;
             default:
                 wave_type_ = Oscillator::REVERSE_SAWTOOTH;
                 break;
@@ -57,6 +63,9 @@ namespace synth {
             calc_all();
         }
         frequency_new_ = frequency;
+        if(wave_type_ ==WAVETABLE) {
+            sample_num_=0;
+        }
     }
     
     void Oscillator::set_mod_f(float mod) {
@@ -98,6 +107,7 @@ namespace synth {
         if (period_samples_ == 0) {
             return 0.0f;
         }
+        int sample_num_wt;
         switch (wave_type_) {
             case SINE:
                 value = sinf(sample_num_norm_);
@@ -130,7 +140,21 @@ namespace synth {
                 break;
             case NOISE:
                 value = -1.0f + (float)rand()/((float)RAND_MAX/2.0f);
-
+                break;
+            case WAVETABLE:
+                if(frequency_new_!=frequency_) {
+                    sample_num_trans_=frequency_new_/65.4064f;
+                    frequency_=frequency_new_;
+                    //qDebug() << "sample_num_trans " << sample_num_trans_ << " f " << frequency_;
+                }
+                sample_num_wt =(int)((float)sample_num_*sample_num_trans_);
+                if(sample_num_wt>waveform_->getLoop()) {
+                    //qDebug() << "sample_num_wt " << sample_num_wt << " loop " << waveform_->getLoop();
+                    sample_num_=waveform_->getAttack();
+                    sample_num_wt =(int)((float)sample_num_*sample_num_trans_);
+                }
+                value = waveform_->getValue(sample_num_wt);
+                sample_num_++;
                 break;
             case REVERSE_SAWTOOTH:
                 value = 2.0f * (floorf(sample_num_norm_) - sample_num_norm_ + 0.5f);
@@ -139,36 +163,44 @@ namespace synth {
                 assert(false);
                 break;
         }
-        sample_num_++;
-        sample_num_norm_+=sample_step_norm_;
-        if(sample_num_>= (long)period_samples_) {
-            sample_num_=0;
-            sample_num_norm_=0;
-            rise_=true;
-            value=0;
-            bool recal_freq_mod=false;
-            if(frequency_!=frequency_new_) {
-                frequency_=frequency_new_;
-                recal_freq_mod=true;
-            }
-            if(mod_f_!=mod_f_new_) {
-                mod_f_=mod_f_new_;
-                recal_freq_mod=true;
-            }
-            if(mod_pw_!=mod_pw_new_) {
-                mod_pw_=mod_pw_new_;
-                recal_freq_mod=true;
-            }
-            if(recal_freq_mod) {
-                calc_all();
+        if(wave_type_ !=WAVETABLE) {
+            sample_num_++;
+            sample_num_norm_+=sample_step_norm_;
+            if(sample_num_>= (long)period_samples_) {
+                sample_num_=0;
+                sample_num_norm_=0;
+                rise_=true;
+                value=0;
+                bool recal_freq_mod=false;
+                if(frequency_!=frequency_new_) {
+                    frequency_=frequency_new_;
+                    recal_freq_mod=true;
+                }
+                if(mod_f_!=mod_f_new_) {
+                    mod_f_=mod_f_new_;
+                    recal_freq_mod=true;
+                }
+                if(mod_pw_!=mod_pw_new_) {
+                    mod_pw_=mod_pw_new_;
+                    recal_freq_mod=true;
+                }
+                if(recal_freq_mod) {
+                    calc_all();
+                }
             }
         }
+
         return value;
     }
     
     void Oscillator::set_pulse_width(float p) {
         pulse_width_ = p;
         calc_edges();
+    }
+
+    void Oscillator::set_waveform(waveform *w)
+    {
+        waveform_=w;
     }
     
     void Oscillator::calc_edges() {

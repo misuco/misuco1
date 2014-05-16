@@ -61,6 +61,7 @@ namespace synth {
         // Set the wave form of oscillator
         void set_osc1_wave_type(Oscillator::WaveType wave_type);
         void set_osc1_wave_type_int(int w);
+        void set_lfo_wave_type_int(int w);
         
 /*        enum ModulationSource {
             LFO_SRC_SQUARE,
@@ -78,15 +79,18 @@ namespace synth {
         };
 //        void set_modulation_source(ModulationSource source);
         void set_modulation_destination(ModulationDestination dest);
+        void set_modulation_destination(int dest);
         void set_modulation_amount(float amount);
         void set_modulation_frequency(float frequency);
         void set_modulation_amount(int voice, float amount);
         void set_modulation_frequency(int voice, float frequency);
+        void set_modulation_mod_f(int voice, float frequency);
         void set_osc_pw(int voice, float p);
         void set_filter_cutoff(int voice, float frequency);
         
         // [0.0, 1.0]
         void set_filter_resonance(int voice,float value);
+        void set_filter_resonance(float value);
         
         // Get a single sample
         float GetSample();

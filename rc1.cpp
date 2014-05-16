@@ -50,20 +50,38 @@ RC1::RC1(QWidget *parent) :
     nomouse = false;
     ttl=2000;
 
-    blockerOn=true;
-    blockerTimeout=10;
+    blockerOn=false;
+    blockerTimeout=0;
     blockerTimeLeft=blockerTimeout;
     blockerPainter=new PaintBlocker();
 
     storage=new Storage();
     layout=new LayoutModel();
 //    sender = new SenderOscXY(this);
-//    sender=new SenderMobileSynth(this);
 //    sender=new SenderSuperCollider(this);
-    sender=new SenderOscPuredata(this);
 //    sender=new SenderDebug();
     ehand=new EventHandlerRect();
     evstat=new EventStat();
+
+#ifdef RC1_IOS
+    sender=new SenderMobileSynth(this);
+
+    QString curDir=QDir::currentPath();
+    int found=curDir.lastIndexOf("/");
+    storagePath=curDir.left(found+1);
+    storagePath+="Documents";
+    QDir dir;
+    dir.mkdir(storagePath);
+    qDebug() << "new path " << storagePath;
+    storagePath+="/";
+
+    midimode=false;
+#else
+    sender=new SenderOscPuredata(this);
+    midimode=true;
+    storagePath="./";
+#endif
+    storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
 
     layout->calcGeo(width(),height());
 
@@ -101,19 +119,6 @@ RC1::RC1(QWidget *parent) :
     nTests=32;
     tpx=0;
     testMode=false;
-
-#ifdef RC1_IOS
-    QString curDir=QDir::currentPath();
-    int found=curDir.lastIndexOf("/");
-    storagePath=curDir.left(found+1);
-    storagePath+="Documents";
-    QDir dir;
-    dir.mkdir(storagePath);
-    qDebug() << "new path " << storagePath;
-    storagePath+="/";
-#else
-    storagePath="./";
-#endif
 
     bgImageOri.load(storagePath+"init.jpg");
     bgImage=bgImageOri.scaled(width(),height());
@@ -490,6 +495,16 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
         */
     }
 }
+bool RC1::getMidimode() const
+{
+    return midimode;
+}
+
+void RC1::setMidimode(bool value)
+{
+    midimode = value;
+}
+
 
 void RC1::setActProgmem(int n)
 {
@@ -498,6 +513,9 @@ void RC1::setActProgmem(int n)
     progmem[actProgmen].baseoct=layout->getBaseoct();
     progmem[actProgmen].topoct=layout->getTopoct();
     progmem[actProgmen].sound=layout->getValueInt(26); // the sound segment
+    progmem[actProgmen].waveform=layout->getValueInt(26); // the wave segment
+    progmem[actProgmen].envelope=layout->getValueInt(27); // the envelope segment
+    progmem[actProgmen].mod=layout->getValueInt(28); // the mod segment
 
     for(int i=0;i<11;i++) {
         progmem[actProgmen].bscale[i]=layout->getBscale(i);
@@ -507,7 +525,9 @@ void RC1::setActProgmem(int n)
     layout->setBasenote(progmem[n].basenote);
     layout->setTopoct(progmem[n].topoct);
     layout->setBaseoct(progmem[n].baseoct);
-    layout->setValueInt(26,progmem[n].sound);
+    layout->setValueInt(26,progmem[n].waveform);
+    layout->setValueInt(27,progmem[n].envelope);
+    layout->setValueInt(28,progmem[n].mod);
     sender->pc(0,progmem[n].sound);
     for(int i=0;i<11;i++) {
         layout->setBscale(i,progmem[n].bscale[i]);
@@ -654,20 +674,24 @@ void RC1::readProgmemXml(QString filename)
     QFile file(filename);
     if(!file.exists()) {
         for(int i=0;i<NPROGMEM;i++) {
-            progmem[i].basenote=i;
+            progmem[i].basenote=i%5;
             progmem[i].baseoct=3;
             progmem[i].topoct=5;
             progmem[i].sound=i;
+            progmem[i].waveform=i%4+1;
+            progmem[i].envelope=i/3+1;
+            progmem[i].mod=i%3+1;
             for(int j=0;j<11;j++) {
                 progmem[i].bscale[j]=false;
             }
-            progmem[i].bscale[5]=true;
+            progmem[i].bscale[i]=true;
+            progmem[i].bscale[i%4]=true;
         }
         writeProgmemXml(filename);
     }
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
         return;
-        qDebug("cannot read file");
+        qDebug() << "cannot read file " << filename;
     }
     xmlr.setDevice(&file);
     if (xmlr.readNextStartElement()) {
@@ -692,6 +716,9 @@ void RC1::readProgmemXml(QString filename)
                     progmem[row].bscale[9]=(bool)xmlr.attributes().value("bscale9").toString().toInt();
                     progmem[row].bscale[10]=(bool)xmlr.attributes().value("bscale10").toString().toInt();
                     progmem[row].sound=(int)xmlr.attributes().value("sound").toString().toInt();
+                    progmem[row].waveform=(int)xmlr.attributes().value("waveform").toString().toInt();
+                    progmem[row].envelope=(int)xmlr.attributes().value("envelope").toString().toInt();
+                    progmem[row].mod=(int)xmlr.attributes().value("mod").toString().toInt();
                     xmlr.skipCurrentElement();
                     row++;
                 } else {
@@ -734,7 +761,16 @@ void RC1::writeProgmemXml(QString filename)
 
         att.sprintf("%d",progmem[row].sound);
         xml.writeAttribute("sound",att);
-
+        
+        att.sprintf("%d",progmem[row].waveform);
+        xml.writeAttribute("waveform",att);
+        
+        att.sprintf("%d",progmem[row].envelope);
+        xml.writeAttribute("envelope",att);
+        
+        att.sprintf("%d",progmem[row].mod);
+        xml.writeAttribute("mod",att);
+        
         for(int j=0;j<11;j++) {
             att.sprintf("%d",(int)progmem[row].bscale[j]);
             attname.sprintf("bscale%d",j);

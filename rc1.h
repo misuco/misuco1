@@ -68,6 +68,9 @@ public:
     
 //    void setProg(int);
 
+    bool getMidimode() const;
+    void setMidimode(bool value);
+
 public slots:
     void replyFinished(QNetworkReply * r);
 
@@ -110,6 +113,10 @@ private:
     QNetworkAccessManager * netxs;
     QString storagePath;
     QString pendingConfigFile;
+
+    // mode
+    bool midimode;
+
     // background image
     QImage bgImageOri;
     QImage bgImage;
@@ -143,6 +150,9 @@ private:
         int topoct;
         bool bscale[11];
         int sound;
+        int waveform;
+        int envelope;
+        int mod;
     };
 
     prog progmem[NPROGMEM];

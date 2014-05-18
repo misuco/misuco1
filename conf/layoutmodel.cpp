@@ -73,7 +73,7 @@ LayoutModel::LayoutModel()
     for (int x = 0; x < 127; ++x)
     {
         midi2f[x] = (freq_a / 32.0) * (pow(2.0 , (((float)x - 9.0)) / 12.0));
-        qDebug() << "note " << x << " f " << midi2f[x];
+        // qDebug() << "note " << x << " f " << midi2f[x];
     }
 
     float freq_c5 = freq_a / 5 * 3; // 264.00 hz @ 60

@@ -174,7 +174,7 @@ namespace synth {
     void Controller::GetCharSamples(char* buffer, int size) {
         
         if(format!=0) {
-            qDebug() << " size " << size << " sampleBytes " << sampleBytes;
+            //qDebug() << " size " << size << " sampleBytes " << sampleBytes;
             //Q_ASSERT(size % sampleBytes == 0);
             Q_UNUSED(sampleBytes) // suppress warning in release builds
             unsigned char *ptr = reinterpret_cast<unsigned char *>(buffer);

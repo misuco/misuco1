@@ -136,31 +136,46 @@ void SenderMobileSynth::setDestination(QHostAddress a, int p)
 SenderMobileSynth::SenderMobileSynth(RC1 * rc1)
 {
     sy= new mobileSynthQT52();
+    qDebug() << "mobileSynthQt52 created";
 }
 
 void SenderMobileSynth::cc(int c, int voiceId, int cc, double v1)
 {
-    if(cc==8) {
+    if(cc==2) {
+//        qDebug() << "SenderMobileSynth::cc " << voiceId << " cc " << cc << " v1 " << v1;
         sy->getSyctl()->set_filter_cutoff(voiceId,v1);
-    } else if(cc==16) {
+    } else if(cc==1) {
         sy->getSyctl()->set_filter_resonance(voiceId,v1);
+    } else if(cc==3) {
+        sy->getSyctl()->set_modulation_amount(voiceId, v1);
+    } else if(cc==4) {
+        sy->getSyctl()->set_modulation_mod_f(voiceId, v1);
     } else if(cc==200) {
         sy->getSyctl()->set_osc1_wave_type_int(v1);
     } else if(cc==201) {
-        switch((int)v1) {
-        case 0:
-            sy->getSyctl()->setADSR(0,50,50,0.1,50);
-            break;
-        case 1:
-            sy->getSyctl()->setADSR(0,50,100000,0.1,500000);
-            break;
-        case 2:
-            sy->getSyctl()->setADSR(0,50,50,1,50000);
-            break;
-        case 3:
-            sy->getSyctl()->setADSR(0,50000,50,1,50000);
-            break;
+        sy->getSyctl()->set_lfo_wave_type_int(v1);
+    } else if(cc==202) {
+        sy->getSyctl()->set_modulation_destination(v1);
+    } else if(cc==203) {
+        switch ((int)v1%4) {
+            case 0:
+                sy->getSyctl()->setADSR(0, 10, 300, 0.5, 500);
+                break;
+            case 1:
+                sy->getSyctl()->setADSR(0, 10, 5000, 0, 5000);
+                break;
+            case 2:
+                sy->getSyctl()->setADSR(0, 10, 300, 0.5, 40000);
+                break;
+            case 3:
+                sy->getSyctl()->setADSR(0, 40000, 10, 1, 80000);
+                break;
+
+            default:
+                break;
         }
+    } else if(cc==204) {
+        sy->getSyctl()->set_filter_resonance(v1);
     }
 }
 

@@ -56,15 +56,6 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             ieventoutnext++;
         }
     }
-    if(p->getState() == Qt::TouchPointPressed) {
-        rc1->getEvstat()->incTouchbegincount();
-    }
-    if(p->getState() == Qt::TouchPointMoved) {
-        rc1->getEvstat()->incTouchmovecount();
-    }
-    if(p->getState() == Qt::TouchPointReleased) {
-        rc1->getEvstat()->incTouchendcount();
-    }
     
     // 2.b. translate to MisuEvent index
     int iy=0;
@@ -102,12 +93,10 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             if(layout->getSegtype(iseg)<2) {
                 if(isegb[evptr]!=-1) {
                     layout->decPressed(isegb[evptr]);
-                    qDebug() << "event " << evptr << "decPressed " << isegb[evptr];
-                    // increase statistics for transitions
-                    rc1->getEvstat()->incTransitioncount();
+                    //qDebug() << "event " << evptr << "decPressed " << isegb[evptr];
                 }
                 layout->incPressed(iseg);
-                qDebug() << "event " << evptr << "incPressed " << iseg;
+                //qDebug() << "event " << evptr << "incPressed " << iseg;
                 isegb[evptr]=iseg;
             }
         }
@@ -116,6 +105,10 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             layResize=false;
         }
 
+        /*
+         * controller handling
+         *
+         */
         if(layout->getSegtype(iseg)==0 || layout->getSegtype(iseg)==1) {
             if(layout->getCtlx(iseg)>0) {
                 if(p->getX()!=ccval1[evptr]) {

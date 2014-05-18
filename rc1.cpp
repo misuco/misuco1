@@ -77,7 +77,8 @@ RC1::RC1(QWidget *parent) :
 
     midimode=false;
 #else
-    sender=new SenderOscPuredata(this);
+//    sender=new SenderOscPuredata(this);
+    sender=new SenderMobileSynth(this);
     midimode=true;
     storagePath="./";
 #endif

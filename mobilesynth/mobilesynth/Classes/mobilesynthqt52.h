@@ -1,7 +1,6 @@
 #ifndef MOBILESYNTHQT52_H
 #define MOBILESYNTHQT52_H
 
-
 #include <QAudioOutput>
 #include <QByteArray>
 #include <QIODevice>

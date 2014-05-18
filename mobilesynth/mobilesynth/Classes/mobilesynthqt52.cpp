@@ -19,10 +19,10 @@ mobileSynthQT52::mobileSynthQT52()
 {
 //    generateData(format, durationUs, sampleRate);
     syctl = new synth::Controller();
-    syctl->set_modulation_amount(0.7);
-    syctl->set_modulation_frequency(0.3);
+    syctl->set_modulation_amount(0);
+    syctl->set_modulation_frequency(0);
 //    syctl->set_modulation_source(synth::Controller::LFO_SRC_TRIANGLE);
-    syctl->set_modulation_destination(synth::Controller::LFO_DEST_FILTER);
+    syctl->set_modulation_destination(synth::Controller::LFO_DEST_NONE);
     syctl->set_osc1_wave_type(synth::Oscillator::SAWTOOTH);
 //    syctl->set_filter_cutoff(2000);
 //    syctl->set_filter_resonance(0.9);
@@ -46,19 +46,18 @@ mobileSynthQT52::mobileSynthQT52()
     //delete m_audioOutput;
     //m_audioOutput = 0;
     m_audioOutput = new QAudioOutput(m_device, m_format, this);
-    m_audioOutput->setBufferSize(2048);
+    m_audioOutput->setBufferSize(BufferSize);
 //    connect(m_audioOutput, SIGNAL(notify()), SLOT(notified()));
 //    connect(m_audioOutput, SIGNAL(stateChanged(QAudio::State)), SLOT(handleStateChanged(QAudio::State)));
     this->start();
 
     // way 1: push mode
-    // m_audioOutput->start(this);
+    //m_audioOutput->start(this);
 
     // way 2: pull mode
     connect(m_pullTimer, SIGNAL(timeout()), SLOT(pullTimerExpired()));
     m_output=m_audioOutput->start();
     m_pullTimer->start(5);
-
 }
 
 mobileSynthQT52::~mobileSynthQT52()
@@ -87,6 +86,10 @@ qint64 mobileSynthQT52::readData(char *data, qint64 len)
         total += chunk;
     }
     */
+
+//    qDebug() << "readData len " << len;
+//TODO: why this dirty hack? why does windows request odd lens
+    if(len%2!=0) len-=1;
     syctl->GetCharSamples(data,len);
 //    return total;
     return len;
@@ -116,13 +119,15 @@ void mobileSynthQT52::noteOff(int vid)
     syctl->NoteOff(vid);
 }
 
-
 void mobileSynthQT52::pullTimerExpired()
 {
     if (m_audioOutput && m_audioOutput->state() != QAudio::StoppedState) {
         int chunks = m_audioOutput->bytesFree()/m_audioOutput->periodSize();
+        //qDebug() << "pullTimerExpired chunks " << chunks << " bytes free " << m_audioOutput->bytesFree();
         while (chunks) {
+           //qDebug() << "pull timer read " << m_audioOutput->periodSize();
            const qint64 len = this->read(m_buffer.data(), m_audioOutput->periodSize());
+           //qDebug() << "pull timer loop len " << len << " chunks " << chunks;
            if (len)
                m_output->write(m_buffer.data(), len);
            if (len != m_audioOutput->periodSize())

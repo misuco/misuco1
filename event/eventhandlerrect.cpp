@@ -47,7 +47,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         evptr_stack_size++;
     }
     
-    // qDebug() << "processPoint ptr " << evptr << " id " << p->getGid();
+    //qDebug() << "processPoint ptr " << evptr << " id " << p->getGid();
     if(p->getState()==Qt::TouchPointPressed) {
         if(act[evptr]!=true) {  // if needed, else ieventsub will be set to 0 by accitent -> hanging note
             act[evptr]=true;
@@ -67,7 +67,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         ysum+=layout->getRowheightpx(iy);
         iseg+=layout->getNseg(iy);
         iy++;
-        //            qDebug() << "loop1 iy:" << iy << " iseg:" << iseg << " ysum: " << ysum;
+        //qDebug() << "loop1 iy:" << iy << " iseg:" << iseg << " ysum: " << ysum;
     }
     if(iy>0) {
         iy--;
@@ -75,7 +75,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         while(p->getX()>xsum && ix<layout->getNseg(iy)) {
             xsum+=layout->getSegwidthpx(iseg);
             iseg++; ix++;
-            //                qDebug() << "loop2 iseg:" << iseg << " xsum: " << xsum;
+            //qDebug() << "loop2 iseg:" << iseg << " xsum: " << xsum;
         }
         if(iseg>0) {
             iseg--;
@@ -207,7 +207,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 snd->note(chan[evptr],ieventout[evptr],note[evptr],0);
                 note[evptr]=-1;
                 layout->decPressed(isegb[evptr]);
-                qDebug() << "event " << evptr << " decpressed " << isegb[evptr] << " if moved from note- into control-field " << iseg;
+                //qDebug() << "event " << evptr << " decpressed " << isegb[evptr] << " if moved from note- into control-field " << iseg;
 //                isegb[evptr]=iseg;
                 movedin=true;
             }
@@ -247,13 +247,12 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             } else if(layout->getSegtype(iseg)==3) {
                 // toggle button
                  if( p->getState() == Qt::TouchPointPressed || movedin) {
-                     //
-                     qDebug() << " seg type 3 " << iseg << " pressed " << layout->getPressed(iseg);
+                     //qDebug() << " seg type 3 " << iseg << " pressed " << layout->getPressed(iseg);
                      if(layout->getPressed(iseg)>0) {
                          layout->decPressed(iseg);
                          if(layout->getChan(iseg)==0) {
                              layout->setBscale(iseg,false);
-                             qDebug() << " bscale off " << iseg;
+                             //qDebug() << " bscale off " << iseg;
                          } else if(layout->getChan(iseg)==1) {
                              layout->setTransMode(false);
                          }
@@ -262,7 +261,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                          layout->incPressed(iseg);
                          if(layout->getChan(iseg)==0) {
                              layout->setBscale(iseg,true);
-                             qDebug() << " bscale on " << iseg;
+                             //qDebug() << " bscale on " << iseg;
 
                              // play note if not yet selected
                              note[evptr]=layout->getValue(iseg);
@@ -310,8 +309,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     xrelquant=xrel*(double)layout->getCtlx(iseg);
                     xrel=(double)xrelquant/(double)layout->getCtlx(iseg);
                 }
-                qDebug() << "x-double-slider " << xrel  << " : " << xrelquant;
-                qDebug() << "x-double-slider " << layout->getValueInt(iseg) << " : " << layout->getValueInt(iseg+1);
+                //qDebug() << "x-double-slider " << xrel  << " : " << xrelquant;
+                //qDebug() << "x-double-slider " << layout->getValueInt(iseg) << " : " << layout->getValueInt(iseg+1);
 
                 if(xrelquant>layout->getValueInt(iseg+1)) {
                     layout->setValue(iseg+1,xrel);
@@ -321,7 +320,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     layout->setValueInt(iseg,xrelquant);
                 } else if(xrelquant<=layout->getValueInt(iseg+1) && xrelquant>=layout->getValueInt(iseg)) {
                     int padDiff=layout->getValueInt(iseg+1)-layout->getValueInt(iseg)+1;
-                    qDebug() << "pad diff " << padDiff;
+                    //qDebug() << "pad diff " << padDiff;
                     if( padDiff<=2 ) {
                         if(xrelquant==layout->getValueInt(iseg+1)) {
                             layout->setValue(iseg,xrel);
@@ -341,7 +340,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 layout->setBaseoct(layout->getValueInt(iseg));
                 layout->setTopoct(layout->getValueInt(iseg+1));
                 layout->updateLayout();
-                qDebug() << "x-double-slider " << layout->getValueInt(iseg) << " : " << layout->getValueInt(iseg+1);
+                //qDebug() << "x-double-slider " << layout->getValueInt(iseg) << " : " << layout->getValueInt(iseg+1);
             } else if(layout->getSegtype(iseg)==10) {
                 if( p->getState() == Qt::TouchPointPressed ) {
                     if(layout->getChan(iseg)==0) {
@@ -506,7 +505,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                         }
                     }
                     digit=link;
-                    link="http://misuco.org/scalex/";
+                    link="http://misuco.org/scales/";
                     link.append(link_pre);
                     link.append(digit);
                     QDesktopServices::openUrl(QUrl(link));
@@ -542,7 +541,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                         if(moved>=iy) {
                             int heightnew=layout->getRowheightpx(0)+1;
                             int heightnewmax=layout->getHeight()/(iy+2);
-                            // qDebug() << "heightnewmax " << heightnewmax;
+                            //qDebug() << "heightnewmax " << heightnewmax;
                             if(heightnew<heightnewmax) {
                                 for(int i=0;i<iy;i++) {
                                     layout->setRowheightpx(i,heightnew);
@@ -595,7 +594,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         if(evptr_stack_size>0) {
             evptr_stack_size--;
         } else {
-            qDebug() << "evptr_stack underflow.";
+            //qDebug() << "evptr_stack underflow.";
         }
     }
 }

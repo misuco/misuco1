@@ -36,10 +36,12 @@ namespace synth {
     }
     
     void Controller::NoteOn(int note, float freq) {
+        //qDebug() << "controller::noteon " << note << " freq " << freq;
         key_stack_.NoteOn(note, freq);
     }
     
     void Controller::NoteOff(int note) {
+        //qDebug() << "controller::noteoff " << note;
         key_stack_.NoteOff(note);
         /*        if (key_stack_.size() == 0) {
          // All notes were release, so start the release phase of the envelope
@@ -161,7 +163,7 @@ namespace synth {
     }
     
     void Controller::GetInt32Sapmles(long* buffer, int size) {
-//        qDebug() << "get samples " <<  size << " from " <<  buffer;
+        //qDebug() << "get samples " <<  size << " from " <<  buffer;
         for (int i = 0; i < size; ++i) {
             buffer[i] = GetSample()* 16777216L;
         }
@@ -255,7 +257,7 @@ namespace synth {
         // Adjust volume
         for(int i=0;i<key_stack_.GetSize();i++) {
             if(key_stack_.getEnvelope(0, i)->released()) {
-                //qDebug() << " controller: clear note " << i;
+                //qDebug() << "controller: clear note " << key_stack_.GetNote(i);
                 key_stack_.NoteClear(key_stack_.GetNote(i));
             }
         }

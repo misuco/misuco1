@@ -83,6 +83,7 @@ RC1::RC1(QWidget *parent) :
     storagePath="./";
 #endif
     storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    qDebug() << "storage path: " << storagePath;
 
     layout->calcGeo(width(),height());
 
@@ -121,7 +122,7 @@ RC1::RC1(QWidget *parent) :
     tpx=0;
     testMode=false;
 
-    bgImageOri.load(storagePath+"init.jpg");
+    bgImageOri.load(storagePath+"/init.jpg");
     bgImage=bgImageOri.scaled(width(),height());
 
     netxs = new QNetworkAccessManager(this);
@@ -137,7 +138,7 @@ RC1::RC1(QWidget *parent) :
     layout->updateLayout();
 
     actProgmen=0;
-    readProgmemXml(storagePath+"prog.xml");
+    readProgmemXml(storagePath+"/prog.xml");
     setActProgmem(0);
 
 
@@ -147,7 +148,8 @@ RC1::RC1(QWidget *parent) :
 
 RC1::~RC1()
 {
-    writeProgmemXml(storagePath+"prog.xml");
+    writeProgmemXml(storagePath+"/prog.xml");
+    qDebug() << "progmem written";
 }
 
 void RC1::paintEvent(QPaintEvent *event)
@@ -534,6 +536,7 @@ void RC1::setActProgmem(int n)
         layout->setBscale(i,progmem[n].bscale[i]);
     }
     layout->updateLayout();
+    writeProgmemXml(storagePath+"/prog.xml");
 }
 
 void RC1::resetStat()

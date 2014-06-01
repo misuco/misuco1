@@ -1,6 +1,8 @@
 // synth.cpp
 // Author: Allen Porter <allen@thebends.org>
+// Redesign: Claudio Zopfi <z@x21.ch>
 
+#include <qdebug>
 #include "synth/envelope.h"
 
 //#include <algorithm>
@@ -60,6 +62,7 @@ void Envelope::set_min(float min) {
 }
 
 void Envelope::NoteOn() {
+    //qDebug() << "NoteOn at current " << current_;
   current_ = 0;
   decay_end_ = attack_ + decay_;
   if (attack_ == 0) {
@@ -73,6 +76,7 @@ void Envelope::NoteOn() {
     decay_slope_ = (max_ - sustain_) / decay_;
   }
   state_ = ATTACK;
+    //qDebug() << " NoteOn at current " <<  current_ << " a: " << attack_ << " d: " << decay_end_ << " s: " << sustain_ << " r: " << release_end_ ;
 }
 
 void Envelope::NoteOff() {
@@ -96,23 +100,19 @@ float Envelope::GetValue() {
   float value = 0;
   
   // Check that we haven't transitioned longo the next state
-  if (state_ == ATTACK || state_ == DECAY) {
-    if (current_ > decay_end_) {
-      state_ = SUSTAIN;
-    } else if (current_ > attack_) {
-      state_ = DECAY;
+    if (state_ == DECAY && current_ > decay_end_) {
+        state_ = SUSTAIN;
+        //qDebug() << "env state to sustain at " << current_ << " decay_end: " << decay_end_;
+    } else if (state_ == ATTACK && current_ > attack_) {
+        state_ = DECAY;
+        //qDebug() << "env state to decay at " << current_ << " attack: " << attack_;
+    } else if (state_ == SUSTAIN && sustain_ <= 0.0) {
+        state_ = DONE;
+        //qDebug() << "env state to done in sustain at " << current_;
+    } else if (state_ == RELEASE && current_ > release_end_) {
+        state_ = DONE;
+        //qDebug() << "env state to done in release at " << current_;
     }
-  }
-  if (state_ == SUSTAIN) {
-    if (sustain_ <= 0.0) {
-      state_ = DONE;
-    }
-  }
-  if (state_ == RELEASE) {
-    if (current_ > release_end_) {
-      state_ = DONE;
-    }
-  }
 
   switch (state_) {
     case ATTACK:

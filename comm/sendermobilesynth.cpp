@@ -56,7 +56,7 @@ void SenderMobileSynth::cc(int c, int voiceId, int cc, double v1)
                 break;
         }
     } else if(cc==204) {
-        qDebug() << "SenderMobileSynth::cc " << voiceId << " cc " << cc << " v1 " << v1;
+//        qDebug() << "SenderMobileSynth::cc " << voiceId << " cc " << cc << " v1 " << v1;
         sy->set_filter_resonance(v1);
     }
     

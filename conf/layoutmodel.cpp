@@ -73,7 +73,7 @@ LayoutModel::LayoutModel()
     for (int x = 0; x < 127; ++x)
     {
         midi2f[x] = (freq_a / 32.0) * (pow(2.0 , (((float)x - 9.0)) / 12.0));
-        // qDebug() << "note " << x << " f " << midi2f[x];
+        //qDebug() << "note " << x << " f " << midi2f[x];
     }
 
     float freq_c5 = freq_a / 5 * 3; // 264.00 hz @ 60
@@ -171,7 +171,7 @@ void LayoutModel::calcGeo(int w, int h)
         aspect_change=true;
     }
     */
-    // qDebug() << "Cacl geo " << w << " " << h << " " << width << " " << height;
+    //qDebug() << "Cacl geo " << w << " " << h << " " << width << " " << height;
     width=w;
     height=h;
     int i=0;
@@ -437,7 +437,7 @@ void LayoutModel::updateLayout()
                 ctly[seg]=2;
 //                segText[seg].sprintf("%d\n%d",midi2TextEU[thisnote%12],(int)value[seg]);
                 segH[seg]=note2hue(thisnote);
-//                qDebug() << seg << " segh " << segH[seg];
+                //qDebug() << seg << " segh " << segH[seg];
             }
         }
         seg++;

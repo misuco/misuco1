@@ -46,13 +46,13 @@ namespace synth {
     KeyStack::~KeyStack() { }
     
     bool KeyStack::NoteOn(int note, float freq) {
-        //qDebug() << "key stack note on " << note << " f: " << freq << " size: " << size_;
+        //qDebug() << "KeyStack note on " << note << " f: " << freq << " size: " << size_;
         
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == note) {
                 oscs[i]->set_frequency(freq);
                 cutoffs[i]->set_cutoff(freq);
-                //qDebug() << "F   stack note on " << note << " f: " << freq << " size: " << size_;
+                //qDebug() << "  KeyStack existing note on size: " << size_;
                 return false;
             }
         }
@@ -62,7 +62,7 @@ namespace synth {
         // => kill oldest note
         if(size_ >= kMaxSize) {
             NoteClear(notes_[0]);
-            //qDebug() << "key stack full, NoteClear " << notes_[0];
+            //qDebug() << "  KeyStack full, NoteClear " << notes_[0];
         }
         
         // put new note on top of stack
@@ -88,18 +88,18 @@ namespace synth {
             envelopes[i][size_]->NoteOn();
         }
         size_++;
-        //qDebug() << "T   stack note on " << note << " f: " << freq << " size: " << size_;
+        //qDebug() << "  KeyStack new note on size: " << size_;
         return true;
     }
     
     bool KeyStack::NoteOff(int note) {
-        //qDebug() << "key stack note off " << note << " size: " << size_;
+        //qDebug() << "KeyStack note off " << note << " size: " << size_;
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == note) {
                 for(int k=0;k<kNumEnv;k++) {
                     envelopes[k][i]->NoteOff();
                 }
-                //qDebug() << "T   stack note off " << note << " size: " << size_;
+                //qDebug() << " KeyStack note off " << note << " size: " << size_;
                 return true;
             }
         }
@@ -107,12 +107,12 @@ namespace synth {
         // to be flaky, so we don't worry if we were asked to remove something that
         // was not on the stack.  The controller also calls our clear() method when
         // no touch events are left as a fallback.
-        //qDebug() << "F   stack note off " << note << " size: " << size_;
+        //qDebug() << "KeyStack unknown note off " << note << " size: " << size_;
         return false;
     }
     
     bool KeyStack::NoteClear(int note) {
-//        qDebug() << "-  NoteClear " << note << " size " << size_;
+        //qDebug() << "KeyStack  NoteClear " << note << " size " << size_;
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == note) {
                 // Remove this element from the stack -- copy all elements above
@@ -152,6 +152,7 @@ namespace synth {
 
                 size_--;
                 //qDebug() << "-T NoteClear " << note;
+                //qDebug() << "notes_ " << notes_[0] << " " << notes_[1] << " " << notes_[2] << " " << notes_[3] << " " ;
                 return true;
             }
         }
@@ -159,7 +160,7 @@ namespace synth {
         // to be flaky, so we don't worry if we were asked to remove something that
         // was not on the stack.  The controller also calls our clear() method when
         // no touch events are left as a fallback.
-        // qDebug() << "-F NoteClear " << note;
+        //qDebug() << "-F NoteClear " << note;
         return false;
     }
     /*
@@ -208,7 +209,7 @@ namespace synth {
                 float fcf=f*oscs[i]->get_frequency()*4;
                 cutoffs[i]->set_cutoff(fcf);
                 i=size_;
-                qDebug() << "setFilterCutoff v " << voice << " f " << f << " fcf " << fcf;
+                //qDebug() << "setFilterCutoff v " << voice << " f " << f << " fcf " << fcf;
             }
         }
     }

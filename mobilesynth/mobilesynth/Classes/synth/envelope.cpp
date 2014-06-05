@@ -2,7 +2,7 @@
 // Author: Allen Porter <allen@thebends.org>
 // Redesign: Claudio Zopfi <z@x21.ch>
 
-#include <qdebug>
+#include <qdebug.h>
 #include "synth/envelope.h"
 
 //#include <algorithm>

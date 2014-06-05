@@ -19,7 +19,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef VIEW_H
 #define VIEW_H
 
+#include <platform.h>
+
+#ifdef NOGL
+#include <QWidget>
+#else
 #include <QGLWidget>
+#endif
+
+
 #include <QPaintEvent>
 #include <QResizeEvent>
 #include <QEvent>
@@ -44,7 +52,11 @@ class IPaint;
 class IPointPaint;
 class IEventHandler;
 
+#ifdef NOGL
+class RC1 : public QWidget, PathObject
+#else
 class RC1 : public QGLWidget, PathObject
+#endif
 {
     Q_OBJECT
 

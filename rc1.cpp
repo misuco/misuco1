@@ -42,7 +42,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 RC1::RC1(QWidget *parent) :
+    #ifdef NOGL
+    QWidget(parent)
+    #else
     QGLWidget(parent)
+    #endif
 {
     setAttribute(Qt::WA_AcceptTouchEvents,true);
     //qDebug() << "View() size:" << width() << " " << height();
@@ -78,8 +82,9 @@ RC1::RC1(QWidget *parent) :
     midimode=false;
 #else
 //    sender=new SenderOscPuredata(this);
+//    midimode=true;
     sender=new SenderMobileSynth(this);
-    midimode=true;
+    midimode=false;
     storagePath="./";
 #endif
     storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);

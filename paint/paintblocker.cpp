@@ -10,4 +10,13 @@ void PaintBlocker::paint(RC1 *view, QPainter *pnt)
     text.sprintf("Please donnate or wait %d seconds to get rid of this blocker",view->getBlockerTimeLeft());
     pnt->drawText(1,1,view->getLayout()->getWidth(),view->getLayout()->getHeight(),Qt::AlignCenter,text);*/
     pnt->drawImage(0,0,*(view->getBgImage()),0,0,view->getLayout()->getWidth(),view->getLayout()->getHeight());
+    closeWidth=view->width()/8;
+    closeXpos=view->width()-closeWidth;
+    pnt->setBrush(Qt::NoBrush);
+    pnt->setPen(QPen(Qt::lightGray,5));
+    pnt->drawEllipse(closeXpos,0,closeWidth,closeWidth);
+    //pnt->setPen(Qt::black);
+    pnt->setFont(QFont(view->getLayout()->getFont(),view->getLayout()->getFontsize()));
+    pnt->drawText(closeXpos,0,closeWidth,closeWidth,Qt::AlignCenter,"start");
+    pnt->drawText(0,0,view->getLayout()->getWidth(),closeWidth,Qt::AlignLeft,"advertisement");
 }

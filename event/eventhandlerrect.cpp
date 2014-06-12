@@ -484,31 +484,33 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             } else if(layout->getSegtype(iseg)==12) {
                 if( p->getState() == Qt::TouchPointPressed || movedin) {
                     QString link = "";
-                    QString link_pre = "";
-                    QString digit;
-                    digit.sprintf("%d",layout->getBasenote()+1);
-                    link.append(digit);
+                    QString link_pre="http://misuco.org/scales/";
+                    //digit.sprintf("%d",layout->getBasenote()+1);
+                    link.append(layout->getMidi2Text(layout->getBasenote()));
                     for(int i=0;i<11;i++) {
                         if(layout->getBscale(i)) {
                             int currnote=layout->getBasenote()+i+1;
                             if(currnote>11) {
+                                /*
                                 if(link_pre.length()==0) {
                                     digit.sprintf("%d",currnote%12+1);
                                 } else {
                                     digit.sprintf("-%d",currnote%12+1);
                                 }
                                 link_pre.append(digit);
+                                */
+                                link_pre.append(layout->getMidi2Text(currnote%12));
                             } else {
+                                /*
                                 digit.sprintf("-%d",currnote+1);
                                 link.append(digit);
+                                */
+                                link.append(layout->getMidi2Text(currnote));
                             }
                         }
                     }
-                    digit=link;
-                    link="http://misuco.org/scales/11-";
-                    link.append(link_pre);
-                    link.append(digit);
-                    QDesktopServices::openUrl(QUrl(link));
+                    link_pre.append(link);
+                    QDesktopServices::openUrl(QUrl(link_pre));
                 }
             } else if(layout->getSegtype(iseg)==11) {
                 if( p->getState() == Qt::TouchPointMoved ) {

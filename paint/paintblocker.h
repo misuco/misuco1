@@ -13,7 +13,9 @@ public:
     virtual float getParamMin(quint16 n)  {return 0;}
     virtual float getParamMax(quint16 n)  {return 0;}
     virtual void setParam(quint16 n, float v) {}
-
+private:
+    int closeXpos;
+    int closeWidth;
 };
 
 #endif // PAINTBLOCKER_H

@@ -93,7 +93,8 @@ RC1::RC1(QWidget *parent) :
 
     storagePath=QStandardPaths::writableLocation(QStandardPaths::DataLocation);
 //  Android: /data/data/org.qtproject.example.rc1/files  => Persistent !!
-    //qDebug() << "storage path: " << storagePath;
+//  W8: C:/Users/c1/AppData/Local/rc1 => Persistent
+//  qDebug() << "storage path: " << storagePath;
 
     storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     layout->calcGeo(width(),height());

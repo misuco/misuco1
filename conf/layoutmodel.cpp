@@ -98,16 +98,16 @@ LayoutModel::LayoutModel()
     
     midi2TextEU = new QString[12];
     midi2TextEU[0]="C";
-    midi2TextEU[1]="c";
+    midi2TextEU[1]="d";
     midi2TextEU[2]="D";
-    midi2TextEU[3]="d";
+    midi2TextEU[3]="e";
     midi2TextEU[4]="E";
     midi2TextEU[5]="F";
-    midi2TextEU[6]="f";
+    midi2TextEU[6]="g";
     midi2TextEU[7]="G";
-    midi2TextEU[8]="g";
+    midi2TextEU[8]="a";
     midi2TextEU[9]="A";
-    midi2TextEU[10]="a";
+    midi2TextEU[10]="b";
     midi2TextEU[11]="B";
     
     midi2TextIN = new QString[12];
@@ -395,13 +395,20 @@ QString LayoutModel::getFont() const
     return font;
 }
 
+QString LayoutModel::getMidi2Text(int midi) const
+{
+    return midi2TextEU[midi];
+}
+
 void LayoutModel::updateLayout()
 {
     int seg;
     int calcnote=basenote+(baseoct+(topoct-baseoct)/2)*12;
     for(seg=bscaleStartSeg;seg<bscaleStartSeg+11;seg++) {
-        value[seg]=midi2f[++calcnote];
+        calcnote=(calcnote+1)%12;
+        value[seg]=midi2f[calcnote];
         segH[seg]=note2hue(calcnote);
+        segText[seg]=midi2TextEU[calcnote];
     }
     valueint[24]=baseoct;
     //value[24]=0.1f*(float)baseoct;

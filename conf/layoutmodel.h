@@ -82,6 +82,7 @@ public:
 
     int getFontsize() const;
     QString getFont() const;
+    QString getMidi2Text(int midi) const;
 
 private:
     int nrows;

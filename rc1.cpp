@@ -54,8 +54,8 @@ RC1::RC1(QWidget *parent) :
     nomouse = false;
     ttl=2000;
 
-    blockerOn=false;
-    blockerTimeout=0;
+    blockerOn=true;
+    blockerTimeout=60;
     blockerTimeLeft=blockerTimeout;
     blockerPainter=new PaintBlocker();
 
@@ -87,9 +87,15 @@ RC1::RC1(QWidget *parent) :
     midimode=false;
     storagePath="./";
 #endif
-    storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
-    qDebug() << "storage path: " << storagePath;
 
+//    storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+//    Android: "/storage/emulated/0/Documents", not persistent
+
+    storagePath=QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+//  Android: /data/data/org.qtproject.example.rc1/files  => Persistent !!
+    //qDebug() << "storage path: " << storagePath;
+
+    storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     layout->calcGeo(width(),height());
 
     nPrePainters=1;
@@ -127,8 +133,14 @@ RC1::RC1(QWidget *parent) :
     tpx=0;
     testMode=false;
 
-    bgImageOri.load(storagePath+"/init.jpg");
-    bgImage=bgImageOri.scaled(width(),height());
+    QFile bgimg(storagePath+"/init.jpg");
+    if(bgimg.exists()) {
+        bgImageOri.load(bgimg.fileName());
+        bgImage=bgImageOri.scaled(width(),height());
+    } else {
+        bgImageOri.load(":/conf/misuco-logo.jpg");
+        bgImage=bgImageOri.scaled(width(),height());
+    }
 
     netxs = new QNetworkAccessManager(this);
     connect(netxs, SIGNAL(finished(QNetworkReply*)),
@@ -136,6 +148,10 @@ RC1::RC1(QWidget *parent) :
 
     //netxs->get(QNetworkRequest(QUrl(RC1_INIT_XML_URL)));
     //netxs->get(QNetworkRequest(QUrl(RC1_SCALES_XML_URL)));
+    QString adurl;
+    adurl.sprintf("http://ads.misuco.org/?w=%d&h=%d",width(),height());
+    adid="";
+    netxs->get(QNetworkRequest(QUrl(adurl)));
 
     layoutxml lxml;
     lxml.setLayoutModel(layout);
@@ -146,15 +162,13 @@ RC1::RC1(QWidget *parent) :
     readProgmemXml(storagePath+"/prog.xml");
     setActProgmem(0);
 
-
-
     //setWindowState(Qt::WindowFullScreen);
 }
 
 RC1::~RC1()
 {
     writeProgmemXml(storagePath+"/prog.xml");
-    qDebug() << "progmem written";
+    //qDebug() << "progmem written";
 }
 
 void RC1::paintEvent(QPaintEvent *event)
@@ -166,7 +180,7 @@ void RC1::paintEvent(QPaintEvent *event)
         fps=fcnt;
         fcnt=0;
         secTimer=true;
-//        qDebug() << "fps: " << fps;
+        //qDebug() << "fps: " << fps;
     }
 
     QPainter painter(this);
@@ -262,7 +276,7 @@ void RC1::timerEvent(QTimerEvent *)
         p->setGid(0);
         ehand->processPoint(p, this);
         
-        qDebug() << "fired test: " << tpx << " " << tpy << " " << tpt;
+        //qDebug() << "fired test: " << tpx << " " << tpy << " " << tpt;
         
         tpx+=tpstep;
         tpn++;
@@ -270,30 +284,33 @@ void RC1::timerEvent(QTimerEvent *)
         if(tpn>=nTests) {
             testMode=false;
         }
-        
     }
-    
-    /*
-     * total chaos
-     *
-    float p=(float)qrand()/(float)RAND_MAX;
-    float q=(float)qrand()/(float)RAND_MAX;
-    float r=(float)qrand()/(float)RAND_MAX;
-    r*=nPointPainters;
-    q*=pointpainters[(int)r]->getParamCount();
-    pointpainters[(int)r]->setParam(q,p);
-     */
 }
 
 bool RC1::event(QEvent *event)
 {
+    QList<QTouchEvent::TouchPoint> touchPoints;
     if(blockerOn) {
-        if( event->type()==QEvent::MouseButtonPress ||
-            event->type()==QEvent::TouchBegin ) {
-            blockerOn=false;
+        if(adid!="") {
+            if(event->type()==QEvent::TouchEnd ) {
+                blockerOn=false;
+                int closeArea=height()/8;
+                touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
+                foreach (const QTouchEvent::TouchPoint &touchPoint, touchPoints) {
+                    if(!(touchPoint.pos().x()>width()-closeArea && touchPoint.pos().y()<closeArea)) {
+                        QDesktopServices::openUrl(QUrl(adid));
+                    }
+                }
+            } else if(event->type()==QEvent::MouseButtonRelease)  {
+                blockerOn=false;
+                int closeArea=height()/8;
+                const QMouseEvent * meve = static_cast<QMouseEvent *>(event);
+                if(!(meve->pos().x()>width()-closeArea && meve->pos().y()<closeArea)) {
+                    QDesktopServices::openUrl(QUrl(adid));
+                }
+            }
         }
     } else {
-        QList<QTouchEvent::TouchPoint> touchPoints;
         if( event->type()==QEvent::TouchEnd ||
             event->type()==QEvent::TouchUpdate ||
             event->type()==QEvent::TouchBegin ) {
@@ -303,7 +320,7 @@ bool RC1::event(QEvent *event)
             // nomouse=true;
             touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
             foreach (const QTouchEvent::TouchPoint &touchPoint, touchPoints) {
-                //            qDebug() << sEvent << ": x:" << touchPoint.pos().x() << " y:" << touchPoint.pos().y() << " t: " << t1.tv_sec << "." << t1.tv_usec;
+                //qDebug() << sEvent << ": x:" << touchPoint.pos().x() << " y:" << touchPoint.pos().y() << " t: " << t1.tv_sec << "." << t1.tv_usec;
                 evstat->incToucheventcount();
                 Point * p = storage->getPoint(0);
                 p->set(touchPoint.pos().x(),touchPoint.pos().y(),this->width(),this->height());
@@ -333,7 +350,7 @@ bool RC1::event(QEvent *event)
             } else if(event->type()==QEvent::MouseButtonRelease) {
                 state=Qt::TouchPointReleased;
             }
-            //        qDebug() << sEvent << ": x:" << meve->pos().x() << " y:" << meve->pos().y() << " t: " << t1.tv_sec << "." << t1.tv_usec;
+            //qDebug() << sEvent << ": x:" << meve->pos().x() << " y:" << meve->pos().y() << " t: " << t1.tv_sec << "." << t1.tv_usec;
             evstat->incToucheventcount();
             Point * p = storage->getPoint(0);
             p->set(meve->pos().x(),meve->pos().y(),this->width(),this->height());
@@ -350,7 +367,7 @@ bool RC1::event(QEvent *event)
 
 void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 port)
 {
-    // qDebug() << "got osc signal " << path << " data " << data << " source " << host->toString();
+    //qDebug() << "got osc signal " << path << " data " << data << " source " << host->toString();
     int ignoreIndex=ignoreAddr.indexOf(*host);
     if(ignoreIndex==-1) {
         QList<QVariant> dl=data.toList();
@@ -513,20 +530,21 @@ void RC1::setMidimode(bool value)
     midimode = value;
 }
 
-
 void RC1::setActProgmem(int n)
 {
-    // store current setup
-    progmem[actProgmen].basenote=layout->getBasenote();
-    progmem[actProgmen].baseoct=layout->getBaseoct();
-    progmem[actProgmen].topoct=layout->getTopoct();
-    progmem[actProgmen].sound=layout->getValueInt(26); // the sound segment
-    progmem[actProgmen].waveform=layout->getValueInt(26); // the wave segment
-    progmem[actProgmen].envelope=layout->getValueInt(27); // the envelope segment
-    progmem[actProgmen].mod=layout->getValueInt(28); // the mod segment
-
-    for(int i=0;i<11;i++) {
-        progmem[actProgmen].bscale[i]=layout->getBscale(i);
+    if(n!=actProgmen) {
+        // store current setup
+        progmem[actProgmen].basenote=layout->getBasenote();
+        progmem[actProgmen].baseoct=layout->getBaseoct();
+        progmem[actProgmen].topoct=layout->getTopoct();
+        progmem[actProgmen].sound=layout->getValueInt(26); // the sound segment
+        progmem[actProgmen].waveform=layout->getValueInt(26); // the wave segment
+        progmem[actProgmen].envelope=layout->getValueInt(27); // the envelope segment
+        progmem[actProgmen].mod=layout->getValueInt(28); // the mod segment
+        for(int i=0;i<11;i++) {
+            progmem[actProgmen].bscale[i]=layout->getBscale(i);
+        }
+        writeProgmemXml(storagePath+"/prog.xml");
     }
     // restore new setup
     actProgmen=n;
@@ -541,44 +559,31 @@ void RC1::setActProgmem(int n)
         layout->setBscale(i,progmem[n].bscale[i]);
     }
     layout->updateLayout();
-    writeProgmemXml(storagePath+"/prog.xml");
 }
 
 void RC1::resetStat()
 {
-
     fps=0;
 }
-/*
-void RC1::setConfigTransistions() {
-    layout->setXY(15,1);
-    layout->setScale(62,8,3,true);
-}
-*/
 
 void RC1::setPPSmin(int p) {
     ttl=500;
     int cornerrad=10;
-    
     painterOn[0]=true;
-//    painterOn[1]=true;
-//    painterOn[2]=true;
-
-    
-    prepainters[0]->setParam(0, 120);       // sPenAct
-    prepainters[0]->setParam(1, 120);       // lPenAct
-    prepainters[0]->setParam(2, 120);         // sPenPsv
-    prepainters[0]->setParam(3, 120);         // lPenPsv
-    prepainters[0]->setParam(4, 120);       // sBrushAct
-    prepainters[0]->setParam(5, 120);       // lBrushAct
-    prepainters[0]->setParam(6, 0);       // sBrushPsv
-    prepainters[0]->setParam(7, 0);        // lBrushPsv
-    prepainters[0]->setParam(8, 2);         // colorMode
-    prepainters[0]->setParam(9, 0);         // chue
-    prepainters[0]->setParam(10, cornerrad);// cradx
-    prepainters[0]->setParam(11, cornerrad);// crady
-    prepainters[0]->setParam(12, 1);        // gradients
-    prepainters[0]->setParam(13, 0);        // painttext
+    prepainters[0]->setParam(0, 120);        // sPenAct
+    prepainters[0]->setParam(1, 120);        // lPenAct
+    prepainters[0]->setParam(2, 120);        // sPenPsv
+    prepainters[0]->setParam(3, 120);        // lPenPsv
+    prepainters[0]->setParam(4, 120);        // sBrushAct
+    prepainters[0]->setParam(5, 120);        // lBrushAct
+    prepainters[0]->setParam(6, 0);          // sBrushPsv
+    prepainters[0]->setParam(7, 0);          // lBrushPsv
+    prepainters[0]->setParam(8, 2);          // colorMode
+    prepainters[0]->setParam(9, 0);          // chue
+    prepainters[0]->setParam(10, cornerrad); // cradx
+    prepainters[0]->setParam(11, cornerrad); // crady
+    prepainters[0]->setParam(12, 1);         // gradients
+    prepainters[0]->setParam(13, 0);         // painttext
 }
 
 Storage *RC1::getStorage() const
@@ -623,38 +628,62 @@ void RC1::setTtl(long value)
 
 void RC1::replyFinished(QNetworkReply * r)
 {
-//    qDebug() << "received " << r->url();
+    qDebug() << "received " << r->url();
+    adid=RC1_ADS_URL;
     if(r->error()==QNetworkReply::NoError) {
-        r->url();
+        //r->url();
+        if(r->hasRawHeader("Adid")) {
+            adid.append(r->rawHeader("Adid"));
+        } else {
+            adid.append("1");
+        }
+
         QByteArray data=r->readAll();
         if(r->url().toString()==RC1_INIT_XML_URL) {
             pendingConfigFile="init.xml";
-        }
-        if(r->url().toString()==RC1_SCALES_XML_URL) {
+        } else if(r->url().toString()==RC1_SCALES_XML_URL) {
             pendingConfigFile="scales.xml";
+        } else {
+            pendingConfigFile="init.jpg";
         }
-        QFile out(storagePath+pendingConfigFile);
+        QFile out(storagePath+"/"+pendingConfigFile);
         if(out.open(QIODevice::WriteOnly)) {
             out.write(data);
             out.close();
+        } else {
+            qDebug() << "cannot write " << storagePath << "/" << pendingConfigFile;
         }
         if(pendingConfigFile=="init.jpg") {
-            bgImageOri.load(storagePath+"init.jpg");
+            bgImageOri.load(storagePath+"/init.jpg");
             bgImage=bgImageOri.scaled(width(),height());
-        }
-        if(r->url().toString()==RC1_INIT_XML_URL) {
-            qDebug() << "setup init.xml";
+            QFile out(storagePath+"/adid.dat");
+            if(out.open(QIODevice::WriteOnly)) {
+                out.write(r->rawHeader("Adid"));
+                out.close();
+            }
+        } else if(r->url().toString()==RC1_INIT_XML_URL) {
+            //qDebug() << "setup init.xml";
             layoutxml lxml;
             lxml.setLayoutModel(layout);
-            lxml.readXml(storagePath+"init.xml");
+            lxml.readXml(storagePath+"/init.xml");
             layout->updateLayout();
-        }
-        if(r->url().toString()==RC1_SCALES_XML_URL) {
-            scaletab.readXml(storagePath+"scales.xml");
+        } else if(r->url().toString()==RC1_SCALES_XML_URL) {
+            scaletab.readXml(storagePath+"/scales.xml");
         }
         r->deleteLater();
     } else {
-        qDebug() << "error reading background from www";
+        QFile adidf(storagePath+"/adid.dat");
+        if(adidf.exists()) {
+            if(adidf.open(QIODevice::ReadOnly)) {
+                QString adidfc=adidf.readAll();
+                adid.append(adidfc);
+            } else {
+                adid.append("1");
+            }
+        } else {
+            adid.append("1");
+        }
+        //qDebug() << "error reading background from www";
     }
 }
 
@@ -667,29 +696,21 @@ EventStat *RC1::getEvstat() const
 {
 return evstat;
 }
-/*
-void RC1::setProg(int p)
-{
-    setPPSmin(p);
-    layout->setFactoryProg(p);
-    sender->pc(0, p);
-}
-
-*/
 
 void RC1::readProgmemXml(QString filename)
 {
     QXmlStreamReader xmlr;
     QFile file(filename);
+    // default initial prog memory
     if(!file.exists()) {
         for(int i=0;i<NPROGMEM;i++) {
             progmem[i].basenote=i%5;
             progmem[i].baseoct=3;
             progmem[i].topoct=5;
             progmem[i].sound=i;
-            progmem[i].waveform=i%4+1;
-            progmem[i].envelope=i/3+1;
-            progmem[i].mod=i%3+1;
+            progmem[i].waveform=i%5;
+            progmem[i].envelope=i%4;
+            progmem[i].mod=i%3;
             for(int j=0;j<11;j++) {
                 progmem[i].bscale[j]=false;
             }

@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/conf">
         <file>misuco.xml</file>
+        <file>misuco-logo.jpg</file>
     </qresource>
     <qresource prefix="/wav">
         <file>waves/guitar1m.wav</file>

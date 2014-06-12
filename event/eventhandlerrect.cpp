@@ -505,7 +505,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                         }
                     }
                     digit=link;
-                    link="http://misuco.org/scales/";
+                    link="http://misuco.org/scales/11-";
                     link.append(link_pre);
                     link.append(digit);
                     QDesktopServices::openUrl(QUrl(link));

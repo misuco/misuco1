@@ -8,7 +8,8 @@
 #include "mobilesynthqt52.h"
 
 const int DataSampleRateHz  = 44100;
-const int BufferSize        = 32768;
+//const int BufferSize        = 32768;
+const int BufferSize        = 4096;
 
 mobileSynthQT52::mobileSynthQT52()
     :   QIODevice()
@@ -57,7 +58,7 @@ mobileSynthQT52::mobileSynthQT52()
     // way 2: pull mode
     connect(m_pullTimer, SIGNAL(timeout()), SLOT(pullTimerExpired()));
     m_output=m_audioOutput->start();
-    m_pullTimer->start(5);
+    m_pullTimer->start(20);
 }
 
 mobileSynthQT52::~mobileSynthQT52()

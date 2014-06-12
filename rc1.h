@@ -46,6 +46,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define RC1_INIT_XML_URL "http://x21.ch/rc1/init.xml"
 #define RC1_SCALES_XML_URL "http://x21.ch/rc1/scales.xml"
+#define RC1_ADS_URL "http://ads.misuco.org/go/?id="
 #define NPROGMEM 11
 
 class IPaint;
@@ -140,6 +141,7 @@ private:
     int blockerTimeout;
     int blockerTimeLeft;
     IPaint * blockerPainter;
+    QString adid;
 
     // frame statistic
     int fps;

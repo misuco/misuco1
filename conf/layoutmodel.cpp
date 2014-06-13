@@ -98,18 +98,32 @@ LayoutModel::LayoutModel()
     
     midi2TextEU = new QString[12];
     midi2TextEU[0]="C";
-    midi2TextEU[1]="d";
+    midi2TextEU[1]="C#";
     midi2TextEU[2]="D";
-    midi2TextEU[3]="e";
+    midi2TextEU[3]="D#";
     midi2TextEU[4]="E";
     midi2TextEU[5]="F";
-    midi2TextEU[6]="g";
+    midi2TextEU[6]="F#";
     midi2TextEU[7]="G";
-    midi2TextEU[8]="a";
+    midi2TextEU[8]="G#";
     midi2TextEU[9]="A";
-    midi2TextEU[10]="b";
+    midi2TextEU[10]="A#";
     midi2TextEU[11]="B";
-    
+
+    midi2TextUrl = new QString[12];
+    midi2TextUrl[0]="c";
+    midi2TextUrl[1]="cis";
+    midi2TextUrl[2]="d";
+    midi2TextUrl[3]="dis";
+    midi2TextUrl[4]="e";
+    midi2TextUrl[5]="f";
+    midi2TextUrl[6]="fis";
+    midi2TextUrl[7]="g";
+    midi2TextUrl[8]="gis";
+    midi2TextUrl[9]="a";
+    midi2TextUrl[10]="ais";
+    midi2TextUrl[11]="b";
+
     midi2TextIN = new QString[12];
     midi2TextIN[0]="SA";
     midi2TextIN[1]="SA'";
@@ -398,6 +412,11 @@ QString LayoutModel::getFont() const
 QString LayoutModel::getMidi2Text(int midi) const
 {
     return midi2TextEU[midi];
+}
+
+QString LayoutModel::getMidi2TextUrl(int midi) const
+{
+    return midi2TextUrl[midi];
 }
 
 void LayoutModel::updateLayout()

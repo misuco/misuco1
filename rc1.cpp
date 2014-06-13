@@ -69,16 +69,6 @@ RC1::RC1(QWidget *parent) :
 
 #ifdef RC1_IOS
     sender=new SenderMobileSynth(this);
-
-    QString curDir=QDir::currentPath();
-    int found=curDir.lastIndexOf("/");
-    storagePath=curDir.left(found+1);
-    storagePath+="Documents";
-    QDir dir;
-    dir.mkdir(storagePath);
-    qDebug() << "new path " << storagePath;
-    storagePath+="/";
-
     midimode=false;
 #else
 //    sender=new SenderOscPuredata(this);
@@ -143,6 +133,19 @@ RC1::RC1(QWidget *parent) :
         bgImage=bgImageOri.scaled(width(),height());
     }
 
+    adid=RC1_ADS_URL;
+    QFile adidf(storagePath+"/adid.dat");
+    if(adidf.exists()) {
+        if(adidf.open(QIODevice::ReadOnly)) {
+            QString adidfc=adidf.readAll();
+            adid.append(adidfc);
+        } else {
+            adid.append("1");
+        }
+    } else {
+        adid.append("1");
+    }
+
     netxs = new QNetworkAccessManager(this);
     connect(netxs, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(replyFinished(QNetworkReply*)));
@@ -150,8 +153,7 @@ RC1::RC1(QWidget *parent) :
     //netxs->get(QNetworkRequest(QUrl(RC1_INIT_XML_URL)));
     //netxs->get(QNetworkRequest(QUrl(RC1_SCALES_XML_URL)));
     QString adurl;
-    adurl.sprintf("http://ads.misuco.org/?w=%d&h=%d",width(),height());
-    adid="";
+    adurl.sprintf("http://ads.misuco.org/get/?w=%d&h=%d",width(),height());
     netxs->get(QNetworkRequest(QUrl(adurl)));
 
     layoutxml lxml;
@@ -630,14 +632,13 @@ void RC1::setTtl(long value)
 void RC1::replyFinished(QNetworkReply * r)
 {
     qDebug() << "received " << r->url();
-    adid=RC1_ADS_URL;
     if(r->error()==QNetworkReply::NoError) {
-        //r->url();
+/*        adid=RC1_ADS_URL;
         if(r->hasRawHeader("Adid")) {
             adid.append(r->rawHeader("Adid"));
         } else {
             adid.append("1");
-        }
+        }*/
 
         QByteArray data=r->readAll();
         if(r->url().toString()==RC1_INIT_XML_URL) {
@@ -655,8 +656,8 @@ void RC1::replyFinished(QNetworkReply * r)
             qDebug() << "cannot write " << storagePath << "/" << pendingConfigFile;
         }
         if(pendingConfigFile=="init.jpg") {
-            bgImageOri.load(storagePath+"/init.jpg");
-            bgImage=bgImageOri.scaled(width(),height());
+//            bgImageOri.load(storagePath+"/init.jpg");
+//            bgImage=bgImageOri.scaled(width(),height());
             QFile out(storagePath+"/adid.dat");
             if(out.open(QIODevice::WriteOnly)) {
                 out.write(r->rawHeader("Adid"));
@@ -673,17 +674,6 @@ void RC1::replyFinished(QNetworkReply * r)
         }
         r->deleteLater();
     } else {
-        QFile adidf(storagePath+"/adid.dat");
-        if(adidf.exists()) {
-            if(adidf.open(QIODevice::ReadOnly)) {
-                QString adidfc=adidf.readAll();
-                adid.append(adidfc);
-            } else {
-                adid.append("1");
-            }
-        } else {
-            adid.append("1");
-        }
         //qDebug() << "error reading background from www";
     }
 }

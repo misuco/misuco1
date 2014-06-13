@@ -83,6 +83,7 @@ public:
     int getFontsize() const;
     QString getFont() const;
     QString getMidi2Text(int midi) const;
+    QString getMidi2TextUrl(int midi) const;
 
 private:
     int nrows;
@@ -107,6 +108,7 @@ private:
     int *pressed;
     QString * segText;
     QString * midi2TextEU;
+    QString * midi2TextUrl;
     QString * midi2TextIN;
     QString * midi2TextDO;
     int * segH;         // segment color hue

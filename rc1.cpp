@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "comm/sendersupercollider.h"
 #include "comm/sendermobilesynth.h"
 #include "comm/senderoscxy.h"
+#include "comm/sendermulti.h"
 #include "paint/paintbgshapes.h"
 #include "paint/paintbgbitmap.h"
 #include "paint/pointpaintshape.h"
@@ -49,7 +50,8 @@ RC1::RC1(QWidget *parent) :
     #endif
 {
     setAttribute(Qt::WA_AcceptTouchEvents,true);
-    //qDebug() << "View() size:" << width() << " " << height();
+    qDebug() << "View() size:" << width() << " " << height();
+
     eventId = 1;
     nomouse = false;
     ttl=2000;
@@ -66,7 +68,7 @@ RC1::RC1(QWidget *parent) :
 //    sender=new SenderDebug();
     ehand=new EventHandlerRect();
     evstat=new EventStat();
-
+/*
 #ifdef RC1_IOS
     sender=new SenderMobileSynth(this);
     midimode=false;
@@ -77,6 +79,8 @@ RC1::RC1(QWidget *parent) :
     midimode=false;
     storagePath="./";
 #endif
+*/
+    sender=new SenderMulti(this);
 
 //    storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
 //    Android: "/storage/emulated/0/Documents", not persistent
@@ -84,9 +88,13 @@ RC1::RC1(QWidget *parent) :
     storagePath=QStandardPaths::writableLocation(QStandardPaths::DataLocation);
 //  Android: /data/data/org.qtproject.example.rc1/files  => Persistent !!
 //  W8: C:/Users/c1/AppData/Local/rc1 => Persistent
-//  qDebug() << "storage path: " << storagePath;
+//  Linux: /home/c1/.local/share/rc1 => not Writable
 
-    storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+//  storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+//  Android: /storage/emulated/0/Documents => not Persistent
+//  Linux: /home/c1/Documents => Persistent
+
+    qDebug() << "storage path: " << storagePath;
     layout->calcGeo(width(),height());
 
     nPrePainters=1;
@@ -557,7 +565,7 @@ void RC1::setActProgmem(int n)
     layout->setValueInt(26,progmem[n].waveform);
     layout->setValueInt(27,progmem[n].envelope);
     layout->setValueInt(28,progmem[n].mod);
-    sender->pc(0,progmem[n].sound);
+    sender->pc(progmem[n].sound);
     for(int i=0;i<11;i++) {
         layout->setBscale(i,progmem[n].bscale[i]);
     }

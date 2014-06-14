@@ -24,22 +24,27 @@ SenderDebug::SenderDebug()
 {
 }
 
-void SenderDebug::cc(int c, int voiceId, int cc, double v1)
+void SenderDebug::cc(int voiceId, int cc, double v1)
 {
 //    qDebug() << "SenderDebug::cc(" << c << "," << voiceId << "," << cc << "," << v1 << ")";
 }
 
-void SenderDebug::pc(int c, int v1)
+void SenderDebug::pc(int v1)
 {
-    qDebug() << "SenderDebug::pc(" << c << "," << v1 << ")";
+    qDebug() << "SenderDebug::pc(" <<  v1 << ")";
 }
 
-void SenderDebug::note(int c, int voiceId, double v1, int v2)
+void SenderDebug::noteOn(int voiceId, double v1, int midinote, int pitch, int v2)
 {
-    qDebug() << "SenderDebug::note(" << c << "," << voiceId << "," << v1 << "," << v2 << ")";
+    qDebug() << "SenderDebug::noteOn(" << voiceId << "," << v1 << "," << v2 << ")";
 }
 
-void SenderDebug::pitch(int c, int voiceId, double v1)
+void SenderDebug::noteOff(int voiceId)
 {
-    qDebug() << "SenderDebug::note(" << c << "," << voiceId << "," << v1  << ")";
+    qDebug() << "SenderDebug::noteOff("  << voiceId << ")";
+}
+
+void SenderDebug::pitch(int voiceId, double v1, int midinote, int pitch)
+{
+    qDebug() << "SenderDebug::pitch(" << voiceId << "," << v1  << ")";
 }

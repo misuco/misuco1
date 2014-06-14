@@ -88,17 +88,19 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
     if( p->getState() == Qt::TouchPointPressed ||
        p->getState() == Qt::TouchPointMoved ) {
         
-
-        if(isegb[evptr]!=iseg) {
-            if(layout->getSegtype(iseg)<2) {
-                if(isegb[evptr]!=-1) {
-                    layout->decPressed(isegb[evptr]);
-                    //qDebug() << "event " << evptr << "decPressed " << isegb[evptr];
-                }
-                layout->incPressed(iseg);
-                //qDebug() << "event " << evptr << "incPressed " << iseg;
-                isegb[evptr]=iseg;
+        // have moved to another segment?
+        // and are we in a note key segment?
+        // isegb: id of previos selected segment; -1 means no previos
+        if(isegb[evptr]!=iseg && layout->getSegtype(iseg)<2) {
+            // turn off pressed if necessary (pressed >0 highlights segment)
+            if(isegb[evptr]!=-1) {
+                layout->decPressed(isegb[evptr]);
+                //qDebug() << "event " << evptr << "decPressed " << isegb[evptr];
             }
+            // turn on pressed for new segment
+            layout->incPressed(iseg);
+            //qDebug() << "event " << evptr << "incPressed " << iseg;
+            isegb[evptr]=iseg;
         }
 
         if(layout->getSegtype(iseg)!=11) {
@@ -117,9 +119,9 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     xrel=xrel/(double)layout->getSegwidthpx(iseg);
                     if(useCCCVal==true) {
                         cccval1=xrel/cccvalAvg+(cccvalAvg-1)*cccval1/cccvalAvg;
-                        snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtlx(iseg), cccval1);
+                        snd->cc(ieventout[evptr], layout->getCtlx(iseg), cccval1);
                     } else {
-                        snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtlx(iseg), xrel);
+                        snd->cc(ieventout[evptr], layout->getCtlx(iseg), xrel);
                     }
                 }
             }
@@ -132,40 +134,37 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     //                ysum+=layout->getRowheightpx(iy);
                     if(useCCCVal==true) {
                         cccval2=yrel/cccvalAvg+(cccvalAvg-1)*cccval2/cccvalAvg;
-                        snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtly(iseg), cccval2);
+                        snd->cc(ieventout[evptr], layout->getCtly(iseg), cccval2);
                     } else {
-                        snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtly(iseg), yrel);
+                        snd->cc(ieventout[evptr], layout->getCtly(iseg), yrel);
                     }
                 }
             }
         }
         
         if(layout->getSegtype(iseg)==0) {
-            double v1;
-            if(rc1->getMidimode()) {
-                v1=layout->getValueInt(iseg);
-            } else {
-                v1=layout->getValue(iseg);
-            }
+            int v1=layout->getValueInt(iseg);
+            double v2=layout->getValue(iseg);
+            int pitch=0;
             p->setHue(30*(layout->getValueInt(iseg)%12));
-            if(note[evptr]!=v1) {
+            if(note[evptr]!=v2) {
                 if(transitionMode) {
                     if(note[evptr]>0) {
-                        snd->pitch(layout->getChan(iseg),ieventout[evptr],v1);
+                        snd->pitch(ieventout[evptr],v2,v1, pitch);
                     } else {
                         ieventout[evptr]=ieventoutnext;
                         ieventoutnext++;
-                        snd->note(layout->getChan(iseg),ieventout[evptr], v1, veldef);
+                        snd->noteOn(ieventout[evptr], v2, v1, pitch, veldef);
                     }
                 } else {
                     if(note[evptr]>0) {
-                        snd->note(chan[evptr],ieventout[evptr],note[evptr],0);
+                        snd->noteOff(ieventout[evptr]);
                     }
                     ieventout[evptr]=ieventoutnext;
                     ieventoutnext++;
-                    snd->note(layout->getChan(iseg),ieventout[evptr], v1, veldef);
+                    snd->noteOn(ieventout[evptr], v2, v1, pitch, veldef);
                 }
-                note[evptr]=v1;
+                note[evptr]=v2;
                 chan[evptr]=layout->getChan(iseg);
             }
         } else if(layout->getSegtype(iseg)==1) {
@@ -190,12 +189,13 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     layout->setSegH(iseg, hue);    // store value for painter
                     p->setHue(hue);
                     
+                    int pitch=0; // TODO: calculate properly
                     if(note[evptr]>0) {
-                        snd->pitch(layout->getChan(iseg),ieventout[evptr],frel);
+                        snd->pitch(ieventout[evptr],frel,frel,pitch);
                     } else {
                         ieventout[evptr]=ieventoutnext;
                         ieventoutnext++;
-                        snd->note(layout->getChan(iseg),ieventout[evptr], frel, veldef);
+                        snd->noteOn(ieventout[evptr],frel,frel,pitch,veldef);
                     }
                     note[evptr]=frel;
                 }
@@ -204,7 +204,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             // turn off note if moved out of note into functional field
             bool movedin=false;
             if(note[evptr]>0) {
-                snd->note(chan[evptr],ieventout[evptr],note[evptr],0);
+                snd->noteOff(ieventout[evptr]);
                 note[evptr]=-1;
                 layout->decPressed(isegb[evptr]);
                 //qDebug() << "event " << evptr << " decpressed " << isegb[evptr] << " if moved from note- into control-field " << iseg;
@@ -264,8 +264,10 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                              //qDebug() << " bscale on " << iseg;
 
                              // play note if not yet selected
+                             /*
                              note[evptr]=layout->getValue(iseg);
-                             snd->note(chan[evptr],ieventout[evptr],note[evptr],veldef);
+                             snd->noteOn(ieventout[evptr],note[evptr],veldef);
+                             */
                              //qDebug() << "snd->note(" << chan[evptr] << " " << ieventout[evptr] << " " << note[evptr];
                          } else if(layout->getChan(iseg)==1) {
                              layout->setTransMode(true);
@@ -289,16 +291,16 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 } else if(layout->getChan(iseg)==1) {
                     rc1->setActProgmem(layout->getValueInt(iseg));
                 } else if(layout->getChan(iseg)==2) {
-                    snd->pc(0,layout->getValueInt(iseg));
+                    snd->pc(layout->getValueInt(iseg));
                 } else if(layout->getChan(iseg)==3) {
                     // waveform
-                    snd->cc(0, 0, 200, layout->getValueInt(iseg));
+                    snd->cc(0, 200, layout->getValueInt(iseg));
                 } else if(layout->getChan(iseg)==4) {
                     // envelope
-                    snd->cc(0,0,203,layout->getValueInt(iseg));
+                    snd->cc(0,203,layout->getValueInt(iseg));
                 } else if(layout->getChan(iseg)==5) {
                     // resonance
-                    snd->cc(0,0,204,layout->getValueInt(iseg));
+                    snd->cc(0,204,layout->getValueInt(iseg));
                 }
             } else if(layout->getSegtype(iseg)==6) {
                 // x-double-slider
@@ -369,7 +371,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                                 layout->getSegText(iseg)->sprintf("WTAB");
                                 break;
                         }
-                        snd->cc(0,0,200,newwaveform);
+                        snd->cc(0,200,newwaveform);
                     } else if(layout->getChan(iseg)==1) {
                         int newwaveform=layout->getValueInt(iseg)+1;
                         if(newwaveform>4) {
@@ -393,7 +395,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                                 layout->getSegText(iseg)->sprintf("LFONOI");
                                 break;
                         }
-                        snd->cc(0,0,201,newwaveform);
+                        snd->cc(0,201,newwaveform);
                     } else if(layout->getChan(iseg)==2) {
                         int newwaveform=layout->getValueInt(iseg)+1;
                         if(newwaveform>3) {
@@ -414,7 +416,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                                 layout->getSegText(iseg)->sprintf("FILT");
                                 break;
                         }
-                        snd->cc(0,0,202,newwaveform);
+                        snd->cc(0,202,newwaveform);
 
                     } else if(layout->getChan(iseg)==3) {
                         int newenv=layout->getValueInt(iseg)+1;
@@ -436,7 +438,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                             layout->getSegText(iseg)->sprintf("_-_");
                                 break;
                         }
-                        snd->cc(0,0,203,newenv);
+                        snd->cc(0,203,newenv);
                     } else if(layout->getChan(iseg)==4) {
                         int newenv=layout->getValueInt(iseg)+1;
                         if(newenv>3) {
@@ -487,6 +489,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     QString link_pre="http://scales.misuco.org/";
                     //digit.sprintf("%d",layout->getBasenote()+1);
                     link.append(layout->getMidi2TextUrl(layout->getBasenote()));
+                    link.append("-");
                     for(int i=0;i<11;i++) {
                         if(layout->getBscale(i)) {
                             int currnote=layout->getBasenote()+i+1;
@@ -500,15 +503,18 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                                 link_pre.append(digit);
                                 */
                                 link_pre.append(layout->getMidi2TextUrl(currnote%12));
+                                link_pre.append("-");
                             } else {
                                 /*
                                 digit.sprintf("-%d",currnote+1);
                                 link.append(digit);
                                 */
                                 link.append(layout->getMidi2TextUrl(currnote));
+                                link.append("-");
                             }
                         }
                     }
+                    link.chop(1);
                     link_pre.append(link);
                     link_pre.append("/#");
                     link_pre.append(layout->getMidi2TextUrl(layout->getBasenote()));
@@ -579,7 +585,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             layout->decPressed(isegb[evptr]);
         }
         if(layout->getSegtype(iseg)==0 || layout->getSegtype(iseg)==1 || layout->getSegtype(iseg)==3) {
-            snd->note(chan[evptr],ieventout[evptr],note[evptr],0);
+            snd->noteOff(ieventout[evptr]);
             note[evptr]=-1;
             isegb[evptr]=-1;
         }

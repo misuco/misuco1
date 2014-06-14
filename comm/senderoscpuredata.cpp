@@ -35,34 +35,26 @@ SenderOscPuredata::SenderOscPuredata(RC1 *rc1)
     x=0;y=0;
 }
 
-void SenderOscPuredata::note(int c, int voiceId, double fr, int vel)
+void SenderOscPuredata::noteOn(int voiceId, double fr, int midinote, int pitch, int vel)
 {
-    int f = (int)fr;
-    if(vel>0) {
-        if(notestate[f]==0) {
-            notestate[f]=vel;
-            QVariantList v;
-            v.append(f);
-            v.append(vel);
-            v.append(c);
-            sendOsc("/note",v);
-            onNoteCnt++;
-            rc1->getEvstat()->incOscnoteoncount();
-        } else {
-            rc1->getEvstat()->incAlreadyoncount();
-        }
-    } else {
-        notestate[f]=0;
-        QVariantList v;
-        v.append(f);
-        v.append(0);
-        v.append(c);
-        sendOsc("/note",v);
-        onNoteCnt--;
-        rc1->getEvstat()->incOscnoteoffcount();
-//  paranoia option, make sure it is really all off
-//        if(onNoteCnt==0) sendOsc("/alloff",1);
-    }
+    int f = midinote;
+    int vid=voiceId%127;
+
+    notestate[vid]=f;
+    QVariantList v;
+    v.append(f);
+    v.append(vel);
+    sendOsc("/note",v);
+    onNoteCnt++;
+}
+
+void SenderOscPuredata::noteOff(int voiceId)
+{
+    QVariantList v;
+    v.append(notestate[voiceId%127]);
+    v.append(0);
+    sendOsc("/note",v);
+    onNoteCnt--;
 }
 
 void SenderOscPuredata::setDestination(QHostAddress a, int p)
@@ -70,18 +62,17 @@ void SenderOscPuredata::setDestination(QHostAddress a, int p)
     oscout->setAddress(a,p);
 }
 
-void SenderOscPuredata::pc(int c, int v1)
+void SenderOscPuredata::pc(int v1)
 {
     QVariantList v;
-    v.append(c);
     v.append(v1);
     sendOsc("/pc",v);
 }
 
-void SenderOscPuredata::cc(int c, int voiceId, int cc, double v1)
+void SenderOscPuredata::cc(int voiceId, int cc, double v1)
 {
-    qDebug() <<  "SenderOscPuredata::cc c "  << c << " cc " << cc << " v1 " << v1;
-    /*
+    //qDebug() <<  "SenderOscPuredata::cc " << cc << " v1 " << v1;
+
     // translate value to midi
     int v1mid=(double)127*v1;
 
@@ -89,13 +80,13 @@ void SenderOscPuredata::cc(int c, int voiceId, int cc, double v1)
     if(v1mid!=ccstate[cc]) {
         ccstate[cc]=v1mid;
         QVariantList v;
+        v.append(voiceId);
         v.append(cc);
         v.append(v1mid);
-        v.append(c);
         sendOsc("/cc",v);
     }
-    */
 
+    /*
     if(cc==1) x=v1*127.0f;
     if(cc==2) y=v1*127.0f;
 
@@ -103,6 +94,7 @@ void SenderOscPuredata::cc(int c, int voiceId, int cc, double v1)
     v.append(x);
     v.append(y);
     sendOsc("/xy",v);
+    */
 }
 
 void SenderOscPuredata::sendOsc(QString path, QVariant list)

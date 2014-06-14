@@ -7,28 +7,34 @@ SenderMulti::SenderMulti(RC1 * rc1)
 
 }
 
-void SenderMulti::cc(int c, int voiceId, int cc, double v1)
+void SenderMulti::cc(int voiceId, int cc, double v1)
 {
-    s1->cc(c,voiceId,cc,v1);
-    s2->cc(c,voiceId,cc,v1);
+    s1->cc(voiceId,cc,v1);
+    s2->cc(voiceId,cc,v1);
 }
 
-void SenderMulti::pc(int c, int v1)
+void SenderMulti::pc(int v1)
 {
-    s1->pc(c,v1);
-    s2->pc(c,v1);
+    s1->pc(v1);
+    s2->pc(v1);
 }
 
-void SenderMulti::note(int c, int voiceId, double f, int v)
+void SenderMulti::noteOn(int voiceId, double f, int midinote, int pitch, int v)
 {
-    s1->note(c,voiceId,f,v);
-    s2->note(c,voiceId,f,v);
+    s1->noteOn(voiceId,f,midinote,pitch,v);
+    s2->noteOn(voiceId,f,midinote,pitch,v);
 }
 
-void SenderMulti::pitch(int c, int voiceId, double f)
+void SenderMulti::noteOff(int voiceId)
 {
-    s1->pitch(c,voiceId,f);
-    s2->pitch(c,voiceId,f);
+    s1->noteOff(voiceId);
+    s2->noteOff(voiceId);
+}
+
+void SenderMulti::pitch(int voiceId, double f, int midinote, int pitch)
+{
+    s1->pitch(voiceId,f,midinote,pitch);
+    s2->pitch(voiceId,f,midinote,pitch);
 }
 
 void SenderMulti::setDestination(QHostAddress a, int p)

@@ -98,30 +98,30 @@ LayoutModel::LayoutModel()
     
     midi2TextEU = new QString[12];
     midi2TextEU[0]="C";
-    midi2TextEU[1]="C#";
+    midi2TextEU[1]="Db";
     midi2TextEU[2]="D";
-    midi2TextEU[3]="D#";
+    midi2TextEU[3]="Eb";
     midi2TextEU[4]="E";
     midi2TextEU[5]="F";
-    midi2TextEU[6]="F#";
+    midi2TextEU[6]="Gb";
     midi2TextEU[7]="G";
-    midi2TextEU[8]="G#";
+    midi2TextEU[8]="Ab";
     midi2TextEU[9]="A";
-    midi2TextEU[10]="A#";
+    midi2TextEU[10]="Bb";
     midi2TextEU[11]="B";
 
     midi2TextUrl = new QString[12];
     midi2TextUrl[0]="c";
-    midi2TextUrl[1]="cis";
+    midi2TextUrl[1]="db";
     midi2TextUrl[2]="d";
-    midi2TextUrl[3]="dis";
+    midi2TextUrl[3]="eb";
     midi2TextUrl[4]="e";
     midi2TextUrl[5]="f";
-    midi2TextUrl[6]="fis";
+    midi2TextUrl[6]="gb";
     midi2TextUrl[7]="g";
-    midi2TextUrl[8]="gis";
+    midi2TextUrl[8]="ab";
     midi2TextUrl[9]="a";
-    midi2TextUrl[10]="ais";
+    midi2TextUrl[10]="bb";
     midi2TextUrl[11]="b";
 
     midi2TextIN = new QString[12];

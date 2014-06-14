@@ -9,10 +9,11 @@ class SenderMulti : public ISender
 {
 public:
     SenderMulti(RC1 * rc1);
-    virtual void cc(int c, int voiceId, int cc, double v1);
-    virtual void pc(int c, int v1);
-    virtual void note(int c, int voiceId, double f, int v);
-    virtual void pitch(int c, int voiceId, double f);
+    virtual void cc(int voiceId, int cc, double v1);
+    virtual void pc(int v1);
+    virtual void noteOn(int voiceId, double f, int midinote, int pitch, int v);
+    virtual void noteOff(int voiceId);
+    virtual void pitch(int voiceId, double f, int midinote, int pitch);
     virtual void setDestination(QHostAddress a,int p);
 
 private:

@@ -11,7 +11,7 @@ SenderMobileSynth::SenderMobileSynth(RC1 * rc1)
     syco->setController(sy);
 }
 
-void SenderMobileSynth::cc(int c, int voiceId, int cc, double v1)
+void SenderMobileSynth::cc(int voiceId, int cc, double v1)
 {
 //    qDebug() << "SenderMobileSynth::cc " << voiceId << " cc " << cc << " v1 " << v1;
 
@@ -73,7 +73,7 @@ void SenderMobileSynth::cc(int c, int voiceId, int cc, double v1)
      */
 }
 
-void SenderMobileSynth::pc(int c, int v1)
+void SenderMobileSynth::pc(int v1)
 {
 //    sy->pc(v1);
     sy->set_osc1_wave_type_int(v1%5);
@@ -113,16 +113,17 @@ void SenderMobileSynth::pc(int c, int v1)
     } */
 }
 
-void SenderMobileSynth::note(int c, int voiceId, double f, int vel)
+void SenderMobileSynth::noteOn(int voiceId, double f, int vel)
 {
-    if(vel>0) {
-        sy->NoteOn(voiceId, (float)f);
-    } else {
-        sy->NoteOff(voiceId);
-    }
+    sy->NoteOn(voiceId, (float)f);
 }
 
-void SenderMobileSynth::pitch(int c, int voiceId, double f) {
+void SenderMobileSynth::noteOff(int voiceId)
+{
+    sy->NoteOff(voiceId);
+}
+
+void SenderMobileSynth::pitch(int voiceId, double f) {
     sy->NoteOn(voiceId, (float)f);
 }
 
@@ -139,7 +140,7 @@ SenderMobileSynth::SenderMobileSynth(RC1 * rc1)
     qDebug() << "mobileSynthQt52 created";
 }
 
-void SenderMobileSynth::cc(int c, int voiceId, int cc, double v1)
+void SenderMobileSynth::cc(int voiceId, int cc, double v1)
 {
     if(cc==2) {
 //        qDebug() << "SenderMobileSynth::cc " << voiceId << " cc " << cc << " v1 " << v1;
@@ -179,20 +180,21 @@ void SenderMobileSynth::cc(int c, int voiceId, int cc, double v1)
     }
 }
 
-void SenderMobileSynth::pc(int c, int v1)
+void SenderMobileSynth::pc(int v1)
 {
 }
 
-void SenderMobileSynth::note(int c, int voiceId, double f, int vel)
+void SenderMobileSynth::noteOn(int voiceId, double f, int midinote, int pitch, int vel)
 {
-    if(vel>0) {
-        sy->noteOn(voiceId, (float)f);
-    } else {
-        sy->noteOff(voiceId);
-    }
+    sy->noteOn(voiceId, (float)f);
 }
 
-void SenderMobileSynth::pitch(int c, int voiceId, double f) {
+void SenderMobileSynth::noteOff(int voiceId)
+{
+    sy->noteOff(voiceId);
+}
+
+void SenderMobileSynth::pitch(int voiceId, double f, int midinote, int pitch) {
     sy->noteOn(voiceId, (float)f);
 }
 

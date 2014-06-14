@@ -135,11 +135,10 @@ RC1::RC1(QWidget *parent) :
     QFile bgimg(storagePath+"/init.jpg");
     if(bgimg.exists()) {
         bgImageOri.load(bgimg.fileName());
-        bgImage=bgImageOri.scaled(width(),height());
     } else {
         bgImageOri.load(":/conf/misuco-logo.jpg");
-        bgImage=bgImageOri.scaled(width(),height());
     }
+    bgImage=bgImageOri.scaled(width(),height());
 
     adid=RC1_ADS_URL;
     QFile adidf(storagePath+"/adid.dat");

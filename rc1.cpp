@@ -60,6 +60,7 @@ RC1::RC1(QWidget *parent) :
     blockerTimeout=60;
     blockerTimeLeft=blockerTimeout;
     blockerPainter=new PaintBlocker();
+    downloadAd=false;
 
     storage=new Storage();
     layout=new LayoutModel();
@@ -135,6 +136,9 @@ RC1::RC1(QWidget *parent) :
     QFile bgimg(storagePath+"/init.jpg");
     if(bgimg.exists()) {
         bgImageOri.load(bgimg.fileName());
+        if(bgImageOri.width()==0) {
+            bgImageOri.load(":/conf/misuco-logo.jpg");
+        }
     } else {
         bgImageOri.load(":/conf/misuco-logo.jpg");
     }
@@ -159,9 +163,6 @@ RC1::RC1(QWidget *parent) :
 
     //netxs->get(QNetworkRequest(QUrl(RC1_INIT_XML_URL)));
     //netxs->get(QNetworkRequest(QUrl(RC1_SCALES_XML_URL)));
-    QString adurl;
-    adurl.sprintf("http://ads.misuco.org/get/?w=%d&h=%d",width(),height());
-    netxs->get(QNetworkRequest(QUrl(adurl)));
 
     layoutxml lxml;
     lxml.setLayoutModel(layout);
@@ -233,9 +234,15 @@ void RC1::paintEvent(QPaintEvent *event)
 
 void RC1::resizeEvent(QResizeEvent *)
 {
-    //qDebug() << "resize event";
+    qDebug() << "resize event " << width() << " " << height();
     layout->calcGeo(width(),height());
-
+    bgImage=bgImageOri.scaled(width(),height());    
+    QString adurl;
+    adurl.sprintf("http://ads.misuco.org/get/?w=%d&h=%d",width(),height());
+    if(!downloadAd) {
+        downloadAd=true;
+        netxs->get(QNetworkRequest(QUrl(adurl)));
+    }
     /*
     bgImage=bgImageOri.scaled(width(),height());
     for(int i=0;i<storage->getLen();i++) {

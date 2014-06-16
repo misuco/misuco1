@@ -113,7 +113,7 @@ void SenderMobileSynth::pc(int v1)
     } */
 }
 
-void SenderMobileSynth::noteOn(int voiceId, double f, int vel)
+void SenderMobileSynth::noteOn(int voiceId, double f, int midinote, int pitch, int vel)
 {
     sy->NoteOn(voiceId, (float)f);
 }
@@ -123,7 +123,7 @@ void SenderMobileSynth::noteOff(int voiceId)
     sy->NoteOff(voiceId);
 }
 
-void SenderMobileSynth::pitch(int voiceId, double f) {
+void SenderMobileSynth::pitch(int voiceId, double f, int midinote, int pitch) {
     sy->NoteOn(voiceId, (float)f);
 }
 

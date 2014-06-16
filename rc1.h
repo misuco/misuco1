@@ -142,6 +142,7 @@ private:
     int blockerTimeLeft;
     IPaint * blockerPainter;
     QString adid;
+    bool downloadAd;
 
     // frame statistic
     int fps;

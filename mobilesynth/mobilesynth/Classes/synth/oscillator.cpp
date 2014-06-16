@@ -174,12 +174,12 @@ namespace synth {
                 value=0;
                 bool recal_freq_mod=false;
                 if(frequency_!=frequency_new_) {
-                    qDebug() << "Oscilator freq change to " << frequency_new_;
+                    //qDebug() << "Oscilator freq change to " << frequency_new_;
                     frequency_=frequency_new_;
                     recal_freq_mod=true;
                 }
                 if(mod_f_!=mod_f_new_) {
-                    qDebug() << "Oscilator mod_freq change to " << frequency_new_;
+                    //qDebug() << "Oscilator mod_freq change to " << frequency_new_;
                     mod_f_=mod_f_new_;
                     recal_freq_mod=true;
                 }

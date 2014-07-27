@@ -291,16 +291,16 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 } else if(layout->getChan(iseg)==1) {
                     rc1->setActProgmem(layout->getValueInt(iseg));
                 } else if(layout->getChan(iseg)==2) {
-                    snd->pc(layout->getValueInt(iseg));
+                    snd->pc(xrelquant);
                 } else if(layout->getChan(iseg)==3) {
                     // waveform
-                    snd->cc(0, 200, layout->getValueInt(iseg));
+                    snd->cc(0, 100, layout->getValueInt(iseg));
                 } else if(layout->getChan(iseg)==4) {
                     // envelope
-                    snd->cc(0,203,layout->getValueInt(iseg));
+                    snd->cc(0,103,layout->getValueInt(iseg));
                 } else if(layout->getChan(iseg)==5) {
                     // resonance
-                    snd->cc(0,204,layout->getValueInt(iseg));
+                    snd->cc(0,104,layout->getValueInt(iseg));
                 }
             } else if(layout->getSegtype(iseg)==6) {
                 // x-double-slider

@@ -125,7 +125,10 @@ float Envelope::GetValue() {
       break;
     case SUSTAIN:
       value = sustain_;
-      assert(value > 0.0);  // Handled in DECAY
+      if(value<0.0) {
+        fprintf(stderr, "sustain<0: %f", value);
+        value=0.0;
+      }
       break;
     case RELEASE:
       value = release_start_value_ -

@@ -89,6 +89,7 @@ RC1::RC1(QWidget *parent) :
     storagePath=QStandardPaths::writableLocation(QStandardPaths::DataLocation);
 //  Android: /data/data/org.qtproject.example.rc1/files  => Persistent !!
 //  W8: C:/Users/c1/AppData/Local/rc1 => Persistent
+//  iOS: /var/mobile/Applications/ADDEBF69-B1C5-4E36-A8C2-789D717434C1/Documents => Persistent
 //  Linux: /home/c1/.local/share/rc1 => not Writable
 
 //  storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
@@ -571,7 +572,8 @@ void RC1::setActProgmem(int n)
     layout->setValueInt(26,progmem[n].waveform);
     layout->setValueInt(27,progmem[n].envelope);
     layout->setValueInt(28,progmem[n].mod);
-    sender->pc(progmem[n].sound);
+    //sender->pc(progmem[n].sound);
+    sender->pc(n);
     for(int i=0;i<11;i++) {
         layout->setBscale(i,progmem[n].bscale[i]);
     }

@@ -43,7 +43,7 @@ void SenderOscPuredata::noteOn(int voiceId, double fr, int midinote, int pitch, 
     notestate[vid]=f;
     QVariantList v;
     v.append(f);
-    v.append(vel);
+    v.append(127);
     sendOsc("/note",v);
     onNoteCnt++;
 }

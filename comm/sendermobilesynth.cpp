@@ -24,13 +24,13 @@ void SenderMobileSynth::cc(int voiceId, int cc, double v1)
         sy->set_modulation_amount(voiceId, v1);
     } else if(cc==4) {
         sy->set_modulation_mod_f(voiceId, v1);
-    } else if(cc==200) {
+    } else if(cc==100) {
         sy->set_osc1_wave_type_int(v1);
-    } else if(cc==201) {
+    } else if(cc==101) {
         sy->set_lfo_wave_type_int(v1);
-    } else if(cc==202) {
+    } else if(cc==102) {
         sy->set_modulation_destination(v1);
-    } else if(cc==203) {
+    } else if(cc==103) {
         switch ((int)v1%4) {
             case 0:
                 sy->setADSR(0, 10, 300, 0.5, 500);
@@ -55,7 +55,7 @@ void SenderMobileSynth::cc(int voiceId, int cc, double v1)
             default:
                 break;
         }
-    } else if(cc==204) {
+    } else if(cc==104) {
 //        qDebug() << "SenderMobileSynth::cc " << voiceId << " cc " << cc << " v1 " << v1;
         sy->set_filter_resonance(v1);
     }
@@ -75,6 +75,7 @@ void SenderMobileSynth::cc(int voiceId, int cc, double v1)
 
 void SenderMobileSynth::pc(int v1)
 {
+    /*
 //    sy->pc(v1);
     sy->set_osc1_wave_type_int(v1%5);
     sy->set_modulation_destination(synth::Controller::LFO_DEST_NONE);
@@ -103,7 +104,7 @@ void SenderMobileSynth::pc(int v1)
             break;
     }
     sy->set_modulation_amount(0);
-    /*
+
     if(v1>7) {
         sy->set_modulation_amount(1.0);
     } else if(v1>3) {
@@ -151,13 +152,13 @@ void SenderMobileSynth::cc(int voiceId, int cc, double v1)
         sy->getSyctl()->set_modulation_amount(voiceId, v1);
     } else if(cc==4) {
         sy->getSyctl()->set_modulation_mod_f(voiceId, v1);
-    } else if(cc==200) {
+    } else if(cc==100) {
         sy->getSyctl()->set_osc1_wave_type_int(v1);
-    } else if(cc==201) {
+    } else if(cc==101) {
         sy->getSyctl()->set_lfo_wave_type_int(v1);
-    } else if(cc==202) {
+    } else if(cc==102) {
         sy->getSyctl()->set_modulation_destination(v1);
-    } else if(cc==203) {
+    } else if(cc==103) {
         switch ((int)v1%4) {
             case 0:
                 sy->getSyctl()->setADSR(0, 10, 300, 0.5, 500);
@@ -175,7 +176,7 @@ void SenderMobileSynth::cc(int voiceId, int cc, double v1)
             default:
                 break;
         }
-    } else if(cc==204) {
+    } else if(cc==104) {
         sy->getSyctl()->set_filter_resonance(v1);
     }
 }

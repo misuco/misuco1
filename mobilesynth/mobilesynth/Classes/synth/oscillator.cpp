@@ -49,9 +49,11 @@ namespace synth {
             case 4:
                 wave_type_ = Oscillator::NOISE;
                 break;
+                /*
             case 5:
                 wave_type_ = Oscillator::WAVETABLE;
                 break;
+                 */
             default:
                 wave_type_ = Oscillator::REVERSE_SAWTOOTH;
                 break;

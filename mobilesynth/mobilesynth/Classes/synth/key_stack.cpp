@@ -11,7 +11,7 @@ using namespace std;
 namespace synth {
     
     KeyStack::KeyStack() : size_(0) {
-        waveform_=new waveform();
+        //waveform_=new waveform();
 
         for(int i=0;i<kMaxSize;i++) {
             for(int j=0;j<kNumEnv;j++) {
@@ -20,11 +20,11 @@ namespace synth {
             oscs[i]=new Oscillator();
             oscs[i]->set_mod_f(0);
             oscs[i]->set_mod_pw(0);
-            oscs[i]->set_waveform(waveform_);
+            //oscs[i]->set_waveform(waveform_);
             lfos[i]=new Oscillator();
             lfos[i]->set_frequency(0);
             lfos[i]->set_wave_type(1);
-            lfos[i]->set_waveform(waveform_);
+            //lfos[i]->set_waveform(waveform_);
             lfos[i]->set_pulse_width(0.5);
             lfos[i]->set_mod_f(0);
             lfos[i]->set_mod_pw(0);

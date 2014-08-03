@@ -40,7 +40,7 @@ void Scales::readXml(QString filename)
     QFile file(filename);
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
         return;
-        qDebug("cannot read file");
+        //qDebug("cannot read file");
     }
     xmlr.setDevice(&file);
     if (xmlr.readNextStartElement()) {

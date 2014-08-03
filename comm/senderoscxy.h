@@ -27,11 +27,11 @@ class SenderOscXY : public ISender
 {
 public:
     SenderOscXY(RC1 * rc1);
-    virtual void cc(int voiceId, int cc, double v1);
-    virtual void pc(int v1);
-    virtual void noteOn(int voiceId, double f, int midinote, int pitch, int vel);
-    virtual void noteOff(int voiceId, double f, int midinote, int pitch, int vel);
-    virtual void pitch(int voiceId, double f, int midinote, int pitch) {}
+    virtual void cc(int chan, int voiceId, int cc, double v1);
+    virtual void pc(int chan, int v1);
+    virtual void noteOn(int chan, int voiceId, double f, int midinote, int pitch, int vel);
+    virtual void noteOff(int chan, int voiceId, double f, int midinote, int pitch, int vel);
+    virtual void pitch(int chan, int voiceId, double f, int midinote, int pitch) {}
     virtual void setDestination(QHostAddress a,int p);
 
 private:

@@ -61,7 +61,8 @@ public:
     void setFactoryProg(int i);*/
     void setSegH(int i, int v);
     void setAllCtlx(int v);
-    void setAllCtly(int v);    
+    void setAllCtly(int v);
+    void setAllChan(int v);
 //    void setRaga(int i, int b);
     int getBasenote() const;
     void setBasenote(int value);

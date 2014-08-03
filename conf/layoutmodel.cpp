@@ -246,7 +246,7 @@ int LayoutModel::getNsegs() const
 
 void LayoutModel::setAll(int n, int *d, int v)
 {
-    for(int i=0;i<n;i++) {
+    for(int i=scaleStartSeg;i<n;i++) {
         d[i]=v;
     }
 }
@@ -495,10 +495,15 @@ void LayoutModel::setSegH(int i, int v)
 
 void LayoutModel::setAllCtlx(int v)
 {
-    setAll(nsegs,ctlx,v);
+    setAll(nsegsmax,ctlx,v);
 }
 
 void LayoutModel::setAllCtly(int v)
 {
-    setAll(nsegs,ctly,v);
+    setAll(nsegsmax,ctly,v);
+}
+
+void LayoutModel::setAllChan(int v)
+{
+    setAll(nsegsmax,chan,v);
 }

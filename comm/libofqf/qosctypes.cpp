@@ -177,7 +177,7 @@ void PathObject::send() { send( QVariant() ); }
 
 void PathObject::signalData( QVariant v ) {
 
-    qDebug() << "signalData" << v.type();
+   //qDebug() << "signalData" << v.type();
     if ( v.type() == _type ) {
         if ( _type == QVariant::Invalid )
                 emit data();

@@ -50,7 +50,7 @@ RC1::RC1(QWidget *parent) :
     #endif
 {
     setAttribute(Qt::WA_AcceptTouchEvents,true);
-    qDebug() << "View() size:" << width() << " " << height();
+    //qDebug() << "View() size:" << width() << " " << height();
 
     eventId = 1;
     nomouse = false;
@@ -81,7 +81,11 @@ RC1::RC1(QWidget *parent) :
     storagePath="./";
 #endif
 */
+    senderAddress=QHostAddress("255.255.255.255");
+    senderPort=3334;
     sender=new SenderMulti(this);
+    
+    chan=0;
 
 //    storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
 //    Android: "/storage/emulated/0/Documents", not persistent
@@ -96,7 +100,7 @@ RC1::RC1(QWidget *parent) :
 //  Android: /storage/emulated/0/Documents => not Persistent
 //  Linux: /home/c1/Documents => Persistent
 
-    qDebug() << "storage path: " << storagePath;
+    //qDebug() << "storage path: " << storagePath;
     layout->calcGeo(width(),height());
 
     nPrePainters=1;
@@ -183,6 +187,12 @@ RC1::~RC1()
     //qDebug() << "progmem written";
 }
 
+void RC1::connectApp(QApplication * app) {
+    connect(app, SIGNAL(applicationStateChanged(Qt::ApplicationState )),
+            this, SLOT(appStateChange(Qt::ApplicationState)));
+
+}
+
 void RC1::paintEvent(QPaintEvent *event)
 {
     now=QDateTime::currentMSecsSinceEpoch();
@@ -235,7 +245,7 @@ void RC1::paintEvent(QPaintEvent *event)
 
 void RC1::resizeEvent(QResizeEvent *)
 {
-    qDebug() << "resize event " << width() << " " << height();
+    //qDebug() << "resize event " << width() << " " << height();
     layout->calcGeo(width(),height());
     bgImage=bgImageOri.scaled(width(),height());    
     QString adurl;
@@ -338,10 +348,11 @@ bool RC1::event(QEvent *event)
             // nomouse=true;
             touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
             foreach (const QTouchEvent::TouchPoint &touchPoint, touchPoints) {
-                //qDebug() << sEvent << ": x:" << touchPoint.pos().x() << " y:" << touchPoint.pos().y() << " t: " << t1.tv_sec << "." << t1.tv_usec;
+                //qDebug() << " x:" << touchPoint.pos().x() << " y:" << touchPoint.pos().y() << " t: " << t ;
                 evstat->incToucheventcount();
                 Point * p = storage->getPoint(0);
-                p->set(touchPoint.pos().x(),touchPoint.pos().y(),this->width(),this->height());
+                // ipad: x value 0 -> selects wrong segment -> fmax
+                p->set(fmax(1,touchPoint.pos().x()),touchPoint.pos().y(),this->width(),this->height());
                 p->setT(t);
                 p->setGid(touchPoint.id());
                 p->setState(touchPoint.state());
@@ -360,6 +371,7 @@ bool RC1::event(QEvent *event)
 
             Qt::TouchPointState state;
 
+            state=Qt::TouchPointMoved;
             if(event->type()==QEvent::MouseMove) {
                 state=Qt::TouchPointMoved;
             } else if(event->type()==QEvent::MouseButtonPress) {
@@ -390,32 +402,13 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
     if(ignoreIndex==-1) {
         QList<QVariant> dl=data.toList();
 
-        if(path=="/loadbg") {
-            if(dl.size()==1) {
-                QString loadurl=dl.at(0).toString();
-                if(loadurl!="") {
-                    netxs->get(QNetworkRequest(QUrl(loadurl)));
-                }
-            }
-        }
-
-        if(path=="/fs") {
-            if(dl.size()==1) {
-                if(dl.at(0).toInt()>0) {
-                    setWindowState(Qt::WindowFullScreen);
-                } else {
-                    setWindowState(Qt::WindowNoState);
-                }
-            }
-        }
-
-        if(path=="/ignore") {
+        if(path=="/ign") {
             if(dl.size()==1) {
                 ignoreAddr.append(QHostAddress(dl.at(0).toString()));
             }
         }
 
-        if(path=="/listen") {
+        if(path=="/lst") {
             if(dl.size()==1) {
                 int i=ignoreAddr.indexOf(QHostAddress(dl.at(0).toString()));
                 if(i>=0) {
@@ -423,13 +416,41 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
                 }
             }
         }
-
-        if(path=="/dest") {
+        
+        if(path=="/dst") {
             if(dl.size()==2) {
-                sender->setDestination(QHostAddress(dl.at(0).toString()),dl.at(1).toInt());
+                senderAddress=QHostAddress(dl.at(0).toString());
+                senderPort=dl.at(1).toInt();
+                sender->setDestination(senderAddress,senderPort);
             }
         }
-
+        
+        if(path=="/chn") {
+            if(dl.size()==1) {
+                chan=dl.at(0).toInt();
+                layout->setAllChan(chan );
+            }
+        }
+/*
+ if(path=="/loadbg") {
+ if(dl.size()==1) {
+ QString loadurl=dl.at(0).toString();
+ if(loadurl!="") {
+ netxs->get(QNetworkRequest(QUrl(loadurl)));
+ }
+ }
+ }
+ 
+ if(path=="/fs") {
+ if(dl.size()==1) {
+ if(dl.at(0).toInt()>0) {
+ setWindowState(Qt::WindowFullScreen);
+ } else {
+ setWindowState(Qt::WindowNoState);
+ }
+ }
+ }
+ 
         if(path=="/ttl") {
             if(dl.size()==1) {
                 ttl=dl.at(0).toInt();
@@ -441,6 +462,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
                 painterOn[dl.at(0).toInt()]=dl.at(1).toBool();
             }
         }
+        */
 
 /*
         if(path=="/lxy") {
@@ -476,7 +498,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
 */
 /*
         if(path=="/tuio/2Dcur") {
-            qDebug() << "got /tuio/2Dcur signal " << path << " data " << data << " source " << host->toString();
+            //qDebug() << "got /tuio/2Dcur signal " << path << " data " << data << " source " << host->toString();
             if(dl.size()>0) {
 
                 // find source host in ip source adress table
@@ -573,7 +595,10 @@ void RC1::setActProgmem(int n)
     layout->setValueInt(27,progmem[n].envelope);
     layout->setValueInt(28,progmem[n].mod);
     //sender->pc(progmem[n].sound);
-    sender->pc(n);
+    sender->pc(chan,n);
+    sender->cc(chan,0,100,progmem[n].waveform);
+    sender->cc(chan,0,103,progmem[n].envelope);
+    sender->cc(chan,0,104,progmem[n].mod);
     for(int i=0;i<11;i++) {
         layout->setBscale(i,progmem[n].bscale[i]);
     }
@@ -644,10 +669,20 @@ void RC1::setTtl(long value)
 {
     ttl = value;
 }
+void RC1::appStateChange(Qt::ApplicationState state) {
+    if(state==Qt::ApplicationActive) {
+        delete(sender);
+        sender=new SenderMulti(this);
+        sender->setDestination(senderAddress,senderPort);
+        delete(oscin);
+        oscin = new QOscServer(3333,this);
+        oscin->registerPathObject(this);
+    }
+}
 
 void RC1::replyFinished(QNetworkReply * r)
 {
-    qDebug() << "received " << r->url();
+    //qDebug() << "received " << r->url();
     if(r->error()==QNetworkReply::NoError) {
 /*        adid=RC1_ADS_URL;
         if(r->hasRawHeader("Adid")) {
@@ -669,7 +704,7 @@ void RC1::replyFinished(QNetworkReply * r)
             out.write(data);
             out.close();
         } else {
-            qDebug() << "cannot write " << storagePath << "/" << pendingConfigFile;
+            //qDebug() << "cannot write " << storagePath << "/" << pendingConfigFile;
         }
         if(pendingConfigFile=="init.jpg") {
 //            bgImageOri.load(storagePath+"/init.jpg");
@@ -728,7 +763,7 @@ void RC1::readProgmemXml(QString filename)
     }
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
         return;
-        qDebug() << "cannot read file " << filename;
+        //qDebug() << "cannot read file " << filename;
     }
     xmlr.setDevice(&file);
     if (xmlr.readNextStartElement()) {

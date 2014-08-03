@@ -23,9 +23,9 @@ SenderOscPuredata::SenderOscPuredata(RC1 *rc1)
 {
     oscout=new QOscClient(QHostAddress("255.255.255.255"),3334);
     oscout->setAddress(QHostAddress("255.255.255.255"),3334);
-    notestate=new quint8[127];
-    ccstate=new int[127];
-    for(int i=0;i<127;i++) {
+    notestate=new quint8[1024];
+    ccstate=new int[1024];
+    for(int i=0;i<1024;i++) {
         notestate[i]=0;
         ccstate[i]=0;
     }
@@ -35,25 +35,31 @@ SenderOscPuredata::SenderOscPuredata(RC1 *rc1)
     x=0;y=0;
 }
 
-void SenderOscPuredata::noteOn(int voiceId, double fr, int midinote, int pitch, int vel)
+void SenderOscPuredata::noteOn(int chan, int voiceId, double fr, int midinote, int pitch, int vel)
 {
     int f = midinote;
-    int vid=voiceId%127;
+    int vid=voiceId%1024;
 
     notestate[vid]=f;
     QVariantList v;
+    //v.append(chan);
     v.append(f);
     v.append(127);
-    sendOsc("/note",v);
+    QString path;
+    path.sprintf("/note/%d",chan);
+    sendOsc(path,v);
     onNoteCnt++;
 }
 
-void SenderOscPuredata::noteOff(int voiceId)
+void SenderOscPuredata::noteOff(int chan, int voiceId)
 {
     QVariantList v;
-    v.append(notestate[voiceId%127]);
+    QString path;
+    //v.append(chan);
+    v.append(notestate[voiceId%1024]);
     v.append(0);
-    sendOsc("/note",v);
+    path.sprintf("/note/%d",chan);
+    sendOsc(path,v);
     onNoteCnt--;
 }
 
@@ -62,14 +68,17 @@ void SenderOscPuredata::setDestination(QHostAddress a, int p)
     oscout->setAddress(a,p);
 }
 
-void SenderOscPuredata::pc(int v1)
+void SenderOscPuredata::pc(int chan, int v1)
 {
     QVariantList v;
+    QString path;
+    //v.append(chan);
     v.append(v1);
-    sendOsc("/pc",v);
+    path.sprintf("/pc/%d",chan);
+    sendOsc(path,v);
 }
 
-void SenderOscPuredata::cc(int voiceId, int cc, double v1)
+void SenderOscPuredata::cc(int chan, int voiceId, int cc, double v1)
 {
     //qDebug() <<  "SenderOscPuredata::cc " << cc << " v1 " << v1;
 
@@ -80,10 +89,12 @@ void SenderOscPuredata::cc(int voiceId, int cc, double v1)
     if(v1mid!=ccstate[cc]) {
         ccstate[cc]=v1mid;
         QVariantList v;
-        v.append(voiceId);
-        v.append(cc);
+        QString path;
+//        v.append(chan);
+//        v.append(cc);
         v.append(v1mid);
-        sendOsc("/cc",v);
+        path.sprintf("/cc/%d/%d",chan,cc);
+        sendOsc(path,v);
     }
 
     /*

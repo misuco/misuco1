@@ -119,9 +119,9 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     xrel=xrel/(double)layout->getSegwidthpx(iseg);
                     if(useCCCVal==true) {
                         cccval1=xrel/cccvalAvg+(cccvalAvg-1)*cccval1/cccvalAvg;
-                        snd->cc(ieventout[evptr], layout->getCtlx(iseg), cccval1);
+                        snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtlx(iseg), cccval1);
                     } else {
-                        snd->cc(ieventout[evptr], layout->getCtlx(iseg), xrel);
+                        snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtlx(iseg), xrel);
                     }
                 }
             }
@@ -134,9 +134,9 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     //                ysum+=layout->getRowheightpx(iy);
                     if(useCCCVal==true) {
                         cccval2=yrel/cccvalAvg+(cccvalAvg-1)*cccval2/cccvalAvg;
-                        snd->cc(ieventout[evptr], layout->getCtly(iseg), cccval2);
+                        snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtly(iseg), cccval2);
                     } else {
-                        snd->cc(ieventout[evptr], layout->getCtly(iseg), yrel);
+                        snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtly(iseg), yrel);
                     }
                 }
             }
@@ -150,19 +150,19 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             if(note[evptr]!=v2) {
                 if(transitionMode) {
                     if(note[evptr]>0) {
-                        snd->pitch(ieventout[evptr],v2,v1, pitch);
+                        snd->pitch(layout->getChan(iseg), ieventout[evptr],v2,v1, pitch);
                     } else {
                         ieventout[evptr]=ieventoutnext;
                         ieventoutnext++;
-                        snd->noteOn(ieventout[evptr], v2, v1, pitch, veldef);
+                        snd->noteOn(layout->getChan(iseg), ieventout[evptr], v2, v1, pitch, veldef);
                     }
                 } else {
                     if(note[evptr]>0) {
-                        snd->noteOff(ieventout[evptr]);
+                        snd->noteOff(chan[evptr], ieventout[evptr]);
                     }
                     ieventout[evptr]=ieventoutnext;
                     ieventoutnext++;
-                    snd->noteOn(ieventout[evptr], v2, v1, pitch, veldef);
+                    snd->noteOn(layout->getChan(iseg), ieventout[evptr], v2, v1, pitch, veldef);
                 }
                 note[evptr]=v2;
                 chan[evptr]=layout->getChan(iseg);
@@ -191,11 +191,11 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     
                     int pitch=0; // TODO: calculate properly
                     if(note[evptr]>0) {
-                        snd->pitch(ieventout[evptr],frel,frel,pitch);
+                        snd->pitch(layout->getChan(iseg), ieventout[evptr],frel,frel,pitch);
                     } else {
                         ieventout[evptr]=ieventoutnext;
                         ieventoutnext++;
-                        snd->noteOn(ieventout[evptr],frel,frel,pitch,veldef);
+                        snd->noteOn(layout->getChan(iseg), ieventout[evptr],frel,frel,pitch,veldef);
                     }
                     note[evptr]=frel;
                 }
@@ -204,7 +204,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             // turn off note if moved out of note into functional field
             bool movedin=false;
             if(note[evptr]>0) {
-                snd->noteOff(ieventout[evptr]);
+                snd->noteOff(chan[evptr], ieventout[evptr]);
                 note[evptr]=-1;
                 layout->decPressed(isegb[evptr]);
                 //qDebug() << "event " << evptr << " decpressed " << isegb[evptr] << " if moved from note- into control-field " << iseg;
@@ -291,16 +291,16 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 } else if(layout->getChan(iseg)==1) {
                     rc1->setActProgmem(layout->getValueInt(iseg));
                 } else if(layout->getChan(iseg)==2) {
-                    snd->pc(xrelquant);
+                    snd->pc(layout->getChan(25), xrelquant);
                 } else if(layout->getChan(iseg)==3) {
                     // waveform
-                    snd->cc(0, 100, layout->getValueInt(iseg));
+                    snd->cc(0, 0, 100, layout->getValueInt(iseg));
                 } else if(layout->getChan(iseg)==4) {
                     // envelope
-                    snd->cc(0,103,layout->getValueInt(iseg));
+                    snd->cc(0, 0,103,layout->getValueInt(iseg));
                 } else if(layout->getChan(iseg)==5) {
                     // resonance
-                    snd->cc(0,104,layout->getValueInt(iseg));
+                    snd->cc(0, 0,104,layout->getValueInt(iseg));
                 }
             } else if(layout->getSegtype(iseg)==6) {
                 // x-double-slider
@@ -371,7 +371,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                                 layout->getSegText(iseg)->sprintf("WTAB");
                                 break;
                         }
-                        snd->cc(0,200,newwaveform);
+                        snd->cc(0,0,200,newwaveform);
                     } else if(layout->getChan(iseg)==1) {
                         int newwaveform=layout->getValueInt(iseg)+1;
                         if(newwaveform>4) {
@@ -395,7 +395,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                                 layout->getSegText(iseg)->sprintf("LFONOI");
                                 break;
                         }
-                        snd->cc(0,201,newwaveform);
+                        snd->cc(0,0,201,newwaveform);
                     } else if(layout->getChan(iseg)==2) {
                         int newwaveform=layout->getValueInt(iseg)+1;
                         if(newwaveform>3) {
@@ -416,7 +416,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                                 layout->getSegText(iseg)->sprintf("FILT");
                                 break;
                         }
-                        snd->cc(0,202,newwaveform);
+                        snd->cc(0,0,202,newwaveform);
 
                     } else if(layout->getChan(iseg)==3) {
                         int newenv=layout->getValueInt(iseg)+1;
@@ -438,7 +438,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                             layout->getSegText(iseg)->sprintf("_-_");
                                 break;
                         }
-                        snd->cc(0,203,newenv);
+                        snd->cc(0,0,203,newenv);
                     } else if(layout->getChan(iseg)==4) {
                         int newenv=layout->getValueInt(iseg)+1;
                         if(newenv>3) {
@@ -585,7 +585,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             layout->decPressed(isegb[evptr]);
         }
         if(layout->getSegtype(iseg)==0 || layout->getSegtype(iseg)==1 || layout->getSegtype(iseg)==3) {
-            snd->noteOff(ieventout[evptr]);
+            snd->noteOff(chan[evptr],ieventout[evptr]);
             note[evptr]=-1;
             isegb[evptr]=-1;
         }
@@ -618,7 +618,7 @@ void EventHandlerRect::init()
     
     ieventoutnext=1;
     
-    useCCCVal=false;
+    useCCCVal=true;
     cccvalAvg=10;
     cccval1=0;
     cccval2=0;

@@ -24,6 +24,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     RC1 w;
+    w.connectApp(&a);
     w.show();
 
     return a.exec();

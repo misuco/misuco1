@@ -9,12 +9,12 @@ SenderSuperCollider::SenderSuperCollider(RC1 * rc1)
     this->rc1=rc1;
 }
 
-void SenderSuperCollider::cc(int voiceId, int cc, double v1)
+void SenderSuperCollider::cc(int chan, int voiceId, int cc, double v1)
 {
 
 }
 
-void SenderSuperCollider::pc(int v1)
+void SenderSuperCollider::pc(int chan, int v1)
 {
 
 }
@@ -24,10 +24,10 @@ void SenderSuperCollider::setDestination(QHostAddress a, int p)
     oscout->setAddress(a,p);
 }
 
-void SenderSuperCollider::noteOn(int voiceId, double f, int midinote, int pitch, int vel)
+void SenderSuperCollider::noteOn(int chan, int voiceId, double f, int midinote, int pitch, int vel)
 {
     QVariantList v;
-    qDebug() << "noteOn vid:" << voiceId << " f " << f << " vel " << vel;
+    //qDebug() << "noteOn vid:" << voiceId << " f " << f << " vel " << vel;
     v.append("c1a1");
     v.append(voiceId);
     v.append(0);
@@ -49,7 +49,7 @@ void SenderSuperCollider::noteOn(int voiceId, double f, int midinote, int pitch,
     onNoteCnt++;
 }
 
-void SenderSuperCollider::pitch(int voiceId, double f, int midinote, int pitch)
+void SenderSuperCollider::pitch(int chan, int voiceId, double f, int midinote, int pitch)
 {
     QVariantList v;
     v.append(voiceId);
@@ -66,7 +66,7 @@ void SenderSuperCollider::sendOsc(QString path, QVariant list)
 }
 
 
-void SenderSuperCollider::noteOff(int voiceId)
+void SenderSuperCollider::noteOff(int chan, int voiceId)
 {
     QVariantList v;
     v.append(voiceId);

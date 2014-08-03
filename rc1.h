@@ -78,6 +78,7 @@ public:
     void setTtl(long value);
 
     void setActProgmem(int);
+    void connectApp(QApplication * app);
     
 //    void setProg(int);
 
@@ -86,6 +87,7 @@ public:
 
 public slots:
     void replyFinished(QNetworkReply * r);
+    void appStateChange(Qt::ApplicationState state);
 
 protected:
     /*  QGLWidget implementation */
@@ -113,7 +115,11 @@ private:
     EventStat * evstat;
     QOscServer * oscin;
 
+    QHostAddress senderAddress;
+    int senderPort;
     QList<QHostAddress> ignoreAddr;
+    
+    int chan; // midi chan for pc
 
     int nPrePainters;
     int nPointPainters;

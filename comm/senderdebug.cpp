@@ -24,27 +24,27 @@ SenderDebug::SenderDebug()
 {
 }
 
-void SenderDebug::cc(int voiceId, int cc, double v1)
+void SenderDebug::cc(int chan, int voiceId, int cc, double v1)
 {
 //    qDebug() << "SenderDebug::cc(" << c << "," << voiceId << "," << cc << "," << v1 << ")";
 }
 
-void SenderDebug::pc(int v1)
+void SenderDebug::pc(int chan, int v1)
 {
     qDebug() << "SenderDebug::pc(" <<  v1 << ")";
 }
 
-void SenderDebug::noteOn(int voiceId, double v1, int midinote, int pitch, int v2)
+void SenderDebug::noteOn(int chan, int voiceId, double v1, int midinote, int pitch, int v2)
 {
     qDebug() << "SenderDebug::noteOn(" << voiceId << "," << v1 << "," << v2 << ")";
 }
 
-void SenderDebug::noteOff(int voiceId)
+void SenderDebug::noteOff(int chan, int voiceId)
 {
     qDebug() << "SenderDebug::noteOff("  << voiceId << ")";
 }
 
-void SenderDebug::pitch(int voiceId, double v1, int midinote, int pitch)
+void SenderDebug::pitch(int chan, int voiceId, double v1, int midinote, int pitch)
 {
     qDebug() << "SenderDebug::pitch(" << voiceId << "," << v1  << ")";
 }

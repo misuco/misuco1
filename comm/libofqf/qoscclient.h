@@ -46,7 +46,7 @@ class QOscClient : public QOscBase, public QOscClientInterface
          QOscClient( const QHostAddress&, quint16 source_port, quint16 dst_port, QObject* );
          QOscClient( const QHostAddress&, quint16 source_port, quint16 dst_port);
          QOscClient() {
-               qDebug() << "QOscClient::QOscClient()";
+              //qDebug() << "QOscClient::QOscClient()";
          }
          /// destructor
          ~QOscClient();

@@ -6,10 +6,10 @@
 waveform::waveform()
 {
     QFile wave(":/wav/waves/guitar1m.wav");
-    qDebug() << "waveform opening ";
+    //qDebug() << "waveform opening ";
     if (wave.open(QIODevice::ReadOnly)) {
         int dimension = (wave.size()-44)/2;
-        qDebug() << "waveform dimension " << dimension << " samples ";
+        //qDebug() << "waveform dimension " << dimension << " samples ";
         values = new float[dimension];
         QDataStream input(&wave);
         input.readRawData((char *)values,44);
@@ -20,7 +20,7 @@ waveform::waveform()
             values[i]=(float)val/32768.0f-1;
             i++;
         }
-        qDebug() << "waveform read " << i << " samples ";
+        //qDebug() << "waveform read " << i << " samples ";
         attack=1000;
         loop=80000;
         release=95000;

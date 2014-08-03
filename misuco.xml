@@ -63,6 +63,6 @@
 </row>
 
     <row height="50" segwidthmax="1">
-        <seg segwidth="1" value="261.625565" valueint="60" ctlx="16" ctly="8" segtype="0" chan="0" pressed="0" segtext="C" segh="145"/>
+        <seg segwidth="1" value="261.625565" valueint="60" ctlx="1" ctly="2" segtype="0" chan="0" pressed="0" segtext="C" segh="145"/>
     </row>
 </misuco>

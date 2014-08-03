@@ -17,7 +17,7 @@ void layoutxml::readXml(QString filename)
                              .arg(file.errorString()));
                              */
         return;
-        qDebug("cannot read file");
+        //qDebug("cannot read file");
     }
     //qDebug() << " opened " << filename;
     xmlr.setDevice(&file);

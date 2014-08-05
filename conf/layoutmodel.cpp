@@ -35,7 +35,7 @@ LayoutModel::LayoutModel()
     setAll(nsegsmax,segwidth,1);
     segwidthpx = new int[nsegsmax];
     segwidthmax=new int[nrowsmax];
-    value = new double[nsegsmax];
+    value = new float[nsegsmax];
     valueint = new int[nsegsmax];
     segText=new QString[nsegsmax];
     segH = new int[nsegsmax];
@@ -68,7 +68,7 @@ LayoutModel::LayoutModel()
     setAll(nsegsmax,pressed,0);
     
     // thanx 2 http://subsynth.sourceforge.net/midinote2freq.html
-    midi2f = new double[127];
+    midi2f = new float[127];
     float freq_a = 440; // a is 440 hz...
     for (int x = 0; x < 127; ++x)
     {
@@ -83,7 +83,7 @@ LayoutModel::LayoutModel()
     float freq_c1 = freq_c2 / 2;    //  17.50 hz @ 12
     float freq_c0 = freq_c1 / 2;    //   8.75 hz @ 12
 
-    midi2fpure = new double[132];
+    midi2fpure = new float[132];
     int pure_m[] = {1,16,9,6,5,4,45,3,8,5,16,15,2};
     int pure_d[] = {1,15,8,5,4,3,32,2,5,3,9,8,1};
 
@@ -271,7 +271,7 @@ int LayoutModel::getCtlx(int i) const
     return ctlx[i];
 }
 
-double LayoutModel::getValue(int i) const
+float LayoutModel::getValue(int i) const
 {
     return value[i];
 }
@@ -323,7 +323,7 @@ void LayoutModel::decPressed(int i)
     }
 }
 
-void LayoutModel::setValue(int i, double v) const
+void LayoutModel::setValue(int i, float v) const
 {
     value[i]=v;
 }

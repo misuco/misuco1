@@ -49,7 +49,7 @@ void layoutxml::writeXml(QString filename)
     int getSegwidth(int i) const;
     int getSegwidthmax(int i) const;
     int getSegwidthpx(int i) const;
-    double getNote(int i) const;
+    float getNote(int i) const;
     int getMidiNote(int i) const;
     int getCtlx(int i) const;
     int getCtly(int i) const;
@@ -139,7 +139,7 @@ void layoutxml::readLayout() {
 //                qDebug() << "xmlr seg name " << xmlr.name();
                 if (xmlr.name() == "seg") {
                     layout->segwidth[seg]=xmlr.attributes().value("segwidth").toString().toInt();
-                    layout->value[seg]=xmlr.attributes().value("value").toString().toDouble();
+                    layout->value[seg]=xmlr.attributes().value("value").toString().toFloat();
                     layout->valueint[seg]=xmlr.attributes().value("valueint").toString().toInt();
                     layout->ctlx[seg]=xmlr.attributes().value("ctlx").toString().toInt();
                     layout->ctly[seg]=xmlr.attributes().value("ctly").toString().toInt();

@@ -35,7 +35,7 @@ SenderOscPuredata::SenderOscPuredata(RC1 *rc1)
     x=0;y=0;
 }
 
-void SenderOscPuredata::noteOn(int chan, int voiceId, double fr, int midinote, int pitch, int vel)
+void SenderOscPuredata::noteOn(int chan, int voiceId, float fr, int midinote, int pitch, int vel)
 {
     int f = midinote;
     int vid=voiceId%1024;
@@ -78,12 +78,12 @@ void SenderOscPuredata::pc(int chan, int v1)
     sendOsc(path,v);
 }
 
-void SenderOscPuredata::cc(int chan, int voiceId, int cc, double v1)
+void SenderOscPuredata::cc(int chan, int voiceId, int cc, float v1)
 {
     //qDebug() <<  "SenderOscPuredata::cc " << cc << " v1 " << v1;
 
     // translate value to midi
-    int v1mid=(double)127*v1;
+    int v1mid=(float)127*v1;
 
     // translate cc numbers
     if(v1mid!=ccstate[cc]) {

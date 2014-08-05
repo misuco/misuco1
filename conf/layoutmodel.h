@@ -39,7 +39,7 @@ public:
     int getSegwidth(int i) const;
     int getSegwidthmax(int i) const;
     int getSegwidthpx(int i) const;
-    double getValue(int i) const;
+    float getValue(int i) const;
     int getValueInt(int i) const;
     int getCtlx(int i) const;
     int getCtly(int i) const;
@@ -52,7 +52,7 @@ public:
     void incPressed(int i);
     void decPressed(int i);
 
-    void setValue(int i, double v) const;
+    void setValue(int i, float v) const;
     void setValueInt(int i, int v) const;
 
 /*    void setXY(int x, int y);
@@ -99,10 +99,10 @@ private:
     int *segwidthmax;
     int *segwidthpx;
     int *segtype;       // segmenttyp: 0=note, 1=transition, 2=layout
-    double *value;
+    float *value;
     int *valueint;
-    double *midi2f;
-    double *midi2fpure;
+    float *midi2f;
+    float *midi2fpure;
     int *ctlx;
     int *ctly;
     int *chan;

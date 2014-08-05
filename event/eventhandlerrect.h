@@ -38,7 +38,7 @@ private:
     int evptr_stack_size;
     int * evptr_stack;
 
-    double * note;      // current note
+    float * note;      // current note
     int * isegb;        // current segment index buffer
     int * chan;         // current note channel
 
@@ -47,8 +47,8 @@ private:
     int * ccval1q;      // current controller1 value: xrel (quantized)
     int * ccval2q;      // current controller1 value: yrel (quantized)
 
-    double cccval1;     // common cc value, average of individual ccvals
-    double cccval2;     // common cc value, average of individual ccvals
+    float cccval1;     // common cc value, average of individual ccvals
+    float cccval2;     // common cc value, average of individual ccvals
     bool useCCCVal;
     int cccvalAvg;      // number of individual ccvals for average calc
     bool transitionMode; // in transition mode no new note on transistions, only pitch change
@@ -60,7 +60,7 @@ private:
     int layResizeDiff;   // how much has layout been resized?
 
     void init();
-    double calcYrel(int y, int ysum, int height);
+    float calcYrel(int y, int ysum, int height);
 };
 
 #endif // EVENTHANDLERRECT_H

@@ -37,8 +37,8 @@ public:
 
     int getX();
     int getY();
-    double getXn();
-    double getYn();
+    float getXn();
+    float getYn();
     long getT();
     int getGid();
     int getState();
@@ -47,8 +47,8 @@ public:
 private:
     int x;
     int y;
-    double xn;
-    double yn;
+    float xn;
+    float yn;
     int width;
     int height;
     long t;

@@ -107,11 +107,11 @@ void QOscBase::oscMessageParseArgs( const QVariant& data, QString& argtypes, QBy
 		argtypes += "i";
 		arguments = arguments + fromInt32( data.toInt() );
 	}
-	if ( data.type() == QVariant::Double ) {
-		argtypes += "f";
-		arguments += fromFloat( data.toDouble() );
-	}
-	if ( data.type() == QVariant::String ) {
+    if ( data.type() == QVariant::Double ) {
+        argtypes += "f";
+        arguments += fromFloat( data.toFloat() );
+    }
+    if ( data.type() == QVariant::String ) {
 		argtypes += "s";
 		arguments += fromString( data.toString() );
 	}
@@ -172,7 +172,7 @@ void PathObject::send( QVariant v ) {
 }
 void PathObject::send( int i ) { send( QVariant( i ) ); }
 void PathObject::send( QString s ) { send( QVariant( s ) ); }
-void PathObject::send( double d ) { send( QVariant( d ) ); }
+void PathObject::send( float d ) { send( QVariant( d ) ); }
 void PathObject::send() { send( QVariant() ); }
 
 void PathObject::signalData( QVariant v ) {
@@ -183,8 +183,8 @@ void PathObject::signalData( QVariant v ) {
                 emit data();
         if ( _type == QVariant::Int )
                 emit data( v.toInt() );
-        if ( _type == QVariant::Double )
-                emit data( v.toDouble() );
+        if ( _type == QVariant::float )
+                emit data( v.tofloat() );
         if ( _type == QVariant::String )
                 emit data( v.toString() );
         emit data( v );

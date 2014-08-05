@@ -166,7 +166,7 @@ void PointPaintShape::paint(Point * point, RC1 * v, QPainter * pnt)
 
 float PointPaintShape::calcRow(quint16 row, Point * pnt, RC1 * v) {
     quint16 i0=row*9;
-    double ltn=(double)(v->getNow()-pnt->getT())/(double)v->getTtl();
+    float ltn=(float)(v->getNow()-pnt->getT())/(float)v->getTtl();
     float res=params[i0];       // spalte 0: konstantanteil
     res+=params[i0+1]*pnt->getXn()*v->getLayout()->getWidth();
     res+=params[i0+2]*pnt->getYn()*v->getLayout()->getHeight();

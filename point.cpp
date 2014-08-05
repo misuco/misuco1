@@ -42,13 +42,13 @@ void Point::set(int x, int y, int w, int h)
 void Point::setX(int x)
 {
     this->x=x;
-    this->xn=(double)x/(double)width;
+    this->xn=(float)x/(float)width;
 }
 
 void Point::setY(int y)
 {
     this->y=y;
-    this->yn=(double)y/(double)height;
+    this->yn=(float)y/(float)height;
 }
 
 void Point::setWidth(int w)
@@ -57,7 +57,7 @@ void Point::setWidth(int w)
         w=1;
     }
     width=w;
-    this->x=xn*(double)w;
+    this->x=xn*(float)w;
 }
 
 void Point::setHeight(int h)
@@ -66,7 +66,7 @@ void Point::setHeight(int h)
         h=1;
     }
     height=h;
-    this->y=yn*(double)h;
+    this->y=yn*(float)h;
 }
 
 void Point::setT(long t)
@@ -100,12 +100,12 @@ int Point::getY()
     return y;
 }
 
-double Point::getXn()
+float Point::getXn()
 {
     return xn;
 }
 
-double Point::getYn()
+float Point::getYn()
 {
     return yn;
 }

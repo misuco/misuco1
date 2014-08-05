@@ -38,7 +38,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
     for(int i=0;i<evptr_stack_size;i++) {
         if(evptr_stack[i]==p->getGid()) {
             evptr=i;
-            i=evptr_stack_size;
+            break;
         }
     }
     if(evptr==-1) {
@@ -57,7 +57,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         }
     }
     
-    // 2.b. translate to MisuEvent index
+    // 2.b. translate to MisuEvent index iseg
     int iy=0;
     int ix=0;
     int iseg=0;
@@ -100,7 +100,6 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             // turn on pressed for new segment
             layout->incPressed(iseg);
             //qDebug() << "event " << evptr << "incPressed " << iseg;
-            isegb[evptr]=iseg;
         }
 
         if(layout->getSegtype(iseg)!=11) {
@@ -115,8 +114,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             if(layout->getCtlx(iseg)>0) {
                 if(p->getX()!=ccval1[evptr]) {
                     ccval1[evptr]=p->getX();
-                    double xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg));
-                    xrel=xrel/(double)layout->getSegwidthpx(iseg);
+                    float xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg));
+                    xrel=xrel/(float)layout->getSegwidthpx(iseg);
                     if(useCCCVal==true) {
                         cccval1=xrel/cccvalAvg+(cccvalAvg-1)*cccval1/cccvalAvg;
                         snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtlx(iseg), cccval1);
@@ -128,9 +127,9 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             if(layout->getCtly(iseg)>0) {
                 if(p->getY()!=ccval2[evptr]) {
                     ccval2[evptr]=p->getY();
-                    //double yrel=p->getY()-(ysum-layout->getRowheightpx(iy));
-                    double yrel=calcYrel(p->getY(),ysum,layout->getRowheightpx(iy));
-                    yrel=1-(yrel/(double)layout->getRowheightpx(iy));
+                    //float yrel=p->getY()-(ysum-layout->getRowheightpx(iy));
+                    float yrel=calcYrel(p->getY(),ysum,layout->getRowheightpx(iy));
+                    yrel=1-(yrel/(float)layout->getRowheightpx(iy));
                     //                ysum+=layout->getRowheightpx(iy);
                     if(useCCCVal==true) {
                         cccval2=yrel/cccvalAvg+(cccvalAvg-1)*cccval2/cccvalAvg;
@@ -144,7 +143,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         
         if(layout->getSegtype(iseg)==0) {
             int v1=layout->getValueInt(iseg);
-            double v2=layout->getValue(iseg);
+            float v2=layout->getValue(iseg);
             int pitch=0;
             p->setHue(30*(layout->getValueInt(iseg)%12));
             if(note[evptr]!=v2) {
@@ -176,13 +175,13 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 if(layout->getSegtype(iseg+1)==0 && layout->getSegtype(iseg-1)==0) {
                     // 3. calculate frequency
                     // 3a. calculate relative xposition in field
-                    double xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg));
-                    xrel=xrel/(double)layout->getSegwidthpx(iseg);
+                    float xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg));
+                    xrel=xrel/(float)layout->getSegwidthpx(iseg);
                     // 3b. calculate frequency difference
-                    double fdiff=layout->getValue(iseg+1)-layout->getValue(iseg-1);
+                    float fdiff=layout->getValue(iseg+1)-layout->getValue(iseg-1);
                     float mndiff=layout->getValueInt(iseg+1)%12-layout->getValueInt(iseg-1)%12;
                     // 3c. calculate relative frequency
-                    double frel=fdiff*xrel;
+                    float frel=fdiff*xrel;
                     frel+=layout->getValue(iseg-1);
                     float hue=(float)(layout->getValueInt(iseg-1)%12)+(mndiff*(float)xrel);
                     hue*=30;
@@ -277,12 +276,12 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                  }
             } else if(layout->getSegtype(iseg)==4) {
                 // x-slider
-                double xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg));
-                xrel=xrel/(double)layout->getSegwidthpx(iseg);
+                float xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg));
+                xrel=xrel/(float)layout->getSegwidthpx(iseg);
                 int xrelquant=0;    // quantized by steps
                 if(layout->getCtlx(iseg)>0) {
-                    xrelquant=xrel*(double)layout->getCtlx(iseg);
-                    //xrel=(double)xrelquant/(double)layout->getCtlx(iseg);
+                    xrelquant=xrel*(float)layout->getCtlx(iseg);
+                    //xrel=(float)xrelquant/(float)layout->getCtlx(iseg);
                 }
                 layout->setValueInt(iseg,xrelquant);
                 if(layout->getChan(iseg)==0) {
@@ -303,16 +302,16 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     snd->cc(0, 0,104,layout->getValueInt(iseg));
                 }
             } else if(layout->getSegtype(iseg)==6) {
-                // x-double-slider
-                double xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg));
-                xrel=xrel/(double)layout->getSegwidthpx(iseg);
+                // x-float-slider
+                float xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg));
+                xrel=xrel/(float)layout->getSegwidthpx(iseg);
                 int xrelquant=0;    // quantized by steps
                 if(layout->getCtlx(iseg)>0) {
-                    xrelquant=xrel*(double)layout->getCtlx(iseg);
-                    xrel=(double)xrelquant/(double)layout->getCtlx(iseg);
+                    xrelquant=xrel*(float)layout->getCtlx(iseg);
+                    xrel=(float)xrelquant/(float)layout->getCtlx(iseg);
                 }
-                //qDebug() << "x-double-slider " << xrel  << " : " << xrelquant;
-                //qDebug() << "x-double-slider " << layout->getValueInt(iseg) << " : " << layout->getValueInt(iseg+1);
+                //qDebug() << "x-float-slider " << xrel  << " : " << xrelquant;
+                //qDebug() << "x-float-slider " << layout->getValueInt(iseg) << " : " << layout->getValueInt(iseg+1);
 
                 if(xrelquant>layout->getValueInt(iseg+1)) {
                     layout->setValue(iseg+1,xrel);
@@ -342,7 +341,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 layout->setBaseoct(layout->getValueInt(iseg));
                 layout->setTopoct(layout->getValueInt(iseg+1));
                 layout->updateLayout();
-                //qDebug() << "x-double-slider " << layout->getValueInt(iseg) << " : " << layout->getValueInt(iseg+1);
+                //qDebug() << "x-float-slider " << layout->getValueInt(iseg) << " : " << layout->getValueInt(iseg+1);
             } else if(layout->getSegtype(iseg)==10) {
                 if( p->getState() == Qt::TouchPointPressed ) {
                     if(layout->getChan(iseg)==0) {
@@ -575,8 +574,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     }
                 }
             }
-            isegb[evptr]=iseg;
         }
+        isegb[evptr]=iseg;
     } else if( p->getState() == Qt::TouchPointReleased ) {
         p->setHue(-1);
         act[evptr]=false;
@@ -631,7 +630,7 @@ void EventHandlerRect::init()
     ieventout=new int[ntp];
     ccval1=new int[ntp];
     ccval2=new int[ntp];
-    note=new double[ntp];
+    note=new float[ntp];
     chan=new int[ntp];
     isegb=new int[ntp];
     
@@ -651,7 +650,7 @@ void EventHandlerRect::init()
     }
 }
 
-double EventHandlerRect::calcYrel(int y, int ysum, int height)
+float EventHandlerRect::calcYrel(int y, int ysum, int height)
 {
     return y-(ysum-height);
 }

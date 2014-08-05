@@ -89,7 +89,7 @@ class PathObject // : public QObject
 		void send( QVariant );
 		void send( int );
 		void send( QString );
-		void send( double );
+		void send( float );
 		void send();
 		//@}
 
@@ -97,7 +97,7 @@ class PathObject // : public QObject
 		// @{
 		void data( QVariant );
 		void data( int );
-		void data( double );
+		void data( float );
 		void data( QString );
 		void data();
 		// @}

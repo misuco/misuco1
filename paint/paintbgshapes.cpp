@@ -310,7 +310,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 fontl=0;
                 pnt->setFont(QFont(lay->getFont(),lay->getFontsize()/2));
             } else if(lay->getSegtype(iseg)==6) {
-                /* double x-slider */
+                /* float x-slider */
                 int sseg=xpaint1/lay->getCtlx(iseg);
                 int xsseg=sseg-2*cradx;
                 int ysseg=ypaint1-2*crady;

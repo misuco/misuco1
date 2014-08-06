@@ -484,30 +484,18 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 }
             } else if(layout->getSegtype(iseg)==12) {
                 if( p->getState() == Qt::TouchPointPressed || movedin) {
+                    /* ordered
                     QString link = "";
                     QString link_pre="http://scales.misuco.org/";
-                    //digit.sprintf("%d",layout->getBasenote()+1);
                     link.append(layout->getMidi2TextUrl(layout->getBasenote()));
                     link.append("-");
                     for(int i=0;i<11;i++) {
                         if(layout->getBscale(i)) {
                             int currnote=layout->getBasenote()+i+1;
                             if(currnote>11) {
-                                /*
-                                if(link_pre.length()==0) {
-                                    digit.sprintf("%d",currnote%12+1);
-                                } else {
-                                    digit.sprintf("-%d",currnote%12+1);
-                                }
-                                link_pre.append(digit);
-                                */
                                 link_pre.append(layout->getMidi2TextUrl(currnote%12));
                                 link_pre.append("-");
                             } else {
-                                /*
-                                digit.sprintf("-%d",currnote+1);
-                                link.append(digit);
-                                */
                                 link.append(layout->getMidi2TextUrl(currnote));
                                 link.append("-");
                             }
@@ -517,7 +505,19 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     link_pre.append(link);
                     link_pre.append("/#");
                     link_pre.append(layout->getMidi2TextUrl(layout->getBasenote()));
-                    QDesktopServices::openUrl(QUrl(link_pre));
+                    */
+                    QString link ="http://scales.misuco.org/";
+                    link.append(layout->getMidi2TextUrl(layout->getBasenote()));
+                    link.append("-");
+                    for(int i=0;i<11;i++) {
+                        if(layout->getBscale(i)) {
+                            int currnote=layout->getBasenote()+i+1;
+                            link.append(layout->getMidi2TextUrl(currnote%12));
+                            link.append("-");
+                        }
+                    }
+                    link.chop(1);
+                    QDesktopServices::openUrl(QUrl(link));
                 }
             } else if(layout->getSegtype(iseg)==11) {
                 if( p->getState() == Qt::TouchPointMoved ) {

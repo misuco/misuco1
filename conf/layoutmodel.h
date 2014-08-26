@@ -26,6 +26,7 @@ class LayoutModel
 public:
     LayoutModel();
     void calcGeo(int w, int h);
+    void calcGeo();
 
     int getWidth() const;
     int getHeight() const;
@@ -54,16 +55,21 @@ public:
 
     void setValue(int i, float v) const;
     void setValueInt(int i, int v) const;
+    void setSegtype(int i, int v) const;
+    void setRowheight(int i, int v) const;
+    void setRowheightmax(int v);
+    void setSegwidth(int i, int v) const;
+    void setSegwidthmax(int i, int v) const;
+    void setChan(int i, int v) const;
+    void setCtlx(int i, int v) const;
+    void setCtly(int i, int v) const;
+    void setPressed(int i, int v) const;
+    void setSegtext(int i, QString t) const;
 
-/*    void setXY(int x, int y);
-    void setScale(int start, int n, int step, bool withTransistion);
-    void setFactoryLayout(int i);
-    void setFactoryProg(int i);*/
     void setSegH(int i, int v);
     void setAllCtlx(int v);
     void setAllCtly(int v);
     void setAllChan(int v);
-//    void setRaga(int i, int b);
     int getBasenote() const;
     void setBasenote(int value);
     int getBasescale() const;
@@ -77,6 +83,10 @@ public:
     void setTransMode(bool t);
     void setRowheightpx(int i, int v);
     void setRowheight(int i, int v);
+
+    void setNrows(int v);
+    void setNseg(int i,int v);
+
     void updateLayout();
 
     int note2hue(int note);

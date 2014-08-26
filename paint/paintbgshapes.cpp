@@ -186,8 +186,8 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 if(gradients>0) {
                     QLinearGradient linearGrad(QPointF(xpaint, ypaint), QPointF(xpaint+xpaint1, ypaint));
                     if(iseg>0) {
-                        linearGrad.setColorAt(0, QColor::fromHsl(col1,satB,lightB));
-                        linearGrad.setColorAt(1, QColor::fromHsl(col2,satB,lightB));
+                        linearGrad.setColorAt(0, QColor::fromHsl(col1,130,lightBNote));
+                        linearGrad.setColorAt(1, QColor::fromHsl(col2,130,lightBNote));
                     } else {
                         linearGrad.setColorAt(0, Qt::black);
                         linearGrad.setColorAt(1, Qt::white);
@@ -222,7 +222,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
             
             if(lay->getSegtype(iseg)==1) {
                 if(gradients) {
-                    pnt->drawRect(xpaint,ypaint+crady,xpaint1_1,ypaint1_2);
+                    pnt->drawRect(xpaint,ypaint,xpaint1_1,ypaint1);
                 } else {
                     if(lightB>0) {
                         pnt->setBrush(QColor::fromHsl(col1,satB,lightB));

@@ -177,6 +177,11 @@ LayoutModel::LayoutModel()
     updateLayout();
 }
 
+void LayoutModel::calcGeo()
+{
+    calcGeo(width,height);
+}
+
 void LayoutModel::calcGeo(int w, int h)
 {
     /*
@@ -325,12 +330,82 @@ void LayoutModel::decPressed(int i)
 
 void LayoutModel::setValue(int i, float v) const
 {
-    value[i]=v;
+    if(i<nsegsmax) {
+        value[i]=v;
+    }
 }
 
 void LayoutModel::setValueInt(int i, int v) const
 {
-    valueint[i]=v;
+    if(i<nsegsmax) {
+        valueint[i]=v;
+    }
+}
+
+void LayoutModel::setSegtype(int i, int v) const
+{
+    if(i<nsegsmax) {
+        segtype[i]=v;
+    }
+}
+
+void LayoutModel::setRowheight(int i, int v) const
+{
+    if(i<nrows) {
+        rowheight[i]=v;
+    }
+}
+
+void LayoutModel::setRowheightmax(int v)
+{
+    rowheightmax=v;
+}
+
+void LayoutModel::setSegwidth(int i, int v) const
+{
+    if(i<nsegsmax) {
+        segwidth[i]=v;
+    }
+}
+
+void LayoutModel::setSegwidthmax(int i, int v) const
+{
+    if(i<nrows) {
+        segwidthmax[i]=v;
+    }
+}
+
+void LayoutModel::setChan(int i, int v) const
+{
+    if(i<nsegsmax) {
+        chan[i]=v;
+    }
+}
+
+void LayoutModel::setCtlx(int i, int v) const
+{
+    if(i<nsegsmax) {
+        ctlx[i]=v;
+    }
+}
+
+void LayoutModel::setCtly(int i, int v) const
+{
+    if(i<nsegsmax) {
+        ctly[i]=v;
+    }
+}
+
+void LayoutModel::setPressed(int i, int v) const
+{
+    pressed[i]=v;
+}
+
+void LayoutModel::setSegtext(int i, QString t) const
+{
+    if(i<nsegsmax) {
+        segText[i]=t;
+    }
 }
 
 int LayoutModel::getBasenote() const
@@ -393,6 +468,22 @@ void LayoutModel::setRowheightpx(int i, int v)
 void LayoutModel::setRowheight(int i, int v)
 {
     rowheight[i]=v;
+}
+
+void LayoutModel::setNrows(int v)
+{
+    if(v<nrowsmax) {
+        nrows=v;
+    }
+}
+
+void LayoutModel::setNseg(int i, int v)
+{
+    if(i<nrowsmax && v<nrowsmax) {
+        nsegs-=nseg[i];
+        nseg[i]=v;
+        nsegs+=v;
+    }
 }
 
 int LayoutModel::note2hue(int note)

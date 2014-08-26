@@ -397,7 +397,7 @@ bool RC1::event(QEvent *event)
 
 void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 port)
 {
-    //qDebug() << "got osc signal " << path << " data " << data << " source " << host->toString();
+    qDebug() << "got osc signal " << path << " data " << data << " source " << host->toString();
     int ignoreIndex=ignoreAddr.indexOf(*host);
     if(ignoreIndex==-1) {
         QList<QVariant> dl=data.toList();
@@ -424,13 +424,100 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
                 sender->setDestination(senderAddress,senderPort);
             }
         }
-        
+
         if(path=="/chn") {
             if(dl.size()==1) {
                 chan=dl.at(0).toInt();
                 layout->setAllChan(chan );
             }
         }
+
+        if(path=="/dim") {
+            if(dl.size()<16) {
+                layout->setNrows(dl.size());
+                int seg=0;
+                for(int i=0;i<dl.size();i++) {
+                    int nseg=dl.at(i).toInt();
+                    if(nseg>16) {
+                        nseg=16;
+                    }
+                    layout->setNseg(i,nseg);
+                    layout->setRowheight(i,1);
+                    layout->setSegwidthmax(i,nseg);
+                    for(int j=0;j<nseg;j++) {
+                        layout->setSegwidth(seg,1);
+                        layout->setPressed(seg++,0);
+                    }
+                }
+                layout->setRowheightmax(dl.size());
+                layout->calcGeo();
+            }
+        }
+
+        if(path=="/val") {
+            if(dl.size()<=layout->getNsegs()) {
+                for(int i=0;i<dl.size();i++) {
+                    layout->setValue(i,dl.at(i).toFloat());
+                }
+                update();
+            }
+        }
+
+        if(path=="/valint") {
+            if(dl.size()<=layout->getNsegs()) {
+                for(int i=0;i<dl.size();i++) {
+                    layout->setValueInt(i,dl.at(i).toInt());
+                }
+                update();
+            }
+        }
+
+        if(path=="/type") {
+            qDebug() << "osc get type size " << dl.size();
+            if(dl.size()<=layout->getNsegs()) {
+                for(int i=0;i<dl.size();i++) {
+                    layout->setSegtype(i,dl.at(i).toInt());
+                }
+                qDebug() << "osc set type";
+                update();
+            }
+        }
+
+        if(path=="/chan") {
+            if(dl.size()<=layout->getNsegs()) {
+                for(int i=0;i<dl.size();i++) {
+                    layout->setChan(i,dl.at(i).toInt());
+                }
+            }
+        }
+
+        if(path=="/ctlx") {
+            if(dl.size()<=layout->getNsegs()) {
+                for(int i=0;i<dl.size();i++) {
+                    layout->setCtlx(i,dl.at(i).toInt());
+                }
+            }
+        }
+
+        if(path=="/ctly") {
+            if(dl.size()<=layout->getNsegs()) {
+                for(int i=0;i<dl.size();i++) {
+                    layout->setCtly(i,dl.at(i).toInt());
+                }
+            }
+        }
+
+        if(path=="/width") {
+            if(dl.size()<=layout->getNsegs()) {
+                for(int i=0;i<dl.size();i++) {
+                    layout->setSegwidth(i,dl.at(i).toInt());
+                }
+                layout->calcGeo();
+            }
+        }
+
+
+
 /*
  if(path=="/loadbg") {
  if(dl.size()==1) {

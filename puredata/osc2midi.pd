@@ -1,4 +1,4 @@
-#N canvas 941 280 790 582 10;
+#N canvas 79 48 1000 690 10;
 #X obj 151 121 unpack 0 0 0;
 #X obj 205 242 print;
 #X obj 153 170 ctlout;
@@ -18,13 +18,20 @@
 ;
 #X obj 369 468 sendOSC;
 #X msg 438 309 connect 255.255.255.255 3333;
-#X msg 453 350 send /chn 2;
+#X msg 455 357 send /chn 2;
 #X msg 462 387 send /chn 1;
 #X msg 380 265 connect 192.168.11.111 3333;
 #X msg 408 287 connect 192.168.11.112 3333;
 #X msg 468 427 send /chn 0;
 #X msg 224 438 disconnect;
 #X msg 362 239 connect 192.168.11.135 3333;
+#X msg 533 470 send /dim 3 3 3;
+#X msg 533 510 send /type 0 1 0 0 1 0 0 1 0;
+#X msg 535 541 send /type 0 0 0 0 0 0 0 0 0;
+#X msg 561 444 send /dim 6 3;
+#X msg 445 334 connect 192.168.11.255 3333;
+#X msg 540 587 send /val 1000 1100 1200 1300 1400 1500 1600 1700 1800
+1900;
 #X connect 0 0 2 2;
 #X connect 0 1 2 1;
 #X connect 0 2 2 0;
@@ -52,3 +59,9 @@
 #X connect 22 0 16 0;
 #X connect 23 0 16 0;
 #X connect 24 0 16 0;
+#X connect 25 0 16 0;
+#X connect 26 0 16 0;
+#X connect 27 0 16 0;
+#X connect 28 0 16 0;
+#X connect 29 0 16 0;
+#X connect 30 0 16 0;

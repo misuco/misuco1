@@ -144,24 +144,27 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         if(layout->getSegtype(iseg)==0) {
             int v1=layout->getValueInt(iseg);
             float v2=layout->getValue(iseg);
-            int pitch=0;
             p->setHue(30*(layout->getValueInt(iseg)%12));
             if(note[evptr]!=v2) {
                 if(transitionMode) {
                     if(note[evptr]>0) {
-                        snd->pitch(layout->getChan(iseg), ieventout[evptr],v2,v1, pitch);
+                        snd->pitch(layout->getChan(iseg), ieventout[evptr],v2,v1, layout->getPitch(iseg));
                     } else {
                         ieventout[evptr]=ieventoutnext;
                         ieventoutnext++;
-                        snd->noteOn(layout->getChan(iseg), ieventout[evptr], v2, v1, pitch, veldef);
+                        snd->noteOn(layout->getChan(iseg), ieventout[evptr], v2, v1, layout->getPitch(iseg), veldef);
                     }
                 } else {
-                    if(note[evptr]>0) {
-                        snd->noteOff(chan[evptr], ieventout[evptr]);
+                    if(note[evptr]>0 && layout->getSegtype(isegb[evptr])==1) {
+                        snd->pitch(layout->getChan(iseg), ieventout[evptr],v2,v1, layout->getPitch(iseg));
+                    } else {
+                        if(note[evptr]>0) {
+                            snd->noteOff(chan[evptr], ieventout[evptr]);
+                        }
+                        ieventout[evptr]=ieventoutnext;
+                        ieventoutnext++;
+                        snd->noteOn(layout->getChan(iseg), ieventout[evptr], v2, v1, layout->getPitch(iseg), veldef);
                     }
-                    ieventout[evptr]=ieventoutnext;
-                    ieventoutnext++;
-                    snd->noteOn(layout->getChan(iseg), ieventout[evptr], v2, v1, pitch, veldef);
                 }
                 note[evptr]=v2;
                 chan[evptr]=layout->getChan(iseg);
@@ -179,22 +182,29 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     xrel=xrel/(float)layout->getSegwidthpx(iseg);
                     // 3b. calculate frequency difference
                     float fdiff=layout->getValue(iseg+1)-layout->getValue(iseg-1);
-                    float mndiff=layout->getValueInt(iseg+1)%12-layout->getValueInt(iseg-1)%12;
+                    //float mndiff=layout->getValueInt(iseg+1)%12-layout->getValueInt(iseg-1)%12;
                     // 3c. calculate relative frequency
                     float frel=fdiff*xrel;
                     frel+=layout->getValue(iseg-1);
-                    float hue=(float)(layout->getValueInt(iseg-1)%12)+(mndiff*(float)xrel);
-                    hue*=30;
-                    layout->setSegH(iseg, hue);    // store value for painter
-                    p->setHue(hue);
-                    
-                    int pitch=0; // TODO: calculate properly
+                    //float hue=(float)(layout->getValueInt(iseg-1)%12)+(mndiff*(float)xrel);
+                    //hue*=30;
+                    //layout->setSegH(iseg, hue);    // store value for painter
+                    //p->setHue(hue);
+
+                    float pitchdiff=4096*(layout->getValueInt(iseg+1)-layout->getValueInt(iseg-1));
+                    pitchdiff+=layout->getPitch(iseg+1);
+                    pitchdiff-=layout->getPitch(iseg-1);
+                    pitchdiff*=xrel;
+                    float pitchednote=layout->getValueInt(iseg-1)*4096+layout->getPitch(iseg-1)+pitchdiff;
+                    int midinote=round(pitchednote/4096);
+                    int pitch=(pitchednote-midinote*4096)/2;
+
                     if(note[evptr]>0) {
-                        snd->pitch(layout->getChan(iseg), ieventout[evptr],frel,frel,pitch);
+                        snd->pitch(layout->getChan(iseg), ieventout[evptr],frel,midinote,pitch);
                     } else {
                         ieventout[evptr]=ieventoutnext;
                         ieventoutnext++;
-                        snd->noteOn(layout->getChan(iseg), ieventout[evptr],frel,frel,pitch,veldef);
+                        snd->noteOn(layout->getChan(iseg), ieventout[evptr],frel,midinote,pitch,veldef);
                     }
                     note[evptr]=frel;
                 }
@@ -283,6 +293,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     xrelquant=xrel*(float)layout->getCtlx(iseg);
                     //xrel=(float)xrelquant/(float)layout->getCtlx(iseg);
                 }
+                layout->setValue(iseg,xrel);
                 layout->setValueInt(iseg,xrelquant);
                 if(layout->getChan(iseg)==0) {
                     layout->setBasenote(layout->getValueInt(iseg));
@@ -301,8 +312,20 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     // resonance
                     snd->cc(0, 0,104,layout->getValueInt(iseg));
                 }
+            } else if(layout->getSegtype(iseg)==5) {
+                // y-slider
+                float yrel=p->getY()-(ysum-layout->getRowheightpx(iy));
+                yrel=yrel/(float)layout->getRowheightpx(iy);
+                int yrelquant=0;    // quantized by steps
+                if(layout->getCtlx(iseg)>0) {
+                    yrelquant=yrel*(float)layout->getCtlx(iseg);
+                    //xrel=(float)xrelquant/(float)layout->getCtlx(iseg);
+                }
+                layout->setValue(iseg,yrel);
+                layout->setValueInt(iseg,yrelquant);
+                snd->cc(0, 0,layout->getCtly(iseg),layout->getValueInt(iseg));
             } else if(layout->getSegtype(iseg)==6) {
-                // x-float-slider
+                // x-twin-slider
                 float xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg));
                 xrel=xrel/(float)layout->getSegwidthpx(iseg);
                 int xrelquant=0;    // quantized by steps
@@ -341,147 +364,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 layout->setBaseoct(layout->getValueInt(iseg));
                 layout->setTopoct(layout->getValueInt(iseg+1));
                 layout->updateLayout();
-                //qDebug() << "x-float-slider " << layout->getValueInt(iseg) << " : " << layout->getValueInt(iseg+1);
-            } else if(layout->getSegtype(iseg)==10) {
-                if( p->getState() == Qt::TouchPointPressed ) {
-                    if(layout->getChan(iseg)==0) {
-                        int newwaveform=layout->getValueInt(iseg)+1;
-                        if(newwaveform>5) {
-                            newwaveform=0;
-                        }
-                        layout->setValueInt(iseg,newwaveform);
-                        switch(newwaveform) {
-                            case 0:
-                                layout->getSegText(iseg)->sprintf("SQR");
-                                break;
-                            case 1:
-                                layout->getSegText(iseg)->sprintf("SAW");
-                                break;
-                            case 2:
-                                layout->getSegText(iseg)->sprintf("SIN");
-                                break;
-                            case 3:
-                                layout->getSegText(iseg)->sprintf("TRI");
-                                break;
-                            case 4:
-                                layout->getSegText(iseg)->sprintf("NOI");
-                                break;
-                            case 5:
-                                layout->getSegText(iseg)->sprintf("WTAB");
-                                break;
-                        }
-                        snd->cc(0,0,200,newwaveform);
-                    } else if(layout->getChan(iseg)==1) {
-                        int newwaveform=layout->getValueInt(iseg)+1;
-                        if(newwaveform>4) {
-                            newwaveform=0;
-                        }
-                        layout->setValueInt(iseg,newwaveform);
-                        switch(newwaveform) {
-                            case 0:
-                                layout->getSegText(iseg)->sprintf("LFOSQR");
-                                break;
-                            case 1:
-                                layout->getSegText(iseg)->sprintf("LFOSAW");
-                                break;
-                            case 2:
-                                layout->getSegText(iseg)->sprintf("LFOSIN");
-                                break;
-                            case 3:
-                                layout->getSegText(iseg)->sprintf("LFOTRI");
-                                break;
-                            case 4:
-                                layout->getSegText(iseg)->sprintf("LFONOI");
-                                break;
-                        }
-                        snd->cc(0,0,201,newwaveform);
-                    } else if(layout->getChan(iseg)==2) {
-                        int newwaveform=layout->getValueInt(iseg)+1;
-                        if(newwaveform>3) {
-                            newwaveform=0;
-                        }
-                        layout->setValueInt(iseg,newwaveform);
-                        switch(newwaveform) {
-                            case 0:
-                                layout->getSegText(iseg)->sprintf("NONE");
-                                break;
-                            case 1:
-                                layout->getSegText(iseg)->sprintf("AMP");
-                                break;
-                            case 2:
-                                layout->getSegText(iseg)->sprintf("FREQ");
-                                break;
-                            case 3:
-                                layout->getSegText(iseg)->sprintf("FILT");
-                                break;
-                        }
-                        snd->cc(0,0,202,newwaveform);
-
-                    } else if(layout->getChan(iseg)==3) {
-                        int newenv=layout->getValueInt(iseg)+1;
-                        if(newenv>3) {
-                            newenv=0;
-                        }
-                        layout->setValueInt(iseg,newenv);
-                        switch(newenv) {
-                        case 0:
-                            layout->getSegText(iseg)->sprintf("-__");
-                            break;
-                        case 1:
-                            layout->getSegText(iseg)->sprintf("--_");
-                            break;
-                        case 2:
-                            layout->getSegText(iseg)->sprintf("---");
-                            break;
-                        case 3:
-                            layout->getSegText(iseg)->sprintf("_-_");
-                                break;
-                        }
-                        snd->cc(0,0,203,newenv);
-                    } else if(layout->getChan(iseg)==4) {
-                        int newenv=layout->getValueInt(iseg)+1;
-                        if(newenv>3) {
-                            newenv=0;
-                        }
-                        layout->setValueInt(iseg,newenv);
-                        switch(newenv) {
-                            case 0:
-                                layout->getSegText(iseg)->sprintf("XMOD1");
-                                break;
-                            case 1:
-                                layout->getSegText(iseg)->sprintf("XMOD2");
-                                break;
-                            case 2:
-                                layout->getSegText(iseg)->sprintf("XMOD3");
-                                break;
-                            case 3:
-                                layout->getSegText(iseg)->sprintf("XMOD4");
-                                break;
-                        }
-                        //snd->cc(0,0,202,newenv);
-                    } else if(layout->getChan(iseg)==5) {
-                        int newenv=layout->getValueInt(iseg)+1;
-                        if(newenv>3) {
-                            newenv=0;
-                        }
-                        layout->setValueInt(iseg,newenv);
-                        switch(newenv) {
-                            case 0:
-                                layout->getSegText(iseg)->sprintf("YMOD1");
-                                break;
-                            case 1:
-                                layout->getSegText(iseg)->sprintf("YMOD2");
-                                break;
-                            case 2:
-                                layout->getSegText(iseg)->sprintf("YMOD3");
-                                break;
-                            case 3:
-                                layout->getSegText(iseg)->sprintf("YMOD4");
-                                break;
-                        }
-                        //snd->cc(0,0,202,newenv);
-                    }
-                }
+                //qDebug() << "x-twin-slider " << layout->getValueInt(iseg) << " : " << layout->getValueInt(iseg+1);
             } else if(layout->getSegtype(iseg)==12) {
                 if( p->getState() == Qt::TouchPointPressed || movedin) {
                     /* ordered
@@ -518,60 +401,6 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     }
                     link.chop(1);
                     QDesktopServices::openUrl(QUrl(link));
-                }
-            } else if(layout->getSegtype(iseg)==11) {
-                if( p->getState() == Qt::TouchPointMoved ) {
-                    if(!layResize) {
-                        layResize=true;
-                        layResizeDiff=p->getY();
-                    } else {
-                        int moved=p->getY()-layResizeDiff;
-                        while(moved>0) {
-                            int index=layResizePnt%iy;
-                            layout->setRowheightpx(index,layout->getRowheightpx(index)+1);
-                            layout->setRowheightpx(iy+1,layout->getRowheightpx(iy+1)-1);
-                            moved--;
-                            layResizePnt++;
-                        }
-                        while(moved<0) {
-                            int index=layResizePnt%iy;
-                            layout->setRowheightpx(index,layout->getRowheightpx(index)-1);
-                            layout->setRowheightpx(iy+1,layout->getRowheightpx(iy+1)+1);
-                            moved++;
-                            layResizePnt--;
-                        }
-                        layResizeDiff=p->getY();
-
-
-                        /*
-                         *
-                         *
-                         * ----------------
-                        if(moved>=iy) {
-                            int heightnew=layout->getRowheightpx(0)+1;
-                            int heightnewmax=layout->getHeight()/(iy+2);
-                            //qDebug() << "heightnewmax " << heightnewmax;
-                            if(heightnew<heightnewmax) {
-                                for(int i=0;i<iy;i++) {
-                                    layout->setRowheightpx(i,heightnew);
-                                }
-                            }
-                            int scaelheightnew=layout->getHeight()-iy*heightnew-layout->getRowheightpx(iy);
-                            layout->setRowheightpx(iy+1,scaelheightnew);
-                            layResizeDiff=p->getY();
-                        } else if(moved<=iy*-1) {
-                            int heightnew=layout->getRowheightpx(0)-1;
-                            if(heightnew>1) {
-                                for(int i=0;i<iy;i++) {
-                                    layout->setRowheightpx(i,heightnew);
-                                }
-                            }
-                            int scaelheightnew=layout->getHeight()-iy*heightnew-layout->getRowheightpx(iy);
-                            layout->setRowheightpx(iy+1,scaelheightnew);
-                            layResizeDiff=p->getY();
-                        }
-                        */
-                    }
                 }
             }
         }

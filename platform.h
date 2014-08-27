@@ -2,6 +2,6 @@
 #define PLATFORM_H
 
 //#define RC1_IOS
-//#define NOGL
+#define NOGL
 
 #endif // PLATFORM_H

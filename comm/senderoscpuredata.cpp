@@ -48,6 +48,12 @@ void SenderOscPuredata::noteOn(int chan, int voiceId, float fr, int midinote, in
     QString path;
     path.sprintf("/note/%d",chan);
     sendOsc(path,v);
+
+    v.clear();
+    v.append(pitch);
+    path.sprintf("/pitch/%d",chan);
+    sendOsc(path,v);
+
     onNoteCnt++;
 }
 
@@ -61,6 +67,33 @@ void SenderOscPuredata::noteOff(int chan, int voiceId)
     path.sprintf("/note/%d",chan);
     sendOsc(path,v);
     onNoteCnt--;
+}
+
+void SenderOscPuredata::pitch(int chan, int voiceId, float fr, int midinote, int pitch)
+{
+    QVariantList v;
+    QString path;
+
+    int f = midinote;
+    int vid=voiceId%1024;
+
+    if(notestate[vid]!=f) {
+        v.append(notestate[vid]);
+        v.append(0);
+        path.sprintf("/note/%d",chan);
+        sendOsc(path,v);
+
+        v.clear();
+        v.append(f);
+        v.append(127);
+        path.sprintf("/note/%d",chan);
+        sendOsc(path,v);
+
+        notestate[vid]=f;
+    }
+    v.append(pitch);
+    path.sprintf("/pitch/%d",chan);
+    sendOsc(path,v);
 }
 
 void SenderOscPuredata::setDestination(QHostAddress a, int p)

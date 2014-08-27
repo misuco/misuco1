@@ -31,7 +31,7 @@ public:
     virtual void pc(int chan, int v1);
     virtual void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int vel);
     virtual void noteOff(int chan, int voiceId);
-    virtual void pitch(int chan, int voiceId, float f, int midinote, int pitch) {}
+    virtual void pitch(int chan, int voiceId, float fr, int midinote, int pitch);
     virtual void setDestination(QHostAddress a,int p);
 
 private:

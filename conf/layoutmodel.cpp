@@ -26,8 +26,8 @@ LayoutModel::LayoutModel()
     height=1;
     fontsize=1;
     font="Arial";
-    nrowsmax=16;
-    nsegsmax=16*16;
+    nrowsmax=32;
+    nsegsmax=32*32;
     nseg = new int[nrowsmax];
     rowheight = new int[nrowsmax];
     rowheightpx = new int[nrowsmax];
@@ -37,6 +37,7 @@ LayoutModel::LayoutModel()
     segwidthmax=new int[nrowsmax];
     value = new float[nsegsmax];
     valueint = new int[nsegsmax];
+    pitch = new int[nsegsmax];
     segText=new QString[nsegsmax];
     segH = new int[nsegsmax];
     // put numbers as text
@@ -286,6 +287,11 @@ int LayoutModel::getValueInt(int i) const
     return valueint[i];
 }
 
+int LayoutModel::getPitch(int i) const
+{
+    return pitch[i];
+}
+
 int LayoutModel::getSegwidthpx(int i) const
 {
     return segwidthpx[i];
@@ -328,17 +334,21 @@ void LayoutModel::decPressed(int i)
     }
 }
 
-void LayoutModel::setValue(int i, float v) const
+void LayoutModel::setValue(int i, float v)
 {
     if(i<nsegsmax) {
         value[i]=v;
+        pitch[i]=round(log2(v/midi2f[valueint[i]])*12*8192/2);
     }
 }
 
-void LayoutModel::setValueInt(int i, int v) const
+void LayoutModel::setValueInt(int i, int v)
 {
     if(i<nsegsmax) {
         valueint[i]=v;
+        value[i]=midi2f[v];
+        pitch[i]=0;
+        segH[i]=note2hue(v);
     }
 }
 
@@ -486,10 +496,24 @@ void LayoutModel::setNseg(int i, int v)
     }
 }
 
+void LayoutModel::setNsegs(int v)
+{
+    nsegs=v;
+}
+
 int LayoutModel::note2hue(int note)
 {
     float calccol=(float)((note+4)%12)*30;
     return (int)calccol%360;
+}
+
+int LayoutModel::midi2freq(int note)
+{
+    if(note<128) {
+        return midi2f[note];
+    } else {
+        return 0;
+    }
 }
 int LayoutModel::getFontsize() const
 {
@@ -531,6 +555,7 @@ void LayoutModel::updateLayout()
         calcnote=basenote+i*12;
         valueint[seg]=calcnote;
         value[seg]=midi2f[calcnote];
+        pitch[seg]=0;
         segText[seg]=midi2TextEU[calcnote%12];
         segwidth[seg]=1;
         segtype[seg]=0;

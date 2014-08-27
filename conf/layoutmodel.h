@@ -31,6 +31,7 @@ public:
     int getWidth() const;
     int getHeight() const;
 
+    //layout
     int getNrows() const;
     int getRowheightpx(int i) const;
     int getRowheightmax() {return rowheightmax;}
@@ -40,21 +41,25 @@ public:
     int getSegwidth(int i) const;
     int getSegwidthmax(int i) const;
     int getSegwidthpx(int i) const;
+    QString * getSegText(int i) const;
+    int getSegH(int i) const;
+
+    // control
     float getValue(int i) const;
     int getValueInt(int i) const;
+    int getPitch(int i) const;
     int getCtlx(int i) const;
     int getCtly(int i) const;
     int getChan(int i) const;
     int getPressed(int i) const;
     int getSegtype(int i) const;
-    QString * getSegText(int i) const;
-    int getSegH(int i) const;
 
     void incPressed(int i);
     void decPressed(int i);
+    void setPressed(int i, int v) const;
 
-    void setValue(int i, float v) const;
-    void setValueInt(int i, int v) const;
+    void setValue(int i, float v);
+    void setValueInt(int i, int v);
     void setSegtype(int i, int v) const;
     void setRowheight(int i, int v) const;
     void setRowheightmax(int v);
@@ -63,7 +68,6 @@ public:
     void setChan(int i, int v) const;
     void setCtlx(int i, int v) const;
     void setCtly(int i, int v) const;
-    void setPressed(int i, int v) const;
     void setSegtext(int i, QString t) const;
 
     void setSegH(int i, int v);
@@ -86,10 +90,12 @@ public:
 
     void setNrows(int v);
     void setNseg(int i,int v);
+    void setNsegs(int v);
 
     void updateLayout();
 
     int note2hue(int note);
+    int midi2freq(int note);
 
     int getFontsize() const;
     QString getFont() const;
@@ -109,8 +115,9 @@ private:
     int *segwidthmax;
     int *segwidthpx;
     int *segtype;       // segmenttyp: 0=note, 1=transition, 2=layout
-    float *value;
-    int *valueint;
+    float *value;       // frequency
+    int *valueint;      // midi note 0...127
+    int *pitch;         // midi pitch -8191/8192
     float *midi2f;
     float *midi2fpure;
     int *ctlx;

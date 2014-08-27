@@ -1,4 +1,4 @@
-#N canvas 79 48 1000 690 10;
+#N canvas 581 179 1247 875 10;
 #X obj 151 121 unpack 0 0 0;
 #X obj 205 242 print;
 #X obj 153 170 ctlout;
@@ -12,7 +12,7 @@
 #X msg 541 88 0;
 #X text 546 108 all notes off;
 #X obj 169 86 OSCroute /cc /note /pitch /pc /alloff;
-#X obj 161 51 dumpOSC 3334;
+#X obj 147 37 dumpOSC 3334;
 #X obj 317 244 shell;
 #X msg 296 206 /home/c1audio/rc1/rc1/puredata/xdotool.sh \$1 \$2 \$3
 ;
@@ -32,6 +32,24 @@
 #X msg 445 334 connect 192.168.11.255 3333;
 #X msg 540 587 send /val 1000 1100 1200 1300 1400 1500 1600 1700 1800
 1900;
+#X msg 614 361 send /dim 9 9 9;
+#X msg 841 419 send /type 0 1 0 1 0 1 0 1 0 0 1 0 1 0 1 0 1 0 0 1 0
+1 0 1 0 1 0;
+#X msg 764 345 send /valint 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+17 18 19 20 21 22 23 24 25 26 27;
+#X msg 771 376 send /txt 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17
+18 19 20 21 22 23 24 25 26 27;
+#X msg 722 296 send /clrtxt 1 \, send /clrtxt 2;
+#X msg 760 199 send /valint 60 61 62 63 64 65 66 67 68 69 70 71 72
+73 74 75 76 77 78 79 80 81 82 83 84 85 86;
+#X msg 81 649 send /dim 7 1 \, send /valint 60 62 64 66 67 70 72 \,
+send /type 5 5 5 5 5 5 5 4 \, send /txt 1 2 3 4 5 6 7 8 \, send /ctlx
+100 100 10 10 10 10 10 10 \, send /ctly 1 2 3 4 5 6 7 8 \, send /hue
+10 20 30 40 50 60 70 \, send /chan 1 2 3 4 5 6 7 8;
+#X msg 87 555 send /dim 7 \, send /valint 60 62 64 66 67 70 72 \, send
+/type 0 1 0 1 0 1 0 \, send /txt 1 1 2 2 3 3 4 \, send /clrtxt 1 \,
+send /clrtxt 3 \, send /clrtxt 5 \, send /ctly 2 2 2 2 2 2 2 \, send
+/chan 0 0 0 0 0 0 0;
 #X connect 0 0 2 2;
 #X connect 0 1 2 1;
 #X connect 0 2 2 0;
@@ -48,7 +66,6 @@
 #X connect 12 2 6 0;
 #X connect 12 3 8 0;
 #X connect 12 4 9 0;
-#X connect 13 0 12 0;
 #X connect 13 0 1 0;
 #X connect 15 0 14 0;
 #X connect 17 0 16 0;
@@ -65,3 +82,11 @@
 #X connect 28 0 16 0;
 #X connect 29 0 16 0;
 #X connect 30 0 16 0;
+#X connect 31 0 16 0;
+#X connect 32 0 16 0;
+#X connect 33 0 16 0;
+#X connect 34 0 16 0;
+#X connect 35 0 16 0;
+#X connect 36 0 16 0;
+#X connect 37 0 16 0;
+#X connect 38 0 16 0;

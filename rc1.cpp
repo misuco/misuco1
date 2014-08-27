@@ -57,7 +57,7 @@ RC1::RC1(QWidget *parent) :
     ttl=2000;
 
     blockerOn=true;
-    blockerTimeout=60;
+    blockerTimeout=0;
     blockerTimeLeft=blockerTimeout;
     blockerPainter=new PaintBlocker();
     downloadAd=false;
@@ -96,7 +96,7 @@ RC1::RC1(QWidget *parent) :
 //  iOS: /var/mobile/Applications/ADDEBF69-B1C5-4E36-A8C2-789D717434C1/Documents => Persistent
 //  Linux: /home/c1/.local/share/rc1 => not Writable
 
-//  storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
 //  Android: /storage/emulated/0/Documents => not Persistent
 //  Linux: /home/c1/Documents => Persistent
 
@@ -449,6 +449,8 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
                         layout->setPressed(seg++,0);
                     }
                 }
+                layout->setNsegs(seg);
+                qDebug() << "set nsegs " << seg;
                 layout->setRowheightmax(dl.size());
                 layout->calcGeo();
             }
@@ -473,7 +475,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
         }
 
         if(path=="/type") {
-            qDebug() << "osc get type size " << dl.size();
+            qDebug() << "osc get type size " << dl.size() << " nsegs " << layout->getNsegs();
             if(dl.size()<=layout->getNsegs()) {
                 for(int i=0;i<dl.size();i++) {
                     layout->setSegtype(i,dl.at(i).toInt());
@@ -513,6 +515,24 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
                     layout->setSegwidth(i,dl.at(i).toInt());
                 }
                 layout->calcGeo();
+            }
+        }
+
+        if(path=="/txt") {
+            if(dl.size()<=layout->getNsegs()) {
+                for(int i=0;i<dl.size();i++) {
+                    layout->setSegtext(i,dl.at(i).toString());
+                }
+                layout->calcGeo();
+            }
+        }
+
+        if(path=="/clrtxt") {
+            if(dl.size()==1) {
+                int seg=dl.at(0).toInt();
+                if(seg<layout->getNsegs()) {
+                    layout->setSegtext(seg,"");
+                }
             }
         }
 

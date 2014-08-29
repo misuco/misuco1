@@ -334,11 +334,17 @@ void LayoutModel::decPressed(int i)
     }
 }
 
+double LayoutModel::Log2( double n )
+{
+    // log(n)/log(2) is log2.
+    return log( n ) / log( 2 );
+}
+
 void LayoutModel::setValue(int i, float v)
 {
     if(i<nsegsmax) {
         value[i]=v;
-        pitch[i]=round(log2(v/midi2f[valueint[i]])*12*8192/2);
+        pitch[i]=round(Log2(v/midi2f[valueint[i]])*12*8192/2);
     }
 }
 

@@ -223,15 +223,15 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             //isegb[evptr]=iseg;
             if(layout->getSegtype(iseg)==2) {
                 // push button
-                if(layout->getChan(iseg)==0) {
+                if(layout->getCtly(iseg)==-1) {
                     // basenote button
                     layout->decPressed(isegb[evptr]);
                     layout->incPressed(iseg);
                     layout->setBasenote(layout->getValueInt(iseg));
                     layout->updateLayout();
-                } else if(layout->getChan(iseg)==1) {
+                } else if(layout->getCtly(iseg)==-2) {
                     rc1->setActProgmem(layout->getValueInt(iseg));
-                } else if(layout->getChan(iseg)==2) {
+                } else if(layout->getCtly(iseg)==-3) {
                     //qDebug() << " segtype 2 chan 2 pressed " << layout->getPressed(iseg) ;
                     if(layout->getPressed(iseg)==0) {
                         layout->setRowheight(0,10);
@@ -259,16 +259,16 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                      //qDebug() << " seg type 3 " << iseg << " pressed " << layout->getPressed(iseg);
                      if(layout->getPressed(iseg)>0) {
                          layout->decPressed(iseg);
-                         if(layout->getChan(iseg)==0) {
+                         if(layout->getCtly(iseg)==-1) {
                              layout->setBscale(iseg,false);
                              //qDebug() << " bscale off " << iseg;
-                         } else if(layout->getChan(iseg)==1) {
+                         } else if(layout->getCtly(iseg)==-2) {
                              layout->setTransMode(false);
                          }
                          layout->updateLayout();
                      } else {
                          layout->incPressed(iseg);
-                         if(layout->getChan(iseg)==0) {
+                         if(layout->getCtly(iseg)==-1) {
                              layout->setBscale(iseg,true);
                              //qDebug() << " bscale on " << iseg;
 
@@ -278,7 +278,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                              snd->noteOn(ieventout[evptr],note[evptr],veldef);
                              */
                              //qDebug() << "snd->note(" << chan[evptr] << " " << ieventout[evptr] << " " << note[evptr];
-                         } else if(layout->getChan(iseg)==1) {
+                         } else if(layout->getCtly(iseg)==-2) {
                              layout->setTransMode(true);
                          }
                          layout->updateLayout();
@@ -295,22 +295,15 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 }
                 layout->setValue(iseg,xrel);
                 layout->setValueInt(iseg,xrelquant);
-                if(layout->getChan(iseg)==0) {
+                if(layout->getCtly(iseg)==-1) {
                     layout->setBasenote(layout->getValueInt(iseg));
                     layout->updateLayout();
-                } else if(layout->getChan(iseg)==1) {
+                } else if(layout->getCtly(iseg)==-2) {
                     rc1->setActProgmem(layout->getValueInt(iseg));
-                } else if(layout->getChan(iseg)==2) {
+                } else if(layout->getCtly(iseg)==-3) {
                     snd->pc(layout->getChan(25), xrelquant);
-                } else if(layout->getChan(iseg)==3) {
-                    // waveform
-                    snd->cc(0, 0, 100, layout->getValueInt(iseg));
-                } else if(layout->getChan(iseg)==4) {
-                    // envelope
-                    snd->cc(0, 0,103,layout->getValueInt(iseg));
-                } else if(layout->getChan(iseg)==5) {
-                    // resonance
-                    snd->cc(0, 0,104,layout->getValueInt(iseg));
+                } else {
+                    snd->cc(0, 0, layout->getCtly(iseg), layout->getValueInt(iseg));
                 }
             } else if(layout->getSegtype(iseg)==5) {
                 // y-slider

@@ -101,6 +101,7 @@ public:
     QString getFont() const;
     QString getMidi2Text(int midi) const;
     QString getMidi2TextUrl(int midi) const;
+    double Log2(double n);
 
 private:
     int nrows;

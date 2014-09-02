@@ -29,6 +29,8 @@ EventHandlerRect::EventHandlerRect()
 //void EventHandlerRect::processPoint(int p->getGid(), Qt::TouchPointState touchPointState, quint16 x1, quint16 y1)
 void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
 {
+    if(p->getX()<=0 || p->getY()<=0 ) return;
+
     ISender * snd=rc1->getSender();
     LayoutModel * layout=rc1->getLayout();
     
@@ -225,31 +227,31 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 // push button
                 if(layout->getCtly(iseg)==-1) {
                     // basenote button
-                    layout->decPressed(isegb[evptr]);
-                    layout->incPressed(iseg);
+//                    layout->decPressed(isegb[evptr]);
+//                    layout->incPressed(iseg);
                     layout->setBasenote(layout->getValueInt(iseg));
                     layout->updateLayout();
                 } else if(layout->getCtly(iseg)==-2) {
                     rc1->setActProgmem(layout->getValueInt(iseg));
                 } else if(layout->getCtly(iseg)==-3) {
                     //qDebug() << " segtype 2 chan 2 pressed " << layout->getPressed(iseg) ;
-                    if(layout->getPressed(iseg)==0) {
-                        layout->setRowheight(0,10);
-                        layout->setRowheight(1,10);
-                        layout->setRowheight(2,10);
-                        layout->setRowheight(3,10);
-                        layout->setRowheight(4,10);
-                        layout->setRowheight(5,10);
-                        layout->incPressed(iseg);
-                        layout->incPressed(iseg);
+                    if(layout->getValueInt(iseg)==0) {
+                        layout->setValueInt(iseg,1);
+                        layout->setPressed(iseg,1);
                     } else {
-                        layout->setRowheight(0,0);
-                        layout->setRowheight(1,0);
-                        layout->setRowheight(2,0);
-                        layout->setRowheight(3,0);
-                        layout->setRowheight(4,10);
-                        layout->setRowheight(5,50);
-                        layout->decPressed(iseg);
+                        layout->setRowheight(layout->getScalerow()-1,10);
+                        layout->setRowheight(layout->getScalerow(),50);
+                        layout->setValueInt(iseg,0);
+                        layout->setPressed(iseg,0);
+                    }
+                    for(int i=0;i<layout->getNrows();i++) {
+                        if(layout->getValueInt(iseg)==1) {
+                            layout->setRowheight(i,10);
+                        } else {
+                            if(i<layout->getScalerow()-1) {
+                                layout->setRowheight(i,0);
+                            }
+                        }
                     }
                     layout->calcGeo(layout->getWidth(),layout->getHeight());
                 }
@@ -260,7 +262,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                      if(layout->getPressed(iseg)>0) {
                          layout->decPressed(iseg);
                          if(layout->getCtly(iseg)==-1) {
-                             layout->setBscale(iseg,false);
+                             layout->setBscale(layout->getCtlx(iseg),false);
                              //qDebug() << " bscale off " << iseg;
                          } else if(layout->getCtly(iseg)==-2) {
                              layout->setTransMode(false);
@@ -269,7 +271,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                      } else {
                          layout->incPressed(iseg);
                          if(layout->getCtly(iseg)==-1) {
-                             layout->setBscale(iseg,true);
+                             layout->setBscale(layout->getCtlx(iseg),true);
                              //qDebug() << " bscale on " << iseg;
 
                              // play note if not yet selected
@@ -301,7 +303,10 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 } else if(layout->getCtly(iseg)==-2) {
                     rc1->setActProgmem(layout->getValueInt(iseg));
                 } else if(layout->getCtly(iseg)==-3) {
-                    snd->pc(layout->getChan(25), xrelquant);
+                    snd->pc(layout->getChan(iseg), xrelquant);
+                } else if(layout->getCtly(iseg)==-4) {
+
+
                 } else {
                     snd->cc(0, 0, layout->getCtly(iseg), layout->getValueInt(iseg));
                 }

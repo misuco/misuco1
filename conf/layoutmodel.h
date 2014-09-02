@@ -91,6 +91,7 @@ public:
     void setNrows(int v);
     void setNseg(int i,int v);
     void setNsegs(int v);
+    int getScalerow() const;
 
     void updateLayout();
 
@@ -108,6 +109,7 @@ private:
     int nsegs;          // total number of active segments
     int nrowsmax;
     int nsegsmax;       // size of segments memory
+
     int *rowheight;
     int rowheightmax;
     int *rowheightpx;
@@ -119,13 +121,16 @@ private:
     float *value;       // frequency
     int *valueint;      // midi note 0...127
     int *pitch;         // midi pitch -8191/8192
-    float *midi2f;
-    float *midi2fpure;
+
     int *ctlx;
     int *ctly;
     int *chan;
     int *pressed;
     QString * segText;
+
+    // lookup tables
+    float *midi2f;
+    float *midi2fpure;
     QString * midi2TextEU;
     QString * midi2TextUrl;
     QString * midi2TextIN;
@@ -134,18 +139,23 @@ private:
 
     bool transMode;     // transistion areas between segments
 
-    int width;
-    int height;
+    int widthPx;
+    int heightPx;
     int fontsize;
     QString font;
 
+    // scale generator parameters
     int basenote;
     int topoct;
     int baseoct;
+    bool bscale[11];
+    int scalewidth;
+    int scaleheight;
 
     // here we declare the bscale-start
-    int bscaleStartSeg;
-    int bscaleRow;
+    //int bscaleStartSeg;
+    //int bscaleRow;
+
     // here we declare from which part the scale keyboard starts
     int scaleStartSeg;
     int scaleRow;
@@ -155,7 +165,6 @@ private:
     int * factoryScaleLen;
     int nFactoryScales;*/
 
-    bool bscale[11];
     void setAll(int n, int * d, int v);
 
 };

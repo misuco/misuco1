@@ -174,6 +174,8 @@ private:
         int waveform;
         int envelope;
         int mod;
+        int width;
+        int height;
     };
 
     prog progmem[NPROGMEM];

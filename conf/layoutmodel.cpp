@@ -22,8 +22,8 @@
 
 LayoutModel::LayoutModel()
 {
-    width=1;
-    height=1;
+    widthPx=1;
+    heightPx=1;
     fontsize=1;
     font="Arial";
     nrowsmax=32;
@@ -156,8 +156,8 @@ LayoutModel::LayoutModel()
     basenote=0;
     topoct=6;
     baseoct=3;
-    bscaleStartSeg=0;
-    bscaleRow=0;
+    //bscaleStartSeg=0;
+    //bscaleRow=0;
     scaleStartSeg=25;
     scaleRow=4;
     transMode=false;
@@ -180,7 +180,7 @@ LayoutModel::LayoutModel()
 
 void LayoutModel::calcGeo()
 {
-    calcGeo(width,height);
+    calcGeo(widthPx,heightPx);
 }
 
 void LayoutModel::calcGeo(int w, int h)
@@ -192,42 +192,42 @@ void LayoutModel::calcGeo(int w, int h)
     }
     */
     //qDebug() << "Cacl geo " << w << " " << h << " " << width << " " << height;
-    width=w;
-    height=h;
+    widthPx=w;
+    heightPx=h;
     int i=0;
     int rowheightsum=0;
     for(int y=0;y<nrows;y++) {
         // if(aspect_change) {
-            rowheightpx[y]=height*rowheight[y]/rowheightmax;
+            rowheightpx[y]=heightPx*rowheight[y]/rowheightmax;
             rowheightsum+=rowheightpx[y];
             // additional pixels may occur due to rounding differences
             // -> add additional pixels to last row
-            if(y==nrows-1 && rowheightsum<height) {
-                rowheightpx[y]+=rowheightsum-height;
+            if(y==nrows-1 && rowheightsum<heightPx) {
+                rowheightpx[y]+=rowheightsum-heightPx;
             }
         // }
         int segwidthsum=0;
         for(int x=0;x<nseg[y];x++) {
-            segwidthpx[i]=width*segwidth[i]/segwidthmax[y];
+            segwidthpx[i]=widthPx*segwidth[i]/segwidthmax[y];
             segwidthsum+=segwidthpx[i];
             // -> add additional pixels to last segment
-            if(x==nseg[y]-1 && segwidthsum<width) {
-                segwidthpx[i]+=width-segwidthsum;
+            if(x==nseg[y]-1 && segwidthsum<widthPx) {
+                segwidthpx[i]+=widthPx-segwidthsum;
             }
             i++;
         }
     }
-    fontsize=height/nrows/5;
+    fontsize=heightPx/nrows/5;
 }
 
 int LayoutModel::getHeight() const
 {
-    return height;
+    return heightPx;
 }
 
 int LayoutModel::getWidth() const
 {
-    return width;
+    return widthPx;
 }
 
 int LayoutModel::getNrows() const
@@ -431,9 +431,7 @@ int LayoutModel::getBasenote() const
 
 void LayoutModel::setBasenote(int value)
 {
-    pressed[12+basenote]=0;
     basenote = value;
-    pressed[12+basenote]=1;
 }
 
 bool LayoutModel::getBscale(int n)
@@ -444,7 +442,6 @@ bool LayoutModel::getBscale(int n)
 void LayoutModel::setBscale(int n, bool value)
 {
     bscale[n]=value;
-    pressed[n+bscaleStartSeg]=value;
 }
 
 int LayoutModel::getTopoct() const
@@ -507,6 +504,11 @@ void LayoutModel::setNsegs(int v)
     nsegs=v;
 }
 
+int LayoutModel::getScalerow() const
+{
+    return scaleRow;
+}
+
 int LayoutModel::note2hue(int note)
 {
     float calccol=(float)((note+4)%12)*30;
@@ -543,22 +545,33 @@ QString LayoutModel::getMidi2TextUrl(int midi) const
 void LayoutModel::updateLayout()
 {
     int seg;
-    int calcnote=basenote+(baseoct+(topoct-baseoct)/2)*12;
-    for(seg=bscaleStartSeg;seg<bscaleStartSeg+11;seg++) {
-        calcnote=(calcnote+1)%12;
-        value[seg]=midi2f[calcnote];
-        segH[seg]=note2hue(calcnote);
-        segText[seg]=midi2TextEU[calcnote];
+    for(seg=0;seg<scaleStartSeg;seg++) {
+        if(segtype[seg]==3 && ctly[seg]==-1) {
+            if(bscale[ctlx[seg]]) {
+                pressed[seg]=1;
+            } else {
+                pressed[seg]=0;
+            }
+            int note=(basenote+ctlx[seg]+1)%12;
+            segH[seg]=note2hue(note);
+            segText[seg]=midi2TextEU[note];
+        } else if(segtype[seg]==6) {
+            valueint[seg]=baseoct;
+        } else if(segtype[seg]==7) {
+            valueint[seg]=topoct;
+        } else if(segtype[seg]==2 && ctly[seg]==-1) {
+            if(valueint[seg]==basenote) {
+                pressed[seg]=1;
+            } else {
+                pressed[seg]=0;
+            }
+        }
     }
-    valueint[24]=baseoct;
-    //value[24]=0.1f*(float)baseoct;
-    valueint[25]=topoct;
-    //value[25]=0.1f*(float)topoct;
 
     // row 4: the scale
-    seg=scaleStartSeg;
+    //seg=scaleStartSeg;
     for(int i=baseoct;i<=topoct;i++) {
-        calcnote=basenote+i*12;
+        int calcnote=basenote+i*12;
         valueint[seg]=calcnote;
         value[seg]=midi2f[calcnote];
         pitch[seg]=0;
@@ -607,7 +620,7 @@ void LayoutModel::updateLayout()
     nseg[scaleRow]=seg-scaleStartSeg;
     segwidthmax[scaleRow]=seg-scaleStartSeg;
     nsegs=seg;
-    calcGeo(width,height);
+    calcGeo(widthPx,heightPx);
 }
 
 void LayoutModel::setSegH(int i, int v)

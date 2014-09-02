@@ -865,6 +865,8 @@ void RC1::readProgmemXml(QString filename)
             }
             progmem[i].bscale[i]=true;
             progmem[i].bscale[i%4]=true;
+            progmem[i].width=10;
+            progmem[i].height=1;
         }
         writeProgmemXml(filename);
     }
@@ -898,6 +900,8 @@ void RC1::readProgmemXml(QString filename)
                     progmem[row].waveform=(int)xmlr.attributes().value("waveform").toString().toInt();
                     progmem[row].envelope=(int)xmlr.attributes().value("envelope").toString().toInt();
                     progmem[row].mod=(int)xmlr.attributes().value("mod").toString().toInt();
+                    progmem[row].width=(int)xmlr.attributes().value("width").toString().toInt();
+                    progmem[row].height=(int)xmlr.attributes().value("height").toString().toInt();
                     xmlr.skipCurrentElement();
                     row++;
                 } else {
@@ -949,7 +953,13 @@ void RC1::writeProgmemXml(QString filename)
         
         att.sprintf("%d",progmem[row].mod);
         xml.writeAttribute("mod",att);
-        
+
+        att.sprintf("%d",progmem[row].width);
+        xml.writeAttribute("width",att);
+
+        att.sprintf("%d",progmem[row].height);
+        xml.writeAttribute("height",att);
+
         for(int j=0;j<11;j++) {
             att.sprintf("%d",(int)progmem[row].bscale[j]);
             attname.sprintf("bscale%d",j);

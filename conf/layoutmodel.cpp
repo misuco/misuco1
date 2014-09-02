@@ -158,7 +158,7 @@ LayoutModel::LayoutModel()
     baseoct=3;
     //bscaleStartSeg=0;
     //bscaleRow=0;
-    scaleStartSeg=25;
+    scaleStartSeg=26;
     scaleRow=4;
     transMode=false;
 
@@ -501,12 +501,21 @@ void LayoutModel::setNseg(int i, int v)
 
 void LayoutModel::setNsegs(int v)
 {
-    nsegs=v;
+    if(v<nsegsmax) {
+        nsegs=v;
+    }
 }
 
 int LayoutModel::getScalerow() const
 {
     return scaleRow;
+}
+
+void LayoutModel::setScaleStartSeg(int s)
+{
+    if(s<nsegs) {
+        scaleStartSeg=s;
+    }
 }
 
 int LayoutModel::note2hue(int note)
@@ -544,7 +553,10 @@ QString LayoutModel::getMidi2TextUrl(int midi) const
 
 void LayoutModel::updateLayout()
 {
-    int seg;
+    int seg=0;
+
+    // qDebug() << "scaleStartSeg " << scaleStartSeg << " nsegs " << nsegs;
+    // switch states for edit elements
     for(seg=0;seg<scaleStartSeg;seg++) {
         if(segtype[seg]==3 && ctly[seg]==-1) {
             if(bscale[ctlx[seg]]) {
@@ -617,8 +629,10 @@ void LayoutModel::updateLayout()
     segtype[seg]=0;
     seg++;*/
 
-    nseg[scaleRow]=seg-scaleStartSeg;
-    segwidthmax[scaleRow]=seg-scaleStartSeg;
+    if(scaleStartSeg>0) {
+        nseg[scaleRow]=seg-scaleStartSeg;
+        segwidthmax[scaleRow]=seg-scaleStartSeg;
+    }
     nsegs=seg;
     calcGeo(widthPx,heightPx);
 }

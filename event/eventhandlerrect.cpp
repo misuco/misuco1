@@ -29,8 +29,6 @@ EventHandlerRect::EventHandlerRect()
 //void EventHandlerRect::processPoint(int p->getGid(), Qt::TouchPointState touchPointState, quint16 x1, quint16 y1)
 void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
 {
-    if(p->getX()<=0 || p->getY()<=0 ) return;
-
     ISender * snd=rc1->getSender();
     LayoutModel * layout=rc1->getLayout();
     
@@ -227,13 +225,13 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 // push button
                 if(layout->getCtly(iseg)==-1) {
                     // basenote button
-//                    layout->decPressed(isegb[evptr]);
-//                    layout->incPressed(iseg);
                     layout->setBasenote(layout->getValueInt(iseg));
                     layout->updateLayout();
                 } else if(layout->getCtly(iseg)==-2) {
+                    // memory button, not in use
                     rc1->setActProgmem(layout->getValueInt(iseg));
                 } else if(layout->getCtly(iseg)==-3) {
+                    // edit button
                     //qDebug() << " segtype 2 chan 2 pressed " << layout->getPressed(iseg) ;
                     if(layout->getValueInt(iseg)==0) {
                         layout->setValueInt(iseg,1);
@@ -260,7 +258,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                  if( p->getState() == Qt::TouchPointPressed || movedin) {
                      //qDebug() << " seg type 3 " << iseg << " pressed " << layout->getPressed(iseg);
                      if(layout->getPressed(iseg)>0) {
-                         layout->decPressed(iseg);
+                         layout->setPressed(iseg,0);
                          if(layout->getCtly(iseg)==-1) {
                              layout->setBscale(layout->getCtlx(iseg),false);
                              //qDebug() << " bscale off " << iseg;
@@ -269,7 +267,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                          }
                          layout->updateLayout();
                      } else {
-                         layout->incPressed(iseg);
+                         layout->setPressed(iseg,1);
                          if(layout->getCtly(iseg)==-1) {
                              layout->setBscale(layout->getCtlx(iseg),true);
                              //qDebug() << " bscale on " << iseg;
@@ -312,12 +310,16 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 }
             } else if(layout->getSegtype(iseg)==5) {
                 // y-slider
-                float yrel=p->getY()-(ysum-layout->getRowheightpx(iy));
-                yrel=yrel/(float)layout->getRowheightpx(iy);
+                int gap=10; // a little distance to the border
+                int gap2=20; // a little distance to the border
+                float yrel=p->getY()-(ysum-layout->getRowheightpx(iy))-gap;
+                yrel=yrel/((float)layout->getRowheightpx(iy)-gap2);
+                if(yrel>=1.0f) { yrel=1.0f; } // due to gap
+                if(yrel<=0) { yrel=0; } // due to gap
+                yrel=1.0f-yrel;    // 0 is at the bottom, not top
                 int yrelquant=0;    // quantized by steps
                 if(layout->getCtlx(iseg)>0) {
                     yrelquant=yrel*(float)layout->getCtlx(iseg);
-                    //xrel=(float)xrelquant/(float)layout->getCtlx(iseg);
                 }
                 layout->setValue(iseg,yrel);
                 layout->setValueInt(iseg,yrelquant);

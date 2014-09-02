@@ -92,6 +92,7 @@ public:
     void setNseg(int i,int v);
     void setNsegs(int v);
     int getScalerow() const;
+    void setScaleStartSeg(int s);
 
     void updateLayout();
 

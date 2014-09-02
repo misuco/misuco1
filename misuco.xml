@@ -57,8 +57,9 @@
     <seg segwidth="3" value="0.000000" valueint="0" ctlx="3" ctly="104" segtype="4" chan="0" pressed="0" segtext="xymod" segh="0"/>
 </row>
 
-<row height="10" segwidthmax="11">
+<row height="10" segwidthmax="12">
     <seg segwidth="10" value="0.000000" valueint="0" ctlx="10" ctly="-2" segtype="4" chan="0" pressed="0" segtext="memory" segh="0"/>
+    <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="-2" segtype="3" chan="0" pressed="0" segtext="mm" segh="0"/>
     <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="-3" segtype="2" chan="0" pressed="0" segtext="edit" segh="0"/>
 </row>
 

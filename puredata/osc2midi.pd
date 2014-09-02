@@ -1,4 +1,4 @@
-#N canvas 615 135 1247 875 10;
+#N canvas 673 142 1247 875 10;
 #X obj 151 121 unpack 0 0 0;
 #X obj 205 242 print;
 #X obj 153 170 ctlout;
@@ -42,14 +42,18 @@
 #X msg 722 296 send /clrtxt 1 \, send /clrtxt 2;
 #X msg 760 199 send /valint 60 61 62 63 64 65 66 67 68 69 70 71 72
 73 74 75 76 77 78 79 80 81 82 83 84 85 86;
-#X msg 81 649 send /dim 7 1 \, send /valint 60 62 64 66 67 70 72 \,
-send /type 5 5 5 5 5 5 5 4 \, send /txt 1 2 3 4 5 6 7 8 \, send /ctlx
-100 100 10 10 10 10 10 10 \, send /ctly 1 2 3 4 5 6 7 8 \, send /hue
-10 20 30 40 50 60 70 \, send /chan 1 2 3 4 5 6 7 8;
 #X msg 87 555 send /dim 7 \, send /valint 60 62 64 66 67 70 72 \, send
 /type 0 1 0 1 0 1 0 \, send /txt 1 1 2 2 3 3 4 \, send /clrtxt 1 \,
 send /clrtxt 3 \, send /clrtxt 5 \, send /ctly 2 2 2 2 2 2 2 \, send
 /chan 0 0 0 0 0 0 0;
+#X msg 81 649 send /dim 7 1 \, send /valint 60 62 5 5 5 5 5 \, send
+/type 5 5 5 5 5 5 5 4 \, send /txt 1 2 3 4 5 6 7 geilo \, send /ctlx
+100 100 10 10 10 10 10 10 \, send /ctly 1 2 3 4 5 6 7 8 \, send /hue
+10 20 30 40 50 60 70 \, send /chan 1 2 3 4 5 6 7 8;
+#X msg 308 741 send /reset;
+#X msg 646 727 send /dim 10 10 10 10 10 10 10 10 10 10 10 10;
+#X msg 313 798 send /loadbg http://redutodorock.com.br/redutodorock/site/wp-content/uploads/2011/11/Amy-Winehouse.jpeg
+\, send /painter 1 0;
 #X connect 0 0 2 2;
 #X connect 0 1 2 1;
 #X connect 0 2 2 0;
@@ -90,3 +94,6 @@ send /clrtxt 3 \, send /clrtxt 5 \, send /ctly 2 2 2 2 2 2 2 \, send
 #X connect 36 0 16 0;
 #X connect 37 0 16 0;
 #X connect 38 0 16 0;
+#X connect 39 0 16 0;
+#X connect 40 0 16 0;
+#X connect 41 0 16 0;

@@ -103,14 +103,15 @@ RC1::RC1(QWidget *parent) :
     //qDebug() << "storage path: " << storagePath;
     layout->calcGeo(width(),height());
 
-    nPrePainters=1;
+    nPrePainters=2;
     prepainters=new IPaint*[nPrePainters];
     prepainters[0]=new PaintBgShapes();
-//    prepainters[0]=new PaintBgBitmap();
+    prepainters[1]=new PaintBgBitmap();
 
-    nPointPainters=0;
-//    pointpainters=new IPointPaint*[nPointPainters];
-//    pointpainters[0]=new PointPaintSphere();
+    nPointPainters=1;
+    pointpainters=new IPointPaint*[nPointPainters];
+    //pointpainters[0]=new PointPaintSphere();
+    pointpainters[0]=new PointPaintShape();
 
     nPostPainters=0;
 //    postpainters=new IPaint*[nPostPainters];
@@ -118,8 +119,8 @@ RC1::RC1(QWidget *parent) :
 
     painterOn=new bool[nPrePainters+nPointPainters+nPostPainters];
     painterOn[0]=true;
-//    painterOn[1]=false;
-//    painterOn[2]=false;
+    painterOn[1]=false;
+    painterOn[2]=false;
 
     oscin = new QOscServer(3333,this);
     oscin->registerPathObject(this);
@@ -169,6 +170,14 @@ RC1::RC1(QWidget *parent) :
     //netxs->get(QNetworkRequest(QUrl(RC1_INIT_XML_URL)));
     //netxs->get(QNetworkRequest(QUrl(RC1_SCALES_XML_URL)));
 
+    resetLayout();
+
+
+    //setWindowState(Qt::WindowFullScreen);
+}
+
+void RC1::resetLayout() {
+
     layoutxml lxml;
     lxml.setLayoutModel(layout);
     lxml.readXml(":/conf/misuco.xml");
@@ -178,7 +187,6 @@ RC1::RC1(QWidget *parent) :
     readProgmemXml(storagePath+"/prog.xml");
     setActProgmem(0);
 
-    //setWindowState(Qt::WindowFullScreen);
 }
 
 RC1::~RC1()
@@ -397,7 +405,7 @@ bool RC1::event(QEvent *event)
 
 void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 port)
 {
-    qDebug() << "got osc signal " << path << " data " << data << " source " << host->toString();
+    //qDebug() << "got osc signal " << path << " data " << data << " source " << host->toString();
     int ignoreIndex=ignoreAddr.indexOf(*host);
     if(ignoreIndex==-1) {
         QList<QVariant> dl=data.toList();
@@ -446,12 +454,16 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
                     layout->setSegwidthmax(i,nseg);
                     for(int j=0;j<nseg;j++) {
                         layout->setSegwidth(seg,1);
-                        layout->setPressed(seg++,0);
+                        layout->setPressed(seg,0);
+                        layout->setSegtype(seg,0);
+                        seg++;
                     }
                 }
                 layout->setNsegs(seg);
-                qDebug() << "set nsegs " << seg;
+                //qDebug() << "set nsegs " << seg;
                 layout->setRowheightmax(dl.size());
+                layout->setScaleStartSeg(0);
+                layout->updateLayout();
                 layout->calcGeo();
             }
         }
@@ -536,6 +548,33 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
             }
         }
 
+        if(path=="/reset") {
+            writeProgmemXml(storagePath+"/prog.xml");
+            resetLayout();
+        }
+
+        if(path=="/loadbg") {
+            if(dl.size()==1) {
+                QString loadurl=dl.at(0).toString();
+                if(loadurl!="") {
+                    netxs->get(QNetworkRequest(QUrl(loadurl)));
+                }
+            }
+        }
+
+        if(path=="/painter") {
+            if(dl.size()==2) {
+                int p=dl.at(0).toInt();
+                if(p>=0 && p<=2) {
+                    int val=dl.at(1).toInt();
+                    if(val==0) {
+                       painterOn[p]=false;
+                    } else {
+                        painterOn[p]=true;
+                    }
+                }
+            }
+        }
 
 
 /*
@@ -803,6 +842,8 @@ void RC1::replyFinished(QNetworkReply * r)
             pendingConfigFile="init.xml";
         } else if(r->url().toString()==RC1_SCALES_XML_URL) {
             pendingConfigFile="scales.xml";
+        } else if(r->url().toString()==bgUrl) {
+            pendingConfigFile="bg.jpg";
         } else {
             pendingConfigFile="init.jpg";
         }
@@ -813,9 +854,10 @@ void RC1::replyFinished(QNetworkReply * r)
         } else {
             //qDebug() << "cannot write " << storagePath << "/" << pendingConfigFile;
         }
-        if(pendingConfigFile=="init.jpg") {
-//            bgImageOri.load(storagePath+"/init.jpg");
-//            bgImage=bgImageOri.scaled(width(),height());
+        if(pendingConfigFile=="bg.jpg") {
+            bgImageOri.load(storagePath+"/bg.jpg");
+            bgImage=bgImageOri.scaled(width(),height());
+        } else if(pendingConfigFile=="init.jpg") {
             QFile out(storagePath+"/adid.dat");
             if(out.open(QIODevice::WriteOnly)) {
                 out.write(r->rawHeader("Adid"));

@@ -139,6 +139,7 @@ private:
     // background image
     QImage bgImageOri;
     QImage bgImage;
+    QString bgUrl;
 
     // blocker
     QImage bgBlockerOri;
@@ -196,6 +197,7 @@ private:
     void setPPSmin(int);
     void readProgmemXml(QString filename);
     void writeProgmemXml(QString filename);
+    void resetLayout();
 };
 
 #endif // VIEW_H

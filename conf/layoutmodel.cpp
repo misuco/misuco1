@@ -68,33 +68,16 @@ LayoutModel::LayoutModel()
     pressed=new int[nsegsmax];
     setAll(nsegsmax,pressed,0);
     
-    // thanx 2 http://subsynth.sourceforge.net/midinote2freq.html
-    midi2f = new float[127];
-    float freq_a = 440; // a is 440 hz...
-    for (int x = 0; x < 127; ++x)
-    {
-        midi2f[x] = (freq_a / 32.0) * (pow(2.0 , (((float)x - 9.0)) / 12.0));
-        //qDebug() << "note " << x << " f " << midi2f[x];
+    midi2f = new float[256];
+    midi2fcent = new float[12];
+    for(int i=0;i<12;i++) {
+        midi2fcent[i]=i*100;
     }
-
-    float freq_c5 = freq_a / 5 * 3; // 264.00 hz @ 60
-    float freq_c4 = freq_c5 / 2;    // 132.00 hz @ 48
-    float freq_c3 = freq_c4 / 2;    //  66.00 hz @ 36
-    float freq_c2 = freq_c3 / 2;    //  33.00 hz @ 24
-    float freq_c1 = freq_c2 / 2;    //  17.50 hz @ 12
-    float freq_c0 = freq_c1 / 2;    //   8.75 hz @ 12
-
-    midi2fpure = new float[132];
-    int pure_m[] = {1,16,9,6,5,4,45,3,8,5,16,15,2};
-    int pure_d[] = {1,15,8,5,4,3,32,2,5,3,9,8,1};
-
-    int x=0;
-    for(int i=0;i<10;i++) {
-        for(int j=0;j<12;j++) {
-            midi2fpure[x] = freq_c0 * pure_m[j] / pure_d[j];
-            x++;
-        }
-        freq_c0*=2;
+    freq_a = 440; // a is 440 hz...
+    for (int x = 0; x < 256; ++x)
+    {
+        midi2f[x] = calcMidi2f(x);
+        //qDebug() << "note " << x << " f " << midi2f[x] << " oct " << oct;
     }
     
     midi2TextEU = new QString[12];
@@ -124,34 +107,6 @@ LayoutModel::LayoutModel()
     midi2TextUrl[9]="a";
     midi2TextUrl[10]="bb";
     midi2TextUrl[11]="b";
-
-    midi2TextIN = new QString[12];
-    midi2TextIN[0]="SA";
-    midi2TextIN[1]="SA'";
-    midi2TextIN[2]="RE";
-    midi2TextIN[3]="RE'";
-    midi2TextIN[4]="GA";
-    midi2TextIN[5]="MA";
-    midi2TextIN[6]="MA'";
-    midi2TextIN[7]="PA";
-    midi2TextIN[8]="PA'";
-    midi2TextIN[9]="DA";
-    midi2TextIN[10]="DA'";
-    midi2TextIN[11]="NI";
-    
-    midi2TextDO = new QString[12];
-    midi2TextDO[0]="DO";
-    midi2TextDO[1]="DO";
-    midi2TextDO[2]="RE";
-    midi2TextDO[3]="RE";
-    midi2TextDO[4]="MI";
-    midi2TextDO[5]="FA";
-    midi2TextDO[6]="FA";
-    midi2TextDO[7]="SO";
-    midi2TextDO[8]="SO";
-    midi2TextDO[9]="LA";
-    midi2TextDO[10]="LA";
-    midi2TextDO[11]="TI";
     
     basenote=0;
     topoct=6;
@@ -255,6 +210,13 @@ void LayoutModel::setAll(int n, int *d, int v)
     for(int i=scaleStartSeg;i<n;i++) {
         d[i]=v;
     }
+}
+
+float LayoutModel::calcMidi2f(int x)
+{
+    int oct=(x+3)/12;
+    int p=x+3;
+    return (freq_a / 64.0f) * (pow(2.0 , (double)((float)oct*1200.0f+(midi2fcent[p%12])) / 1200.0));
 }
 
 int LayoutModel::getSegwidth(int i) const
@@ -524,14 +486,29 @@ int LayoutModel::note2hue(int note)
     return (int)calccol%360;
 }
 
-int LayoutModel::midi2freq(int note)
+int LayoutModel::midi2freq(uint note)
 {
-    if(note<128) {
+    if(note<256) {
         return midi2f[note];
     } else {
         return 0;
     }
 }
+
+void LayoutModel::setMidi2fcent(int pos, float value)
+{
+    if(pos<12) {
+        midi2fcent[pos]=value;
+        // set only the changed strings to save time
+        for(int i=pos+1;i+=12;i<256) {
+            midi2f[i]=calcMidi2f(i);
+        }
+        if(pos==11) {   // make sure in this case note 0 is set
+            midi2f[0]=calcMidi2f(0);
+        }
+    }
+}
+
 int LayoutModel::getFontsize() const
 {
     return fontsize;

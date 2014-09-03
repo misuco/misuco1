@@ -97,7 +97,8 @@ public:
     void updateLayout();
 
     int note2hue(int note);
-    int midi2freq(int note);
+    int midi2freq(uint note);
+    void setMidi2fcent(int pos, float value);
 
     int getFontsize() const;
     QString getFont() const;
@@ -106,6 +107,7 @@ public:
     double Log2(double n);
 
 private:
+    // view and event parameters
     int nrows;
     int nsegs;          // total number of active segments
     int nrowsmax;
@@ -127,23 +129,14 @@ private:
     int *ctly;
     int *chan;
     int *pressed;
-    QString * segText;
 
-    // lookup tables
-    float *midi2f;
-    float *midi2fpure;
-    QString * midi2TextEU;
-    QString * midi2TextUrl;
-    QString * midi2TextIN;
-    QString * midi2TextDO;
-    int * segH;         // segment color hue
-
-    bool transMode;     // transistion areas between segments
-
+    // pure view parameters
     int widthPx;
     int heightPx;
     int fontsize;
     QString font;
+    QString * segText;
+    int * segH;         // segment color hue
 
     // scale generator parameters
     int basenote;
@@ -152,22 +145,22 @@ private:
     bool bscale[11];
     int scalewidth;
     int scaleheight;
-
-    // here we declare the bscale-start
-    //int bscaleStartSeg;
-    //int bscaleRow;
+    bool transMode;     // transistion areas between segments
 
     // here we declare from which part the scale keyboard starts
     int scaleStartSeg;
     int scaleRow;
 
-/*    int * factoryScaleValues;
-    int * factoryScaleStart;
-    int * factoryScaleLen;
-    int nFactoryScales;*/
+    // lookup tables
+    float *midi2f;
+    float *midi2fcent;
+    float freq_a;
+    QString * midi2TextEU;
+    QString * midi2TextUrl;
 
+    // util function
     void setAll(int n, int * d, int v);
-
+    float calcMidi2f(int x);
 };
 
 #endif // LAYOUTMODEL_H

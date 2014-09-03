@@ -473,7 +473,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
                 for(int i=0;i<dl.size();i++) {
                     layout->setValue(i,dl.at(i).toFloat());
                 }
-                update();
+                //update();
             }
         }
 
@@ -482,7 +482,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
                 for(int i=0;i<dl.size();i++) {
                     layout->setValueInt(i,dl.at(i).toInt());
                 }
-                update();
+                //update();
             }
         }
 
@@ -492,8 +492,8 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
                 for(int i=0;i<dl.size();i++) {
                     layout->setSegtype(i,dl.at(i).toInt());
                 }
-                qDebug() << "osc set type";
-                update();
+                //qDebug() << "osc set type";
+                //update();
             }
         }
 
@@ -544,6 +544,18 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
                 int seg=dl.at(0).toInt();
                 if(seg<layout->getNsegs()) {
                     layout->setSegtext(seg,"");
+                }
+            }
+        }
+        if(path=="/cents") {
+            if(dl.size()==2) {
+                int seg=dl.at(0).toInt();
+                if(seg>=0 && seg<=11) {
+                    float cents=dl.at(1).toFloat();
+                    if(cents>=0 && cents<=1200) {
+                        layout->setMidi2fcent(seg,cents);
+                        layout->updateLayout();
+                    }
                 }
             }
         }

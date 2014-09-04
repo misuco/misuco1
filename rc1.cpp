@@ -471,7 +471,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
         if(path=="/val") {
             if(dl.size()<=layout->getNsegs()) {
                 for(int i=0;i<dl.size();i++) {
-                    layout->setValue(i,dl.at(i).toFloat());
+                    layout->setFreq(i,dl.at(i).toFloat());
                 }
                 //update();
             }
@@ -480,7 +480,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
         if(path=="/valint") {
             if(dl.size()<=layout->getNsegs()) {
                 for(int i=0;i<dl.size();i++) {
-                    layout->setValueInt(i,dl.at(i).toInt());
+                    layout->setMidinote(i,dl.at(i).toInt());
                 }
                 //update();
             }
@@ -743,10 +743,10 @@ void RC1::setActProgmem(int n)
         progmem[actProgmen].basenote=layout->getBasenote();
         progmem[actProgmen].baseoct=layout->getBaseoct();
         progmem[actProgmen].topoct=layout->getTopoct();
-        progmem[actProgmen].sound=layout->getValueInt(26); // the sound segment
-        progmem[actProgmen].waveform=layout->getValueInt(26); // the wave segment
-        progmem[actProgmen].envelope=layout->getValueInt(27); // the envelope segment
-        progmem[actProgmen].mod=layout->getValueInt(28); // the mod segment
+        progmem[actProgmen].sound=layout->getMidinote(26); // the sound segment
+        progmem[actProgmen].waveform=layout->getMidinote(26); // the wave segment
+        progmem[actProgmen].envelope=layout->getMidinote(27); // the envelope segment
+        progmem[actProgmen].mod=layout->getMidinote(28); // the mod segment
         for(int i=0;i<11;i++) {
             progmem[actProgmen].bscale[i]=layout->getBscale(i);
         }
@@ -757,9 +757,9 @@ void RC1::setActProgmem(int n)
     layout->setBasenote(progmem[n].basenote);
     layout->setTopoct(progmem[n].topoct);
     layout->setBaseoct(progmem[n].baseoct);
-    layout->setValueInt(26,progmem[n].waveform);
-    layout->setValueInt(27,progmem[n].envelope);
-    layout->setValueInt(28,progmem[n].mod);
+    layout->setMidinote(26,progmem[n].waveform);
+    layout->setMidinote(27,progmem[n].envelope);
+    layout->setMidinote(28,progmem[n].mod);
     //sender->pc(progmem[n].sound);
     sender->pc(chan,n);
     sender->cc(chan,0,100,progmem[n].waveform);

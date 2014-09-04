@@ -35,11 +35,13 @@ LayoutModel::LayoutModel()
     setAll(nsegsmax,segwidth,1);
     segwidthpx = new int[nsegsmax];
     segwidthmax=new int[nrowsmax];
-    value = new float[nsegsmax];
-    valueint = new int[nsegsmax];
+    freq = new float[nsegsmax];
+    midinote = new int[nsegsmax];
     pitch = new int[nsegsmax];
     segText=new QString[nsegsmax];
     segH = new int[nsegsmax];
+    xrel = new float[nsegsmax];
+    yrel = new float[nsegsmax];
     // put numbers as text
     for(int i=0;i<nsegsmax;i++) {
         segText[i].setNum(i);
@@ -67,7 +69,14 @@ LayoutModel::LayoutModel()
     
     pressed=new int[nsegsmax];
     setAll(nsegsmax,pressed,0);
-    
+
+    xrelq=new int[nsegsmax];
+    setAll(nsegsmax,xrelq,0);
+
+    yrelq=new int[nsegsmax];
+    setAll(nsegsmax,yrelq,0);
+
+
     midi2f = new float[256];
     midi2fcent = new float[12];
     for(int i=0;i<12;i++) {
@@ -240,14 +249,14 @@ int LayoutModel::getCtlx(int i) const
     return ctlx[i];
 }
 
-float LayoutModel::getValue(int i) const
+float LayoutModel::getFreq(int i) const
 {
-    return value[i];
+    return freq[i];
 }
 
-int LayoutModel::getValueInt(int i) const
+int LayoutModel::getMidinote(int i) const
 {
-    return valueint[i];
+    return midinote[i];
 }
 
 int LayoutModel::getPitch(int i) const
@@ -303,19 +312,59 @@ double LayoutModel::Log2( double n )
     return log( n ) / log( 2 );
 }
 
-void LayoutModel::setValue(int i, float v)
+float LayoutModel::getXrel(int i) const
+{
+    return xrel[i];
+}
+
+void LayoutModel::setXrel(int i,float value)
+{
+    xrel[i] = value;
+}
+
+float LayoutModel::getYrel(int i) const
+{
+    return yrel[i];
+}
+
+void LayoutModel::setYrel(int i,float value)
+{
+    yrel[i] = value;
+}
+
+int LayoutModel::getXrelq(int i) const
+{
+    return xrelq[i];
+}
+
+void LayoutModel::setXrelq(int i, int value)
+{
+    xrelq[i] = value;
+}
+
+int LayoutModel::getYrelq(int i) const
+{
+    return yrelq[i];
+}
+
+void LayoutModel::setYrelq(int i, int value)
+{
+    yrelq[i] = value;
+}
+
+void LayoutModel::setFreq(int i, float v)
 {
     if(i<nsegsmax) {
-        value[i]=v;
-        pitch[i]=round(Log2(v/midi2f[valueint[i]])*12*8192/2);
+        freq[i]=v;
+        pitch[i]=round(Log2(v/midi2f[midinote[i]])*12*8192/2);
     }
 }
 
-void LayoutModel::setValueInt(int i, int v)
+void LayoutModel::setMidinote(int i, int v)
 {
     if(i<nsegsmax) {
-        valueint[i]=v;
-        value[i]=midi2f[v];
+        midinote[i]=v;
+        freq[i]=midi2f[v];
         pitch[i]=0;
         segH[i]=note2hue(v);
     }
@@ -392,9 +441,9 @@ int LayoutModel::getBasenote() const
     return basenote;
 }
 
-void LayoutModel::setBasenote(int value)
+void LayoutModel::setBasenote(int v)
 {
-    basenote = value;
+    basenote = v;
 }
 
 bool LayoutModel::getBscale(int n)
@@ -402,9 +451,9 @@ bool LayoutModel::getBscale(int n)
     return bscale[n];
 }
 
-void LayoutModel::setBscale(int n, bool value)
+void LayoutModel::setBscale(int n, bool v)
 {
-    bscale[n]=value;
+    bscale[n]=v;
 }
 
 int LayoutModel::getTopoct() const
@@ -546,25 +595,33 @@ void LayoutModel::updateLayout()
     // qDebug() << "scaleStartSeg " << scaleStartSeg << " nsegs " << nsegs;
     // switch states for edit elements
     for(seg=0;seg<scaleStartSeg;seg++) {
-        if(segtype[seg]==3 && ctly[seg]==-1) {
-            if(bscale[ctlx[seg]]) {
-                pressed[seg]=1;
+        if((segtype[seg]==3 && ctly[seg]==-1) || (segtype[seg]==0 && ctly[seg]==-2)  || (segtype[seg]==0 && ctly[seg]==-1) ) {
+            int note;
+            if(ctly[seg]==-1) {
+                note=ctlx[seg];
+                if(basenote==ctlx[seg]) {
+                    pressed[seg]=1;
+                } else {
+                    pressed[seg]=0;
+                }
             } else {
-                pressed[seg]=0;
+                note=(basenote+ctlx[seg]+1)%12;
+                if(bscale[ctlx[seg]]) {
+                    pressed[seg]=1;
+                } else {
+                    pressed[seg]=0;
+                }
             }
-            int note=(basenote+ctlx[seg]+1)%12;
+            int oct=baseoct*12;
+            midinote[seg]=note+oct;
+            freq[seg]=midi2f[note+oct];
+            pitch[seg]=0;
             segH[seg]=note2hue(note);
-            segText[seg]=midi2TextEU[note];
+            segText[seg]=midi2TextEU[note%12];
         } else if(segtype[seg]==6) {
-            valueint[seg]=baseoct;
+            midinote[seg]=baseoct;
         } else if(segtype[seg]==7) {
-            valueint[seg]=topoct;
-        } else if(segtype[seg]==2 && ctly[seg]==-1) {
-            if(valueint[seg]==basenote) {
-                pressed[seg]=1;
-            } else {
-                pressed[seg]=0;
-            }
+            midinote[seg]=topoct;
         }
     }
 
@@ -572,8 +629,8 @@ void LayoutModel::updateLayout()
     //seg=scaleStartSeg;
     for(int i=baseoct;i<=topoct;i++) {
         int calcnote=basenote+i*12;
-        valueint[seg]=calcnote;
-        value[seg]=midi2f[calcnote];
+        midinote[seg]=calcnote;
+        freq[seg]=midi2f[calcnote];
         pitch[seg]=0;
         segText[seg]=midi2TextEU[calcnote%12];
         segwidth[seg]=1;
@@ -591,8 +648,8 @@ void LayoutModel::updateLayout()
                 segtype[seg]=0;
                 segwidth[seg]=1;
                 int thisnote=calcnote+j+1;
-                valueint[seg]=thisnote;
-                value[seg]=midi2f[thisnote];
+                midinote[seg]=thisnote;
+                freq[seg]=midi2f[thisnote];
                 //qDebug() << " scale midi " << thisnote << " f " << value[seg] << " seg " << seg;
                 segText[seg]=midi2TextEU[thisnote%12];
                 ctlx[seg]=1;

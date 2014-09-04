@@ -38,7 +38,7 @@ private:
     int evptr_stack_size;
     int * evptr_stack;
 
-    float * note;      // current note
+    float * freq;       // current frequency
     int * isegb;        // current segment index buffer
     int * chan;         // current note channel
 

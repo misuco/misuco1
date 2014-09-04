@@ -81,10 +81,10 @@ void layoutxml::writeXml(QString filename)
             xml.writeStartElement("seg");
             att.sprintf("%d",layout->getSegwidth(i));
             xml.writeAttribute("segwidth", att);
-            att.sprintf("%lf",layout->getValue(i));
-            xml.writeAttribute("value", att);
-            att.sprintf("%d",layout->getValueInt(i));
-            xml.writeAttribute("valueint", att);
+            att.sprintf("%lf",layout->getFreq(i));
+            xml.writeAttribute("freq", att);
+            att.sprintf("%d",layout->getMidinote(i));
+            xml.writeAttribute("midinote", att);
             att.sprintf("%d",layout->getCtlx(i));
             xml.writeAttribute("ctlx", att);
             att.sprintf("%d",layout->getCtly(i));
@@ -139,8 +139,8 @@ void layoutxml::readLayout() {
 //                qDebug() << "xmlr seg name " << xmlr.name();
                 if (xmlr.name() == "seg") {
                     layout->segwidth[seg]=xmlr.attributes().value("segwidth").toString().toInt();
-                    layout->value[seg]=xmlr.attributes().value("value").toString().toFloat();
-                    layout->valueint[seg]=xmlr.attributes().value("valueint").toString().toInt();
+                    layout->freq[seg]=xmlr.attributes().value("freq").toString().toFloat();
+                    layout->midinote[seg]=xmlr.attributes().value("midinote").toString().toInt();
                     layout->ctlx[seg]=xmlr.attributes().value("ctlx").toString().toInt();
                     layout->ctly[seg]=xmlr.attributes().value("ctly").toString().toInt();
                     layout->segtype[seg]=xmlr.attributes().value("segtype").toString().toInt();

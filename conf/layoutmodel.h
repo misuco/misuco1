@@ -45,8 +45,8 @@ public:
     int getSegH(int i) const;
 
     // control
-    float getValue(int i) const;
-    int getValueInt(int i) const;
+    float getFreq(int i) const;
+    int getMidinote(int i) const;
     int getPitch(int i) const;
     int getCtlx(int i) const;
     int getCtly(int i) const;
@@ -58,8 +58,8 @@ public:
     void decPressed(int i);
     void setPressed(int i, int v) const;
 
-    void setValue(int i, float v);
-    void setValueInt(int i, int v);
+    void setFreq(int i, float v);
+    void setMidinote(int i, int v);
     void setSegtype(int i, int v) const;
     void setRowheight(int i, int v) const;
     void setRowheightmax(int v);
@@ -75,15 +75,15 @@ public:
     void setAllCtly(int v);
     void setAllChan(int v);
     int getBasenote() const;
-    void setBasenote(int value);
+    void setBasenote(int v);
     int getBasescale() const;
-    void setBasescale(int value);
+    void setBasescale(int v);
     bool getBscale(int n);
-    void setBscale(int n, bool value);
+    void setBscale(int n, bool v);
     int getTopoct() const;
-    void setTopoct(int value);
+    void setTopoct(int v);
     int getBaseoct() const;
-    void setBaseoct(int value);
+    void setBaseoct(int v);
     void setTransMode(bool t);
     void setRowheightpx(int i, int v);
     void setRowheight(int i, int v);
@@ -98,13 +98,23 @@ public:
 
     int note2hue(int note);
     int midi2freq(uint note);
-    void setMidi2fcent(uint pos, float value);
+    void setMidi2fcent(uint pos, float freq);
 
     int getFontsize() const;
     QString getFont() const;
     QString getMidi2Text(int midi) const;
     QString getMidi2TextUrl(int midi) const;
     double Log2(double n);
+
+    float getXrel(int i) const;
+    void setXrel(int i,float value);
+    float getYrel(int i) const;
+    void setYrel(int i,float value);
+
+    int getXrelq(int i) const;
+    void setXrelq(int i, int value);
+    int getYrelq(int i) const;
+    void setYrelq(int i, int value);
 
 private:
     // view and event parameters
@@ -121,9 +131,13 @@ private:
     int *segwidthmax;
     int *segwidthpx;
     int *segtype;       // segmenttyp: 0=note, 1=transition, 2=layout
-    float *value;       // frequency
-    int *valueint;      // midi note 0...127
+    float *freq;       // frequency
+    int *midinote;      // midi note 0...127
     int *pitch;         // midi pitch -8191/8192
+    float *xrel;
+    float *yrel;
+    int *xrelq;
+    int *yrelq;
 
     int *ctlx;
     int *ctly;

@@ -1,69 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE misuco>
 <misuco version="1.0" rowheightmax="60" bscalerow="0" scalerow="5" >
     <row height="0" segwidthmax="12">
-        <seg segwidth="1" value="523.251131" valueint="0" ctlx="0" ctly="-1" segtype="3" chan="0" pressed="0" segtext="Db" segh="164"/>
-        <seg segwidth="1" value="554.365262" valueint="1" ctlx="1" ctly="-1" segtype="3" chan="0" pressed="0" segtext="D" segh="196"/>
-        <seg segwidth="1" value="587.329536" valueint="2" ctlx="2" ctly="-1" segtype="3" chan="0" pressed="0" segtext="Eb" segh="229"/>
-        <seg segwidth="1" value="622.253967" valueint="3" ctlx="3" ctly="-1" segtype="3" chan="0" pressed="0" segtext="E" segh="262"/>
-        <seg segwidth="1" value="659.255114" valueint="4" ctlx="4" ctly="-1" segtype="3" chan="0" pressed="0" segtext="F" segh="295"/>
-        <seg segwidth="1" value="698.456463" valueint="5" ctlx="5" ctly="-1" segtype="3" chan="0" pressed="0" segtext="Gb" segh="327"/>
-        <seg segwidth="1" value="739.988845" valueint="6" ctlx="6" ctly="-1" segtype="3" chan="0" pressed="0" segtext="G" segh="0"/>
-        <seg segwidth="1" value="783.990872" valueint="7" ctlx="7" ctly="-1" segtype="3" chan="0" pressed="0" segtext="Ab" segh="0"/>
-        <seg segwidth="1" value="830.609395" valueint="8" ctlx="8" ctly="-1" segtype="3" chan="0" pressed="0" segtext="A" segh="90"/>
-        <seg segwidth="1" value="830.609395" valueint="9" ctlx="9" ctly="-1" segtype="3" chan="0" pressed="0" segtext="Bb" segh="100"/>
-        <seg segwidth="1" value="830.609395" valueint="10" ctlx="10" ctly="-1" segtype="3" chan="0" pressed="0" segtext="B" segh="110"/>
-        <seg segwidth="1" value="830.609395" valueint="11" ctlx="11" ctly="0" segtype="12" chan="0" pressed="0" segtext="?" segh="110"/>
+        <seg segwidth="1" freq="523.251131" midinote="0" ctlx="0" ctly="-2" segtype="0" chan="0" pressed="0" segtext="Db" segh="164"/>
+        <seg segwidth="1" freq="554.365262" midinote="1" ctlx="1" ctly="-2" segtype="0" chan="0" pressed="0" segtext="D" segh="196"/>
+        <seg segwidth="1" freq="587.329536" midinote="2" ctlx="2" ctly="-2" segtype="0" chan="0" pressed="0" segtext="Eb" segh="229"/>
+        <seg segwidth="1" freq="622.253967" midinote="3" ctlx="3" ctly="-2" segtype="0" chan="0" pressed="0" segtext="E" segh="262"/>
+        <seg segwidth="1" freq="659.255114" midinote="4" ctlx="4" ctly="-2" segtype="0" chan="0" pressed="0" segtext="F" segh="295"/>
+        <seg segwidth="1" freq="698.456463" midinote="5" ctlx="5" ctly="-2" segtype="0" chan="0" pressed="0" segtext="Gb" segh="327"/>
+        <seg segwidth="1" freq="739.988845" midinote="6" ctlx="6" ctly="-2" segtype="0" chan="0" pressed="0" segtext="G" segh="0"/>
+        <seg segwidth="1" freq="783.990872" midinote="7" ctlx="7" ctly="-2" segtype="0" chan="0" pressed="0" segtext="Ab" segh="0"/>
+        <seg segwidth="1" freq="830.609395" midinote="8" ctlx="8" ctly="-2" segtype="0" chan="0" pressed="0" segtext="A" segh="90"/>
+        <seg segwidth="1" freq="830.609395" midinote="9" ctlx="9" ctly="-2" segtype="0" chan="0" pressed="0" segtext="Bb" segh="100"/>
+        <seg segwidth="1" freq="830.609395" midinote="10" ctlx="10" ctly="-2" segtype="0" chan="0" pressed="0" segtext="B" segh="110"/>
+        <seg segwidth="1" freq="830.609395" midinote="11" ctlx="11" ctly="0" segtype="12" chan="0" pressed="0" segtext="?" segh="110"/>
     </row>
     <row height="0" segwidthmax="12">
-        <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="-1" segtype="2" chan="0" pressed="0" segtext="C" segh="120"/>
-        <seg segwidth="1" value="0.000000" valueint="1" ctlx="0" ctly="-1" segtype="2" chan="0" pressed="0" segtext="Db" segh="150"/>
-        <seg segwidth="1" value="0.000000" valueint="2" ctlx="0" ctly="-1" segtype="2" chan="0" pressed="0" segtext="D" segh="180"/>
-        <seg segwidth="1" value="0.000000" valueint="3" ctlx="0" ctly="-1" segtype="2" chan="0" pressed="0" segtext="Eb" segh="210"/>
-        <seg segwidth="1" value="0.000000" valueint="4" ctlx="0" ctly="-1" segtype="2" chan="0" pressed="0" segtext="E" segh="240"/>
-        <seg segwidth="1" value="0.000000" valueint="5" ctlx="0" ctly="-1" segtype="2" chan="0" pressed="0" segtext="F" segh="270"/>
-        <seg segwidth="1" value="0.000000" valueint="6" ctlx="0" ctly="-1" segtype="2" chan="0" pressed="0" segtext="Gb" segh="300"/>
-        <seg segwidth="1" value="0.000000" valueint="7" ctlx="0" ctly="-1" segtype="2" chan="0" pressed="0" segtext="G" segh="330"/>
-        <seg segwidth="1" value="0.000000" valueint="8" ctlx="0" ctly="-1" segtype="2" chan="0" pressed="0" segtext="Ab" segh="0"/>
-        <seg segwidth="1" value="0.000000" valueint="9" ctlx="0" ctly="-1" segtype="2" chan="0" pressed="0" segtext="A" segh="30"/>
-        <seg segwidth="1" value="0.000000" valueint="10" ctlx="0" ctly="-1" segtype="2" chan="0" pressed="0" segtext="Bb" segh="60"/>
-        <seg segwidth="1" value="0.000000" valueint="11" ctlx="0" ctly="-1" segtype="2" chan="0" pressed="0" segtext="B" segh="90"/>
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="0" ctly="-1" segtype="0" chan="0" pressed="0" segtext="C" segh="120"/>
+        <seg segwidth="1" freq="0.000000" midinote="1" ctlx="1" ctly="-1" segtype="0" chan="0" pressed="0" segtext="Db" segh="150"/>
+        <seg segwidth="1" freq="0.000000" midinote="2" ctlx="2" ctly="-1" segtype="0" chan="0" pressed="0" segtext="D" segh="180"/>
+        <seg segwidth="1" freq="0.000000" midinote="3" ctlx="3" ctly="-1" segtype="0" chan="0" pressed="0" segtext="Eb" segh="210"/>
+        <seg segwidth="1" freq="0.000000" midinote="4" ctlx="4" ctly="-1" segtype="0" chan="0" pressed="0" segtext="E" segh="240"/>
+        <seg segwidth="1" freq="0.000000" midinote="5" ctlx="5" ctly="-1" segtype="0" chan="0" pressed="0" segtext="F" segh="270"/>
+        <seg segwidth="1" freq="0.000000" midinote="6" ctlx="6" ctly="-1" segtype="0" chan="0" pressed="0" segtext="Gb" segh="300"/>
+        <seg segwidth="1" freq="0.000000" midinote="7" ctlx="7" ctly="-1" segtype="0" chan="0" pressed="0" segtext="G" segh="330"/>
+        <seg segwidth="1" freq="0.000000" midinote="8" ctlx="8" ctly="-1" segtype="0" chan="0" pressed="0" segtext="Ab" segh="0"/>
+        <seg segwidth="1" freq="0.000000" midinote="9" ctlx="9" ctly="-1" segtype="0" chan="0" pressed="0" segtext="A" segh="30"/>
+        <seg segwidth="1" freq="0.000000" midinote="10" ctlx="10" ctly="-1" segtype="0" chan="0" pressed="0" segtext="Bb" segh="60"/>
+        <seg segwidth="1" freq="0.000000" midinote="11" ctlx="11" ctly="-1" segtype="0" chan="0" pressed="0" segtext="B" segh="90"/>
     </row>
     <row height="0" segwidthmax="1">
-        <seg segwidth="1" value="0.200000" valueint="2" ctlx="10" ctly="0" segtype="6" chan="0" pressed="0" segtext="octave range" segh="65"/>
-        <seg segwidth="0" value="0.500000" valueint="5" ctlx="10" ctly="0" segtype="7" chan="0" pressed="0" segtext="" segh="75"/>
+        <seg segwidth="1" freq="0.200000" midinote="2" ctlx="10" ctly="0" segtype="6" chan="0" pressed="0" segtext="octave range" segh="65"/>
+        <seg segwidth="0" freq="0.500000" midinote="5" ctlx="10" ctly="0" segtype="7" chan="0" pressed="0" segtext="" segh="75"/>
     </row>
-    
-<!--
- <row height="0" segwidthmax="10">
- <seg segwidth="10" value="0.000000" valueint="0" ctlx="16" ctly="0" segtype="4" chan="2" pressed="0" segtext="sound" segh="0"/>
- </row>
- 
- <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="0" segtype="3" chan="1" pressed="0" segtext="TM" segh="75"/>
- 
-    <row height="0" segwidthmax="6">
-        <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="0" segtype="10" chan="0" pressed="0" segtext="SQU" segh="75"/>
-        <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="0" segtype="10" chan="1" pressed="0" segtext="LFOSQU" segh="75"/>
-        <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="0" segtype="10" chan="2" pressed="0" segtext="NONE" segh="75"/>
-        <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="0" segtype="10" chan="3" pressed="0" segtext="-__" segh="75"/>
-        <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="0" segtype="10" chan="4" pressed="0" segtext="X:NONE" segh="75"/>
-        <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="0" segtype="10" chan="5" pressed="0" segtext="Y:NONE" segh="75"/>
-    </row>
- -->
 
 
 <row height="0" segwidthmax="12">
-    <seg segwidth="5" value="0.000000" valueint="0" ctlx="5" ctly="100" segtype="4" chan="0" pressed="0" segtext="wave" segh="0"/>
-    <seg segwidth="4" value="0.000000" valueint="0" ctlx="4" ctly="103" segtype="4" chan="0" pressed="0" segtext="envelope" segh="0"/>
-    <seg segwidth="3" value="0.000000" valueint="0" ctlx="3" ctly="104" segtype="4" chan="0" pressed="0" segtext="xymod" segh="0"/>
+    <seg segwidth="5" freq="0.000000" midinote="0" ctlx="5" ctly="100" segtype="4" chan="0" pressed="0" segtext="wave" segh="0"/>
+    <seg segwidth="4" freq="0.000000" midinote="0" ctlx="4" ctly="103" segtype="4" chan="0" pressed="0" segtext="envelope" segh="0"/>
+    <seg segwidth="3" freq="0.000000" midinote="0" ctlx="3" ctly="104" segtype="4" chan="0" pressed="0" segtext="xymod" segh="0"/>
 </row>
 
 <row height="10" segwidthmax="12">
-    <seg segwidth="10" value="0.000000" valueint="0" ctlx="10" ctly="-2" segtype="4" chan="0" pressed="0" segtext="memory" segh="0"/>
-    <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="-2" segtype="3" chan="0" pressed="0" segtext="mm" segh="0"/>
-    <seg segwidth="1" value="0.000000" valueint="0" ctlx="0" ctly="-3" segtype="2" chan="0" pressed="0" segtext="edit" segh="0"/>
+    <seg segwidth="10" freq="0.000000" midinote="0" ctlx="10" ctly="-2" segtype="4" chan="0" pressed="0" segtext="memory" segh="0"/>
+    <seg segwidth="1" freq="0.000000" midinote="0" ctlx="0" ctly="-2" segtype="3" chan="0" pressed="0" segtext="mm" segh="0"/>
+    <seg segwidth="1" freq="0.000000" midinote="0" ctlx="0" ctly="-3" segtype="2" chan="0" pressed="0" segtext="edit" segh="0"/>
 </row>
 
     <row height="50" segwidthmax="1">
-        <seg segwidth="1" value="261.625565" valueint="60" ctlx="1" ctly="2" segtype="0" chan="0" pressed="0" segtext="C" segh="145"/>
+        <seg segwidth="1" freq="261.625565" midinote="60" ctlx="1" ctly="2" segtype="0" chan="0" pressed="0" segtext="C" segh="145"/>
     </row>
 </misuco>

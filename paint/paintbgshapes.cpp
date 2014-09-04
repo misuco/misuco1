@@ -147,7 +147,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
             int ypaint1_1=ypaint1-1;
             int ypaint1_2=ypaint1-2*crady;
             if(colorMode==1 ) {
-                col=32*(lay->getValueInt(iseg)%12);
+                col=32*(lay->getMidinote(iseg)%12);
             } else if(colorMode==2 ){
                 col=lay->getSegH(iseg);
             }
@@ -176,8 +176,8 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
             int col2=chue;
             if(lay->getSegtype(iseg)==1) {
                 if(colorMode==1 ) {
-                    col1=(lay->getValueInt(iseg-1)%12)*32;
-                    col2=(lay->getValueInt(iseg+1)%12)*32;
+                    col1=(lay->getMidinote(iseg-1)%12)*32;
+                    col2=(lay->getMidinote(iseg+1)%12)*32;
                 } else if(colorMode==2 ) {
                     col1=lay->getSegH(iseg-1);
                     col2=lay->getSegH(iseg+1);
@@ -288,7 +288,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 int sseg=xpaint1/lay->getCtlx(iseg);
                 int xsseg=sseg-2*cradx;
                 int ysseg=ypaint1-2*crady;
-                int xv1=lay->getValueInt(iseg)*sseg;
+                int xv1=lay->getXrelq(iseg)*sseg;
 //                pnt->drawEllipse(xpaint+xv1,ypaint,ypaint1_1,ypaint1_1);
 //                pnt->drawRect(xpaint+xv1,ypaint,sseg,ypaint1_1);
                 pnt->drawRoundedRect(xpaint+xv1,ypaint,sseg,ypaint1_1,cradx,crady);
@@ -314,9 +314,9 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 pnt->setBrush(Qt::lightGray);
                 pnt->setPen(Qt::NoPen);
                 float sseg=(float)ypaint1/(float)lay->getCtlx(iseg);
-                int xsseg=xpaint1-2*cradx;
-                int ysseg=sseg-2*crady;
-                int yv1=(float)(lay->getCtlx(iseg)-lay->getValueInt(iseg))*sseg;
+//                int xsseg=xpaint1-2*cradx;
+//                int ysseg=sseg-2*crady;
+                int yv1=(float)(lay->getCtlx(iseg)-lay->getYrelq(iseg))*sseg;
 //                pnt->drawEllipse(xpaint+xv1,ypaint,ypaint1_1,ypaint1_1);
 //                pnt->drawRect(xpaint+xv1,ypaint,sseg,ypaint1_1);
                 pnt->drawRect(xpaint,ypaint+yv1,xpaint1_1,sseg);
@@ -325,7 +325,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 QString text;
                 pnt->setBrush(Qt::darkGray);
                 pnt->setFont(QFont(lay->getFont(),lay->getFontsize()/2));
-                text.sprintf("%d",lay->getValueInt(iseg));
+                text.sprintf("%d",lay->getYrelq(iseg));
                 pnt->setPen(Qt::lightGray);
                 pnt->drawText(xpaint,ypaint+ypaint1-lay->getFontsize(),xpaint1_1,lay->getFontsize(),Qt::AlignCenter,text);
                 textAlign=Qt::AlignLeft;
@@ -341,8 +341,8 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 pnt->setPen(Qt::NoPen);
                 //int xv1=lay->getValue(iseg)*xpaint1_1;
                 //int xv2=lay->getValue(iseg+1)*xpaint1_1;
-                int xv1=(lay->getValueInt(iseg))*sseg;
-                int xv2=(lay->getValueInt(iseg+1)+1)*sseg;
+                int xv1=(lay->getYrelq(iseg))*sseg;
+                int xv2=(lay->getYrelq(iseg+1)+1)*sseg;
                 xrow_header=xv1+cradx;
                 pnt->drawRoundedRect(xv1, ypaint, xv2-xv1,ypaint1_1,cradx,crady);
 

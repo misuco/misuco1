@@ -557,6 +557,14 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
                         layout->updateLayout();
                     }
                 }
+            } else if(dl.size()==12) {
+                for(int i=0;i<12;i++) {
+                    float cents=dl.at(i).toFloat();
+                    if(cents>=0 && cents<=1200) {
+                        layout->setMidi2fcent(i,cents);
+                    }
+                }
+                layout->updateLayout();
             }
         }
 

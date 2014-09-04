@@ -98,7 +98,7 @@ public:
 
     int note2hue(int note);
     int midi2freq(uint note);
-    void setMidi2fcent(int pos, float value);
+    void setMidi2fcent(uint pos, float value);
 
     int getFontsize() const;
     QString getFont() const;

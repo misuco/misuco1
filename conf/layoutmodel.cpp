@@ -74,6 +74,7 @@ LayoutModel::LayoutModel()
         midi2fcent[i]=i*100;
     }
     freq_a = 440; // a is 440 hz...
+
     for (int x = 0; x < 256; ++x)
     {
         midi2f[x] = calcMidi2f(x);
@@ -495,16 +496,26 @@ int LayoutModel::midi2freq(uint note)
     }
 }
 
-void LayoutModel::setMidi2fcent(int pos, float value)
+void LayoutModel::setMidi2fcent(uint pos, float value)
 {
     if(pos<12) {
         midi2fcent[pos]=value;
-        // set only the changed strings to save time
-        for(int i=pos+1;i+=12;i<256) {
-            midi2f[i]=calcMidi2f(i);
+
+        /*
+        for (int x = 0; x < 255; ++x)
+        {
+            midi2f[x] = calcMidi2f(x);
         }
-        if(pos==11) {   // make sure in this case note 0 is set
-            midi2f[0]=calcMidi2f(0);
+        */
+
+        // set only the changed strings to save time
+        int i=pos-3;
+        if(i<0) {
+            i+=12;
+        }
+        for(;i<=255;i+=12) {
+            midi2f[i]=calcMidi2f(i);
+            //qDebug() << "pos " << pos << " i " << i << " value " << value;
         }
     }
 }
@@ -582,6 +593,7 @@ void LayoutModel::updateLayout()
                 int thisnote=calcnote+j+1;
                 valueint[seg]=thisnote;
                 value[seg]=midi2f[thisnote];
+                //qDebug() << " scale midi " << thisnote << " f " << value[seg] << " seg " << seg;
                 segText[seg]=midi2TextEU[thisnote%12];
                 ctlx[seg]=1;
                 ctly[seg]=2;

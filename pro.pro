@@ -157,7 +157,10 @@ OTHER_FILES += \
     Info.plist \
     misuco.xml \
     scales.xml \
-    misuco-logo.jpg
+    misuco-logo.jpg \
+    conf/l1.xml \
+    conf/l2.xml \
+    conf/l3.xml
 
 OBJECTIVE_SOURCES += \
     mobilesynth/mobilesynth/Classes/mobilesynthViewControllerRc1.mm \

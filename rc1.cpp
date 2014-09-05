@@ -172,21 +172,24 @@ RC1::RC1(QWidget *parent) :
 
     resetLayout();
 
-
     //setWindowState(Qt::WindowFullScreen);
 }
 
-void RC1::resetLayout() {
+void RC1::resetLayout(QString filename) {
 
     layoutxml lxml;
     lxml.setLayoutModel(layout);
-    lxml.readXml(":/conf/misuco.xml");
+    lxml.readXml(filename);
     layout->updateLayout();
 
     actProgmen=0;
     readProgmemXml(storagePath+"/prog.xml");
     setActProgmem(0);
 
+}
+
+void RC1::resetLayout() {
+    resetLayout(":/conf/l1.xml");
 }
 
 RC1::~RC1()
@@ -743,10 +746,10 @@ void RC1::setActProgmem(int n)
         progmem[actProgmen].basenote=layout->getBasenote();
         progmem[actProgmen].baseoct=layout->getBaseoct();
         progmem[actProgmen].topoct=layout->getTopoct();
-        progmem[actProgmen].sound=layout->getMidinote(26); // the sound segment
-        progmem[actProgmen].waveform=layout->getMidinote(26); // the wave segment
-        progmem[actProgmen].envelope=layout->getMidinote(27); // the envelope segment
-        progmem[actProgmen].mod=layout->getMidinote(28); // the mod segment
+        progmem[actProgmen].sound=actProgmen; // the sound segment
+        progmem[actProgmen].waveform=layout->getSoundParam(100); // the wave segment
+        progmem[actProgmen].envelope=layout->getSoundParam(103); // the envelope segment
+        progmem[actProgmen].mod=layout->getSoundParam(104); // the mod segment
         for(int i=0;i<11;i++) {
             progmem[actProgmen].bscale[i]=layout->getBscale(i);
         }
@@ -757,9 +760,9 @@ void RC1::setActProgmem(int n)
     layout->setBasenote(progmem[n].basenote);
     layout->setTopoct(progmem[n].topoct);
     layout->setBaseoct(progmem[n].baseoct);
-    layout->setMidinote(26,progmem[n].waveform);
-    layout->setMidinote(27,progmem[n].envelope);
-    layout->setMidinote(28,progmem[n].mod);
+    layout->setSoundParam(100,progmem[n].waveform);
+    layout->setSoundParam(103,progmem[n].envelope);
+    layout->setSoundParam(104,progmem[n].mod);
     //sender->pc(progmem[n].sound);
     sender->pc(chan,n);
     sender->cc(chan,0,100,progmem[n].waveform);

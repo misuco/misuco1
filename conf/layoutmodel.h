@@ -116,6 +116,9 @@ public:
     int getYrelq(int i) const;
     void setYrelq(int i, int value);
 
+    int getSoundParam(int i) const;
+    void setSoundParam(int i, int value);
+
 private:
     // view and event parameters
     int nrows;
@@ -160,6 +163,10 @@ private:
     int scalewidth;
     int scaleheight;
     bool transMode;     // transistion areas between segments
+
+    // sound parameters
+    int *soundParam;
+    int nSoundParam;
 
     // here we declare from which part the scale keyboard starts
     int scaleStartSeg;

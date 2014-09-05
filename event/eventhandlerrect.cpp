@@ -112,10 +112,22 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
          */
         float xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg));
         xrel=xrel/(float)layout->getSegwidthpx(iseg);
+        if(xrel>1.0f) {
+            xrel=1.0f;
+        }
+        if(xrel<0) {
+            xrel=0;
+        }
         layout->setXrel(iseg,xrel);
 
         float yrel=calcYrel(p->getY(),ysum,layout->getRowheightpx(iy));
         yrel=1-(yrel/(float)layout->getRowheightpx(iy));
+        if(yrel>1.0f) {
+            yrel=1.0f;
+        }
+        if(yrel<0) {
+            yrel=0;
+        }
         layout->setYrel(iseg,yrel);
 
         int xrelquant=0;    // quantized by steps
@@ -239,25 +251,30 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 // push button
                 if(layout->getCtly(iseg)==-1) {
                     // basenote button
-                    layout->setBasenote(layout->getMidinote(iseg));
+                    layout->setBasenote(layout->getCtlx(iseg));
                     layout->updateLayout();
                 } else if(layout->getCtly(iseg)==-2) {
                     // memory button, not in use
-                    rc1->setActProgmem(layout->getMidinote(iseg));
+                    rc1->setActProgmem(layout->getCtlx(iseg));
+                } else if(layout->getCtly(iseg)==-4) {
+                    // layout switch button
+                    QString filename;
+                    filename.sprintf(":/conf/l%d.xml",layout->getCtlx(iseg));
+                    rc1->resetLayout(filename);
                 } else if(layout->getCtly(iseg)==-3) {
                     // edit button
                     //qDebug() << " segtype 2 chan 2 pressed " << layout->getPressed(iseg) ;
-                    if(layout->getMidinote(iseg)==0) {
-                        layout->setMidinote(iseg,1);
+                    if(layout->getPressed(iseg)==0) {
+//                        layout->setMidinote(iseg,1);
                         layout->setPressed(iseg,1);
                     } else {
                         layout->setRowheight(layout->getScalerow()-1,10);
-                        layout->setRowheight(layout->getScalerow(),50);
-                        layout->setMidinote(iseg,0);
+                        layout->setRowheight(layout->getScalerow(),40);
+//                        layout->setMidinote(iseg,0);
                         layout->setPressed(iseg,0);
                     }
                     for(int i=0;i<layout->getNrows();i++) {
-                        if(layout->getMidinote(iseg)==1) {
+                        if(layout->getPressed(iseg)==1) {
                             layout->setRowheight(i,10);
                         } else {
                             if(i<layout->getScalerow()-1) {
@@ -299,8 +316,15 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     rc1->setActProgmem(xrelquant);
                 } else if(layout->getCtly(iseg)==-3) {
                     snd->pc(layout->getChan(iseg), xrelquant);
+                } else if(layout->getCtly(iseg)==-4) {
+                    layout->setTopoct(xrelquant);
+                    layout->updateLayout();
+                } else if(layout->getCtly(iseg)==-5) {
+                    layout->setBaseoct(xrelquant);
+                    layout->updateLayout();
                 } else {
                     snd->cc(0, 0, layout->getCtly(iseg), xrelquant);
+                    layout->setSoundParam(layout->getCtly(iseg),xrelquant);
                 }
             } else if(layout->getSegtype(iseg)==5) {
                 // y-slider

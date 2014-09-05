@@ -80,10 +80,11 @@ public:
     void setActProgmem(int);
     void connectApp(QApplication * app);
     
-//    void setProg(int);
-
     bool getMidimode() const;
     void setMidimode(bool value);
+
+    void resetLayout(QString filename);
+    void resetLayout();
 
 public slots:
     void replyFinished(QNetworkReply * r);
@@ -197,7 +198,6 @@ private:
     void setPPSmin(int);
     void readProgmemXml(QString filename);
     void writeProgmemXml(QString filename);
-    void resetLayout();
 };
 
 #endif // VIEW_H

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE misuco>
-<misuco version="1.0" rowheightmax="60" bscalerow="0" scalerow="5" >
-    <row height="0" segwidthmax="12">
+<misuco version="1.0" rowheightmax="50" scalerow="4" >
+    <row height="10" segwidthmax="12">
         <seg segwidth="1" freq="523.251131" midinote="0" ctlx="0" ctly="-2" segtype="0" chan="0" pressed="0" segtext="Db" segh="164"/>
         <seg segwidth="1" freq="554.365262" midinote="1" ctlx="1" ctly="-2" segtype="0" chan="0" pressed="0" segtext="D" segh="196"/>
         <seg segwidth="1" freq="587.329536" midinote="2" ctlx="2" ctly="-2" segtype="0" chan="0" pressed="0" segtext="Eb" segh="229"/>
@@ -14,7 +14,7 @@
         <seg segwidth="1" freq="830.609395" midinote="10" ctlx="10" ctly="-2" segtype="0" chan="0" pressed="0" segtext="B" segh="110"/>
         <seg segwidth="1" freq="830.609395" midinote="11" ctlx="11" ctly="0" segtype="12" chan="0" pressed="0" segtext="?" segh="110"/>
     </row>
-    <row height="0" segwidthmax="12">
+    <row height="10" segwidthmax="12">
         <seg segwidth="1" freq="0.000000" midinote="0" ctlx="0" ctly="-1" segtype="0" chan="0" pressed="0" segtext="C" segh="120"/>
         <seg segwidth="1" freq="0.000000" midinote="1" ctlx="1" ctly="-1" segtype="0" chan="0" pressed="0" segtext="Db" segh="150"/>
         <seg segwidth="1" freq="0.000000" midinote="2" ctlx="2" ctly="-1" segtype="0" chan="0" pressed="0" segtext="D" segh="180"/>
@@ -28,25 +28,17 @@
         <seg segwidth="1" freq="0.000000" midinote="10" ctlx="10" ctly="-1" segtype="0" chan="0" pressed="0" segtext="Bb" segh="60"/>
         <seg segwidth="1" freq="0.000000" midinote="11" ctlx="11" ctly="-1" segtype="0" chan="0" pressed="0" segtext="B" segh="90"/>
     </row>
-    <row height="0" segwidthmax="1">
-        <seg segwidth="1" freq="0.200000" midinote="2" ctlx="10" ctly="0" segtype="6" chan="0" pressed="0" segtext="octave range" segh="65"/>
-        <seg segwidth="0" freq="0.500000" midinote="5" ctlx="10" ctly="0" segtype="7" chan="0" pressed="0" segtext="" segh="75"/>
+    <row height="10" segwidthmax="3">
+    <seg segwidth="1" freq="0.000000" midinote="0" ctlx="1" ctly="-4" segtype="2" chan="0" pressed="0" segtext="scale" segh="0"/>
+    <seg segwidth="1" freq="0.000000" midinote="0" ctlx="2" ctly="-4" segtype="2" chan="0" pressed="0" segtext="octave" segh="0"/>
+    <seg segwidth="1" freq="0.000000" midinote="0" ctlx="3" ctly="-4" segtype="2" chan="0" pressed="0" segtext="sound" segh="0"/>
     </row>
-
-
-<row height="0" segwidthmax="12">
-    <seg segwidth="5" freq="0.000000" midinote="0" ctlx="5" ctly="100" segtype="4" chan="0" pressed="0" segtext="wave" segh="0"/>
-    <seg segwidth="4" freq="0.000000" midinote="0" ctlx="4" ctly="103" segtype="4" chan="0" pressed="0" segtext="envelope" segh="0"/>
-    <seg segwidth="3" freq="0.000000" midinote="0" ctlx="3" ctly="104" segtype="4" chan="0" pressed="0" segtext="xymod" segh="0"/>
-</row>
-
-<row height="10" segwidthmax="12">
-    <seg segwidth="10" freq="0.000000" midinote="0" ctlx="10" ctly="-2" segtype="4" chan="0" pressed="0" segtext="memory" segh="0"/>
-    <seg segwidth="1" freq="0.000000" midinote="0" ctlx="0" ctly="-2" segtype="3" chan="0" pressed="0" segtext="mm" segh="0"/>
-    <seg segwidth="1" freq="0.000000" midinote="0" ctlx="0" ctly="-3" segtype="2" chan="0" pressed="0" segtext="edit" segh="0"/>
-</row>
-
-    <row height="50" segwidthmax="1">
+    <row height="10" segwidthmax="12">
+        <seg segwidth="10" freq="0.000000" midinote="0" ctlx="10" ctly="-2" segtype="4" chan="0" pressed="0" segtext="memory" segh="0"/>
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="0" ctly="-2" segtype="3" chan="0" pressed="0" segtext="mm" segh="0"/>
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="0" ctly="-3" segtype="2" chan="0" pressed="1" segtext="edit" segh="0"/>
+    </row>
+    <row height="10" segwidthmax="1">
         <seg segwidth="1" freq="261.625565" midinote="60" ctlx="1" ctly="2" segtype="0" chan="0" pressed="0" segtext="C" segh="145"/>
     </row>
 </misuco>

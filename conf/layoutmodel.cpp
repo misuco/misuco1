@@ -76,6 +76,9 @@ LayoutModel::LayoutModel()
     yrelq=new int[nsegsmax];
     setAll(nsegsmax,yrelq,0);
 
+    nSoundParam=128;
+    soundParam=new int[nSoundParam];
+    setAll(nSoundParam,soundParam,0);
 
     midi2f = new float[256];
     midi2fcent = new float[12];
@@ -123,7 +126,7 @@ LayoutModel::LayoutModel()
     baseoct=3;
     //bscaleStartSeg=0;
     //bscaleRow=0;
-    scaleStartSeg=26;
+    scaleStartSeg=24;
     scaleRow=4;
     transMode=false;
 
@@ -351,6 +354,16 @@ void LayoutModel::setYrelq(int i, int value)
 {
     yrelq[i] = value;
 }
+int LayoutModel::getSoundParam(int i) const
+{
+    return soundParam[i];
+}
+
+void LayoutModel::setSoundParam(int i, int value)
+{
+    soundParam[i] = value;
+}
+
 
 void LayoutModel::setFreq(int i, float v)
 {
@@ -463,9 +476,12 @@ int LayoutModel::getTopoct() const
 
 void LayoutModel::setTopoct(int v)
 {
-    topoct = v;
-//    valueint[24] = v;
-//    value[24] = 0.1f*(float)v;
+    if(baseoct>v) {
+        topoct=baseoct;
+        baseoct=v;
+    } else {
+        topoct = v;
+    }
 }
 
 int LayoutModel::getBaseoct() const
@@ -475,9 +491,12 @@ int LayoutModel::getBaseoct() const
 
 void LayoutModel::setBaseoct(int v)
 {
-    baseoct=v;
-//    valueint[23] = v;
-//    value[23] = 0.1f*(float)v;
+    if(topoct<v) {
+        baseoct=topoct;
+        topoct=v;
+    } else {
+        baseoct=v;
+    }
 }
 
 void LayoutModel::setTransMode(bool t)
@@ -618,10 +637,14 @@ void LayoutModel::updateLayout()
             pitch[seg]=0;
             segH[seg]=note2hue(note);
             segText[seg]=midi2TextEU[note%12];
-        } else if(segtype[seg]==6) {
-            midinote[seg]=baseoct;
-        } else if(segtype[seg]==7) {
-            midinote[seg]=topoct;
+        } else if(segtype[seg]==4 ) {
+            if(ctly[seg]==-4) {
+                xrelq[seg]=topoct;
+            } else if(ctly[seg]==-5) {
+                xrelq[seg]=baseoct;
+            } else if(ctly[seg]>0 && ctly[seg]<nSoundParam) {
+                xrelq[seg]=soundParam[ctly[seg]];
+            }
         }
     }
 
@@ -632,10 +655,16 @@ void LayoutModel::updateLayout()
         midinote[seg]=calcnote;
         freq[seg]=midi2f[calcnote];
         pitch[seg]=0;
+        QString octnum;
+        octnum.sprintf("%d",i+1);
         segText[seg]=midi2TextEU[calcnote%12];
+        segText[seg].append(octnum);
+        ctlx[seg]=1;
+        ctly[seg]=2;
         segwidth[seg]=1;
         segtype[seg]=0;
         segH[seg]=note2hue(calcnote);
+        pressed[seg]=0;
         for(int j=0;j<11;j++) {
             if(bscale[j]) {
                 if(transMode) {
@@ -650,19 +679,19 @@ void LayoutModel::updateLayout()
                 int thisnote=calcnote+j+1;
                 midinote[seg]=thisnote;
                 freq[seg]=midi2f[thisnote];
-                //qDebug() << " scale midi " << thisnote << " f " << value[seg] << " seg " << seg;
                 segText[seg]=midi2TextEU[thisnote%12];
+                segText[seg].append(octnum);
                 ctlx[seg]=1;
                 ctly[seg]=2;
-//                segText[seg].sprintf("%d\n%d",midi2TextEU[thisnote%12],(int)value[seg]);
                 segH[seg]=note2hue(thisnote);
-                //qDebug() << seg << " segh " << segH[seg];
+                pressed[seg]=0;
             }
         }
         seg++;
         if(i<topoct && transMode) {
             segtype[seg]=1;
             segText[seg]="";
+            pressed[seg]=0;
             seg++;
         }
     }

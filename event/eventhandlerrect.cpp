@@ -260,29 +260,12 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     // layout switch button
                     QString filename;
                     filename.sprintf(":/conf/l%d.xml",layout->getCtlx(iseg));
+                    layout->setCurrLayout(layout->getCtlx(iseg));
                     rc1->resetLayout(filename);
+                    layout->updateLayout();
                 } else if(layout->getCtly(iseg)==-3) {
                     // edit button
-                    //qDebug() << " segtype 2 chan 2 pressed " << layout->getPressed(iseg) ;
-                    if(layout->getPressed(iseg)==0) {
-//                        layout->setMidinote(iseg,1);
-                        layout->setPressed(iseg,1);
-                    } else {
-                        layout->setRowheight(layout->getScalerow()-1,10);
-                        layout->setRowheight(layout->getScalerow(),40);
-//                        layout->setMidinote(iseg,0);
-                        layout->setPressed(iseg,0);
-                    }
-                    for(int i=0;i<layout->getNrows();i++) {
-                        if(layout->getPressed(iseg)==1) {
-                            layout->setRowheight(i,10);
-                        } else {
-                            if(i<layout->getScalerow()-1) {
-                                layout->setRowheight(i,0);
-                            }
-                        }
-                    }
-                    layout->calcGeo(layout->getWidth(),layout->getHeight());
+                    layout->toggleEdit();
                 }
             } else if(layout->getSegtype(iseg)==3) {
                 // toggle button

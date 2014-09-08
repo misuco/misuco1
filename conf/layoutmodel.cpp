@@ -129,6 +129,8 @@ LayoutModel::LayoutModel()
     scaleStartSeg=24;
     scaleRow=4;
     transMode=false;
+    currLayout=1;
+    editMode=true;
 
     //define one simple segment
     rowheightmax=1;
@@ -363,6 +365,16 @@ void LayoutModel::setSoundParam(int i, int value)
 {
     soundParam[i] = value;
 }
+int LayoutModel::getCurrLayout() const
+{
+    return currLayout;
+}
+
+void LayoutModel::setCurrLayout(int value)
+{
+    currLayout = value;
+}
+
 
 
 void LayoutModel::setFreq(int i, float v)
@@ -588,6 +600,28 @@ void LayoutModel::setMidi2fcent(uint pos, float value)
     }
 }
 
+void LayoutModel::toggleEdit()
+{
+    if(!editMode) {
+        editMode=true;
+    } else {
+        rowheight[scaleRow-1]=10;
+        rowheight[scaleRow]=rowheightmax-10;
+        editMode=false;
+    }
+    for(int i=0;i<nrows;i++) {
+        if(editMode) {
+            rowheight[i]=10;
+        } else {
+            if(i<scaleRow-1) {
+                rowheight[i]=0;
+            }
+        }
+    }
+    calcGeo();
+    updateLayout();
+}
+
 int LayoutModel::getFontsize() const
 {
     return fontsize;
@@ -637,6 +671,20 @@ void LayoutModel::updateLayout()
             pitch[seg]=0;
             segH[seg]=note2hue(note);
             segText[seg]=midi2TextEU[note%12];
+        } else if(segtype[seg]==2 ) {
+            if(ctly[seg]==-3) {
+                if(editMode) {
+                    pressed[seg]=1;
+                } else {
+                    pressed[seg]=0;
+                }
+            } else if(ctly[seg]==-4) {
+                if(ctlx[seg]==currLayout) {
+                    pressed[seg]=1;
+                } else {
+                    pressed[seg]=0;
+                }
+            }
         } else if(segtype[seg]==4 ) {
             if(ctly[seg]==-4) {
                 xrelq[seg]=topoct;

@@ -99,6 +99,7 @@ public:
     int note2hue(int note);
     int midi2freq(uint note);
     void setMidi2fcent(uint pos, float freq);
+    void toggleEdit();
 
     int getFontsize() const;
     QString getFont() const;
@@ -118,6 +119,9 @@ public:
 
     int getSoundParam(int i) const;
     void setSoundParam(int i, int value);
+
+    int getCurrLayout() const;
+    void setCurrLayout(int value);
 
 private:
     // view and event parameters
@@ -155,6 +159,10 @@ private:
     QString * segText;
     int * segH;         // segment color hue
 
+    // view help parameters
+    int currLayout;
+    bool editMode;
+
     // scale generator parameters
     int basenote;
     int topoct;
@@ -168,7 +176,7 @@ private:
     int *soundParam;
     int nSoundParam;
 
-    // here we declare from which part the scale keyboard starts
+    // here we declare from which part the performance area starts
     int scaleStartSeg;
     int scaleRow;
 

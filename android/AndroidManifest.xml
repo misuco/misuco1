@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<manifest package="org.qtproject.example.rc1" xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0">
+<manifest package="org.misuco.pro" xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0">
     <application android:name="org.qtproject.qt5.android.bindings.QtApplication" android:label="@string/app_name">
-        <activity android:configChanges="orientation|locale|fontScale|keyboard|keyboardHidden|navigation" android:name="org.qtproject.qt5.android.bindings.QtActivity" android:label="@string/app_name">
+        <activity android:configChanges="orientation|locale|fontScale|keyboard|keyboardHidden|navigation" android:name="org.qtproject.qt5.android.bindings.QtActivity" android:label="@string/app_name" android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

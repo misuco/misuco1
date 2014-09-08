@@ -167,10 +167,13 @@ RC1::RC1(QWidget *parent) :
     connect(netxs, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(replyFinished(QNetworkReply*)));
 
-    //netxs->get(QNetworkRequest(QUrl(RC1_INIT_XML_URL)));
-    //netxs->get(QNetworkRequest(QUrl(RC1_SCALES_XML_URL)));
-
     resetLayout();
+
+    layout->toggleEdit();
+    actProgmen=0;
+    readProgmemXml(storagePath+"/prog.xml");
+    setActProgmem(0);
+    layout->updateLayout();
 
     //setWindowState(Qt::WindowFullScreen);
 }
@@ -180,11 +183,7 @@ void RC1::resetLayout(QString filename) {
     layoutxml lxml;
     lxml.setLayoutModel(layout);
     lxml.readXml(filename);
-    layout->updateLayout();
 
-    actProgmen=0;
-    readProgmemXml(storagePath+"/prog.xml");
-    setActProgmem(0);
 
 }
 

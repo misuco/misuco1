@@ -6,5 +6,6 @@
         <file>conf/l1.xml</file>
         <file>conf/l2.xml</file>
         <file>conf/l3.xml</file>
+        <file>conf/l4.xml</file>
     </qresource>
 </RCC>

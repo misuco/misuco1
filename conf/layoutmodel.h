@@ -123,6 +123,8 @@ public:
     int getCurrLayout() const;
     void setCurrLayout(int value);
 
+    int getSegBorder() const;
+
 private:
     // view and event parameters
     int nrows;
@@ -158,6 +160,7 @@ private:
     QString font;
     QString * segText;
     int * segH;         // segment color hue
+    int segBorder;
 
     // view help parameters
     int currLayout;

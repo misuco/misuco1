@@ -160,7 +160,8 @@ OTHER_FILES += \
     misuco-logo.jpg \
     conf/l1.xml \
     conf/l2.xml \
-    conf/l3.xml
+    conf/l3.xml \
+    conf/l4.xml
 
 OBJECTIVE_SOURCES += \
     mobilesynth/mobilesynth/Classes/mobilesynthViewControllerRc1.mm \

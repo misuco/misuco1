@@ -110,7 +110,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
          * calculation, quantisation and storage of segment relative x/y values
          *
          */
-        float xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg));
+        float xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg))-layout->getSegBorder();
         xrel=xrel/(float)layout->getSegwidthpx(iseg);
         if(xrel>1.0f) {
             xrel=1.0f;
@@ -120,7 +120,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         }
         layout->setXrel(iseg,xrel);
 
-        float yrel=calcYrel(p->getY(),ysum,layout->getRowheightpx(iy));
+        float yrel=p->getY()-(ysum-layout->getRowheightpx(iy))-layout->getSegBorder();
         yrel=1-(yrel/(float)layout->getRowheightpx(iy));
         if(yrel>1.0f) {
             yrel=1.0f;
@@ -441,9 +441,4 @@ void EventHandlerRect::init()
         isegb[i]=-1;
         evptr_stack[i]=-1;
     }
-}
-
-float EventHandlerRect::calcYrel(int y, int ysum, int height)
-{
-    return y-(ysum-height);
 }

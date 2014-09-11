@@ -144,6 +144,7 @@ LayoutModel::LayoutModel()
     ctlx[0]=1;
     ctly[0]=2;
     segH[0]=100;
+    segBorder=0;
     calcGeo(200,200);
     updateLayout();
 }
@@ -164,6 +165,7 @@ void LayoutModel::calcGeo(int w, int h)
     //qDebug() << "Cacl geo " << w << " " << h << " " << width << " " << height;
     widthPx=w;
     heightPx=h;
+    segBorder=heightPx*10/nrows/100;
     int i=0;
     int rowheightsum=0;
     for(int y=0;y<nrows;y++) {
@@ -374,8 +376,10 @@ void LayoutModel::setCurrLayout(int value)
 {
     currLayout = value;
 }
-
-
+int LayoutModel::getSegBorder() const
+{
+    return segBorder;
+}
 
 void LayoutModel::setFreq(int i, float v)
 {

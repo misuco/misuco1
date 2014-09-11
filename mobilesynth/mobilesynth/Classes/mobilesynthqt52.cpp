@@ -8,8 +8,8 @@
 #include "mobilesynthqt52.h"
 
 const int DataSampleRateHz  = 44100;
-const int BufferSize        = 32768;
-//const int BufferSize        = 4096;
+//const int BufferSize        = 32768;
+const int BufferSize        = 8192;
 
 mobileSynthQT52::mobileSynthQT52()
     :   QIODevice()

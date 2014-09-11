@@ -36,8 +36,8 @@ PaintBgShapes::PaintBgShapes()
     colorMode=2;
     chue=0;
     
-    cradx=10;
-    crady=10;
+    cradx=0;
+    crady=0;
     
     gradients=1;
     painttext=1;
@@ -126,12 +126,13 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
     iseg=0;
     pnt->setBrush(Qt::NoBrush);
     
+    cradx=lay->getSegBorder();
+    crady=lay->getSegBorder();
+    int xrow_header=cradx;
+
     for(int y = 0; y < lay->getNrows(); y++) {
         ypaint1=lay->getRowheightpx(y);
-        crady=ypaint1/7;
-        cradx=ypaint1/7;
         xpaint=1;
-        int xrow_header=cradx;
 
         for (int x = 0; x < lay->getNseg(y); x ++) {
 

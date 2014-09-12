@@ -96,8 +96,12 @@ namespace synth {
             lfo_wave=w;
         }
         
-        void setADSR(int n, long a, long d, float s, long r) {env_a[n]=a;env_d[n]=d;env_s[n]=s;env_r[n]=r;};
-        
+        void setADSR(int n, long a, long d, float s, long r) {env_a[n]=a;env_d[n]=d;env_s[n]=s;env_r[n]=r;}
+        void setAttack(int n, long a) {env_a[n]=a;}
+        void setDecay(int n, long d) {env_d[n]=d;}
+        void setSustain(int n, float s) {env_s[n]=s;}
+        void setRelease(int n, long r) {env_r[n]=r;}
+
     private:
         int size_;
         int notes_[kMaxSize+1];

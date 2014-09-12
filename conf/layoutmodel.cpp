@@ -19,6 +19,8 @@
 #include <QDebug>
 #include <math.h>
 #include "layoutmodel.h"
+#include "layoutxml.h"
+
 
 LayoutModel::LayoutModel()
 {
@@ -608,15 +610,12 @@ void LayoutModel::toggleEdit()
 {
     if(!editMode) {
         editMode=true;
+        resetLayout();
     } else {
         rowheight[scaleRow-1]=10;
         rowheight[scaleRow]=rowheightmax-10;
         editMode=false;
-    }
-    for(int i=0;i<nrows;i++) {
-        if(editMode) {
-            rowheight[i]=10;
-        } else {
+        for(int i=0;i<nrows;i++) {
             if(i<scaleRow-1) {
                 rowheight[i]=0;
             }
@@ -625,6 +624,24 @@ void LayoutModel::toggleEdit()
     calcGeo();
     updateLayout();
 }
+
+
+void LayoutModel::resetLayout(int i) {
+    QString filename;
+    filename.sprintf(":/conf/l%d.xml",i);
+    resetLayout(filename);
+}
+
+void LayoutModel::resetLayout(QString filename) {
+    layoutxml lxml;
+    lxml.setLayoutModel(this);
+    lxml.readXml(filename);
+}
+
+void LayoutModel::resetLayout() {
+    resetLayout(currLayout);
+}
+
 
 int LayoutModel::getFontsize() const
 {

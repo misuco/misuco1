@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE misuco>
 <misuco version="1.0" rowheightmax="60" scalerow="5" >
-    <row height="30" segwidthmax="3">
-        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="5" ctly="100" segtype="5" chan="0" pressed="0" segtext="wave" segh="0"/>
-        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="4" ctly="103" segtype="5" chan="0" pressed="0" segtext="envelope" segh="0"/>
-        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="3" ctly="104" segtype="5" chan="0" pressed="0" segtext="xymod" segh="0"/>
+    <row height="30" segwidthmax="6">
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="4" ctly="100" segtype="5" chan="0" pressed="0" segtext="wave" segh="0"/>
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="127" ctly="105" segtype="5" chan="0" pressed="0" segtext="attack" segh="0"/>
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="127" ctly="106" segtype="5" chan="0" pressed="0" segtext="decay" segh="0"/>
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="127" ctly="107" segtype="5" chan="0" pressed="0" segtext="sustain" segh="0"/>
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="127" ctly="108" segtype="5" chan="0" pressed="0" segtext="release" segh="0"/>
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="127" ctly="109" segtype="5" chan="0" pressed="0" segtext="resonance" segh="0"/>
     </row>
     <row height="10" segwidthmax="4">
         <seg segwidth="1" freq="0.000000" midinote="0" ctlx="1" ctly="-4" segtype="2" chan="0" pressed="0" segtext="scale" segh="0"/>

@@ -172,7 +172,23 @@ namespace synth {
     void Controller::setADSR(int n, long a, long d, float s, long r) {
         key_stack_.setADSR(n,a,d,s,r);
     }
-    
+
+    void Controller::setAttack(int n, long a) {
+        key_stack_.setAttack(n,a);
+    }
+
+    void Controller::setDecay(int n, long d) {
+        key_stack_.setDecay(n,d);
+    }
+
+    void Controller::setSustain(int n, float s) {
+        key_stack_.setSustain(n,s);
+    }
+
+    void Controller::setRelease(int n, int r) {
+        key_stack_.setRelease(n,r);
+    }
+
     void Controller::GetCharSamples(char* buffer, int size) {
         
         if(format!=0) {

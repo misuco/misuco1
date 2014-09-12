@@ -101,6 +101,11 @@ namespace synth {
         
         void setFormat(QAudioFormat * f);
         
+        void setAttack(int n, long a);
+        void setDecay(int n, long d);
+        void setSustain(int n, float s);
+        void setRelease(int n, int r);
+
     private:
         // Invoked when one of the routing parameters changes, such as the source
         // or destination of modulation.

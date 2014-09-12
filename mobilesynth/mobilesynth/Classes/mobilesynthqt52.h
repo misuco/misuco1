@@ -35,6 +35,8 @@ public slots:
 private:
 //    void generateData(const QAudioFormat &format, qint64 durationUs, int sampleRate);
 //    qint64 m_pos;
+    int DataSampleRateHz;
+    int BufferSize;
     QTimer *m_pullTimer;
     QByteArray m_buffer;
     synth::Controller * syctl;

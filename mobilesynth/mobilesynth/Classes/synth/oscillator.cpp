@@ -55,7 +55,7 @@ namespace synth {
                 break;
                  */
             default:
-                wave_type_ = Oscillator::REVERSE_SAWTOOTH;
+                wave_type_ = Oscillator::SINE;
                 break;
         }
     }

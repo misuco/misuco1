@@ -178,6 +178,16 @@ void SenderMobileSynth::cc(int chan, int voiceId, int cc, float v1)
         }
     } else if(cc==104) {
         sy->getSyctl()->set_filter_resonance(v1);
+    } else if(cc==105) {
+        sy->getSyctl()->setAttack(voiceId, v1*700.0f);
+    } else if(cc==106) {
+        sy->getSyctl()->setDecay(voiceId, v1*700.0f);
+    } else if(cc==107) {
+        sy->getSyctl()->setSustain(voiceId, v1/127.0f);
+    } else if(cc==108) {
+        sy->getSyctl()->setRelease(voiceId, v1*700.0f);
+    } else if(cc==109) {
+        sy->getSyctl()->set_filter_resonance(voiceId,v1/32);
     }
 }
 

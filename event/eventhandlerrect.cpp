@@ -111,7 +111,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
          *
          */
         float xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg))-layout->getSegBorder();
-        xrel=xrel/(float)layout->getSegwidthpx(iseg);
+        xrel=xrel/(float)(layout->getSegwidthpx(iseg)-2*layout->getSegBorder());
         if(xrel>1.0f) {
             xrel=1.0f;
         }
@@ -121,13 +121,14 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         layout->setXrel(iseg,xrel);
 
         float yrel=p->getY()-(ysum-layout->getRowheightpx(iy))-layout->getSegBorder();
-        yrel=1-(yrel/(float)layout->getRowheightpx(iy));
+        yrel=yrel/(float)(layout->getRowheightpx(iy)-2*layout->getSegBorder());
         if(yrel>1.0f) {
             yrel=1.0f;
         }
         if(yrel<0) {
             yrel=0;
         }
+        yrel=1.0f-yrel;
         layout->setYrel(iseg,yrel);
 
         int xrelquant=0;    // quantized by steps
@@ -135,6 +136,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         if(layout->getCtly(iseg)<0 || layout->getSegtype(iseg)>3) {
             xrelquant=xrel*(float)layout->getCtlx(iseg);
             yrelquant=yrel*(float)layout->getCtlx(iseg);
+            //qDebug() << "xrelquant " << xrelquant << " yrelquant " << yrelquant;
         }
         layout->setXrelq(iseg,xrelquant);
         layout->setYrelq(iseg,yrelquant);
@@ -258,10 +260,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     rc1->setActProgmem(layout->getCtlx(iseg));
                 } else if(layout->getCtly(iseg)==-4) {
                     // layout switch button
-                    QString filename;
-                    filename.sprintf(":/conf/l%d.xml",layout->getCtlx(iseg));
-                    layout->setCurrLayout(layout->getCtlx(iseg));
-                    rc1->resetLayout(filename);
+                    layout->resetLayout(layout->getCtlx(iseg));
                     layout->updateLayout();
                 } else if(layout->getCtly(iseg)==-3) {
                     // edit button

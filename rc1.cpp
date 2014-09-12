@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDir>
 
 #include "platform.h"
-#include "conf/layoutxml.h"
 #include "rc1.h"
 #include "event/eventhandlerrect.h"
 #include "comm/senderdebug.h"
@@ -69,18 +68,7 @@ RC1::RC1(QWidget *parent) :
 //    sender=new SenderDebug();
     ehand=new EventHandlerRect();
     evstat=new EventStat();
-/*
-#ifdef RC1_IOS
-    sender=new SenderMobileSynth(this);
-    midimode=false;
-#else
-//    sender=new SenderOscPuredata(this);
-//    midimode=true;
-    sender=new SenderMobileSynth(this);
-    midimode=false;
-    storagePath="./";
-#endif
-*/
+
     senderAddress=QHostAddress("255.255.255.255");
     senderPort=3334;
     sender=new SenderMulti(this);
@@ -167,7 +155,7 @@ RC1::RC1(QWidget *parent) :
     connect(netxs, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(replyFinished(QNetworkReply*)));
 
-    resetLayout();
+    layout->resetLayout();
 
     layout->toggleEdit();
     actProgmen=0;
@@ -176,19 +164,6 @@ RC1::RC1(QWidget *parent) :
     layout->updateLayout();
 
     //setWindowState(Qt::WindowFullScreen);
-}
-
-void RC1::resetLayout(QString filename) {
-
-    layoutxml lxml;
-    lxml.setLayoutModel(layout);
-    lxml.readXml(filename);
-
-
-}
-
-void RC1::resetLayout() {
-    resetLayout(":/conf/l1.xml");
 }
 
 RC1::~RC1()
@@ -572,7 +547,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
 
         if(path=="/reset") {
             writeProgmemXml(storagePath+"/prog.xml");
-            resetLayout();
+            layout->resetLayout();
         }
 
         if(path=="/loadbg") {
@@ -860,9 +835,7 @@ void RC1::replyFinished(QNetworkReply * r)
         }*/
 
         QByteArray data=r->readAll();
-        if(r->url().toString()==RC1_INIT_XML_URL) {
-            pendingConfigFile="init.xml";
-        } else if(r->url().toString()==RC1_SCALES_XML_URL) {
+        if(r->url().toString()==RC1_SCALES_XML_URL) {
             pendingConfigFile="scales.xml";
         } else if(r->url().toString()==bgUrl) {
             pendingConfigFile="bg.jpg";
@@ -885,12 +858,6 @@ void RC1::replyFinished(QNetworkReply * r)
                 out.write(r->rawHeader("Adid"));
                 out.close();
             }
-        } else if(r->url().toString()==RC1_INIT_XML_URL) {
-            //qDebug() << "setup init.xml";
-            layoutxml lxml;
-            lxml.setLayoutModel(layout);
-            lxml.readXml(storagePath+"/init.xml");
-            layout->updateLayout();
         } else if(r->url().toString()==RC1_SCALES_XML_URL) {
             scaletab.readXml(storagePath+"/scales.xml");
         }

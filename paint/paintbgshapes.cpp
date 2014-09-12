@@ -67,7 +67,6 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
     pnt->setBrush(Qt::black);
     pnt->drawRect(0,0,view->width(),view->height());
     
-
     /*
      for(int y = 0; y < lay->getNrows(); y++) {
      for (int x = 0; x < lay->getNseg(y); x ++) {
@@ -153,8 +152,6 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 col=lay->getSegH(iseg);
             }
             
-            //            int col=21*(lay->getNote(iseg)%12);
-            //            int col=lay->getSegH(iseg);
             int lightP=lPenPsv;
             int lightB=lBrushPsv;
             int lightBNote=lBrushPsvNote;
@@ -171,8 +168,6 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 fontl=0;
             }
             
-            //            int col1=lay->getSegH(iseg-1);
-            //            int col2=lay->getSegH(iseg+1);
             int col1=chue;
             int col2=chue;
             if(lay->getSegtype(iseg)==1) {
@@ -312,67 +307,32 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 pnt->setFont(QFont(lay->getFont(),lay->getFontsize()/2));
 
             } else if(lay->getSegtype(iseg)==5) {
+                // vertical fadder
                 pnt->setBrush(Qt::lightGray);
                 pnt->setPen(Qt::NoPen);
-                float sseg=(float)ypaint1/(float)lay->getCtlx(iseg);
-//                int xsseg=xpaint1-2*cradx;
-//                int ysseg=sseg-2*crady;
+                float sseg=(float)(ypaint1-2*cradx)/(float)lay->getCtlx(iseg);
                 int yv1=(float)(lay->getCtlx(iseg)-lay->getYrelq(iseg))*sseg;
-//                pnt->drawEllipse(xpaint+xv1,ypaint,ypaint1_1,ypaint1_1);
-//                pnt->drawRect(xpaint+xv1,ypaint,sseg,ypaint1_1);
-                pnt->drawRect(xpaint,ypaint+yv1,xpaint1_1,sseg);
-              //  pnt->setFont(QFont(lay->getFont(),lay->getFontsize()));
-              //  xrow_header=xpaint+xv1+cradx;
+                pnt->drawRoundedRect(xpaint,ypaint+yv1,xpaint1_1,2*crady,cradx,crady);
                 QString text;
                 pnt->setBrush(Qt::darkGray);
                 pnt->setFont(QFont(lay->getFont(),lay->getFontsize()/2));
                 text.sprintf("%d",lay->getYrelq(iseg));
-                pnt->setPen(Qt::lightGray);
-                pnt->drawText(xpaint,ypaint+ypaint1-lay->getFontsize(),xpaint1_1,lay->getFontsize(),Qt::AlignCenter,text);
+                pnt->setPen(Qt::darkGray);
+                pnt->drawText(xpaint,ypaint+yv1,xpaint1_1,2*crady,Qt::AlignCenter,text);
                 textAlign=Qt::AlignLeft;
-                fontl=0;
+                //fontl=0;
 
-            } else if(lay->getSegtype(iseg)==6) {
-                /* float x-slider */
-                int sseg=xpaint1/lay->getCtlx(iseg);
-                int xsseg=sseg-2*cradx;
-                int ysseg=ypaint1-2*crady;
-
-                pnt->setBrush(Qt::lightGray);
-                pnt->setPen(Qt::NoPen);
-                //int xv1=lay->getValue(iseg)*xpaint1_1;
-                //int xv2=lay->getValue(iseg+1)*xpaint1_1;
-                int xv1=(lay->getYrelq(iseg))*sseg;
-                int xv2=(lay->getYrelq(iseg+1)+1)*sseg;
-                xrow_header=xv1+cradx;
-                pnt->drawRoundedRect(xv1, ypaint, xv2-xv1,ypaint1_1,cradx,crady);
-
-                xv1=0;
-                QString text;
-                pnt->setBrush(Qt::darkGray);
-                for(int i=1;i<=lay->getCtlx(iseg);i++) {
-                    text.sprintf("%d",i);
-                    pnt->setPen(Qt::NoPen);
-                    //pnt->drawRoundedRect(xv1+cradx,ypaint+crady,xsseg,ysseg,cradx,crady);
-                    pnt->drawRect(xv1+cradx,ypaint+crady,xsseg,ysseg);
-                    pnt->setPen(QColor::fromHsl(col,120,0));
-                    pnt->drawText(xv1,ypaint,sseg,ypaint1,Qt::AlignCenter,text);
-                    xv1+=sseg;
-                }
-                textAlign=Qt::AlignLeft;
-                fontl=0;
-                pnt->setFont(QFont(lay->getFont(),lay->getFontsize()/2));
             }
-            if (lay->getSegtype(iseg)!=7)   {
-                if(painttext>0 && (editMode|(lay->getSegtype(iseg)==2)|(lay->getSegtype(iseg)==3)) ) {
-                    pnt->setPen(QColor::fromHsl(col,120,fontl));
-                    if(lay->getSegtype(iseg)==4 | lay->getSegtype(iseg)==6) {
-                        pnt->drawText(xrow_header,ypaint,xpaint1,ypaint1,textAlign,*lay->getSegText(iseg));
-                    } else {
-                        pnt->drawText(xpaint,ypaint,xpaint1,ypaint1,textAlign,*lay->getSegText(iseg));
-                    }
+
+            if(painttext>0 && (editMode|(lay->getSegtype(iseg)==2)|(lay->getSegtype(iseg)==3)) ) {
+                pnt->setPen(QColor::fromHsl(col,120,fontl));
+                if(lay->getSegtype(iseg)==4 | lay->getSegtype(iseg)==6) {
+                    pnt->drawText(xrow_header,ypaint,xpaint1,ypaint1,textAlign,*lay->getSegText(iseg));
+                } else {
+                    pnt->drawText(xpaint,ypaint,xpaint1,ypaint1,textAlign,*lay->getSegText(iseg));
                 }
             }
+
 
             // row header
             /*

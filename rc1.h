@@ -44,7 +44,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "paint/ipointpaint.h"
 #include "comm/libofqf/qosctypes.h"
 
-#define RC1_INIT_XML_URL "http://x21.ch/rc1/init.xml"
 #define RC1_SCALES_XML_URL "http://x21.ch/rc1/scales.xml"
 #define RC1_ADS_URL "http://ads.misuco.org/go/?id="
 #define NPROGMEM 11
@@ -82,9 +81,6 @@ public:
     
     bool getMidimode() const;
     void setMidimode(bool value);
-
-    void resetLayout(QString filename);
-    void resetLayout();
 
 public slots:
     void replyFinished(QNetworkReply * r);

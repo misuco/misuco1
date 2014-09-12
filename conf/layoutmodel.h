@@ -125,6 +125,10 @@ public:
 
     int getSegBorder() const;
 
+    void resetLayout(int i);
+    void resetLayout(QString filename);
+    void resetLayout();
+
 private:
     // view and event parameters
     int nrows;

@@ -51,8 +51,9 @@ namespace synth {
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == note) {
                 oscs[i]->set_frequency(freq);
+                oscs[i]->set_wave_type(osc_wave);
                 cutoffs[i]->set_cutoff(freq);
-                //qDebug() << "  KeyStack existing note on size: " << size_;
+                qDebug() << "  KeyStack existing note " << note << " size " << size_ << " wave " << osc_wave;
                 return false;
             }
         }
@@ -62,7 +63,7 @@ namespace synth {
         // => kill oldest note
         if(size_ >= kMaxSize) {
             NoteClear(notes_[0]);
-            //qDebug() << "  KeyStack full, NoteClear " << notes_[0];
+            qDebug() << "  KeyStack full, NoteClear " << notes_[0];
         }
         
         // put new note on top of stack
@@ -88,7 +89,7 @@ namespace synth {
             envelopes[i][size_]->NoteOn();
         }
         size_++;
-        //qDebug() << "  KeyStack new note on size: " << size_;
+        qDebug() << "  KeyStack new note " << note << " size " << size_ << " wave " << osc_wave;
         return true;
     }
     
@@ -208,7 +209,7 @@ namespace synth {
             if (notes_[i] == voice) {
                 float fcf=f*oscs[i]->get_frequency()*4;
                 cutoffs[i]->set_cutoff(fcf);
-                i=size_;
+                break;
                 //qDebug() << "setFilterCutoff v " << voice << " f " << f << " fcf " << fcf;
             }
         }
@@ -219,7 +220,7 @@ namespace synth {
             if (notes_[i] == voice) {
                 float frs=f*filter_res_;
                 filters[i]->set_resonance(frs);
-                i=size_;
+                break;
             }
         }
     }
@@ -232,7 +233,7 @@ namespace synth {
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == voice) {
                 oscs[i]->set_pulse_width(pw);
-                i=size_;
+                break;
             }
         }
         osc_pw=pw;

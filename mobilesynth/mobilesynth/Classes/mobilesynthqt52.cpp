@@ -7,17 +7,20 @@
 
 #include "mobilesynthqt52.h"
 
-const int DataSampleRateHz  = 44100;
-//const int BufferSize        = 32768;
-const int BufferSize        = 8192;
 
 mobileSynthQT52::mobileSynthQT52()
     :   QIODevice()
     ,   m_pullTimer(new QTimer(this))
     ,   m_device(QAudioDeviceInfo::defaultOutputDevice())
-    ,   m_buffer(BufferSize, 0)
 
 {
+    DataSampleRateHz  = 44100;
+    //const int BufferSize        = 32768;
+    BufferSize        = 8192;
+
+    m_buffer.resize(BufferSize);
+    m_buffer.fill(0);
+
 //    generateData(format, durationUs, sampleRate);
     syctl = new synth::Controller();
     syctl->set_modulation_amount(0);

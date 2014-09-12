@@ -629,6 +629,7 @@ void LayoutModel::toggleEdit()
 void LayoutModel::resetLayout(int i) {
     QString filename;
     filename.sprintf(":/conf/l%d.xml",i);
+    currLayout=i;
     resetLayout(filename);
 }
 

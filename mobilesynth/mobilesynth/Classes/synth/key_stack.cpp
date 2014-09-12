@@ -41,6 +41,7 @@ namespace synth {
         lfo_freq_init_=0;
         osc_pw=0.5;
         filter_res_=0;
+        filter_cutoff_=0.5f;
     }
     
     KeyStack::~KeyStack() { }
@@ -204,17 +205,21 @@ namespace synth {
         }
     }
     
+    void KeyStack::setFilterCutoff(float f) {
+        filter_cutoff_=f;
+    }
+
     void KeyStack::setFilterCutoff(int voice, float f) {
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == voice) {
-                float fcf=f*oscs[i]->get_frequency()*4;
+                float fcf=f*oscs[i]->get_frequency()*filter_cutoff_*8;
                 cutoffs[i]->set_cutoff(fcf);
                 break;
                 //qDebug() << "setFilterCutoff v " << voice << " f " << f << " fcf " << fcf;
             }
         }
     }
-    
+
     void KeyStack::setFilterRes(int voice, float f) {
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == voice) {
@@ -224,7 +229,21 @@ namespace synth {
             }
         }
     }
-    
+
+    void KeyStack::setModulation(int voice, float f) {
+        for (int i = 0; i < size_; ++i) {
+            if (notes_[i] == voice) {
+                float frs=f*mod_res_*filter_res_;
+                filters[i]->set_resonance(frs);
+
+                float fcf=f*oscs[i]->get_frequency()*filter_cutoff_*mod_cutoff_*8;
+                cutoffs[i]->set_cutoff(fcf);
+
+                break;
+            }
+        }
+    }
+
     void KeyStack::setFilterRes(float f) {
         filter_res_=f;
     }

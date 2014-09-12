@@ -27,7 +27,13 @@ namespace synth {
         key_stack_.setADSR(0, 1000, 1000, 0.8, 80000);
         key_stack_.setADSR(1, 0,   0,   1, 1000);
         format=0;
-//        reset_routing();
+        volume_=0.5;
+        //        reset_routing();
+    }
+
+    void Controller::set_volume(float volume)
+    {
+        volume_=volume;
     }
     void Controller::set_sample_rate(float sample_rate) {
 //        osc1_.set_sample_rate(sample_rate);
@@ -143,11 +149,30 @@ namespace synth {
         }
     }
      */
-    
+
+    void Controller::set_filter_cutoff(float frequency) {
+        key_stack_.setFilterCutoff(frequency);
+    }
+
+    void Controller::set_mod_filter_cutoff(float v)
+    {
+        key_stack_.setModCutoff(v);
+    }
+
+    void Controller::set_mod_filter_resonance(float v)
+    {
+        key_stack_.setModRes(v);
+    }
+
+    void Controller::set_modulation(int voice, float v)
+    {
+        key_stack_.setModulation(voice,v);
+    }
+
     void Controller::set_filter_cutoff(int voice, float frequency) {
         key_stack_.setFilterCutoff(voice, frequency);
     }
-    
+
     void Controller::set_filter_resonance(int voice, float value) {
         key_stack_.setFilterRes(voice, value);
     }
@@ -270,6 +295,7 @@ namespace synth {
         // Clip!
         value = fmaxf(-1.0f, value);
         value = fminf(1.0f, value);
+        value *= volume_;
         // Adjust volume
         for(int i=0;i<key_stack_.GetSize();i++) {
             if(key_stack_.getEnvelope(0, i)->released()) {

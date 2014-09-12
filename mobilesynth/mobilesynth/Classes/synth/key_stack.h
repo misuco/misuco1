@@ -71,6 +71,7 @@ namespace synth {
         }
         
         void setFilterCutoff(int note, float f);
+        void setFilterCutoff(float f);
         void setFilterRes(int note, float f);
         void setFilterRes(float f);
         void setModAmt(int i, float v );
@@ -102,6 +103,10 @@ namespace synth {
         void setSustain(int n, float s) {env_s[n]=s;}
         void setRelease(int n, long r) {env_r[n]=r;}
 
+        void setModulation(int voice, float f);
+        void setModCutoff(float f) {mod_cutoff_=f;}
+        void setModRes(float f) {mod_res_=f;}
+
     private:
         int size_;
         int notes_[kMaxSize+1];
@@ -128,6 +133,9 @@ namespace synth {
         int osc_wave;
         int lfo_wave;
         float filter_res_;
+        float filter_cutoff_; // 0.0 ... 1.0
+        float mod_cutoff_;
+        float mod_res_;
     };
     
     float KeyToFrequency(int key);

@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE misuco>
 <misuco version="1.0" rowheightmax="60" scalerow="3" >
-    <row height="30" segwidthmax="11">
-        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="4" ctly="128" segtype="5" chan="0" pressed="0" segtext="waveform" segh="0"/>
-        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="127" ctly="129" segtype="5" chan="0" pressed="0" segtext="attack" segh="0"/>
-        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="127" ctly="130" segtype="5" chan="0" pressed="0" segtext="decay" segh="0"/>
-        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="127" ctly="131" segtype="5" chan="0" pressed="0" segtext="sustain" segh="0"/>
-        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="127" ctly="132" segtype="5" chan="0" pressed="0" segtext="release" segh="0"/>
-        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="127" ctly="133" segtype="5" chan="0" pressed="0" segtext="cutoff" segh="0"/>
-        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="127" ctly="134" segtype="5" chan="0" pressed="0" segtext="reso" segh="0"/>
-        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="127" ctly="135" segtype="5" chan="0" pressed="0" segtext="cmod" segh="0"/>
-        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="127" ctly="136" segtype="5" chan="0" pressed="0" segtext="rmod" segh="0"/>
-        <seg segwidth="2" freq="0.000000" midinote="0" ctlx="127" ctly="137" segtype="5" chan="0" pressed="0" segtext="vol" segh="0"/>
+    <row height="30" segwidthmax="12">
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="0" ctly="-3" segtype="0" chan="0" pressed="0" segtext="waveform" segh="0"/>
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="1" ctly="-3" segtype="0" chan="0" pressed="0" segtext="attack" segh="0"/>
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="2" ctly="-3" segtype="0" chan="0" pressed="0" segtext="decay" segh="0"/>
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="3" ctly="-3" segtype="0" chan="0" pressed="0" segtext="sustain" segh="0"/>
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="4" ctly="-3" segtype="0" chan="0" pressed="0" segtext="release" segh="0"/>
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="5" ctly="-3" segtype="0" chan="0" pressed="0" segtext="cutoff" segh="0"/>
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="6" ctly="-3" segtype="0" chan="0" pressed="0" segtext="reso" segh="0"/>
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="7" ctly="-3" segtype="0" chan="0" pressed="0" segtext="cmod" segh="0"/>
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="8" ctly="-3" segtype="0" chan="0" pressed="0" segtext="rmod" segh="0"/>
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="9" ctly="-3" segtype="0" chan="0" pressed="0" segtext="vol" segh="0"/>
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="10" ctly="-3" segtype="0" chan="0" pressed="0" segtext="vol" segh="0"/>
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="11" ctly="-3" segtype="0" chan="0" pressed="0" segtext="vol" segh="0"/>
     </row>
     <row height="10" segwidthmax="4">
         <seg segwidth="1" freq="0.000000" midinote="0" ctlx="1" ctly="-4" segtype="2" chan="0" pressed="0" segtext="scale" segh="0"/>
         <seg segwidth="1" freq="0.000000" midinote="0" ctlx="2" ctly="-4" segtype="2" chan="0" pressed="0" segtext="octave" segh="0"/>
-        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="3" ctly="-4" segtype="2" chan="0" pressed="0" segtext="sound" segh="0"/>
-        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="4" ctly="-4" segtype="2" chan="0" pressed="0" segtext="sound" segh="0"/>
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="3" ctly="-4" segtype="2" chan="0" pressed="0" segtext="synth" segh="0"/>
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="4" ctly="-4" segtype="2" chan="0" pressed="0" segtext="tune" segh="0"/>
     </row>
     <row height="10" segwidthmax="12">
         <seg segwidth="10" freq="0.000000" midinote="0" ctlx="10" ctly="-2" segtype="4" chan="0" pressed="0" segtext="memory" segh="0"/>

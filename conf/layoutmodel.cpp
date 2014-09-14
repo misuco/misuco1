@@ -82,7 +82,7 @@ LayoutModel::LayoutModel()
     midi2f = new float[256];
     midi2fcent = new float[12];
     for(int i=0;i<12;i++) {
-        midi2fcent[i]=i*100;
+        midi2fcent[i]=0;
     }
     freq_a = 440; // a is 440 hz...
 
@@ -221,7 +221,7 @@ float LayoutModel::calcMidi2f(int x)
 {
     int oct=(x+3)/12;
     int p=x+3;
-    return (freq_a / 64.0f) * (pow(2.0 , (double)((float)oct*1200.0f+(midi2fcent[p%12])) / 1200.0));
+    return (freq_a / 64.0f) * (pow(2.0 , (double)((float)oct*1200.0f+(midi2fcent[p%12]+100.0f*(p%12))) / 1200.0));
 }
 
 int LayoutModel::getSegwidth(int i) const
@@ -578,11 +578,6 @@ void LayoutModel::setMidi2fcent(uint pos, float value)
         midi2fcent[pos]=value;
 
         /*
-        for (int x = 0; x < 255; ++x)
-        {
-            midi2f[x] = calcMidi2f(x);
-        }
-        */
 
         // set only the changed strings to save time
         int i=pos-3;
@@ -590,6 +585,11 @@ void LayoutModel::setMidi2fcent(uint pos, float value)
             i+=12;
         }
         for(;i<=255;i+=12) {
+            midi2f[i]=calcMidi2f(i);
+            //qDebug() << "pos " << pos << " i " << i << " value " << value;
+        }
+        */
+        for(int i=0;i<=255;i++) {
             midi2f[i]=calcMidi2f(i);
             //qDebug() << "pos " << pos << " i " << i << " value " << value;
         }
@@ -660,7 +660,7 @@ void LayoutModel::updateLayout()
     // qDebug() << "scaleStartSeg " << scaleStartSeg << " nsegs " << nsegs;
     // switch states for edit elements
     for(seg=0;seg<scaleStartSeg;seg++) {
-        if((segtype[seg]==3 && ctly[seg]==-1) || (segtype[seg]==0 && ctly[seg]==-2)  || (segtype[seg]==0 && ctly[seg]==-1) ) {
+        if(segtype[seg]==0 ) {
             int note;
             if(ctly[seg]==-1) {
                 note=ctlx[seg];
@@ -669,15 +669,19 @@ void LayoutModel::updateLayout()
                 } else {
                     pressed[seg]=0;
                 }
-            } else {
+            } else if(ctly[seg]==-2) {
                 note=(progmem[actProgmen].basenote+ctlx[seg]+1)%12;
                 if(progmem[actProgmen].bscale[ctlx[seg]]) {
                     pressed[seg]=1;
                 } else {
                     pressed[seg]=0;
                 }
+            } else if(ctly[seg]==-3) {
+                note=(progmem[actProgmen].basenote+ctlx[seg])%12;
             }
-            int oct=progmem[actProgmen].baseoct*12;
+            int oct=progmem[actProgmen].baseoct+progmem[actProgmen].topoct;
+            oct/=2;
+            oct*=12;
             midinote[seg]=note+oct;
             freq[seg]=midi2f[note+oct];
             pitch[seg]=0;

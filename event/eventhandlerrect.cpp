@@ -172,8 +172,16 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         }
         
         if(layout->getSegtype(iseg)==0) {
+            if(layout->getCtly(iseg)==-3) {
+                layout->setMidi2fcent((layout->getCtlx(iseg)+3)%12,(layout->getYrel(iseg)-0.5f)*200.0f);
+                layout->updateLayout();
+            }
+
             int midinote=layout->getMidinote(iseg);
             float f=layout->getFreq(iseg);
+
+            qDebug() << "f " << f;
+
             //p->setHue(30*(layout->getValueInt(iseg)%12));
             if(freq[evptr]!=f) {
                 if(transitionMode) {

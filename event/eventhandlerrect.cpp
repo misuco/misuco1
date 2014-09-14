@@ -257,7 +257,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     layout->updateLayout();
                 } else if(layout->getCtly(iseg)==-2) {
                     // memory button, not in use
-                    rc1->setActProgmem(layout->getCtlx(iseg));
+                    layout->setActProgmem(layout->getCtlx(iseg));
+                    layout->updateLayout();
                 } else if(layout->getCtly(iseg)==-4) {
                     // layout switch button
                     layout->resetLayout(layout->getCtlx(iseg));
@@ -295,7 +296,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     layout->setBasenote(xrelquant);
                     layout->updateLayout();
                 } else if(layout->getCtly(iseg)==-2) {
-                    rc1->setActProgmem(xrelquant);
+                    layout->setActProgmem(xrelquant);
+                    layout->updateLayout();
                 } else if(layout->getCtly(iseg)==-3) {
                     snd->pc(layout->getChan(iseg), xrelquant);
                 } else if(layout->getCtly(iseg)==-4) {
@@ -305,12 +307,15 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     layout->setBaseoct(xrelquant);
                     layout->updateLayout();
                 } else {
-                    snd->cc(0, 0, layout->getCtly(iseg), xrelquant);
+                    snd->cc(0, 0, layout->getCtly(iseg)+100, xrelquant);
                     layout->setSoundParam(layout->getCtly(iseg),xrelquant);
                 }
             } else if(layout->getSegtype(iseg)==5) {
                 // y-slider
                 snd->cc(0, 0,layout->getCtly(iseg),yrelquant);
+                if(layout->getCtly(iseg)>127) {
+                    layout->setSoundParam(layout->getCtly(iseg)-128,yrelquant);
+                }
             } else if(layout->getSegtype(iseg)==12) {
                 if( p->getState() == Qt::TouchPointPressed || movedin) {
                     /* ordered

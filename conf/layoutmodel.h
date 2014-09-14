@@ -20,6 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define LAYOUTMODEL_H
 #include <QString>
 
+
+#define NSOUNDPARAM 10
+#define NPROGMEM 11
+
 class LayoutModel
 {
     friend class layoutxml;
@@ -129,6 +133,10 @@ public:
     void resetLayout(QString filename);
     void resetLayout();
 
+    void readProgmemXml(QString filename);
+    void writeProgmemXml(QString filename);
+    void setActProgmem(int n);
+
 private:
     // view and event parameters
     int nrows;
@@ -171,17 +179,24 @@ private:
     bool editMode;
 
     // scale generator parameters
-    int basenote;
-    int topoct;
-    int baseoct;
-    bool bscale[11];
-    int scalewidth;
-    int scaleheight;
+//    int basenote;
+//    int topoct;
+//    int baseoct;
+//    bool bscale[11];
     bool transMode;     // transistion areas between segments
 
-    // sound parameters
-    int *soundParam;
-    int nSoundParam;
+    // program memory
+    struct prog {
+        int basenote;
+        int baseoct;
+        int topoct;
+        bool bscale[11];
+        int soundParam[NSOUNDPARAM];
+    };
+
+    prog progmem[NPROGMEM];
+
+    int actProgmen;
 
     // here we declare from which part the performance area starts
     int scaleStartSeg;

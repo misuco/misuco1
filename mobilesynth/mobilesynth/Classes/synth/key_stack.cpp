@@ -54,7 +54,8 @@ namespace synth {
                 oscs[i]->set_frequency(freq);
                 oscs[i]->set_wave_type(osc_wave);
                 cutoffs[i]->set_cutoff(freq);
-                qDebug() << "  KeyStack existing note " << note << " size " << size_ << " wave " << osc_wave;
+                initModulation(i,0);
+                //qDebug() << "  KeyStack existing note " << note << " size " << size_ << " wave " << osc_wave;
                 return false;
             }
         }
@@ -64,7 +65,7 @@ namespace synth {
         // => kill oldest note
         if(size_ >= kMaxSize) {
             NoteClear(notes_[0]);
-            qDebug() << "  KeyStack full, NoteClear " << notes_[0];
+            //qDebug() << "  KeyStack full, NoteClear " << notes_[0];
         }
         
         // put new note on top of stack
@@ -81,6 +82,7 @@ namespace synth {
         lfos[size_]->set_mod_pw(0);
         cutoffs[size_]->set_cutoff(freq);
         mod_amt_[size_]=mod_amt_init_;
+        initModulation(size_,0);
 
         for(int i=0;i<kNumEnv;i++) {
             envelopes[i][size_]->set_attack(env_a[i]);
@@ -90,7 +92,7 @@ namespace synth {
             envelopes[i][size_]->NoteOn();
         }
         size_++;
-        qDebug() << "  KeyStack new note " << note << " size " << size_ << " wave " << osc_wave;
+        //qDebug() << "  KeyStack new note " << note << " size " << size_ << " wave " << osc_wave;
         return true;
     }
     
@@ -230,18 +232,24 @@ namespace synth {
         }
     }
 
-    void KeyStack::setModulation(int voice, float f) {
+    void KeyStack::setModulation(int voice, float mod) {
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == voice) {
-                float frs=f*mod_res_*filter_res_;
-                filters[i]->set_resonance(frs);
-
-                float fcf=f*oscs[i]->get_frequency()*filter_cutoff_*mod_cutoff_*8;
-                cutoffs[i]->set_cutoff(fcf);
-
+                initModulation(i,mod);
                 break;
             }
         }
+    }
+
+    void KeyStack::initModulation(int i, float mod) {
+        mod-=0.5f;
+        mod*=2;
+        float frs=filter_res_+filter_res_*mod_res_*mod;
+        filters[i]->set_resonance(frs);
+
+        float fcf=oscs[i]->get_frequency()*filter_cutoff_*8;
+        fcf+=fcf*mod_cutoff_*mod;
+        cutoffs[i]->set_cutoff(fcf);
     }
 
     void KeyStack::setFilterRes(float f) {

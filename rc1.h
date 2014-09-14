@@ -46,7 +46,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define RC1_SCALES_XML_URL "http://x21.ch/rc1/scales.xml"
 #define RC1_ADS_URL "http://ads.misuco.org/go/?id="
-#define NPROGMEM 11
 
 class IPaint;
 class IPointPaint;
@@ -162,23 +161,6 @@ private:
     QList<quint32> tuioAlive;
     QList<quint16> tuioSources;
 
-    // memory
-    struct prog {
-        int basenote;
-        int baseoct;
-        int topoct;
-        bool bscale[11];
-        int sound;
-        int waveform;
-        int envelope;
-        int mod;
-        int width;
-        int height;
-    };
-
-    prog progmem[NPROGMEM];
-    int actProgmen;
-
     // test facilities
     long tpt;
     int tpn;
@@ -189,11 +171,10 @@ private:
     bool testMode;
     
     void resetStat();
-
     void setPPS(int);
     void setPPSmin(int);
-    void readProgmemXml(QString filename);
-    void writeProgmemXml(QString filename);
+
+    void transmitSoundParam();
 };
 
 #endif // VIEW_H

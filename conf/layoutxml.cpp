@@ -166,6 +166,7 @@ void layoutxml::readLayout() {
     layout->nrows=row;
     layout->nsegs=seg;
     layout->calcGeo(layout->widthPx,layout->heightPx);
+    layout->updateLayout();
 
 //    qDebug() << xmlr.error();
 //    qDebug() << xmlr.errorString();

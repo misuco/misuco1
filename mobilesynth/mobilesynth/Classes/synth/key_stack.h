@@ -103,7 +103,7 @@ namespace synth {
         void setSustain(int n, float s) {env_s[n]=s;}
         void setRelease(int n, long r) {env_r[n]=r;}
 
-        void setModulation(int voice, float f);
+        void setModulation(int voice, float mod);
         void setModCutoff(float f) {mod_cutoff_=f;}
         void setModRes(float f) {mod_res_=f;}
 
@@ -136,9 +136,11 @@ namespace synth {
         float filter_cutoff_; // 0.0 ... 1.0
         float mod_cutoff_;
         float mod_res_;
+        void initModulation(int i, float mod);
+
     };
     
-    float KeyToFrequency(int key);
+    // float KeyToFrequency(int key);
     
 }  // namespace synth
 

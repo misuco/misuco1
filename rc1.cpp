@@ -88,8 +88,7 @@ RC1::RC1(QWidget *parent) :
 //  Android: /storage/emulated/0/Documents => not Persistent
 //  Linux: /home/c1/Documents => Persistent
 
-    //qDebug() << "storage path: " << storagePath;
-    layout->calcGeo(width(),height());
+//    qDebug() << "storage path: " << storagePath;
 
     nPrePainters=2;
     prepainters=new IPaint*[nPrePainters];
@@ -158,9 +157,9 @@ RC1::RC1(QWidget *parent) :
     layout->resetLayout();
 
     layout->toggleEdit();
-    actProgmen=0;
-    readProgmemXml(storagePath+"/prog.xml");
-    setActProgmem(0);
+    layout->readProgmemXml(storagePath+"/prog.xml");
+    layout->setActProgmem(0);
+    layout->calcGeo(width(),height());
     layout->updateLayout();
 
     //setWindowState(Qt::WindowFullScreen);
@@ -168,7 +167,7 @@ RC1::RC1(QWidget *parent) :
 
 RC1::~RC1()
 {
-    writeProgmemXml(storagePath+"/prog.xml");
+    layout->writeProgmemXml(storagePath+"/prog.xml");
     //qDebug() << "progmem written";
 }
 
@@ -546,7 +545,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
         }
 
         if(path=="/reset") {
-            writeProgmemXml(storagePath+"/prog.xml");
+            layout->writeProgmemXml(storagePath+"/prog.xml");
             layout->resetLayout();
         }
 
@@ -713,41 +712,6 @@ void RC1::setMidimode(bool value)
     midimode = value;
 }
 
-void RC1::setActProgmem(int n)
-{
-    if(n!=actProgmen) {
-        // store current setup
-        progmem[actProgmen].basenote=layout->getBasenote();
-        progmem[actProgmen].baseoct=layout->getBaseoct();
-        progmem[actProgmen].topoct=layout->getTopoct();
-        progmem[actProgmen].sound=actProgmen; // the sound segment
-        progmem[actProgmen].waveform=layout->getSoundParam(100); // the wave segment
-        progmem[actProgmen].envelope=layout->getSoundParam(103); // the envelope segment
-        progmem[actProgmen].mod=layout->getSoundParam(104); // the mod segment
-        for(int i=0;i<11;i++) {
-            progmem[actProgmen].bscale[i]=layout->getBscale(i);
-        }
-        writeProgmemXml(storagePath+"/prog.xml");
-    }
-    // restore new setup
-    actProgmen=n;
-    layout->setBasenote(progmem[n].basenote);
-    layout->setTopoct(progmem[n].topoct);
-    layout->setBaseoct(progmem[n].baseoct);
-    layout->setSoundParam(100,progmem[n].waveform);
-    layout->setSoundParam(103,progmem[n].envelope);
-    layout->setSoundParam(104,progmem[n].mod);
-    //sender->pc(progmem[n].sound);
-    sender->pc(chan,n);
-    sender->cc(chan,0,100,progmem[n].waveform);
-    sender->cc(chan,0,103,progmem[n].envelope);
-    sender->cc(chan,0,104,progmem[n].mod);
-    for(int i=0;i<11;i++) {
-        layout->setBscale(i,progmem[n].bscale[i]);
-    }
-    layout->updateLayout();
-}
-
 void RC1::resetStat()
 {
     fps=0;
@@ -771,6 +735,13 @@ void RC1::setPPSmin(int p) {
     prepainters[0]->setParam(11, cornerrad); // crady
     prepainters[0]->setParam(12, 1);         // gradients
     prepainters[0]->setParam(13, 0);         // painttext
+}
+
+void RC1::transmitSoundParam()
+{
+    for(int i=0;i<NSOUNDPARAM;i++) {
+        sender->cc(chan,0,i+128,layout->getSoundParam(i));
+    }
 }
 
 Storage *RC1::getStorage() const
@@ -877,130 +848,3 @@ EventStat *RC1::getEvstat() const
 return evstat;
 }
 
-void RC1::readProgmemXml(QString filename)
-{
-    QXmlStreamReader xmlr;
-    QFile file(filename);
-    // default initial prog memory
-    if(!file.exists()) {
-        for(int i=0;i<NPROGMEM;i++) {
-            progmem[i].basenote=i%5;
-            progmem[i].baseoct=3;
-            progmem[i].topoct=5;
-            progmem[i].sound=i;
-            progmem[i].waveform=i%5;
-            progmem[i].envelope=i%4;
-            progmem[i].mod=i%3;
-            for(int j=0;j<11;j++) {
-                progmem[i].bscale[j]=false;
-            }
-            progmem[i].bscale[i]=true;
-            progmem[i].bscale[i%4]=true;
-            progmem[i].width=10;
-            progmem[i].height=1;
-        }
-        writeProgmemXml(filename);
-    }
-    if (!file.open(QFile::ReadOnly | QFile::Text)) {
-        return;
-        //qDebug() << "cannot read file " << filename;
-    }
-    xmlr.setDevice(&file);
-    if (xmlr.readNextStartElement()) {
-        if (xmlr.name() == "misucoprogmem" && xmlr.attributes().value("version") == "1.0") {
-
-            int row=0;
-
-            while (xmlr.readNextStartElement() && row<NPROGMEM) {
-                if (xmlr.name() == "prog") {
-                    progmem[row].basenote=xmlr.attributes().value("basenote").toString().toInt();
-                    progmem[row].baseoct=xmlr.attributes().value("baseoct").toString().toInt();
-                    progmem[row].topoct=xmlr.attributes().value("topoct").toString().toInt();
-                    progmem[row].bscale[0]=(bool)xmlr.attributes().value("bscale0").toString().toInt();
-                    progmem[row].bscale[1]=(bool)xmlr.attributes().value("bscale1").toString().toInt();
-                    progmem[row].bscale[2]=(bool)xmlr.attributes().value("bscale2").toString().toInt();
-                    progmem[row].bscale[3]=(bool)xmlr.attributes().value("bscale3").toString().toInt();
-                    progmem[row].bscale[4]=(bool)xmlr.attributes().value("bscale4").toString().toInt();
-                    progmem[row].bscale[5]=(bool)xmlr.attributes().value("bscale5").toString().toInt();
-                    progmem[row].bscale[6]=(bool)xmlr.attributes().value("bscale6").toString().toInt();
-                    progmem[row].bscale[7]=(bool)xmlr.attributes().value("bscale7").toString().toInt();
-                    progmem[row].bscale[8]=(bool)xmlr.attributes().value("bscale8").toString().toInt();
-                    progmem[row].bscale[9]=(bool)xmlr.attributes().value("bscale9").toString().toInt();
-                    progmem[row].bscale[10]=(bool)xmlr.attributes().value("bscale10").toString().toInt();
-                    progmem[row].sound=(int)xmlr.attributes().value("sound").toString().toInt();
-                    progmem[row].waveform=(int)xmlr.attributes().value("waveform").toString().toInt();
-                    progmem[row].envelope=(int)xmlr.attributes().value("envelope").toString().toInt();
-                    progmem[row].mod=(int)xmlr.attributes().value("mod").toString().toInt();
-                    progmem[row].width=(int)xmlr.attributes().value("width").toString().toInt();
-                    progmem[row].height=(int)xmlr.attributes().value("height").toString().toInt();
-                    xmlr.skipCurrentElement();
-                    row++;
-                } else {
-                    xmlr.skipCurrentElement();
-                }
-            }
-        } else {
-            xmlr.raiseError(QObject::tr("The file is not a MISUCO version 1.0 file."));
-        }
-    }
-    file.close();
-}
-
-void RC1::writeProgmemXml(QString filename)
-{
-    QXmlStreamWriter xml;
-    QFile file(filename);
-    file.open(QIODevice::WriteOnly);
-
-    xml.setDevice(&file);
-    QString att;
-    QString attname;
-
-    xml.writeStartDocument();
-    xml.writeDTD("<!DOCTYPE misuco>");
-    xml.writeStartElement("misucoprogmem");
-    xml.writeAttribute("version", "1.0");
-
-    for (int row = 0; row < NPROGMEM; row++) {
-        xml.writeStartElement("prog");
-
-        att.sprintf("%d",progmem[row].basenote);
-        xml.writeAttribute("basenote",att);
-
-        att.sprintf("%d",progmem[row].baseoct);
-        xml.writeAttribute("baseoct",att);
-
-        att.sprintf("%d",progmem[row].topoct);
-        xml.writeAttribute("topoct",att);
-
-        att.sprintf("%d",progmem[row].sound);
-        xml.writeAttribute("sound",att);
-        
-        att.sprintf("%d",progmem[row].waveform);
-        xml.writeAttribute("waveform",att);
-        
-        att.sprintf("%d",progmem[row].envelope);
-        xml.writeAttribute("envelope",att);
-        
-        att.sprintf("%d",progmem[row].mod);
-        xml.writeAttribute("mod",att);
-
-        att.sprintf("%d",progmem[row].width);
-        xml.writeAttribute("width",att);
-
-        att.sprintf("%d",progmem[row].height);
-        xml.writeAttribute("height",att);
-
-        for(int j=0;j<11;j++) {
-            att.sprintf("%d",(int)progmem[row].bscale[j]);
-            attname.sprintf("bscale%d",j);
-            xml.writeAttribute(attname,att);
-        }
-
-        xml.writeEndElement();
-    }
-    xml.writeEndDocument();
-
-    file.close();
-
-}

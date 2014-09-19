@@ -677,7 +677,8 @@ void LayoutModel::updateLayout()
                     pressed[seg]=0;
                 }
             } else if(ctly[seg]==-3) {
-                note=(progmem[actProgmen].basenote+ctlx[seg])%12;
+                note=ctlx[seg]%12;
+                yrel[seg]=midi2fcent[(note+3)%12]/200+0.5;
             }
             int oct=progmem[actProgmen].baseoct+progmem[actProgmen].topoct;
             oct/=2;
@@ -708,12 +709,14 @@ void LayoutModel::updateLayout()
                 }
             }
         } else if(segtype[seg]==4 ) {
-            if(ctly[seg]==-4) {
+            if(ctly[seg]==-2) {
+                xrelq[seg]=actProgmen;
+            } else if(ctly[seg]==-4) {
                 xrelq[seg]=progmem[actProgmen].topoct;
             } else if(ctly[seg]==-5) {
                 xrelq[seg]=progmem[actProgmen].baseoct;
-            } else if(ctly[seg]>0 && ctly[seg]<NSOUNDPARAM) {
-                xrelq[seg]=progmem[actProgmen].soundParam[ctly[seg]];
+//            } else if(ctly[seg]>0 && ctly[seg]<NSOUNDPARAM) {
+//                xrelq[seg]=progmem[actProgmen].soundParam[ctly[seg]];
             }
         } else if(segtype[seg]==5 ) {
             if(ctly[seg]>127) {
@@ -730,7 +733,7 @@ void LayoutModel::updateLayout()
         freq[seg]=midi2f[calcnote];
         pitch[seg]=0;
         QString octnum;
-        octnum.sprintf("%d",i+1);
+        octnum.sprintf(" %d",i+1);
         segText[seg]=midi2TextEU[calcnote%12];
         segText[seg].append(octnum);
         ctlx[seg]=1;

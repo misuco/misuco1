@@ -103,9 +103,11 @@ public:
     int note2hue(int note);
     int midi2freq(uint note);
     void setMidi2fcent(uint pos, float freq);
+    void initMidi2f(uint n);
     void toggleEdit();
 
     int getFontsize() const;
+    int getFontsizeS() const;
     QString getFont() const;
     QString getMidi2Text(int midi) const;
     QString getMidi2TextUrl(int midi) const;
@@ -136,6 +138,8 @@ public:
     void readProgmemXml(QString filename);
     void writeProgmemXml(QString filename);
     void setActProgmem(int n);
+
+    bool getEditMode() const;
 
 private:
     // view and event parameters
@@ -169,6 +173,7 @@ private:
     int widthPx;
     int heightPx;
     int fontsize;
+    int fontsizeS;
     QString font;
     QString * segText;
     int * segH;         // segment color hue
@@ -179,10 +184,6 @@ private:
     bool editMode;
 
     // scale generator parameters
-//    int basenote;
-//    int topoct;
-//    int baseoct;
-//    bool bscale[11];
     bool transMode;     // transistion areas between segments
 
     // program memory
@@ -212,6 +213,7 @@ private:
     // util function
     void setAll(int n, int * d, int v);
     float calcMidi2f(int x);
+    void calcMidi2f();
 };
 
 #endif // LAYOUTMODEL_H

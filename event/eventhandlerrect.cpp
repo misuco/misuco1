@@ -180,7 +180,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             int midinote=layout->getMidinote(iseg);
             float f=layout->getFreq(iseg);
 
-            qDebug() << "f " << f;
+            //qDebug() << "f " << f;
 
             //p->setHue(30*(layout->getValueInt(iseg)%12));
             if(freq[evptr]!=f) {
@@ -323,6 +323,9 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 snd->cc(0, 0,layout->getCtly(iseg),yrelquant);
                 if(layout->getCtly(iseg)>127) {
                     layout->setSoundParam(layout->getCtly(iseg)-128,yrelquant);
+                } else if(layout->getCtly(iseg)==-1) {
+                    layout->initMidi2f(layout->getYrelq(iseg));
+                    layout->updateLayout();
                 }
             } else if(layout->getSegtype(iseg)==12) {
                 if( p->getState() == Qt::TouchPointPressed || movedin) {

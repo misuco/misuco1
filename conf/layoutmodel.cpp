@@ -81,9 +81,8 @@ LayoutModel::LayoutModel()
 
     midi2f = new float[256];
     midi2fcent = new float[12];
-    for(int i=0;i<12;i++) {
-        midi2fcent[i]=0;
-    }
+    initMidi2f(0);
+
     freq_a = 440; // a is 440 hz...
 
     for (int x = 0; x < 256; ++x)
@@ -177,7 +176,8 @@ void LayoutModel::calcGeo(int w, int h)
             i++;
         }
     }
-    fontsize=heightPx/nrows/5;
+    fontsize=heightPx/25;
+    fontsizeS=fontsize/2;
 }
 
 int LayoutModel::getHeight() const
@@ -215,13 +215,6 @@ void LayoutModel::setAll(int n, int *d, int v)
     for(int i=scaleStartSeg;i<n;i++) {
         d[i]=v;
     }
-}
-
-float LayoutModel::calcMidi2f(int x)
-{
-    int oct=(x+3)/12;
-    int p=x+3;
-    return (freq_a / 64.0f) * (pow(2.0 , (double)((float)oct*1200.0f+(midi2fcent[p%12]+100.0f*(p%12))) / 1200.0));
 }
 
 int LayoutModel::getSegwidth(int i) const
@@ -572,28 +565,102 @@ int LayoutModel::midi2freq(uint note)
     }
 }
 
+
+float LayoutModel::calcMidi2f(int x)
+{
+    int oct=(x+3)/12;
+    int p=x+3;
+    return (freq_a / 64.0f) * (pow(2.0 , (double)((float)oct*1200.0f+(midi2fcent[p%12]+100.0f*(p%12))) / 1200.0));
+}
+
+void LayoutModel::calcMidi2f()
+{
+    /*
+
+    // set only the changed strings to save time
+    int i=pos-3;
+    if(i<0) {
+        i+=12;
+    }
+    for(;i<=255;i+=12) {
+        midi2f[i]=calcMidi2f(i);
+        //qDebug() << "pos " << pos << " i " << i << " value " << value;
+    }
+    */
+    for(int i=0;i<=255;i++) {
+        midi2f[i]=calcMidi2f(i);
+        //qDebug() << "pos " << pos << " i " << i << " value " << value;
+    }
+}
+
 void LayoutModel::setMidi2fcent(uint pos, float value)
 {
     if(pos<12) {
         midi2fcent[pos]=value;
+    }
+    calcMidi2f();
+}
 
-        /*
+void LayoutModel::initMidi2f(uint n)
+{
+    switch(n) {
+    case 1:
+        // reinen Stimmung von C-Dur und C-moll
+        // http://de.wikipedia.org/wiki/Gleichstufige_Stimmung
+        midi2fcent[0]=16;
+        midi2fcent[1]=28;
+        midi2fcent[2]=20;
+        midi2fcent[3]=32;
+        midi2fcent[4]=2;
+        midi2fcent[5]=14;
+        midi2fcent[6]=6;
+        midi2fcent[7]=18;
+        midi2fcent[8]=30;
+        midi2fcent[9]=0;
+        midi2fcent[10]=34;
+        midi2fcent[11]=4;
+        break;
 
-        // set only the changed strings to save time
-        int i=pos-3;
-        if(i<0) {
-            i+=12;
-        }
-        for(;i<=255;i+=12) {
-            midi2f[i]=calcMidi2f(i);
-            //qDebug() << "pos " << pos << " i " << i << " value " << value;
-        }
-        */
-        for(int i=0;i<=255;i++) {
-            midi2f[i]=calcMidi2f(i);
-            //qDebug() << "pos " << pos << " i " << i << " value " << value;
+    case 2:
+        // Bach (Billeter, Wohltemperiert)
+        // http://www.instrument-tuner.com/temperaments_de.html
+        midi2fcent[0]=4.888;
+        midi2fcent[1]=-2.932;
+        midi2fcent[2]=4.888;
+        midi2fcent[3]=0.978;
+        midi2fcent[4]=-4.887;
+        midi2fcent[5]=4.888;
+        midi2fcent[6]=-4.887;
+        midi2fcent[7]=4.888;
+        midi2fcent[8]=-0.977;
+        midi2fcent[9]=0;
+        midi2fcent[10]=2.933;
+        midi2fcent[11]=-4.887;
+        break;
+
+    case 3:
+        // Natürlich Harmonisch
+        // http://www.instrument-tuner.com/temperaments_de.html
+        midi2fcent[0]=15.641;
+        midi2fcent[1]=27.372;
+        midi2fcent[2]=19.551;
+        midi2fcent[3]=31.282;
+        midi2fcent[4]=1.956;
+        midi2fcent[5]=13.686;
+        midi2fcent[6]=5.864;
+        midi2fcent[7]=17.596;
+        midi2fcent[8]=29.327;
+        midi2fcent[9]=0;
+        midi2fcent[10]=33.237;
+        midi2fcent[11]=3.910;
+        break;
+
+    default:
+        for(int i=0;i<12;i++) {
+            midi2fcent[i]=0;
         }
     }
+    calcMidi2f();
 }
 
 void LayoutModel::toggleEdit()
@@ -637,6 +704,11 @@ void LayoutModel::resetLayout() {
 int LayoutModel::getFontsize() const
 {
     return fontsize;
+}
+
+int LayoutModel::getFontsizeS() const
+{
+    return fontsizeS;
 }
 QString LayoutModel::getFont() const
 {
@@ -936,3 +1008,9 @@ void LayoutModel::setActProgmem(int n)
     actProgmen=n;
     updateLayout();
 }
+
+bool LayoutModel::getEditMode() const
+{
+    return editMode;
+}
+

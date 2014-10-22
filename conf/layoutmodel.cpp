@@ -794,8 +794,8 @@ void LayoutModel::updateLayout()
 //                xrelq[seg]=progmem[actProgmen].soundParam[ctly[seg]];
             }
         } else if(segtype[seg]==5 ) {
-            if(ctly[seg]>127) {
-                yrelq[seg]=progmem[actProgmen].soundParam[ctly[seg]-128];
+            if(ctly[seg]>117) {
+                yrelq[seg]=progmem[actProgmen].soundParam[ctly[seg]-118];
             }
         }
     }

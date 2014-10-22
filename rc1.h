@@ -75,12 +75,9 @@ public:
     long getTtl() const;
     void setTtl(long value);
 
-    void setActProgmem(int);
     void connectApp(QApplication * app);
+    void transmitSoundParam();
     
-    bool getMidimode() const;
-    void setMidimode(bool value);
-
 public slots:
     void replyFinished(QNetworkReply * r);
     void appStateChange(Qt::ApplicationState state);
@@ -174,7 +171,6 @@ private:
     void setPPS(int);
     void setPPSmin(int);
 
-    void transmitSoundParam();
 };
 
 #endif // VIEW_H

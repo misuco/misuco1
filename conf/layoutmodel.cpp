@@ -339,10 +339,13 @@ void LayoutModel::setYrelq(int i, int value)
 {
     yrelq[i] = value;
 }
+
 int LayoutModel::getSoundParam(int i) const
 {
     if(i<NSOUNDPARAM) {
         return progmem[actProgmen].soundParam[i];
+    } else {
+        return 0;
     }
 }
 
@@ -729,11 +732,11 @@ void LayoutModel::updateLayout()
 {
     int seg=0;
 
-    // qDebug() << "scaleStartSeg " << scaleStartSeg << " nsegs " << nsegs;
+    //qDebug() << "scaleStartSeg " << scaleStartSeg << " nsegs " << nsegs;
     // switch states for edit elements
     for(seg=0;seg<scaleStartSeg;seg++) {
         if(segtype[seg]==0 ) {
-            int note;
+            int note=0;
             if(ctly[seg]==-1) {
                 note=ctlx[seg];
                 if(progmem[actProgmen].basenote==ctlx[seg]) {
@@ -888,6 +891,7 @@ void LayoutModel::readProgmemXml(QString filename)
     QFile file(filename);
     // default initial prog memory
     if(!file.exists()) {
+        qDebug() << "init progmem file not exist " << filename;
         for(int i=0;i<NPROGMEM;i++) {
             progmem[i].basenote=i%5;
             progmem[i].baseoct=3;
@@ -913,7 +917,7 @@ void LayoutModel::readProgmemXml(QString filename)
     }
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
         return;
-        //qDebug() << "cannot read file " << filename;
+        qDebug() << "cannot read file " << filename;
     }
     xmlr.setDevice(&file);
     if (xmlr.readNextStartElement()) {
@@ -959,7 +963,10 @@ void LayoutModel::writeProgmemXml(QString filename)
 {
     QXmlStreamWriter xml;
     QFile file(filename);
-    file.open(QIODevice::WriteOnly);
+    if (!file.open(QFile::WriteOnly | QFile::Text)) {
+        return;
+        qDebug() << "cannot write file " << filename;
+    }
 
     xml.setDevice(&file);
     QString att;

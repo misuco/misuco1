@@ -305,7 +305,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     layout->updateLayout();
                 } else if(layout->getCtly(iseg)==-2) {
                     layout->setActProgmem(xrelquant);
-                    layout->updateLayout();
+                    rc1->transmitSoundParam();
+                    //layout->updateLayout();
                 } else if(layout->getCtly(iseg)==-3) {
                     snd->pc(layout->getChan(iseg), xrelquant);
                 } else if(layout->getCtly(iseg)==-4) {

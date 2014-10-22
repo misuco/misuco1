@@ -14,27 +14,27 @@ SenderMobileSynth::SenderMobileSynth(RC1 * rc1)
 void SenderMobileSynth::cc(int chan, int voiceId, int cc, float v1)
 {
     if(cc==2) {
-        sy->getSyctl()->set_modulation(voiceId,v1);
+        sy->set_modulation(voiceId,v1);
     } else if(cc==128) {
-        sy->getSyctl()->set_osc1_wave_type_int(v1);
+        sy->set_osc1_wave_type_int(v1);
     } else if(cc==129) {
-        sy->getSyctl()->setAttack(0, v1*700.0f);
+        sy->setAttack(0, v1*700.0f);
     } else if(cc==130) {
-        sy->getSyctl()->setDecay(0, v1*700.0f);
+        sy->setDecay(0, v1*700.0f);
     } else if(cc==131) {
-        sy->getSyctl()->setSustain(0, v1/127.0f);
+        sy->setSustain(0, v1/127.0f);
     } else if(cc==132) {
-        sy->getSyctl()->setRelease(0, v1*700.0f);
+        sy->setRelease(0, v1*700.0f);
     } else if(cc==133) {
-        sy->getSyctl()->set_filter_cutoff(v1/127.0f);
+        sy->set_filter_cutoff(v1/127.0f);
     } else if(cc==134) {
-        sy->getSyctl()->set_filter_resonance(v1/32.0f);
+        sy->set_filter_resonance(v1/32.0f);
     } else if(cc==135) {
-        sy->getSyctl()->set_mod_filter_cutoff(v1/127.0f);
+        sy->set_mod_filter_cutoff(v1/127.0f);
     } else if(cc==136) {
-        sy->getSyctl()->set_mod_filter_resonance(v1/127.0f);
+        sy->set_mod_filter_resonance(v1/127.0f);
     } else if(cc==137) {
-        sy->getSyctl()->set_volume(v1/127.0f);
+        sy->set_volume(v1/127.0f);
     }
 }
 

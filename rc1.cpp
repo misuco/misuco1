@@ -75,21 +75,20 @@ RC1::RC1(QWidget *parent) :
     
     chan=0;
 
-//    storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
-//    Android: "/storage/emulated/0/Documents", not persistent
-
-    storagePath=QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-//  Android: /data/data/org.qtproject.example.rc1/files  => Persistent !!
-//  W8: C:/Users/c1/AppData/Local/rc1 => Persistent
-//  iOS: /var/mobile/Applications/ADDEBF69-B1C5-4E36-A8C2-789D717434C1/Documents => Persistent
-//  Linux: /home/c1/.local/share/rc1 => not Writable
-
+#ifdef RC1_LINUX
     storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
-//  Android: /storage/emulated/0/Documents => not Persistent
-//  Linux: /home/c1/Documents => Persistent
-
+    //  Android: /storage/emulated/0/Documents => not Persistent
+    //  Linux: /home/c1/Documents => Persistent
+#elifdef RC1_IOS
+    storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+#else
+    storagePath=QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    //  Android: /data/data/org.qtproject.example.rc1/files  => Persistent !!
+    //  W8: C:/Users/c1/AppData/Local/rc1 => Persistent
+    //  iOS: /var/mobile/Applications/ADDEBF69-B1C5-4E36-A8C2-789D717434C1/Documents => Persistent
+    //  Linux: /home/c1/.local/share/rc1 => not Writable
+#endif
 //    qDebug() << "storage path: " << storagePath;
-
     nPrePainters=2;
     prepainters=new IPaint*[nPrePainters];
     prepainters[0]=new PaintBgShapes();
@@ -154,10 +153,10 @@ RC1::RC1(QWidget *parent) :
     connect(netxs, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(replyFinished(QNetworkReply*)));
 
+    layout->readProgmemXml(storagePath+"/prog.xml");
     layout->resetLayout();
 
     layout->toggleEdit();
-    layout->readProgmemXml(storagePath+"/prog.xml");
     layout->setActProgmem(0);
     layout->calcGeo(width(),height());
     layout->updateLayout();
@@ -702,15 +701,6 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 p
         */
     }
 }
-bool RC1::getMidimode() const
-{
-    return midimode;
-}
-
-void RC1::setMidimode(bool value)
-{
-    midimode = value;
-}
 
 void RC1::resetStat()
 {
@@ -735,13 +725,6 @@ void RC1::setPPSmin(int p) {
     prepainters[0]->setParam(11, cornerrad); // crady
     prepainters[0]->setParam(12, 1);         // gradients
     prepainters[0]->setParam(13, 0);         // painttext
-}
-
-void RC1::transmitSoundParam()
-{
-    for(int i=0;i<NSOUNDPARAM;i++) {
-        sender->cc(chan,0,i+128,layout->getSoundParam(i));
-    }
 }
 
 Storage *RC1::getStorage() const
@@ -847,4 +830,12 @@ EventStat *RC1::getEvstat() const
 {
 return evstat;
 }
+
+void RC1::transmitSoundParam()
+{
+    for(int i=0;i<NSOUNDPARAM;i++) {
+         sender->cc(chan,0,i+128,layout->getSoundParam(i));
+    }
+}
+
 

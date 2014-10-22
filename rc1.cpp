@@ -79,8 +79,9 @@ RC1::RC1(QWidget *parent) :
     storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     //  Android: /storage/emulated/0/Documents => not Persistent
     //  Linux: /home/c1/Documents => Persistent
+    // iOS: not Persistent???? But document exchange folder
 #elifdef RC1_IOS
-    storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    storagePath=QStandardPaths::writableLocation(QStandardPaths::DataLocation);
 #else
     storagePath=QStandardPaths::writableLocation(QStandardPaths::DataLocation);
     //  Android: /data/data/org.qtproject.example.rc1/files  => Persistent !!
@@ -88,7 +89,8 @@ RC1::RC1(QWidget *parent) :
     //  iOS: /var/mobile/Applications/ADDEBF69-B1C5-4E36-A8C2-789D717434C1/Documents => Persistent
     //  Linux: /home/c1/.local/share/rc1 => not Writable
 #endif
-//    qDebug() << "storage path: " << storagePath;
+    //qDebug() << "storage path: " << storagePath;
+    progmemFile=storagePath+"/prog.xml";
     nPrePainters=2;
     prepainters=new IPaint*[nPrePainters];
     prepainters[0]=new PaintBgShapes();
@@ -153,7 +155,7 @@ RC1::RC1(QWidget *parent) :
     connect(netxs, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(replyFinished(QNetworkReply*)));
 
-    layout->readProgmemXml(storagePath+"/prog.xml");
+    layout->readProgmemXml(progmemFile);
     layout->resetLayout();
 
     layout->toggleEdit();
@@ -176,7 +178,7 @@ void RC1::connectApp(QApplication * app) {
 
 }
 
-void RC1::paintEvent(QPaintEvent *event)
+void RC1::paintEvent(QPaintEvent *)
 {
     now=QDateTime::currentMSecsSinceEpoch();
 
@@ -378,7 +380,7 @@ bool RC1::event(QEvent *event)
     return QWidget::event(event);
 }
 
-void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16 port)
+void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
 {
     //qDebug() << "got osc signal " << path << " data " << data << " source " << host->toString();
     int ignoreIndex=ignoreAddr.indexOf(*host);
@@ -707,7 +709,7 @@ void RC1::resetStat()
     fps=0;
 }
 
-void RC1::setPPSmin(int p) {
+void RC1::setPPSmin() {
     ttl=500;
     int cornerrad=10;
     painterOn[0]=true;
@@ -774,6 +776,8 @@ void RC1::appStateChange(Qt::ApplicationState state) {
         delete(oscin);
         oscin = new QOscServer(3333,this);
         oscin->registerPathObject(this);
+    } else {
+        layout->writeProgmemXml(progmemFile);
     }
 }
 
@@ -787,7 +791,7 @@ void RC1::replyFinished(QNetworkReply * r)
         } else {
             adid.append("1");
         }*/
-
+        QString pendingConfigFile;
         QByteArray data=r->readAll();
         if(r->url().toString()==RC1_SCALES_XML_URL) {
             pendingConfigFile="scales.xml";

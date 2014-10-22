@@ -110,8 +110,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
          * calculation, quantisation and storage of segment relative x/y values
          *
          */
-        float xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg))-layout->getSegBorder();
-        xrel=xrel/(float)(layout->getSegwidthpx(iseg)-2*layout->getSegBorder());
+        float xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg))-2*layout->getSegBorder();
+        xrel=xrel/(float)(layout->getSegwidthpx(iseg)-4*layout->getSegBorder());
         if(xrel>1.0f) {
             xrel=1.0f;
         }
@@ -120,8 +120,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         }
         layout->setXrel(iseg,xrel);
 
-        float yrel=p->getY()-(ysum-layout->getRowheightpx(iy))-layout->getSegBorder();
-        yrel=yrel/(float)(layout->getRowheightpx(iy)-2*layout->getSegBorder());
+        float yrel=p->getY()-(ysum-layout->getRowheightpx(iy))-2*layout->getSegBorder();
+        yrel=yrel/(float)(layout->getRowheightpx(iy)-4*layout->getSegBorder());
         if(yrel>1.0f) {
             yrel=1.0f;
         }
@@ -266,7 +266,6 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 } else if(layout->getCtly(iseg)==-2) {
                     // memory button, not in use
                     layout->setActProgmem(layout->getCtlx(iseg));
-                    layout->updateLayout();
                 } else if(layout->getCtly(iseg)==-4) {
                     // layout switch button
                     layout->resetLayout(layout->getCtlx(iseg));
@@ -322,8 +321,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             } else if(layout->getSegtype(iseg)==5) {
                 // y-slider
                 snd->cc(0, 0,layout->getCtly(iseg),yrelquant);
-                if(layout->getCtly(iseg)>127) {
-                    layout->setSoundParam(layout->getCtly(iseg)-128,yrelquant);
+                if(layout->getCtly(iseg)>=118) {
+                    layout->setSoundParam(layout->getCtly(iseg)-118,yrelquant);
                 } else if(layout->getCtly(iseg)==-1) {
                     layout->initMidi2f(layout->getYrelq(iseg));
                     layout->updateLayout();

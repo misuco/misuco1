@@ -124,7 +124,7 @@ private:
     // network config
     QNetworkAccessManager * netxs;
     QString storagePath;
-    QString pendingConfigFile;
+    QString progmemFile;
 
     // mode
     bool midimode;
@@ -168,8 +168,7 @@ private:
     bool testMode;
     
     void resetStat();
-    void setPPS(int);
-    void setPPSmin(int);
+    void setPPSmin();
 
 };
 

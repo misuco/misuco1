@@ -890,8 +890,9 @@ void LayoutModel::readProgmemXml(QString filename)
     QXmlStreamReader xmlr;
     QFile file(filename);
     // default initial prog memory
+    qDebug() << "reading progmem " << filename;
     if(!file.exists()) {
-        qDebug() << "init progmem file not exist " << filename;
+        qDebug() << "init progmem file not exist ";
         for(int i=0;i<NPROGMEM;i++) {
             progmem[i].basenote=i%5;
             progmem[i].baseoct=3;
@@ -967,6 +968,7 @@ void LayoutModel::writeProgmemXml(QString filename)
         return;
         qDebug() << "cannot write file " << filename;
     }
+    qDebug() << "writing progmem file " << filename;
 
     xml.setDevice(&file);
     QString att;

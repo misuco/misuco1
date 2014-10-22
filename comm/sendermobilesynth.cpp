@@ -15,46 +15,46 @@ void SenderMobileSynth::cc(int chan, int voiceId, int cc, float v1)
 {
     if(cc==2) {
         sy->set_modulation(voiceId,v1);
-    } else if(cc==128) {
+    } else if(cc==118) {
         sy->set_osc1_wave_type_int(v1);
-    } else if(cc==129) {
+    } else if(cc==119) {
         sy->setAttack(0, v1*700.0f);
-    } else if(cc==130) {
+    } else if(cc==120) {
         sy->setDecay(0, v1*700.0f);
-    } else if(cc==131) {
+    } else if(cc==121) {
         sy->setSustain(0, v1/127.0f);
-    } else if(cc==132) {
+    } else if(cc==122) {
         sy->setRelease(0, v1*700.0f);
-    } else if(cc==133) {
+    } else if(cc==123) {
         sy->set_filter_cutoff(v1/127.0f);
-    } else if(cc==134) {
+    } else if(cc==124) {
         sy->set_filter_resonance(v1/32.0f);
-    } else if(cc==135) {
+    } else if(cc==125) {
         sy->set_mod_filter_cutoff(v1/127.0f);
-    } else if(cc==136) {
+    } else if(cc==126) {
         sy->set_mod_filter_resonance(v1/127.0f);
-    } else if(cc==137) {
+    } else if(cc==127) {
         sy->set_volume(v1/127.0f);
     }
 }
 
-void SenderMobileSynth::pc(int chan, int v1) {}
+void SenderMobileSynth::pc(int, int) {}
 
-void SenderMobileSynth::noteOn(int chan, int voiceId, float f, int midinote, int pitch, int vel)
+void SenderMobileSynth::noteOn(int, int voiceId, float f, int, int, int)
 {
     sy->NoteOn(voiceId, (float)f);
 }
 
-void SenderMobileSynth::noteOff(int chan,int voiceId)
+void SenderMobileSynth::noteOff(int,int voiceId)
 {
     sy->NoteOff(voiceId);
 }
 
-void SenderMobileSynth::pitch(int chan, int voiceId, float f, int midinote, int pitch) {
+void SenderMobileSynth::pitch(int, int voiceId, float f, int, int) {
     sy->NoteOn(voiceId, (float)f);
 }
 
-void SenderMobileSynth::setDestination(QHostAddress a, int p)
+void SenderMobileSynth::setDestination(QHostAddress,int)
 {
 
 }
@@ -71,25 +71,25 @@ void SenderMobileSynth::cc(int chan, int voiceId, int cc, float v1)
 {
     if(cc==2) {
         sy->getSyctl()->set_modulation(voiceId,v1);
-    } else if(cc==128) {
+    } else if(cc==118) {
         sy->getSyctl()->set_osc1_wave_type_int(v1);
-    } else if(cc==129) {
+    } else if(cc==119) {
         sy->getSyctl()->setAttack(0, v1*700.0f);
-    } else if(cc==130) {
+    } else if(cc==120) {
         sy->getSyctl()->setDecay(0, v1*700.0f);
-    } else if(cc==131) {
+    } else if(cc==121) {
         sy->getSyctl()->setSustain(0, v1/127.0f);
-    } else if(cc==132) {
+    } else if(cc==122) {
         sy->getSyctl()->setRelease(0, v1*700.0f);
-    } else if(cc==133) {
+    } else if(cc==123) {
         sy->getSyctl()->set_filter_cutoff(v1/127.0f);
-    } else if(cc==134) {
+    } else if(cc==124) {
         sy->getSyctl()->set_filter_resonance(v1/32.0f);
-    } else if(cc==135) {
+    } else if(cc==125) {
         sy->getSyctl()->set_mod_filter_cutoff(v1/127.0f);
-    } else if(cc==136) {
+    } else if(cc==126) {
         sy->getSyctl()->set_mod_filter_resonance(v1/127.0f);
-    } else if(cc==137) {
+    } else if(cc==127) {
         sy->getSyctl()->set_volume(v1/127.0f);
     }
 }

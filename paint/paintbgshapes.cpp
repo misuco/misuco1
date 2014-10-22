@@ -130,7 +130,6 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
 
             for (int x = 0; x < lay->getNseg(y); x ++) {
 
-
                 // init font
                 textAlign=Qt::AlignCenter;
                 pnt->setFont(QFont(lay->getFont(),lay->getFontsize()));
@@ -291,15 +290,15 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                     // vertical fadder
                     pnt->setBrush(Qt::lightGray);
                     pnt->setPen(Qt::NoPen);
-                    float sseg=(float)(ypaint1-2*cradx)/(float)lay->getCtlx(iseg);
-                    int yv1=(float)(lay->getCtlx(iseg)-lay->getYrelq(iseg))*sseg;
+                    float sseg=(float)(ypaint1-4*cradx)/(float)lay->getCtlx(iseg);
+                    int yv1=cradx+(float)(lay->getCtlx(iseg)-lay->getYrelq(iseg))*sseg;
                     pnt->drawRoundedRect(xpaint,ypaint+yv1,xpaint1_1,2*crady,cradx,crady);
                     QString text;
                     pnt->setBrush(Qt::darkGray);
                     pnt->setFont(QFont(lay->getFont(),lay->getFontsizeS()));
                     text.sprintf("%d",lay->getYrelq(iseg));
                     pnt->setPen(Qt::darkGray);
-                    pnt->drawText(xpaint,ypaint+yv1,xpaint1_1,2*crady,Qt::AlignCenter,text);
+                    pnt->drawText(xpaint,ypaint+ypaint1-crady,xpaint1_1,crady,Qt::AlignCenter,text);
                     textAlign=Qt::AlignLeft;
                     //fontl=0;
                 } else if(lay->getSegtype(iseg)==0 && lay->getCtly(iseg)==-3) {

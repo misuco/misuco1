@@ -9,10 +9,10 @@ public:
     PaintBlocker();
     virtual void paint(RC1 *view, QPainter *pnt);
     virtual int getParamCount() {return 0;}
-    virtual float getParam(quint16 n)  {return 0;}
-    virtual float getParamMin(quint16 n)  {return 0;}
-    virtual float getParamMax(quint16 n)  {return 0;}
-    virtual void setParam(quint16 n, float v) {}
+    virtual float getParam(quint16)  {return 0;}
+    virtual float getParamMin(quint16)  {return 0;}
+    virtual float getParamMax(quint16)  {return 0;}
+    virtual void setParam(quint16, float) {}
 private:
     int closeXpos;
     int closeWidth;

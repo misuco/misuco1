@@ -12,15 +12,15 @@ QOscProxy::QOscProxy(QObject * p, QHostAddress adr, quint16 port) : QObject( p )
     QOscProxy(p,adr,adr,port,port);
 }
 
-void QOscProxy::setAddress(const QHostAddress& adr, quint16 port)
+void QOscProxy::setAddress(const QHostAddress&, quint16)
 {
 }
 
-void QOscProxy::setAnswerAddress(QOscServer * srv)
+void QOscProxy::setAnswerAddress(QOscServer *)
 {
 }
 
-void QOscProxy::setSocket(QUdpSocket * socket)
+void QOscProxy::setSocket(QUdpSocket *)
 {
 }
 
@@ -39,7 +39,7 @@ void QOscProxy::registerPathObject(PathObject * po)
     Server->registerPathObject(po);
 }
 
-void QOscProxy::unregisterPathObject(PathObject * po)
+void QOscProxy::unregisterPathObject(PathObject *)
 {
 }
 

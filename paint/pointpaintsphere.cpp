@@ -40,22 +40,22 @@ int PointPaintSphere::getParamCount()
     return 0;
 }
 
-float PointPaintSphere::getParam(quint16 n)
+float PointPaintSphere::getParam(quint16)
 {
     return 0;
 }
 
-float PointPaintSphere::getParamMin(quint16 n)
+float PointPaintSphere::getParamMin(quint16)
 {
     return 0;
 }
 
-float PointPaintSphere::getParamMax(quint16 n)
+float PointPaintSphere::getParamMax(quint16)
 {
     return 0;
 }
 
-void PointPaintSphere::setParam(quint16 n, float v)
+void PointPaintSphere::setParam(quint16, float)
 {
 
 }

@@ -107,12 +107,12 @@ void PointPaintShape::setParam(quint16 n, float v)
     params[n]=v;
 }
 
-float PointPaintShape::getParamMax(quint16 n)
+float PointPaintShape::getParamMax(quint16)
 {
     return 0;
 }
 
-float PointPaintShape::getParamMin(quint16 n)
+float PointPaintShape::getParamMin(quint16)
 {
     return 1;
 }

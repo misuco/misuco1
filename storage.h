@@ -33,7 +33,6 @@ private:
     Point **pnts;
     int len;
     int put_pnt;
-    int np;
 };
 
 #endif // STORAGE_H

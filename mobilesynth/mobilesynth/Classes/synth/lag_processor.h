@@ -34,7 +34,7 @@ class LagProcessor : public Parameter {
   Parameter* param_;
   bool has_last_value_;
   float last_value_;
-  long samples_;
+  //long samples_;
 
   Envelope envelope_;
 };

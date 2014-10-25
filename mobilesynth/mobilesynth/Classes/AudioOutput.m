@@ -16,7 +16,7 @@
 
 @implementation AudioOutput
 
-static const float kSampleRate = 44100.0;
+//static const float kSampleRate = 44100.0;
 static const int kOutputBus = 0;
 
 @synthesize sampleDelegate;
@@ -29,7 +29,7 @@ static const int kOutputBus = 0;
                                code:status
                            userInfo:nil] localizedDescription]);
   } else {
-    NSLog(message);
+    //NSLog(message);
   }
   exit(1);
 }

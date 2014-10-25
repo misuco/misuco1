@@ -35,7 +35,7 @@ SenderOscPuredata::SenderOscPuredata(RC1 *rc1)
     x=0;y=0;
 }
 
-void SenderOscPuredata::noteOn(int chan, int voiceId, float fr, int midinote, int pitch, int vel)
+void SenderOscPuredata::noteOn(int chan, int voiceId, float, int midinote, int pitch, int)
 {
     int f = midinote;
     int vid=voiceId%1024;
@@ -69,7 +69,7 @@ void SenderOscPuredata::noteOff(int chan, int voiceId)
     onNoteCnt--;
 }
 
-void SenderOscPuredata::pitch(int chan, int voiceId, float fr, int midinote, int pitch)
+void SenderOscPuredata::pitch(int chan, int voiceId, float, int midinote, int pitch)
 {
     QVariantList v;
     QString path;
@@ -111,7 +111,7 @@ void SenderOscPuredata::pc(int chan, int v1)
     sendOsc(path,v);
 }
 
-void SenderOscPuredata::cc(int chan, int voiceId, int cc, float v1)
+void SenderOscPuredata::cc(int chan, int, int cc, float v1)
 {
     //qDebug() <<  "SenderOscPuredata::cc " << cc << " v1 " << v1;
 

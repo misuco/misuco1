@@ -14,9 +14,9 @@ namespace synth {
     : wave_type_(SINE),
     frequency_(0),
     mod_f_(0),
-    sample_rate_(kDefaultSampleRate),
     pulse_width_(0.5),
     sample_num_norm_(0),
+    sample_rate_(kDefaultSampleRate),
     sample_num_(0),
     rise_(true){
 

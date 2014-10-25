@@ -29,25 +29,23 @@ SenderOscXY::SenderOscXY(RC1 *rc1)
     y=0;
 }
 
-void SenderOscXY::noteOn(int chan, int voiceId, float fr, int midinote, int pitch, int vel)
+void SenderOscXY::noteOn(int, int, float, int, int, int)
 {
 }
 
-void SenderOscXY::noteOff(int chan, int voiceId, float f, int midinote, int pitch, int vel)
-{
-}
+//void SenderOscXY::noteOff(int chan, int voiceId, float f, int midinote, int pitch, int vel){}
 
 void SenderOscXY::setDestination(QHostAddress a, int p)
 {
     oscout->setAddress(a,p);
 }
 
-void SenderOscXY::pc(int chan, int v1)
+void SenderOscXY::pc(int, int)
 {
 
 }
 
-void SenderOscXY::cc(int chan, int voiceId, int cc, float v1)
+void SenderOscXY::cc(int, int, int cc, float v1)
 {
 
     if(cc==1) x=v1;

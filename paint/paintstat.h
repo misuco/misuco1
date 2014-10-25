@@ -35,8 +35,6 @@ public:
 private:
     float * params;
     quint16 nparams;
-    quint16 ncols;
-    quint16 nrows;
     QString platform_os;
     QString font;
     int fontDiv;

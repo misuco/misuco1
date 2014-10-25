@@ -12,18 +12,18 @@ int PaintBgBitmap::getParamCount() {
     return 0;
 }
 
-float PaintBgBitmap::getParam(quint16 n) {
+float PaintBgBitmap::getParam(quint16) {
     return 0;
 }
 
-float PaintBgBitmap::getParamMin(quint16 n) {
+float PaintBgBitmap::getParamMin(quint16) {
     return 0;
 }
 
-float PaintBgBitmap::getParamMax(quint16 n) {
+float PaintBgBitmap::getParamMax(quint16) {
     return 0;
 }
 
-void PaintBgBitmap::setParam(quint16 n, float v) {
+void PaintBgBitmap::setParam(quint16, float) {
 
 }

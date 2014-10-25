@@ -59,9 +59,9 @@ namespace synth {
      key_stack_.clear();
      }*/
     
-    void Controller::set_osc1_wave_type(Oscillator::WaveType wave_type) {
+//    void Controller::set_osc1_wave_type(Oscillator::WaveType wave_type) {
 //        osc1_.set_wave_type(wave_type);
-    }
+//    }
     
     void Controller::set_osc_pw(int voice, float p) {
         key_stack_.setOscPW(voice, p);

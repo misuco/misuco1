@@ -358,15 +358,15 @@ int PaintBgShapes::getParamCount() {
     return 8;
 }
 
-float PaintBgShapes::getParam(quint16 n) {
+float PaintBgShapes::getParam(quint16) {
     return 0;
 }
 
-float PaintBgShapes::getParamMin(quint16 n) {
+float PaintBgShapes::getParamMin(quint16) {
     return 0;
 }
 
-float PaintBgShapes::getParamMax(quint16 n) {
+float PaintBgShapes::getParamMax(quint16) {
     return 0;
 }
 

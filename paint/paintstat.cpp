@@ -56,7 +56,7 @@ void PaintStat::paint(RC1 *rc1, QPainter *pnt)
     int fontsize=rc1->getLayout()->getWidth()/fontDiv;
     int linehight=rc1->getLayout()->getWidth()/lineDiv;
 
-    EventStat * evstat = rc1->getEvstat();
+    //EventStat * evstat = rc1->getEvstat();
     pnt->setPen(Qt::gray);
     pnt->setFont(QFont(font,fontsize,linehight));
     QString fpss;
@@ -90,14 +90,16 @@ int PaintStat::getParamCount() {
 float PaintStat::getParam(quint16 n) {
     if(n<nparams) {
         return params[n];
+    } else {
+        return 0;
     }
 }
 
-float PaintStat::getParamMin(quint16 n) {
+float PaintStat::getParamMin(quint16) {
     return 0;
 }
 
-float PaintStat::getParamMax(quint16 n) {
+float PaintStat::getParamMax(quint16) {
     return 0;
 }
 

@@ -3,7 +3,7 @@
 
 #ifdef RC1_IOS
 
-SenderMobileSynth::SenderMobileSynth(RC1 * rc1)
+SenderMobileSynth::SenderMobileSynth(RC1 *)
 {
     
     syco=new mobilesynthview::Widget();
@@ -11,7 +11,7 @@ SenderMobileSynth::SenderMobileSynth(RC1 * rc1)
     syco->setController(sy);
 }
 
-void SenderMobileSynth::cc(int chan, int voiceId, int cc, float v1)
+void SenderMobileSynth::cc(int, int voiceId, int cc, float v1)
 {
     if(cc==2) {
         sy->set_modulation(voiceId,v1);

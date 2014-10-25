@@ -37,8 +37,6 @@ private:
     PointPaintShape * pps;
     float * params;
     quint16 nparams;
-    quint16 ncols;
-    quint16 nrows;
 };
 
 #endif // PAINERSHAPES_H

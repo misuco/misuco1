@@ -57,7 +57,7 @@ namespace synth {
         float a2_;
         float b1_;
         float b2_;
-        float b3_;
+        //float b3_;
     };
     
     // Simple VCF

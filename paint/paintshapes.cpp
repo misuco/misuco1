@@ -49,14 +49,16 @@ int PaintShapes::getParamCount() {
 float PaintShapes::getParam(quint16 n) {
     if(n<nparams) {
         return params[n];
+    } else {
+        return 0;
     }
 }
 
-float PaintShapes::getParamMin(quint16 n) {
+float PaintShapes::getParamMin(quint16) {
     return 0;
 }
 
-float PaintShapes::getParamMax(quint16 n) {
+float PaintShapes::getParamMax(quint16) {
     return 0;
 }
 

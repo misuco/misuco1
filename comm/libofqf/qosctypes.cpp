@@ -106,20 +106,20 @@ void QOscBase::oscMessageParseArgs( const QVariant& data, QString& argtypes, QBy
 	if ( data.type() == QVariant::Int ) {
 		argtypes += "i";
 		arguments = arguments + fromInt32( data.toInt() );
-	}
-    if ( data.type() == QVariant::Double ) {
+	} else if ( data.type() == QVariant::Double ) {
         argtypes += "f";
         arguments += fromFloat( data.toFloat() );
-    }
-    if ( data.type() == QVariant::String ) {
+    } else if ( data.type() == QVariant::String ) {
 		argtypes += "s";
 		arguments += fromString( data.toString() );
-	}
-	if ( data.type() == QVariant::List ) {
+	} else if ( data.type() == QVariant::List ) {
 		QList<QVariant> list = data.toList();
 		foreach( QVariant v, list )
 			oscMessageParseArgs( v, argtypes, arguments );
-	}
+    } else {
+        argtypes += "f";
+        arguments += fromFloat( data.toFloat() );
+    }
 }
 
 QByteArray QOscBase::oscMessage( QString path, QVariant arg ) {

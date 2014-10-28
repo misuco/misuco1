@@ -14,7 +14,8 @@
 class SenderMobileSynth : public ISender
 {
 public:
-    SenderMobileSynth(RC1 * rc1);
+    SenderMobileSynth(RC1 *);
+    ~SenderMobileSynth();
     virtual void cc(int chan, int voiceId, int cc, float v1);
     virtual void pc(int chan, int v1);
     virtual void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int vel);

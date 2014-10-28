@@ -59,7 +59,7 @@ namespace synth {
         // Set the volume of oscillator
         // void set_osc1_level(float level);
         // Set the wave form of oscillator
-        void set_osc1_wave_type(Oscillator::WaveType wave_type);
+        //void set_osc1_wave_type(Oscillator::WaveType wave_type);
         void set_osc1_wave_type_int(int w);
         void set_lfo_wave_type_int(int w);
         

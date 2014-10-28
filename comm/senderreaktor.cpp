@@ -16,10 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-#include "senderoscpuredata.h"
+#include "senderreaktor.h"
 #include "../comm/libofqf/qoscclient.h"
 
-SenderOscPuredata::SenderOscPuredata(RC1 *rc1)
+SenderReaktor::SenderReaktor(RC1 *rc1)
 {
     oscout=new QOscClient(QHostAddress("255.255.255.255"),3334);
     oscout->setAddress(QHostAddress("255.255.255.255"),3334);
@@ -33,84 +33,87 @@ SenderOscPuredata::SenderOscPuredata(RC1 *rc1)
     onNoteCnt=0;
 }
 
-SenderOscPuredata::~SenderOscPuredata()
+SenderReaktor::~SenderReaktor()
 {
     delete(notestate);
     delete(ccstate);
     delete(oscout);
 }
 
-void SenderOscPuredata::noteOn(int chan, int voiceId, float, int midinote, int pitch, int)
+void SenderReaktor::noteOn(int chan, int voiceId, float, int midinote, int pitch, int)
 {
     int f = midinote;
     int vid=voiceId%1024;
 
     notestate[vid]=f;
     QVariantList v;
-    v.append(chan);
     v.append(f);
     v.append(127);
-    sendOsc("/note",v);
+    QString path;
+    path.sprintf("/note/%d",chan);
+    sendOsc(path,v);
 
     v.clear();
-    v.append(chan);
     v.append(pitch);
-    sendOsc("/pitch",v);
+    path.sprintf("/pitch/%d",chan);
+    sendOsc(path,v);
 
     onNoteCnt++;
 }
 
-void SenderOscPuredata::noteOff(int chan, int voiceId)
+void SenderReaktor::noteOff(int chan, int voiceId)
 {
     QVariantList v;
-    v.append(chan);
+    QString path;
     v.append(notestate[voiceId%1024]);
     v.append(0);
-    sendOsc("/note",v);
+    path.sprintf("/note/%d",chan);
+    sendOsc(path,v);
     onNoteCnt--;
 }
 
-void SenderOscPuredata::pitch(int chan, int voiceId, float, int midinote, int pitch)
+void SenderReaktor::pitch(int chan, int voiceId, float, int midinote, int pitch)
 {
     QVariantList v;
+    QString path;
 
     int f = midinote;
     int vid=voiceId%1024;
 
     if(notestate[vid]!=f) {
-        v.append(chan);
         v.append(notestate[vid]);
         v.append(0);
-        sendOsc("/note",v);
+        path.sprintf("/note/%d",chan);
+        sendOsc(path,v);
 
         v.clear();
-        v.append(chan);
         v.append(f);
         v.append(127);
-        sendOsc("/note",v);
+        path.sprintf("/note/%d",chan);
+        sendOsc(path,v);
 
         notestate[vid]=f;
-        v.clear();
     }
-    v.append(chan);
     v.append(pitch);
-    sendOsc("/pitch",v);
+    path.sprintf("/pitch/%d",chan);
+    sendOsc(path,v);
 }
 
-void SenderOscPuredata::setDestination(QHostAddress a, int p)
+void SenderReaktor::setDestination(QHostAddress a, int p)
 {
     oscout->setAddress(a,p);
 }
 
-void SenderOscPuredata::pc(int chan, int v1)
+void SenderReaktor::pc(int chan, int v1)
 {
     QVariantList v;
-    v.append(chan);
+    QString path;
     v.append(v1);
-    sendOsc("/pc",v);
+    path.sprintf("/pc/%d",chan);
+    sendOsc(path,v);
 }
 
-void SenderOscPuredata::cc(int chan, int, int cc, float v1)
+void SenderReaktor::cc(int chan, int, int cc, float v1)
 {
     //qDebug() <<  "SenderOscPuredata::cc " << cc << " v1 " << v1;
 
@@ -121,26 +124,15 @@ void SenderOscPuredata::cc(int chan, int, int cc, float v1)
     if(v1mid!=ccstate[cc]) {
         ccstate[cc]=v1mid;
         QVariantList v;
-        v.append(chan);
-        v.append(cc);
+        QString path;
         v.append(v1mid);
-        sendOsc("/cc",v);
+        path.sprintf("/cc/%d/%d",chan,cc);
+        sendOsc(path,v);
     }
-
-    /*
-    if(cc==1) x=v1*127.0f;
-    if(cc==2) y=v1*127.0f;
-
-    QVariantList v;
-    v.append(x);
-    v.append(y);
-    sendOsc("/xy",v);
-    */
 }
 
-void SenderOscPuredata::sendOsc(QString path, QVariant list)
+void SenderReaktor::sendOsc(QString path, QVariant list)
 {
-//    qDebug() << " sendOsc to " << path << " values " << list;
+    //qDebug() << " sendOsc to " << path << " values " << list;
     oscout->sendData(path,list);
-    //rc1->getEvstat()->incOsccount();
 }

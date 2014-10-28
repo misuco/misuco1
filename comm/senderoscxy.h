@@ -27,6 +27,7 @@ class SenderOscXY : public ISender
 {
 public:
     SenderOscXY(RC1 * rc1);
+    ~SenderOscXY();
     virtual void cc(int chan, int voiceId, int cc, float v1);
     virtual void pc(int chan, int v1);
     virtual void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int vel);

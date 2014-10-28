@@ -27,6 +27,7 @@ class SenderOscPuredata : public ISender
 {
 public:
     SenderOscPuredata(RC1 * rc1);
+    ~SenderOscPuredata();
     virtual void cc(int chan, int voiceId, int cc, float v1);
     virtual void pc(int chan, int v1);
     virtual void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int vel);
@@ -36,13 +37,11 @@ public:
 
 private:
     QOscClientInterface* oscout;
-    RC1 * rc1;
-    int prog;           // current program
-    quint8 * notestate;      // currently played notes
+    int prog;              // current program
+    quint8 * notestate;   // currently played notes
     int * ccstate;       // current ccval;
     quint8 onNoteCnt;   // count of on Notes
     void sendOsc(QString path, QVariant list);
-    int x,y;
 };
 
 #endif // SENDEROSCPUREDATA_H

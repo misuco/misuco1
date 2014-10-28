@@ -3,12 +3,14 @@
 
 #include "isender.h"
 #include "sendermobilesynth.h"
-#include "senderoscpuredata.h"
+#include "senderoscmidigeneric.h"
+#include "sendersupercollider.h"
 
 class SenderMulti : public ISender
 {
 public:
     SenderMulti(RC1 * rc1);
+    ~SenderMulti();
     virtual void cc(int chan, int voiceId, int cc, float v1);
     virtual void pc(int chan, int v1);
     virtual void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int v);
@@ -19,6 +21,7 @@ public:
 private:
     ISender * s1;
     ISender * s2;
+    ISender * s3;
 };
 
 #endif // SENDERMULTI_H

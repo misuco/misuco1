@@ -423,7 +423,7 @@ void EventHandlerRect::init()
     layResizeDiff=0;
     layResizePnt=0;
     
-    ieventoutnext=1;
+    ieventoutnext=2000;
     
     useCCCVal=true;
     cccvalAvg=10;

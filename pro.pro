@@ -59,7 +59,9 @@ SOURCES += main.cpp\
     paint/paintblocker.cpp \
     conf/scales.cpp \
     mobilesynth/mobilesynth/Classes/synth/waveform.cpp \
-    comm/sendermulti.cpp
+    comm/sendermulti.cpp \
+    comm/senderreaktor.cpp \
+    comm/senderoscmidigeneric.cpp
 
 HEADERS  += \
     storage.h \
@@ -114,7 +116,9 @@ HEADERS  += \
     paint/paintblocker.h \
     conf/scales.h \
     mobilesynth/mobilesynth/Classes/synth/waveform.h \
-    comm/sendermulti.h
+    comm/sendermulti.h \
+    comm/senderreaktor.h \
+    comm/senderoscmidigeneric.h
 
 OTHER_FILES += \
     android/res/values-ru/strings.xml \

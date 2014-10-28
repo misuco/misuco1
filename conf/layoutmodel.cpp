@@ -783,6 +783,14 @@ void LayoutModel::updateLayout()
                     pressed[seg]=0;
                 }
             }
+        } else if(segtype[seg]==3 ) {
+            if(ctly[seg]==-2) {
+                if(transMode) {
+                    pressed[seg]=1;
+                } else {
+                    pressed[seg]=0;
+                }
+            }
         } else if(segtype[seg]==4 ) {
             if(ctly[seg]==-2) {
                 xrelq[seg]=actProgmen;

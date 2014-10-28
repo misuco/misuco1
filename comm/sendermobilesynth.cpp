@@ -11,6 +11,12 @@ SenderMobileSynth::SenderMobileSynth(RC1 *)
     syco->setController(sy);
 }
 
+SenderMobileSynth::~SenderMobileSynth()
+{
+    delete(syco);
+    delete(sy);
+}
+
 void SenderMobileSynth::cc(int, int voiceId, int cc, float v1)
 {
     if(cc==2) {
@@ -61,10 +67,15 @@ void SenderMobileSynth::setDestination(QHostAddress,int)
 
 #else
 
-SenderMobileSynth::SenderMobileSynth(RC1 * rc1)
+SenderMobileSynth::SenderMobileSynth(RC1 *)
 {
     sy= new mobileSynthQT52();
     //qDebug() << "mobileSynthQt52 created";
+}
+
+SenderMobileSynth::~SenderMobileSynth()
+{
+    delete(sy);
 }
 
 void SenderMobileSynth::cc(int chan, int voiceId, int cc, float v1)

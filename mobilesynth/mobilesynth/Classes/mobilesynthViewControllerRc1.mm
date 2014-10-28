@@ -33,8 +33,10 @@ namespace mobilesynthview
     }
     Widget::~Widget()
     {
-        if (impl)
-            [impl->wrapped release];
+        if (impl) {
+            [impl->wrapped dealloc];
+//            [impl->wrapped release];
+        }
         delete impl;
     }
     void Widget::noteOn(int n, float f)
@@ -70,33 +72,6 @@ static float GetFrequencyForNote(int note) {
 
 - (id)init {
     self = [super init];
-    /*
-     controller_ = new synth::Controller;
-     controller_->set_modulation_amount(0.7);
-     controller_->set_modulation_frequency(0.3);
-     controller_->set_modulation_source(synth::Controller::LFO_SRC_TRIANGLE);
-     controller_->set_modulation_destination(synth::Controller::LFO_DEST_FILTER);
-     
-     //controller_->set_osc2_shift(0);
-     //controller_->set_osc_sync(0);
-     
-     // OSC 1
-     // controller_->set_osc1_level(0.5);
-     controller_->set_osc1_wave_type(synth::Oscillator::SAWTOOTH);
-     //controller_->set_osc1_octave(synth::Controller::OCTAVE_1);
-     
-     // OSC 2
-     //controller_->set_osc2_level(0);
-     //controller_->set_osc2_wave_type(synth::Oscillator::TRIANGLE);
-     //controller_->set_osc2_octave(synth::Controller::OCTAVE_1);
-     
-     //controller_->set_glide_samples(0);
-     
-     controller_->set_filter_cutoff(2000);
-     controller_->set_filter_resonance(0.9);
-     controller_->set_sample_rate(44100);
-     */
-    
     return self;
 }
 
@@ -184,7 +159,7 @@ static float GetFrequencyForNote(int note) {
 
 - (void)dealloc {
     [output dealloc];
-    delete controller_;
+    //delete controller_;
     [super dealloc];
 }
 

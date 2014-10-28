@@ -21,15 +21,11 @@ mobileSynthQT52::mobileSynthQT52()
     m_buffer.resize(BufferSize);
     m_buffer.fill(0);
 
-//    generateData(format, durationUs, sampleRate);
     syctl = new synth::Controller();
     syctl->set_modulation_amount(0);
     syctl->set_modulation_frequency(0);
-//    syctl->set_modulation_source(synth::Controller::LFO_SRC_TRIANGLE);
     syctl->set_modulation_destination(synth::Controller::LFO_DEST_NONE);
-    syctl->set_osc1_wave_type(synth::Oscillator::SAWTOOTH);
-//    syctl->set_filter_cutoff(2000);
-//    syctl->set_filter_resonance(0.9);
+    syctl->set_osc1_wave_type_int(0);
     syctl->set_sample_rate(DataSampleRateHz);
 
     m_format.setSampleRate(DataSampleRateHz);
@@ -66,7 +62,8 @@ mobileSynthQT52::mobileSynthQT52()
 
 mobileSynthQT52::~mobileSynthQT52()
 {
-
+    delete(syctl);
+    delete(m_audioOutput);
 }
 
 void mobileSynthQT52::start()

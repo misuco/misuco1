@@ -110,8 +110,16 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
          * calculation, quantisation and storage of segment relative x/y values
          *
          */
-        float xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg))-2*layout->getSegBorder();
-        xrel=xrel/(float)(layout->getSegwidthpx(iseg)-4*layout->getSegBorder());
+        float xrel=p->getX()-(xsum-layout->getSegwidthpx(iseg));
+
+        // for non-transistion segments calculate with border
+        if(layout->getSegtype(iseg)!=1) {
+            xrel-=2*layout->getSegBorder();
+            xrel=xrel/(float)(layout->getSegwidthpx(iseg)-4*layout->getSegBorder());
+        } else {
+            xrel=xrel/(float)(layout->getSegwidthpx(iseg));
+        }
+
         if(xrel>1.0f) {
             xrel=1.0f;
         }
@@ -175,6 +183,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             if(layout->getCtly(iseg)==-3) {
                 layout->setMidi2fcent((layout->getCtlx(iseg)+3)%12,(layout->getYrel(iseg)-0.5f)*200.0f);
                 layout->updateLayout();
+                // prevent re-trigger due to freq. difference
+                freq[evptr]=layout->getFreq(iseg);
             }
 
             int midinote=layout->getMidinote(iseg);

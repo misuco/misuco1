@@ -832,6 +832,7 @@ void LayoutModel::updateLayout()
                     segtype[seg]=1;
                     segText[seg]="";
                     segwidth[seg]=1;
+                    pressed[seg]=0;
                 }
                 seg++;
                 segtype[seg]=0;

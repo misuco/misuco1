@@ -184,9 +184,11 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 layout->setMidi2fcent((layout->getCtlx(iseg)+3)%12,(layout->getYrel(iseg)-0.5f)*200.0f);
                 layout->updateLayout();
                 // prevent re-trigger due to freq. difference
-                freq[evptr]=layout->getFreq(iseg);
+                if(p->getState()==Qt::TouchPointMoved) {
+                    freq[evptr]=layout->getFreq(iseg);
+                    snd->pitch(layout->getChan(iseg), ieventout[evptr],freq[evptr], layout->getMidinote(iseg), layout->getPitch(iseg));
+                }
             }
-
             int midinote=layout->getMidinote(iseg);
             float f=layout->getFreq(iseg);
 

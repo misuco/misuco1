@@ -31,7 +31,7 @@ void SenderSuperCollider::setDestination(QHostAddress a, int p)
 void SenderSuperCollider::noteOn(int, int voiceId, float f, int, int, int vel)
 {
     QVariantList v;
-    qDebug() << "noteOn vid:" << voiceId << " f " << f << " vel " << vel;
+    //qDebug() << "noteOn vid:" << voiceId << " f " << f << " vel " << vel;
     v.append("c1a1");
     v.append(voiceId);
     v.append(0);
@@ -59,7 +59,7 @@ void SenderSuperCollider::noteOn(int, int voiceId, float f, int, int, int vel)
 
 void SenderSuperCollider::pitch(int, int voiceId, float f, int, int)
 {
-    qDebug() << "pitch vid:" << voiceId << " f " << f;
+    //qDebug() << "pitch vid:" << voiceId << " f " << f;
     QVariantList v;
     v.append(voiceId);
     v.append("freq");
@@ -76,7 +76,7 @@ void SenderSuperCollider::sendOsc(QString path, QVariant list)
 
 void SenderSuperCollider::noteOff(int, int voiceId)
 {
-    qDebug() << "note off vid:" << voiceId ;
+    //qDebug() << "note off vid:" << voiceId ;
     QVariantList v;
     v.append(voiceId);
     v.append("amp");

@@ -80,43 +80,38 @@ LayoutModel::LayoutModel()
     setAll(nsegsmax,yrelq,0);
 
     midi2f = new float[256];
+    midi2fequal = new float[256];
     midi2fcent = new float[12];
-    initMidi2f(0);
-
-    freq_a = 440; // a is 440 hz...
-
-    for (int x = 0; x < 256; ++x)
-    {
-        midi2f[x] = calcMidi2f(x);
-        //qDebug() << "note " << x << " f " << midi2f[x] << " oct " << oct;
-    }
+    freq_a = 440;       // a is 440 hz...
+    calcMidi2Fequal();  // initialize equaly tempered midi frequency lut
+    initMidi2f(0);      // includes calcMidi2f();
     
     midi2TextEU = new QString[12];
     midi2TextEU[0]="C";
-    midi2TextEU[1]="Db";
+    midi2TextEU[1]="C#";
     midi2TextEU[2]="D";
-    midi2TextEU[3]="Eb";
+    midi2TextEU[3]="D#";
     midi2TextEU[4]="E";
     midi2TextEU[5]="F";
-    midi2TextEU[6]="Gb";
+    midi2TextEU[6]="F#";
     midi2TextEU[7]="G";
-    midi2TextEU[8]="Ab";
+    midi2TextEU[8]="G#";
     midi2TextEU[9]="A";
-    midi2TextEU[10]="Bb";
+    midi2TextEU[10]="A#";
     midi2TextEU[11]="B";
 
     midi2TextUrl = new QString[12];
     midi2TextUrl[0]="c";
-    midi2TextUrl[1]="db";
+    midi2TextUrl[1]="cs";
     midi2TextUrl[2]="d";
-    midi2TextUrl[3]="eb";
+    midi2TextUrl[3]="ds";
     midi2TextUrl[4]="e";
     midi2TextUrl[5]="f";
-    midi2TextUrl[6]="gb";
+    midi2TextUrl[6]="fs";
     midi2TextUrl[7]="g";
-    midi2TextUrl[8]="ab";
+    midi2TextUrl[8]="gs";
     midi2TextUrl[9]="a";
-    midi2TextUrl[10]="bb";
+    midi2TextUrl[10]="as";
     midi2TextUrl[11]="b";
     
     scaleStartSeg=24;
@@ -373,8 +368,13 @@ void LayoutModel::setFreq(int i, float v)
 {
     if(i<nsegsmax) {
         freq[i]=v;
-        pitch[i]=round(Log2(v/midi2f[midinote[i]])*12*8192/2);
+//        pitch[i]=round(Log2(v/midi2fequal[midinote[i]])*12*8192/2);
+        pitch[i]=calcPitch(midinote[i],v);
     }
+}
+
+float LayoutModel::calcPitch(int midinote, float f) {
+    return round(Log2(f/midi2fequal[midinote])*12*8192/2);
 }
 
 void LayoutModel::setMidinote(int i, int v)
@@ -568,7 +568,6 @@ int LayoutModel::midi2freq(uint note)
     }
 }
 
-
 float LayoutModel::calcMidi2f(int x)
 {
     int oct=(x+3)/12;
@@ -576,23 +575,36 @@ float LayoutModel::calcMidi2f(int x)
     return (freq_a / 64.0f) * (pow(2.0 , (double)((float)oct*1200.0f+(midi2fcent[p%12]+100.0f*(p%12))) / 1200.0));
 }
 
+float LayoutModel::calcMidi2Fequal(int x)
+{
+    int oct=(x+3)/12;
+    int p=x+3;
+    return (freq_a / 64.0f) * (pow(2.0 , (double)((float)oct*1200.0f+(100.0f*(p%12))) / 1200.0));
+}
+
 void LayoutModel::calcMidi2f()
 {
     /*
-
-    // set only the changed strings to save time
-    int i=pos-3;
-    if(i<0) {
-        i+=12;
-    }
-    for(;i<=255;i+=12) {
-        midi2f[i]=calcMidi2f(i);
-        //qDebug() << "pos " << pos << " i " << i << " value " << value;
-    }
-    */
+     // set only the changed strings to save time
+     int i=pos-3;
+     if(i<0) {
+     i+=12;
+     }
+     for(;i<=255;i+=12) {
+     midi2f[i]=calcMidi2f(i);
+     //qDebug() << "pos " << pos << " i " << i << " value " << value;
+     }
+     */
     for(int i=0;i<=255;i++) {
         midi2f[i]=calcMidi2f(i);
         //qDebug() << "pos " << pos << " i " << i << " value " << value;
+    }
+}
+
+void LayoutModel::calcMidi2Fequal()
+{
+    for(int i=0;i<=255;i++) {
+        midi2fequal[i]=calcMidi2Fequal(i);
     }
 }
 
@@ -760,7 +772,7 @@ void LayoutModel::updateLayout()
             oct*=12;
             midinote[seg]=note+oct;
             freq[seg]=midi2f[note+oct];
-            pitch[seg]=0;
+            pitch[seg]=midi2fcent[(note+3)%12]*4096.0f/100.0f;
             segH[seg]=note2hue(note);
             segText[seg]=midi2TextEU[note%12];
         } else if(segtype[seg]==2 ) {
@@ -814,7 +826,7 @@ void LayoutModel::updateLayout()
         int calcnote=progmem[actProgmen].basenote+i*12;
         midinote[seg]=calcnote;
         freq[seg]=midi2f[calcnote];
-        pitch[seg]=0;
+        pitch[seg]=midi2fcent[(calcnote+3)%12]*4096.0f/100.0f;
         QString octnum;
         octnum.sprintf(" %d",i+1);
         segText[seg]=midi2TextEU[calcnote%12];
@@ -840,6 +852,8 @@ void LayoutModel::updateLayout()
                 int thisnote=calcnote+j+1;
                 midinote[seg]=thisnote;
                 freq[seg]=midi2f[thisnote];
+                pitch[seg]=midi2fcent[(thisnote+3)%12]*4096.0f/100.0f;
+                //qDebug() << "pitch " << pitch[seg] << " " ;
                 segText[seg]=midi2TextEU[thisnote%12];
                 segText[seg].append(octnum);
                 ctlx[seg]=1;
@@ -899,7 +913,7 @@ void LayoutModel::readProgmemXml(QString filename)
     QXmlStreamReader xmlr;
     QFile file(filename);
     // default initial prog memory
-    qDebug() << "reading progmem " << filename;
+    //qDebug() << "reading progmem " << filename;
     if(!file.exists()) {
         qDebug() << "init progmem file not exist ";
         for(int i=0;i<NPROGMEM;i++) {
@@ -927,7 +941,7 @@ void LayoutModel::readProgmemXml(QString filename)
     }
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
         return;
-        qDebug() << "cannot read file " << filename;
+        //qDebug() << "cannot read file " << filename;
     }
     xmlr.setDevice(&file);
     if (xmlr.readNextStartElement()) {
@@ -975,9 +989,9 @@ void LayoutModel::writeProgmemXml(QString filename)
     QFile file(filename);
     if (!file.open(QFile::WriteOnly | QFile::Text)) {
         return;
-        qDebug() << "cannot write file " << filename;
+        //qDebug() << "cannot write file " << filename;
     }
-    qDebug() << "writing progmem file " << filename;
+    //qDebug() << "writing progmem file " << filename;
 
     xml.setDevice(&file);
     QString att;

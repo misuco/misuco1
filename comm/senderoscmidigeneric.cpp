@@ -77,6 +77,7 @@ void SenderOscMidiGeneric::noteOff(int chan, int voiceId)
 
 void SenderOscMidiGeneric::pitch(int chan, int voiceId, float, int midinote, int pitch)
 {
+    //qDebug() << "SenderOscMidiGeneric::pitch " << chan << " " << voiceId << " " << midinote << " " << pitch;
     QVariantList v;
     QString path;
 
@@ -98,6 +99,7 @@ void SenderOscMidiGeneric::pitch(int chan, int voiceId, float, int midinote, int
         sendOsc(path,v);
 
         notestate[vid]=f;
+        v.clear();
     }
     v.append(pitch);
     v.append(chan);

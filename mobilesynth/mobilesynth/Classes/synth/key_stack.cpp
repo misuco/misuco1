@@ -12,7 +12,7 @@ namespace synth {
     
     KeyStack::KeyStack() : size_(0) {
         //waveform_=new waveform();
-        qDebug() << "setup keystack";
+        //qDebug() << "setup keystack";
 
         for(int i=0;i<kMaxSize;i++) {
             for(int j=0;j<kNumEnv;j++) {
@@ -43,11 +43,11 @@ namespace synth {
         osc_pw=0.5;
         filter_res_=0;
         filter_cutoff_=0.5f;
-        qDebug() << "setup keystack done ";
+        //qDebug() << "setup keystack done ";
     }
     
     KeyStack::~KeyStack() {
-        qDebug() << "delete keystack ";
+        //qDebug() << "delete keystack ";
         for(int i=0;i<kMaxSize;i++) {
             for(int j=0;j<kNumEnv;j++) {
                 delete(envelopes[j][i]);
@@ -57,7 +57,7 @@ namespace synth {
             delete(cutoffs[i]);
             delete(filters[i]);
         }
-        qDebug() << "delete keystack done ";
+        //qDebug() << "delete keystack done ";
     }
     
     bool KeyStack::NoteOn(int note, float freq) {

@@ -191,6 +191,7 @@ void RC1::paintEvent(QPaintEvent *)
     }
 
     QPainter painter(this);
+    //qDebug() << "painter window " << painter.window().width() << " " << painter.window().height() ;
 
     if(blockerOn) {
         blockerPainter->paint(this,&painter);
@@ -231,10 +232,16 @@ void RC1::paintEvent(QPaintEvent *)
 void RC1::resizeEvent(QResizeEvent *)
 {
     //qDebug() << "resize event " << width() << " " << height();
-    layout->calcGeo(width(),height());
-    bgImage=bgImageOri.scaled(width(),height());    
+    int w=width();
+    int h=height();
+    if(height()>width()) {
+        w=height();
+        h=width();
+    }
+    layout->calcGeo(w,h);
+    bgImage=bgImageOri.scaled(w,h);
     QString adurl;
-    adurl.sprintf("http://ads.misuco.org/get/?w=%d&h=%d",width(),height());
+    adurl.sprintf("http://ads.misuco.org/get/?w=%d&h=%d",w,h);
     if(!downloadAd) {
         downloadAd=true;
         netxs->get(QNetworkRequest(QUrl(adurl)));
@@ -464,7 +471,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
         }
 
         if(path=="/type") {
-            qDebug() << "osc get type size " << dl.size() << " nsegs " << layout->getNsegs();
+            //qDebug() << "osc get type size " << dl.size() << " nsegs " << layout->getNsegs();
             if(dl.size()<=layout->getNsegs()) {
                 for(int i=0;i<dl.size();i++) {
                     layout->setSegtype(i,dl.at(i).toInt());

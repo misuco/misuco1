@@ -156,7 +156,7 @@ private:
     int *segwidthmax;
     int *segwidthpx;
     int *segtype;       // segmenttyp: 0=note, 1=transition, 2=layout
-    float *freq;       // frequency
+    float *freq;        // frequency
     int *midinote;      // midi note 0...127
     int *pitch;         // midi pitch -8191/8192
     float *xrel;
@@ -204,8 +204,9 @@ private:
     int scaleRow;
 
     // lookup tables
-    float *midi2f;
-    float *midi2fcent;
+    float *midi2fequal;  // equal tempered midi scale
+    float *midi2fcent;   // microtuning scale
+    float *midi2f;       // microtuned frequency scale
     float freq_a;
     QString * midi2TextEU;
     QString * midi2TextUrl;
@@ -214,6 +215,9 @@ private:
     void setAll(int n, int * d, int v);
     float calcMidi2f(int x);
     void calcMidi2f();
+    float calcMidi2Fequal(int x);
+    void calcMidi2Fequal();
+    float calcPitch(int midinote, float f);
 };
 
 #endif // LAYOUTMODEL_H

@@ -93,12 +93,20 @@ static float GetFrequencyForNote(int note) {
     // Format preferred by the iphone (Fixed 8.24)
     outputFormat.mSampleRate = 44100.0;
     outputFormat.mFormatID = kAudioFormatLinearPCM;
-    outputFormat.mFormatFlags  = kAudioFormatFlagsAudioUnitCanonical;
+    //outputFormat.mFormatFlags  = kAudioFormatFlagsAudioUnitCanonical;
+    //outputFormat.mFormatFlags  = kAudioFormatFlagIsFloat | kAudioFormatFlagsNativeEndian | kAudioFormatFlagIsPacked | kAudioFormatFlagIsNonInterleaved;
+    outputFormat.mFormatFlags  = kAudioFormatFlagIsSignedInteger;
+#if  __IPHONE_OS_VERSION_MAX_ALLOWED >= 8000
+    outputFormat.mBytesPerPacket = sizeof(SInt32);
+    outputFormat.mBytesPerFrame = sizeof(SInt32);
+    outputFormat.mBitsPerChannel = 8 * sizeof(SInt32);
+#else
     outputFormat.mBytesPerPacket = sizeof(AudioUnitSampleType);
-    outputFormat.mFramesPerPacket = 1;
     outputFormat.mBytesPerFrame = sizeof(AudioUnitSampleType);
-    outputFormat.mChannelsPerFrame = 1;
     outputFormat.mBitsPerChannel = 8 * sizeof(AudioUnitSampleType);
+#endif
+    outputFormat.mFramesPerPacket = 1;
+    outputFormat.mChannelsPerFrame = 1;
     outputFormat.mReserved = 0;
     
     output = [[AudioOutput alloc] initWithAudioFormat:&outputFormat];

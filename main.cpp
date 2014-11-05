@@ -36,9 +36,15 @@ int main(int argc, char **argv)
 #endif
 {
     QApplication a(argc, argv);
+    
+    RC1 * w = new RC1();
+    w->connectApp(&a);
+    w->show();
+    /*
     RC1 w;
     w.connectApp(&a);
     w.show();
-
+    */
+    
     return a.exec();
 }

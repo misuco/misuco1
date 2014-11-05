@@ -278,6 +278,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 } else if(layout->getCtly(iseg)==-2) {
                     // memory button, not in use
                     layout->setActProgmem(layout->getCtlx(iseg));
+                    rc1->transmitSoundParam();
                 } else if(layout->getCtly(iseg)==-4) {
                     // layout switch button
                     layout->resetLayout(layout->getCtlx(iseg));
@@ -333,8 +334,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             } else if(layout->getSegtype(iseg)==5) {
                 // y-slider
                 snd->cc(0, 0,layout->getCtly(iseg),yrelquant);
-                if(layout->getCtly(iseg)>=118) {
-                    layout->setSoundParam(layout->getCtly(iseg)-118,yrelquant);
+                if(layout->getCtly(iseg)>=102) {
+                    layout->setSoundParam(layout->getCtly(iseg)-102,yrelquant);
                 } else if(layout->getCtly(iseg)==-1) {
                     layout->initMidi2f(layout->getYrelq(iseg));
                     layout->updateLayout();

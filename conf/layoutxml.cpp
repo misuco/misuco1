@@ -116,7 +116,6 @@ void layoutxml::readLayout() {
 
     layout->rowheightmax=xmlr.attributes().value("rowheightmax").toString().toInt();
     layout->scaleRow=xmlr.attributes().value("scalerow").toString().toInt();
-//    layout->bscaleRow=xmlr.attributes().value("bscalerow").toString().toInt();
     while (xmlr.readNextStartElement()) {
         //qDebug() << "xmlr row name " << xmlr.name();
         if (xmlr.name() == "row") {
@@ -129,14 +128,11 @@ void layoutxml::readLayout() {
             if(row==layout->scaleRow) {
                 layout->scaleStartSeg=seg;
             }
-//            if(row==layout->bscaleRow) {
-//                layout->bscaleStartSeg=seg;
-//            }
             row++;
             nrowseg=0;
 
             while(xmlr.readNextStartElement()) {
-//                qDebug() << "xmlr seg name " << xmlr.name();
+                //qDebug() << "xmlr seg name " << xmlr.name();
                 if (xmlr.name() == "seg") {
                     layout->segwidth[seg]=xmlr.attributes().value("segwidth").toString().toInt();
                     layout->freq[seg]=xmlr.attributes().value("freq").toString().toFloat();
@@ -149,7 +145,7 @@ void layoutxml::readLayout() {
                     layout->segText[seg].clear();
                     layout->segText[seg].append(xmlr.attributes().value("segtext").toString());
                     layout->segH[seg]=xmlr.attributes().value("segh").toString().toInt();
-//                    qDebug()<< "segH " << layout->segH[seg] << " for seg " << seg;
+                    //qDebug()<< "segH " << layout->segH[seg] << " for seg " << seg;
                     seg++;
                     nrowseg++;
                     xmlr.skipCurrentElement();
@@ -168,7 +164,7 @@ void layoutxml::readLayout() {
     layout->calcGeo(layout->widthPx,layout->heightPx);
     layout->updateLayout();
 
-//    qDebug() << xmlr.error();
-//    qDebug() << xmlr.errorString();
-//    qDebug() << "nrows " << row << " nsegs " << seg;
+    //qDebug() << xmlr.error();
+    //qDebug() << xmlr.errorString();
+    //qDebug() << "nrows " << row << " nsegs " << seg;
 }

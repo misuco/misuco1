@@ -88,7 +88,7 @@ qint64 mobileSynthQT52::readData(char *data, qint64 len)
     }
     */
 
-//    qDebug() << "readData len " << len;
+    //qDebug() << "readData len " << len;
 //TODO: why this dirty hack? why does windows request odd lens
     if(len%2!=0) len-=1;
     syctl->GetCharSamples(data,len);

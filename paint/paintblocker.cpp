@@ -6,17 +6,21 @@ PaintBlocker::PaintBlocker()
 
 void PaintBlocker::paint(RC1 *view, QPainter *pnt)
 {
-/*    QString text;
-    text.sprintf("Please donnate or wait %d seconds to get rid of this blocker",view->getBlockerTimeLeft());
-    pnt->drawText(1,1,view->getLayout()->getWidth(),view->getLayout()->getHeight(),Qt::AlignCenter,text);*/
+    
     pnt->drawImage(0,0,*(view->getBgImage()),0,0,view->getLayout()->getWidth(),view->getLayout()->getHeight());
-    closeWidth=view->width()/8-10;
+    closeWidth=view->height()/5-10;
     closeXpos=view->width()-closeWidth-5;
+    
     pnt->setBrush(Qt::NoBrush);
-    pnt->setPen(QPen(Qt::lightGray,5));
+    pnt->setPen(QPen(Qt::lightGray,4));
     pnt->drawEllipse(closeXpos,5,closeWidth,closeWidth);
     //pnt->setPen(Qt::black);
     pnt->setFont(QFont(view->getLayout()->getFont(),view->getLayout()->getFontsize()));
-    pnt->drawText(closeXpos,5,closeWidth,closeWidth,Qt::AlignCenter,"start");
-    pnt->drawText(5,5,view->getLayout()->getWidth(),closeWidth,Qt::AlignLeft,"advertisement");
+
+    QString text;
+    text.sprintf("Advertisement: click to open or wait %d seconds or press  → ",view->getBlockerTimeLeft());
+    pnt->drawText(5,5,view->getLayout()->getWidth(),view->getLayout()->getHeight(),Qt::AlignLeft,text);
+
+    pnt->drawText(closeXpos,5,closeWidth,closeWidth,Qt::AlignCenter,"skip");
+    // pnt->drawText(5,5,view->getLayout()->getWidth(),closeWidth,Qt::AlignLeft,"advertisement");
 }

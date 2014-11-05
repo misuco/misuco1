@@ -171,7 +171,7 @@ void LayoutModel::calcGeo(int w, int h)
             i++;
         }
     }
-    fontsize=heightPx/25;
+    fontsize=heightPx/20;
     fontsizeS=fontsize/2;
 }
 
@@ -652,23 +652,40 @@ void LayoutModel::initMidi2f(uint n)
         midi2fcent[10]=2.933;
         midi2fcent[11]=-4.887;
         break;
+            
+        case 3:
+            // Natürlich Harmonisch
+            // http://www.instrument-tuner.com/temperaments_de.html
+            midi2fcent[0]=15.641;
+            midi2fcent[1]=27.372;
+            midi2fcent[2]=19.551;
+            midi2fcent[3]=31.282;
+            midi2fcent[4]=1.956;
+            midi2fcent[5]=13.686;
+            midi2fcent[6]=5.864;
+            midi2fcent[7]=17.596;
+            midi2fcent[8]=29.327;
+            midi2fcent[9]=0;
+            midi2fcent[10]=33.237;
+            midi2fcent[11]=3.910;
+            break;
 
-    case 3:
-        // Natürlich Harmonisch
-        // http://www.instrument-tuner.com/temperaments_de.html
-        midi2fcent[0]=15.641;
-        midi2fcent[1]=27.372;
-        midi2fcent[2]=19.551;
-        midi2fcent[3]=31.282;
-        midi2fcent[4]=1.956;
-        midi2fcent[5]=13.686;
-        midi2fcent[6]=5.864;
-        midi2fcent[7]=17.596;
-        midi2fcent[8]=29.327;
-        midi2fcent[9]=0;
-        midi2fcent[10]=33.237;
-        midi2fcent[11]=3.910;
-        break;
+        case 4:
+            // Pythagoreisch
+            // http://www.instrument-tuner.com/temperaments_de.html
+            midi2fcent[0]=-5.865;
+            midi2fcent[1]=7.820;
+            midi2fcent[2]=-1.955;
+            midi2fcent[3]=-11.730;
+            midi2fcent[4]=1.955;
+            midi2fcent[5]=-7.820;
+            midi2fcent[6]=5.865;
+            midi2fcent[7]=-3.910;
+            midi2fcent[8]=9.775;
+            midi2fcent[9]=0.000;
+            midi2fcent[10]=-9.775;
+            midi2fcent[11]=3.910;
+            break;
 
     default:
         for(int i=0;i<12;i++) {
@@ -814,8 +831,8 @@ void LayoutModel::updateLayout()
 //                xrelq[seg]=progmem[actProgmen].soundParam[ctly[seg]];
             }
         } else if(segtype[seg]==5 ) {
-            if(ctly[seg]>117) {
-                yrelq[seg]=progmem[actProgmen].soundParam[ctly[seg]-118];
+            if(ctly[seg]>=102) {
+                yrelq[seg]=progmem[actProgmen].soundParam[ctly[seg]-102];
             }
         }
     }
@@ -915,7 +932,7 @@ void LayoutModel::readProgmemXml(QString filename)
     // default initial prog memory
     //qDebug() << "reading progmem " << filename;
     if(!file.exists()) {
-        qDebug() << "init progmem file not exist ";
+        //qDebug() << "init progmem file not exist ";
         for(int i=0;i<NPROGMEM;i++) {
             progmem[i].basenote=i%5;
             progmem[i].baseoct=3;

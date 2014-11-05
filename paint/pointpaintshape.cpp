@@ -176,6 +176,6 @@ float PointPaintShape::calcRow(quint16 row, Point * pnt, RC1 * v) {
     res+=params[i0+6]*ltn*v->getLayout()->getWidth();
     res+=params[i0+7]*ltn*v->getLayout()->getHeight();
     res+=params[i0+8]*pnt->getHue();
-//    qDebug() << " row " << row << " col " << col << " res " << res;
+    //qDebug() << " row " << row << " col " << col << " res " << res;
     return res;
 }

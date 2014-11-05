@@ -27,7 +27,7 @@ void PointPaintSphere::paint(Point *point, RC1 *v, QPainter *pnt)
     if(point->getHue()>=0) {
         float age=(float)(v->getNow()-point->getT())/(float)v->getTtl();
         int rad=(float)v->getLayout()->getWidth()/2*age;
-        //    qDebug() << v->getNow() << " " << point->getT() << " " << rad;
+        //qDebug() << v->getNow() << " " << point->getT() << " " << rad;
         pnt->setBrush(Qt::NoBrush);
         pnt->setPen(QColor::fromHsl(point->getHue(), 230, 200-200.0*age ));
         pnt->drawEllipse(point->getX()-rad/2,point->getY()-rad/2, rad, rad);

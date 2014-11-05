@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "senderoscmidigeneric.h"
 #include "../comm/libofqf/qoscclient.h"
 
-SenderOscMidiGeneric::SenderOscMidiGeneric(RC1 *rc1)
+SenderOscMidiGeneric::SenderOscMidiGeneric(RC1 *)
 {
     oscout=new QOscClient(QHostAddress("255.255.255.255"),3334);
     oscout->setAddress(QHostAddress("255.255.255.255"),3334);

@@ -56,21 +56,18 @@ RC1::RC1(QWidget *parent) :
     ttl=2000;
 
     blockerOn=true;
-    blockerTimeout=0;
+    blockerTimeout=30;
     blockerTimeLeft=blockerTimeout;
     blockerPainter=new PaintBlocker();
     downloadAd=false;
 
     storage=new Storage();
     layout=new LayoutModel();
-//    sender = new SenderOscXY(this);
-//    sender=new SenderSuperCollider(this);
-//    sender=new SenderDebug();
     ehand=new EventHandlerRect();
     evstat=new EventStat();
 
     senderAddress=QHostAddress("255.255.255.255");
-    senderPort=3334;
+    senderPort=3150;
     sender=new SenderMulti(this);
     
     chan=0;
@@ -110,10 +107,11 @@ RC1::RC1(QWidget *parent) :
     painterOn[1]=false;
     painterOn[2]=false;
 
+#ifdef RC1_PRO
     oscin = new QOscServer(3333,this);
     oscin->registerPathObject(this);
+#endif
     
-    resetStat();
     this->startTimer(0);
 
     fpsT.start();
@@ -157,11 +155,11 @@ RC1::RC1(QWidget *parent) :
 
     layout->readProgmemXml(progmemFile);
     layout->resetLayout();
-
     layout->toggleEdit();
     layout->setActProgmem(0);
     layout->calcGeo(width(),height());
     layout->updateLayout();
+    transmitSoundParam();
 
     //setWindowState(Qt::WindowFullScreen);
 }
@@ -314,7 +312,7 @@ bool RC1::event(QEvent *event)
         if(adid!="") {
             if(event->type()==QEvent::TouchEnd ) {
                 blockerOn=false;
-                int closeArea=height()/8;
+                int closeArea=height()/5;
                 touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
                 foreach (const QTouchEvent::TouchPoint &touchPoint, touchPoints) {
                     if(!(touchPoint.pos().x()>width()-closeArea && touchPoint.pos().y()<closeArea)) {
@@ -323,7 +321,7 @@ bool RC1::event(QEvent *event)
                 }
             } else if(event->type()==QEvent::MouseButtonRelease)  {
                 blockerOn=false;
-                int closeArea=height()/8;
+                int closeArea=height()/5;
                 const QMouseEvent * meve = static_cast<QMouseEvent *>(event);
                 if(!(meve->pos().x()>width()-closeArea && meve->pos().y()<closeArea)) {
                     QDesktopServices::openUrl(QUrl(adid));
@@ -780,9 +778,11 @@ void RC1::appStateChange(Qt::ApplicationState state) {
         delete(sender);
         sender=new SenderMulti(this);
         sender->setDestination(senderAddress,senderPort);
+#ifdef RC1_PRO
         delete(oscin);
         oscin = new QOscServer(3333,this);
         oscin->registerPathObject(this);
+#endif
     } else {
         layout->writeProgmemXml(progmemFile);
     }
@@ -792,12 +792,6 @@ void RC1::replyFinished(QNetworkReply * r)
 {
     //qDebug() << "received " << r->url();
     if(r->error()==QNetworkReply::NoError) {
-/*        adid=RC1_ADS_URL;
-        if(r->hasRawHeader("Adid")) {
-            adid.append(r->rawHeader("Adid"));
-        } else {
-            adid.append("1");
-        }*/
         QString pendingConfigFile;
         QByteArray data=r->readAll();
         if(r->url().toString()==RC1_SCALES_XML_URL) {
@@ -845,7 +839,7 @@ return evstat;
 void RC1::transmitSoundParam()
 {
     for(int i=0;i<NSOUNDPARAM;i++) {
-         sender->cc(chan,0,i+128,layout->getSoundParam(i));
+         sender->cc(chan,0,i+102,layout->getSoundParam(i));
     }
 }
 

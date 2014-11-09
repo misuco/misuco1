@@ -161,6 +161,11 @@ RC1::RC1(QWidget *parent) :
     layout->updateLayout();
     transmitSoundParam();
 
+    QFontDatabase db;
+    foreach (const QString &family, db.families()) {
+         qDebug() << family;
+    }
+
     //setWindowState(Qt::WindowFullScreen);
 }
 

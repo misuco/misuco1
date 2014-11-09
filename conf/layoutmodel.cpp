@@ -20,15 +20,14 @@
 #include <math.h>
 #include <QFile>
 #include "layoutmodel.h"
-#include "layoutxml.h"
-
 
 LayoutModel::LayoutModel()
 {
     widthPx=1;
     heightPx=1;
     fontsize=1;
-    font="Arial";
+    //font="Arial";
+    font="DIN Alternate";
     nrowsmax=32;
     nsegsmax=32*32;
     nseg = new int[nrowsmax];
@@ -45,18 +44,13 @@ LayoutModel::LayoutModel()
     segH = new int[nsegsmax];
     xrel = new float[nsegsmax];
     yrel = new float[nsegsmax];
-    // put numbers as text
+    /* put numbers as text
     for(int i=0;i<nsegsmax;i++) {
         segText[i].setNum(i);
         segH[i]=i*10%255;
     }
-    for(int i=0;i<11;i++) {
-        progmem[actProgmen].bscale[i]=false;
-    }
-    /*
-    bscale[4]=true;
-    bscale[7]=true;
     */
+    layxml.setLayoutModel(this);
 
     segtype = new int[nsegsmax];
     setAll(nsegsmax,segtype,0);
@@ -133,6 +127,8 @@ LayoutModel::LayoutModel()
     ctly[0]=2;
     segH[0]=100;
     segBorder=0;
+
+
 //    calcGeo(200,200);
 //    updateLayout();
 }
@@ -338,7 +334,7 @@ void LayoutModel::setYrelq(int i, int value)
 int LayoutModel::getSoundParam(int i) const
 {
     if(i<NSOUNDPARAM) {
-        return progmem[actProgmen].soundParam[i];
+        return progmem.progmem[actProgmen].soundParam[i];
     } else {
         return 0;
     }
@@ -347,7 +343,7 @@ int LayoutModel::getSoundParam(int i) const
 void LayoutModel::setSoundParam(int i, int value)
 {
     if(i<NSOUNDPARAM) {
-        progmem[actProgmen].soundParam[i] = value;
+        progmem.progmem[actProgmen].soundParam[i] = value;
     }
 }
 int LayoutModel::getCurrLayout() const
@@ -455,51 +451,51 @@ void LayoutModel::setSegtext(int i, QString t) const
 
 int LayoutModel::getBasenote() const
 {
-    return progmem[actProgmen].basenote;
+    return progmem.progmem[actProgmen].basenote;
 }
 
 void LayoutModel::setBasenote(int v)
 {
-    progmem[actProgmen].basenote = v;
+    progmem.progmem[actProgmen].basenote = v;
 }
 
 bool LayoutModel::getBscale(int n)
 {
-    return progmem[actProgmen].bscale[n];
+    return progmem.progmem[actProgmen].bscale[n];
 }
 
 void LayoutModel::setBscale(int n, bool v)
 {
-    progmem[actProgmen].bscale[n]=v;
+    progmem.progmem[actProgmen].bscale[n]=v;
 }
 
 int LayoutModel::getTopoct() const
 {
-    return progmem[actProgmen].topoct;
+    return progmem.progmem[actProgmen].topoct;
 }
 
 void LayoutModel::setTopoct(int v)
 {
-    if(progmem[actProgmen].baseoct>v) {
-        progmem[actProgmen].topoct=progmem[actProgmen].baseoct;
-        progmem[actProgmen].baseoct=v;
+    if(progmem.progmem[actProgmen].baseoct>v) {
+        progmem.progmem[actProgmen].topoct=progmem.progmem[actProgmen].baseoct;
+        progmem.progmem[actProgmen].baseoct=v;
     } else {
-        progmem[actProgmen].topoct = v;
+        progmem.progmem[actProgmen].topoct = v;
     }
 }
 
 int LayoutModel::getBaseoct() const
 {
-    return progmem[actProgmen].baseoct;
+    return progmem.progmem[actProgmen].baseoct;
 }
 
 void LayoutModel::setBaseoct(int v)
 {
-    if(progmem[actProgmen].topoct<v) {
-        progmem[actProgmen].baseoct=progmem[actProgmen].topoct;
-        progmem[actProgmen].topoct=v;
+    if(progmem.progmem[actProgmen].topoct<v) {
+        progmem.progmem[actProgmen].baseoct=progmem.progmem[actProgmen].topoct;
+        progmem.progmem[actProgmen].topoct=v;
     } else {
-        progmem[actProgmen].baseoct=v;
+        progmem.progmem[actProgmen].baseoct=v;
     }
 }
 
@@ -723,9 +719,7 @@ void LayoutModel::resetLayout(int i) {
 }
 
 void LayoutModel::resetLayout(QString filename) {
-    layoutxml lxml;
-    lxml.setLayoutModel(this);
-    lxml.readXml(filename);
+    layxml.readXml(filename);
 }
 
 void LayoutModel::resetLayout() {
@@ -768,14 +762,14 @@ void LayoutModel::updateLayout()
             int note=0;
             if(ctly[seg]==-1) {
                 note=ctlx[seg];
-                if(progmem[actProgmen].basenote==ctlx[seg]) {
+                if(progmem.progmem[actProgmen].basenote==ctlx[seg]) {
                     pressed[seg]=1;
                 } else {
                     pressed[seg]=0;
                 }
             } else if(ctly[seg]==-2) {
-                note=(progmem[actProgmen].basenote+ctlx[seg]+1)%12;
-                if(progmem[actProgmen].bscale[ctlx[seg]]) {
+                note=(progmem.progmem[actProgmen].basenote+ctlx[seg]+1)%12;
+                if(progmem.progmem[actProgmen].bscale[ctlx[seg]]) {
                     pressed[seg]=1;
                 } else {
                     pressed[seg]=0;
@@ -784,7 +778,7 @@ void LayoutModel::updateLayout()
                 note=ctlx[seg]%12;
                 yrel[seg]=midi2fcent[(note+3)%12]/200+0.5;
             }
-            int oct=progmem[actProgmen].baseoct+progmem[actProgmen].topoct;
+            int oct=progmem.progmem[actProgmen].baseoct+progmem.progmem[actProgmen].topoct;
             oct/=2;
             oct*=12;
             midinote[seg]=note+oct;
@@ -824,23 +818,23 @@ void LayoutModel::updateLayout()
             if(ctly[seg]==-2) {
                 xrelq[seg]=actProgmen;
             } else if(ctly[seg]==-4) {
-                xrelq[seg]=progmem[actProgmen].topoct;
+                xrelq[seg]=progmem.progmem[actProgmen].topoct;
             } else if(ctly[seg]==-5) {
-                xrelq[seg]=progmem[actProgmen].baseoct;
+                xrelq[seg]=progmem.progmem[actProgmen].baseoct;
 //            } else if(ctly[seg]>0 && ctly[seg]<NSOUNDPARAM) {
-//                xrelq[seg]=progmem[actProgmen].soundParam[ctly[seg]];
+//                xrelq[seg]=progmem.progmem[actProgmen].soundParam[ctly[seg]];
             }
         } else if(segtype[seg]==5 ) {
             if(ctly[seg]>=102) {
-                yrelq[seg]=progmem[actProgmen].soundParam[ctly[seg]-102];
+                yrelq[seg]=progmem.progmem[actProgmen].soundParam[ctly[seg]-102];
             }
         }
     }
 
     // row 4: the scale
     //seg=scaleStartSeg;
-    for(int i=progmem[actProgmen].baseoct;i<=progmem[actProgmen].topoct;i++) {
-        int calcnote=progmem[actProgmen].basenote+i*12;
+    for(int i=progmem.progmem[actProgmen].baseoct;i<=progmem.progmem[actProgmen].topoct;i++) {
+        int calcnote=progmem.progmem[actProgmen].basenote+i*12;
         midinote[seg]=calcnote;
         freq[seg]=midi2f[calcnote];
         pitch[seg]=midi2fcent[(calcnote+3)%12]*4096.0f/100.0f;
@@ -855,7 +849,7 @@ void LayoutModel::updateLayout()
         segH[seg]=note2hue(calcnote);
         pressed[seg]=0;
         for(int j=0;j<11;j++) {
-            if(progmem[actProgmen].bscale[j]) {
+            if(progmem.progmem[actProgmen].bscale[j]) {
                 if(transMode) {
                     seg++;
                     segtype[seg]=1;
@@ -880,7 +874,7 @@ void LayoutModel::updateLayout()
             }
         }
         seg++;
-        if(i<progmem[actProgmen].topoct && transMode) {
+        if(i<progmem.progmem[actProgmen].topoct && transMode) {
             segtype[seg]=1;
             segText[seg]="";
             pressed[seg]=0;
@@ -924,133 +918,6 @@ void LayoutModel::setAllChan(int v)
     setAll(nsegsmax,chan,v);
 }
 
-
-void LayoutModel::readProgmemXml(QString filename)
-{
-    QXmlStreamReader xmlr;
-    QFile file(filename);
-    // default initial prog memory
-    //qDebug() << "reading progmem " << filename;
-    if(!file.exists()) {
-        //qDebug() << "init progmem file not exist ";
-        for(int i=0;i<NPROGMEM;i++) {
-            progmem[i].basenote=i%5;
-            progmem[i].baseoct=3;
-            progmem[i].topoct=5;
-            for(int j=0;j<11;j++) {
-                progmem[i].bscale[j]=false;
-            }
-            progmem[i].bscale[i]=true;
-            progmem[i].bscale[i%4]=true;
-
-            progmem[i].soundParam[0]=2;     // waveform
-            progmem[i].soundParam[1]=10;    // attack
-            progmem[i].soundParam[2]=10;    // decay
-            progmem[i].soundParam[3]=127;   // sustain
-            progmem[i].soundParam[4]=64;    // release
-            progmem[i].soundParam[5]=0;     // cutoff
-            progmem[i].soundParam[6]=12*i;  // resonance
-            progmem[i].soundParam[7]=0;     // mod cutoff
-            progmem[i].soundParam[8]=0;     // mod resonance
-            progmem[i].soundParam[9]=100;   // volume
-        }
-        writeProgmemXml(filename);
-    }
-    if (!file.open(QFile::ReadOnly | QFile::Text)) {
-        return;
-        //qDebug() << "cannot read file " << filename;
-    }
-    xmlr.setDevice(&file);
-    if (xmlr.readNextStartElement()) {
-        if (xmlr.name() == "misucoprogmem" && xmlr.attributes().value("version") == "1.0") {
-
-            int row=0;
-
-            while (xmlr.readNextStartElement() && row<NPROGMEM) {
-                if (xmlr.name() == "prog") {
-                    progmem[row].basenote=xmlr.attributes().value("basenote").toString().toInt();
-                    progmem[row].baseoct=xmlr.attributes().value("baseoct").toString().toInt();
-                    progmem[row].topoct=xmlr.attributes().value("topoct").toString().toInt();
-                    progmem[row].bscale[0]=(bool)xmlr.attributes().value("bscale0").toString().toInt();
-                    progmem[row].bscale[1]=(bool)xmlr.attributes().value("bscale1").toString().toInt();
-                    progmem[row].bscale[2]=(bool)xmlr.attributes().value("bscale2").toString().toInt();
-                    progmem[row].bscale[3]=(bool)xmlr.attributes().value("bscale3").toString().toInt();
-                    progmem[row].bscale[4]=(bool)xmlr.attributes().value("bscale4").toString().toInt();
-                    progmem[row].bscale[5]=(bool)xmlr.attributes().value("bscale5").toString().toInt();
-                    progmem[row].bscale[6]=(bool)xmlr.attributes().value("bscale6").toString().toInt();
-                    progmem[row].bscale[7]=(bool)xmlr.attributes().value("bscale7").toString().toInt();
-                    progmem[row].bscale[8]=(bool)xmlr.attributes().value("bscale8").toString().toInt();
-                    progmem[row].bscale[9]=(bool)xmlr.attributes().value("bscale9").toString().toInt();
-                    progmem[row].bscale[10]=(bool)xmlr.attributes().value("bscale10").toString().toInt();
-                    for(int i=0;i<NSOUNDPARAM;i++) {
-                        QString attrName;
-                        attrName.sprintf("soundparam%d",i);
-                        progmem[row].soundParam[i]=xmlr.attributes().value(attrName).toInt();
-                    }
-                    xmlr.skipCurrentElement();
-                    row++;
-                } else {
-                    xmlr.skipCurrentElement();
-                }
-            }
-        } else {
-            xmlr.raiseError(QObject::tr("The file is not a MISUCO version 1.0 file."));
-        }
-    }
-    file.close();
-}
-
-void LayoutModel::writeProgmemXml(QString filename)
-{
-    QXmlStreamWriter xml;
-    QFile file(filename);
-    if (!file.open(QFile::WriteOnly | QFile::Text)) {
-        return;
-        //qDebug() << "cannot write file " << filename;
-    }
-    //qDebug() << "writing progmem file " << filename;
-
-    xml.setDevice(&file);
-    QString att;
-    QString attname;
-
-    xml.writeStartDocument();
-    xml.writeDTD("<!DOCTYPE misuco>");
-    xml.writeStartElement("misucoprogmem");
-    xml.writeAttribute("version", "1.0");
-
-    for (int row = 0; row < NPROGMEM; row++) {
-        xml.writeStartElement("prog");
-
-        att.sprintf("%d",progmem[row].basenote);
-        xml.writeAttribute("basenote",att);
-
-        att.sprintf("%d",progmem[row].baseoct);
-        xml.writeAttribute("baseoct",att);
-
-        att.sprintf("%d",progmem[row].topoct);
-        xml.writeAttribute("topoct",att);
-
-        for(int i=0;i<NSOUNDPARAM;i++) {
-            att.sprintf("%d",progmem[row].soundParam[i]);
-            QString attrName;
-            attrName.sprintf("soundparam%d",i);
-            xml.writeAttribute(attrName,att);
-        }
-
-        for(int j=0;j<11;j++) {
-            att.sprintf("%d",(int)progmem[row].bscale[j]);
-            attname.sprintf("bscale%d",j);
-            xml.writeAttribute(attname,att);
-        }
-
-        xml.writeEndElement();
-    }
-    xml.writeEndDocument();
-    file.close();
-}
-
-
 void LayoutModel::setActProgmem(int n)
 {
     // restore new setup
@@ -1061,5 +928,15 @@ void LayoutModel::setActProgmem(int n)
 bool LayoutModel::getEditMode() const
 {
     return editMode;
+}
+
+void LayoutModel::readProgmemXml(QString filename)
+{
+    progmem.readProgmemXml(filename);
+}
+
+void LayoutModel::writeProgmemXml(QString filename)
+{
+    progmem.writeProgmemXml(filename);
 }
 

@@ -1,27 +1,21 @@
-#include <QFile>
-#include "layoutxml.h"
 #include <QDebug>
+#include "layoutmodel.h"
 
-layoutxml::layoutxml()
+LayoutXml::LayoutXml()
 {
 }
 
-void layoutxml::readXml(QString filename)
+void LayoutXml::readXml(QString filename)
 {
     QFile file(filename);
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
-        /*
-        QMessageBox::warning(this, tr("QXmlStream Bookmarks"),
-                             tr("Cannot read file %1:\n%2.")
-                             .arg(fileName)
-                             .arg(file.errorString()));
-                             */
-        return;
         //qDebug("cannot read file");
+        return;
     }
     //qDebug() << " opened " << filename;
     xmlr.setDevice(&file);
     if (xmlr.readNextStartElement()) {
+        //qDebug() << " xmlr.name() " << xmlr.name();
         if (xmlr.name() == "misuco" && xmlr.attributes().value("version") == "1.0")
             readLayout();
         else
@@ -30,36 +24,11 @@ void layoutxml::readXml(QString filename)
     file.close();
 }
 
-void layoutxml::writeXml(QString filename)
+void LayoutXml::writeXml(QString filename)
 {
     QFile file(filename);
     file.open(QIODevice::WriteOnly);
-
     xml.setDevice(&file);
-/*
- *
- *  int getNrows() const;
-    int getNsegs() const;
-
-    int getRowheightpx(int i) const;
-    int getRowheightmax() {return rowheightmax;}
-    int getRowheight(int i) {return rowheight[i];}
-    int getNseg(int i) const;
-
-    int getSegwidth(int i) const;
-    int getSegwidthmax(int i) const;
-    int getSegwidthpx(int i) const;
-    float getNote(int i) const;
-    int getMidiNote(int i) const;
-    int getCtlx(int i) const;
-    int getCtly(int i) const;
-    int getChan(int i) const;
-    int getPressed(int i) const;
-    int getSegtype(int i) const;
-    QString * getSegText(int i) const;
-    int getSegH(int i) const;
-
- */
     int i=0;
     QString att;
 
@@ -109,7 +78,7 @@ void layoutxml::writeXml(QString filename)
 
 }
 
-void layoutxml::readLayout() {
+void LayoutXml::readLayout() {
     int row=0;
     int seg=0;
     int nrowseg=0;

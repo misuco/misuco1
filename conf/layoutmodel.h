@@ -19,14 +19,38 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef LAYOUTMODEL_H
 #define LAYOUTMODEL_H
 #include <QString>
+#include "progmem.h"
+#include "layoutxml.h"
 
+#ifndef LAYOUTXML_H
+#define LAYOUTXML_H
 
-#define NSOUNDPARAM 10
-#define NPROGMEM 11
+#include <QFile>
+#include <QXmlStreamReader>
+#include <QXmlStreamWriter>
+
+class LayoutModel;
+class LayoutXml
+{
+public:
+    LayoutXml();
+    void setLayoutModel(LayoutModel* l) {layout=l;}
+    void readXml(QString filename);
+    void writeXml(QString filename);
+
+private:
+    QXmlStreamWriter xml;
+    QXmlStreamReader xmlr;
+    LayoutModel * layout;
+    void readLayout();
+    void writeLayout();
+};
+
+#endif // LAYOUTXML_H
 
 class LayoutModel
 {
-    friend class layoutxml;
+    friend class LayoutXml;
 public:
     LayoutModel();
     void calcGeo(int w, int h);
@@ -135,11 +159,12 @@ public:
     void resetLayout(QString filename);
     void resetLayout();
 
-    void readProgmemXml(QString filename);
-    void writeProgmemXml(QString filename);
     void setActProgmem(int n);
 
     bool getEditMode() const;
+
+    void readProgmemXml(QString filename);
+    void writeProgmemXml(QString filename);
 
 private:
     // view and event parameters
@@ -186,17 +211,8 @@ private:
     // scale generator parameters
     bool transMode;     // transistion areas between segments
 
-    // program memory
-    struct prog {
-        int basenote;
-        int baseoct;
-        int topoct;
-        bool bscale[11];
-        int soundParam[NSOUNDPARAM];
-    };
-
-    prog progmem[NPROGMEM];
-
+    LayoutXml layxml;
+    ProgMem progmem;
     int actProgmen;
 
     // here we declare from which part the performance area starts

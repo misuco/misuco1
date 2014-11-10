@@ -14,7 +14,7 @@ void ProgMem::readProgmemXml(QString filename)
         filename=":/conf/prog.xml";
         file.setFileName(filename);
     }
-    qDebug() << "reading progmem " << filename;
+    //qDebug() << "reading progmem " << filename;
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
         //qDebug() << "cannot read file " << filename;
         return;

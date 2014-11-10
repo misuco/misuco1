@@ -187,7 +187,7 @@ namespace synth {
         }
     }
     
-    void Controller::GetInt32Sapmles(long* buffer, int size) {
+    void Controller::GetInt32Sapmles(int* buffer, int size) {
         //qDebug() << "get samples " <<  size << " from " <<  buffer;
         for (int i = 0; i < size; ++i) {
             buffer[i] = GetSample()* 16777216L;

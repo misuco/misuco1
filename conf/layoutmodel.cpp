@@ -26,8 +26,11 @@ LayoutModel::LayoutModel()
     widthPx=1;
     heightPx=1;
     fontsize=1;
-    //font="Arial";
+#ifdef RC1_IOS
     font="DIN Alternate";
+#else
+    font="Roboto";
+#endif
     nrowsmax=32;
     nsegsmax=32*32;
     nseg = new int[nrowsmax];
@@ -44,12 +47,6 @@ LayoutModel::LayoutModel()
     segH = new int[nsegsmax];
     xrel = new float[nsegsmax];
     yrel = new float[nsegsmax];
-    /* put numbers as text
-    for(int i=0;i<nsegsmax;i++) {
-        segText[i].setNum(i);
-        segH[i]=i*10%255;
-    }
-    */
     layxml.setLayoutModel(this);
 
     segtype = new int[nsegsmax];
@@ -167,7 +164,11 @@ void LayoutModel::calcGeo(int w, int h)
             i++;
         }
     }
+#ifdef RC1_IOS
     fontsize=heightPx/20;
+#else
+    fontsize=heightPx/30;
+#endif
     fontsizeS=fontsize/2;
 }
 

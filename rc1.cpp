@@ -422,21 +422,14 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
             }
         }
 
-        if(path=="/chn") {
-            if(dl.size()==1) {
-                chan=dl.at(0).toInt();
-                layout->setAllChan(chan );
-            }
-        }
-
         if(path=="/dim") {
-            if(dl.size()<16) {
+            if(dl.size()<=32) {
                 layout->setNrows(dl.size());
                 int seg=0;
                 for(int i=0;i<dl.size();i++) {
                     int nseg=dl.at(i).toInt();
-                    if(nseg>16) {
-                        nseg=16;
+                    if(nseg>32) {
+                        nseg=32;
                     }
                     layout->setNseg(i,nseg);
                     layout->setRowheight(i,1);
@@ -451,13 +444,41 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
                 layout->setNsegs(seg);
                 //qDebug() << "set nsegs " << seg;
                 layout->setRowheightmax(dl.size());
-                layout->setScaleStartSeg(0);
-                layout->updateLayout();
+                //layout->setScaleStartSeg(0);
+                //layout->updateLayout();
+                for(int doseg=0;doseg<=seg;) {
+                    doseg=layout->generateScale(doseg);
+                }
                 layout->calcGeo();
             }
         }
 
-        if(path=="/val") {
+        if(path=="/dimxy") {
+            if(dl.size()==2) {
+                int width=dl.at(0).toInt();
+                int height=dl.at(1).toInt();
+                qDebug() << "dimxy " << width << " " << height;
+                if(width<=32 && height<=32) {
+                    layout->setNrows(height);
+                    for(int i=0;i<height;i++) {
+                        layout->setNseg(i,width);
+                        layout->setRowheight(i,1);
+                        layout->setSegwidthmax(i,width);
+                    }
+                    int nsegs=width*height;
+                    qDebug() << "total segs " << nsegs;
+                    layout->setNsegs(nsegs);
+                    layout->setRowheightmax(height);
+                    for(int doseg=0;doseg<nsegs;) {
+                        doseg=layout->generateScale(doseg);
+                        qDebug() << "do segs " << doseg;
+                    }
+                    layout->calcGeo();
+                }
+            }
+        }
+
+        if(path=="/freq") {
             if(dl.size()<=layout->getNsegs()) {
                 for(int i=0;i<dl.size();i++) {
                     layout->setFreq(i,dl.at(i).toFloat());
@@ -466,7 +487,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
             }
         }
 
-        if(path=="/valint") {
+        if(path=="/midinote") {
             if(dl.size()<=layout->getNsegs()) {
                 for(int i=0;i<dl.size();i++) {
                     layout->setMidinote(i,dl.at(i).toInt());
@@ -479,7 +500,14 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
             //qDebug() << "osc get type size " << dl.size() << " nsegs " << layout->getNsegs();
             if(dl.size()<=layout->getNsegs()) {
                 for(int i=0;i<dl.size();i++) {
-                    layout->setSegtype(i,dl.at(i).toInt());
+                    int segtype=dl.at(i).toInt();
+                    if(segtype==0 ||
+                       (segtype==1 &&   // for segtype 1 both neighbors must be 0
+                       i>0 && i+1<dl.size() &&
+                       dl.at(i-1)==0 &&
+                       dl.at(i+1)==0)) {
+                        layout->setSegtype(i,segtype);
+                    }
                 }
                 //qDebug() << "osc set type";
                 //update();
@@ -489,7 +517,10 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
         if(path=="/chan") {
             if(dl.size()<=layout->getNsegs()) {
                 for(int i=0;i<dl.size();i++) {
-                    layout->setChan(i,dl.at(i).toInt());
+                    int chan=dl.at(i).toInt();
+                    if(chan>0) {
+                        layout->setChan(i,chan);
+                    }
                 }
             }
         }

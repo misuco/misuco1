@@ -7,51 +7,6 @@
 #X obj 541 135 ctlout 123 0 1;
 #X msg 541 88 0;
 #X text 546 108 all notes off;
-#X obj 317 244 shell;
-#X msg 296 206 /home/c1audio/rc1/rc1/puredata/xdotool.sh \$1 \$2 \$3
-;
-#X obj 369 468 sendOSC;
-#X msg 438 309 connect 255.255.255.255 3333;
-#X msg 455 357 send /chn 2;
-#X msg 462 387 send /chn 1;
-#X msg 380 265 connect 192.168.11.111 3333;
-#X msg 408 287 connect 192.168.11.112 3333;
-#X msg 468 427 send /chn 0;
-#X msg 224 438 disconnect;
-#X msg 362 239 connect 192.168.11.135 3333;
-#X msg 533 470 send /dim 3 3 3;
-#X msg 535 541 send /type 0 0 0 0 0 0 0 0 0;
-#X msg 561 444 send /dim 6 3;
-#X msg 445 334 connect 192.168.11.255 3333;
-#X msg 540 587 send /val 1000 1100 1200 1300 1400 1500 1600 1700 1800
-1900;
-#X msg 614 361 send /dim 9 9 9;
-#X msg 841 419 send /type 0 1 0 1 0 1 0 1 0 0 1 0 1 0 1 0 1 0 0 1 0
-1 0 1 0 1 0;
-#X msg 764 345 send /valint 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
-17 18 19 20 21 22 23 24 25 26 27;
-#X msg 771 376 send /txt 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17
-18 19 20 21 22 23 24 25 26 27;
-#X msg 722 296 send /clrtxt 1 \, send /clrtxt 2;
-#X msg 760 199 send /valint 60 61 62 63 64 65 66 67 68 69 70 71 72
-73 74 75 76 77 78 79 80 81 82 83 84 85 86;
-#X msg 69 545 send /dim 7 \, send /valint 60 62 64 66 67 70 72 \, send
-/type 0 1 0 1 0 1 0 \, send /txt 1 1 2 2 3 3 4 \, send /clrtxt 1 \,
-send /clrtxt 3 \, send /clrtxt 5 \, send /ctly 2 2 2 2 2 2 2 \, send
-/chan 0 0 0 0 0 0 0;
-#X msg 81 649 send /dim 7 1 \, send /valint 60 62 5 5 5 5 5 \, send
-/type 5 5 5 5 5 5 5 4 \, send /txt 1 2 3 4 5 6 7 geilo \, send /ctlx
-100 100 10 10 10 10 10 10 \, send /ctly 1 2 3 4 5 6 7 8 \, send /hue
-10 20 30 40 50 60 70 \, send /chan 1 2 3 4 5 6 7 8;
-#X msg 308 741 send /reset;
-#X msg 646 727 send /dim 10 10 10 10 10 10 10 10 10 10 10 10;
-#X msg 313 798 send /loadbg http://redutodorock.com.br/redutodorock/site/wp-content/uploads/2011/11/Amy-Winehouse.jpeg
-\, send /painter 1 0;
-#X msg 533 510 send /type 0 1 0 0 1 0 1 1 0;
-#X msg 125 733 send /cents 2 150;
-#X msg 116 762 send /cents 0 10 20 30 40 50 60 70 80 90 100 110;
-#X msg 119 790 send /cents 0 100 200 300 400 500 600 700 800 900 1000
-1100;
 #X obj 169 86 OSCroute /cc /note /pitch /pc /alloff;
 #X obj 151 121 unpack s 0 0 0;
 #X obj 240 126 unpack s 0 0 0;
@@ -59,49 +14,20 @@ send /clrtxt 3 \, send /clrtxt 5 \, send /ctly 2 2 2 2 2 2 2 \, send
 #X obj 434 134 unpack s 0 0;
 #X obj 147 37 dumpOSC 3150;
 #X connect 6 0 5 0;
-#X connect 9 0 8 0;
-#X connect 11 0 10 0;
-#X connect 12 0 10 0;
-#X connect 13 0 10 0;
-#X connect 14 0 10 0;
-#X connect 15 0 10 0;
-#X connect 16 0 10 0;
-#X connect 17 0 10 0;
-#X connect 18 0 10 0;
-#X connect 19 0 10 0;
-#X connect 20 0 10 0;
-#X connect 21 0 10 0;
-#X connect 22 0 10 0;
-#X connect 23 0 10 0;
-#X connect 24 0 10 0;
-#X connect 25 0 10 0;
-#X connect 26 0 10 0;
-#X connect 27 0 10 0;
-#X connect 28 0 10 0;
-#X connect 29 0 10 0;
-#X connect 30 0 10 0;
-#X connect 31 0 10 0;
-#X connect 32 0 10 0;
-#X connect 33 0 10 0;
-#X connect 34 0 10 0;
-#X connect 35 0 10 0;
-#X connect 36 0 10 0;
-#X connect 37 0 10 0;
-#X connect 38 0 10 0;
-#X connect 39 0 40 0;
-#X connect 39 1 41 0;
-#X connect 39 2 42 0;
-#X connect 39 3 43 0;
-#X connect 39 4 5 0;
-#X connect 40 1 1 2;
-#X connect 40 2 1 1;
-#X connect 40 3 1 0;
-#X connect 41 1 2 2;
-#X connect 41 2 2 0;
-#X connect 41 3 2 1;
-#X connect 42 1 3 1;
-#X connect 42 2 3 0;
-#X connect 43 1 4 1;
-#X connect 43 2 4 0;
-#X connect 44 0 39 0;
-#X connect 44 0 0 0;
+#X connect 8 0 9 0;
+#X connect 8 1 10 0;
+#X connect 8 2 11 0;
+#X connect 8 3 12 0;
+#X connect 8 4 5 0;
+#X connect 9 1 1 2;
+#X connect 9 2 1 1;
+#X connect 9 3 1 0;
+#X connect 10 1 2 2;
+#X connect 10 2 2 0;
+#X connect 10 3 2 1;
+#X connect 11 1 3 1;
+#X connect 11 2 3 0;
+#X connect 12 1 4 1;
+#X connect 12 2 4 0;
+#X connect 13 0 8 0;
+#X connect 13 0 0 0;

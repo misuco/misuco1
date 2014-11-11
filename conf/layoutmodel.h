@@ -166,6 +166,8 @@ public:
     void readProgmemXml(QString filename);
     void writeProgmemXml(QString filename);
 
+    int generateScale(int seg);
+
 private:
     // view and event parameters
     int nrows;

@@ -124,10 +124,6 @@ LayoutModel::LayoutModel()
     ctly[0]=2;
     segH[0]=100;
     segBorder=0;
-
-
-//    calcGeo(200,200);
-//    updateLayout();
 }
 
 void LayoutModel::calcGeo()
@@ -477,6 +473,12 @@ int LayoutModel::getTopoct() const
 
 void LayoutModel::setTopoct(int v)
 {
+    if(v>10) {
+        v=10;
+    }
+    if(v<0) {
+        v=0;
+    }
     if(progmem.progmem[actProgmen].baseoct>v) {
         progmem.progmem[actProgmen].topoct=progmem.progmem[actProgmen].baseoct;
         progmem.progmem[actProgmen].baseoct=v;
@@ -492,6 +494,12 @@ int LayoutModel::getBaseoct() const
 
 void LayoutModel::setBaseoct(int v)
 {
+    if(v>10) {
+        v=10;
+    }
+    if(v<0) {
+        v=0;
+    }
     if(progmem.progmem[actProgmen].topoct<v) {
         progmem.progmem[actProgmen].baseoct=progmem.progmem[actProgmen].topoct;
         progmem.progmem[actProgmen].topoct=v;
@@ -831,9 +839,19 @@ void LayoutModel::updateLayout()
             }
         }
     }
+    seg=generateScale(seg);
+    nseg[scaleRow]=seg-scaleStartSeg;
+    segwidthmax[scaleRow]=seg-scaleStartSeg;
+    nsegs=seg;
+    calcGeo(widthPx,heightPx);
+}
 
+int LayoutModel::generateScale(int seg) {
     // row 4: the scale
     //seg=scaleStartSeg;
+    if(seg>=nsegsmax) return seg;
+    int startseg=seg; // save startseg to count added segs
+
     for(int i=progmem.progmem[actProgmen].baseoct;i<=progmem.progmem[actProgmen].topoct;i++) {
         int calcnote=progmem.progmem[actProgmen].basenote+i*12;
         midinote[seg]=calcnote;
@@ -853,12 +871,16 @@ void LayoutModel::updateLayout()
             if(progmem.progmem[actProgmen].bscale[j]) {
                 if(transMode) {
                     seg++;
+                    if(seg>=nsegsmax) return seg;
                     segtype[seg]=1;
                     segText[seg]="";
                     segwidth[seg]=1;
+                    ctlx[seg]=1;
+                    ctly[seg]=2;
                     pressed[seg]=0;
                 }
                 seg++;
+                if(seg>=nsegsmax) return seg;
                 segtype[seg]=0;
                 segwidth[seg]=1;
                 int thisnote=calcnote+j+1;
@@ -875,29 +897,59 @@ void LayoutModel::updateLayout()
             }
         }
         seg++;
+        if(seg>=nsegsmax) return seg;
         if(i<progmem.progmem[actProgmen].topoct && transMode) {
             segtype[seg]=1;
             segText[seg]="";
+            segwidth[seg]=1;
+            pressed[seg]=0;
+            ctlx[seg]=1;
+            ctly[seg]=2;
+            seg++;
+            if(seg>=nsegsmax) return seg;
+        }
+    }
+
+    // it sounds nice if an octave finishes
+    // on top with the first note
+    //
+
+    // but only, if there is more than 1 seg
+    if(seg>startseg+1) {
+
+        // is there enough space in transMode?
+        if(transMode) {
+            if(seg+1<nsegsmax) {
+                segtype[seg]=1;
+                segText[seg]="";
+                segwidth[seg]=1;
+                pressed[seg]=0;
+                ctlx[seg]=1;
+                ctly[seg]=2;
+                seg++;
+            }
+        }
+
+        // draw top segment only
+        // in case that we're  not at the really upper end
+        // border (nsegsmax) of the seg storage
+        if(!(transMode && seg+1>nsegsmax)) {
+            int calcnote=progmem.progmem[actProgmen].basenote+(progmem.progmem[actProgmen].topoct+1)*12;
+            midinote[seg]=calcnote;
+            freq[seg]=midi2f[calcnote];
+            segText[seg]=midi2TextEU[calcnote%12];
+            segwidth[seg]=1;
+            segtype[seg]=0;
+            ctlx[seg]=1;
+            ctly[seg]=2;
+            segH[seg]=note2hue(calcnote);
             pressed[seg]=0;
             seg++;
         }
     }
-    /*
-    int calcnote=basenote+(topoct+1)*12;
-    valueint[seg]=calcnote;
-    value[seg]=midi2f[calcnote];
-    segText[seg]=midi2TextEU[calcnote%12];
-    segwidth[seg]=1;
-    segtype[seg]=0;
-    seg++;*/
-
-    if(scaleStartSeg>0) {
-        nseg[scaleRow]=seg-scaleStartSeg;
-        segwidthmax[scaleRow]=seg-scaleStartSeg;
-    }
-    nsegs=seg;
-    calcGeo(widthPx,heightPx);
+    return seg;
 }
+
 
 void LayoutModel::setSegH(int i, int v)
 {

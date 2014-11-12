@@ -44,8 +44,8 @@ send /clrtxt 3 \, send /clrtxt 5 \, send /ctly 2 2 2 2 2 2 2 \, send
 #X msg 540 587 send /freq 1000 1100 1200 1300 1400 1500 1600 1700 1800
 1900;
 #X msg 76 89 send /dim 16 16 16 16 16 16;
-#X msg 679 637 send /dimxy 32 32;
 #X msg 661 677 send /dimxy 21 23;
+#X msg 679 637 send /dimxy 31 32;
 #X connect 1 0 0 0;
 #X connect 3 0 2 0;
 #X connect 4 0 2 0;

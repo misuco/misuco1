@@ -18,7 +18,6 @@
  */
 #include <QDebug>
 #include <math.h>
-#include <QFile>
 #include "layoutmodel.h"
 
 LayoutModel::LayoutModel()
@@ -34,12 +33,17 @@ LayoutModel::LayoutModel()
     nrowsmax=32;
     nsegsmax=32*32;
     nseg = new int[nrowsmax];
+    setAll(nrowsmax,nseg,0);
     rowheight = new int[nrowsmax];
+    setAll(nrowsmax,rowheight,1);
     rowheightpx = new int[nrowsmax];
+    setAll(nrowsmax,rowheightpx,1);
     segwidth = new int[nsegsmax];
     setAll(nsegsmax,segwidth,1);
     segwidthpx = new int[nsegsmax];
+    setAll(nsegsmax,segwidthpx,1);
     segwidthmax=new int[nrowsmax];
+    setAll(nrowsmax,segwidthmax,1);
     freq = new float[nsegsmax];
     midinote = new int[nsegsmax];
     pitch = new int[nsegsmax];
@@ -525,23 +529,23 @@ void LayoutModel::setRowheight(int i, int v)
 
 void LayoutModel::setNrows(int v)
 {
-    if(v<nrowsmax) {
+    if(v<=nrowsmax && v>0) {
         nrows=v;
     }
 }
 
 void LayoutModel::setNseg(int i, int v)
 {
-    if(i<nrowsmax && v<nrowsmax) {
-        nsegs-=nseg[i];
+    if(i<=nrowsmax && v<=nrowsmax && i>=0 && v>0) {
+        //nsegs-=nseg[i];
         nseg[i]=v;
-        nsegs+=v;
+        //nsegs+=v;
     }
 }
 
 void LayoutModel::setNsegs(int v)
 {
-    if(v<nsegsmax) {
+    if(v>=0 && v<=nsegsmax) {
         nsegs=v;
     }
 }

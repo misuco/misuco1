@@ -457,7 +457,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
             if(dl.size()==2) {
                 int width=dl.at(0).toInt();
                 int height=dl.at(1).toInt();
-                qDebug() << "dimxy " << width << " " << height;
+                //qDebug() << "dimxy " << width << " " << height;
                 if(width<=32 && height<=32) {
                     layout->setNrows(height);
                     for(int i=0;i<height;i++) {
@@ -466,12 +466,12 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
                         layout->setSegwidthmax(i,width);
                     }
                     int nsegs=width*height;
-                    qDebug() << "total segs " << nsegs;
+                    //qDebug() << "total segs " << nsegs;
                     layout->setNsegs(nsegs);
                     layout->setRowheightmax(height);
                     for(int doseg=0;doseg<nsegs;) {
                         doseg=layout->generateScale(doseg);
-                        qDebug() << "do segs " << doseg;
+                        //qDebug() << "do segs " << doseg;
                     }
                     layout->calcGeo();
                 }

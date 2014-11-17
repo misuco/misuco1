@@ -1,4 +1,4 @@
-#N canvas 571 48 1273 875 10;
+#N canvas 17 150 1147 774 10;
 #X obj 317 244 shell;
 #X msg 296 206 /home/c1audio/rc1/rc1/puredata/xdotool.sh \$1 \$2 \$3
 ;
@@ -46,6 +46,10 @@ send /clrtxt 3 \, send /clrtxt 5 \, send /ctly 2 2 2 2 2 2 2 \, send
 #X msg 661 677 send /dimxy 21 23;
 #X msg 679 637 send /dimxy 32 32;
 #X msg 561 444 send /dim 32 32;
+#X msg 872 505 send /freq1 1 262;
+#X msg 869 544 send /freq1 1 \$1;
+#X obj 1026 485 vsl 15 220 440 880 0 0 empty empty empty 0 -9 0 10
+-262144 -1 -1 5300 1;
 #X connect 1 0 0 0;
 #X connect 3 0 2 0;
 #X connect 4 0 2 0;
@@ -77,3 +81,6 @@ send /clrtxt 3 \, send /clrtxt 5 \, send /ctly 2 2 2 2 2 2 2 \, send
 #X connect 30 0 2 0;
 #X connect 31 0 2 0;
 #X connect 32 0 2 0;
+#X connect 33 0 2 0;
+#X connect 34 0 2 0;
+#X connect 35 0 34 0;

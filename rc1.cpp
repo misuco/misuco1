@@ -74,8 +74,8 @@ RC1::RC1(QWidget *parent) :
 
 #ifdef RC1_LINUX
     storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
-    //  Android: /storage/emulated/0/Documents => not Persistent
-    //  Linux: /home/c1/Documents => Persistent
+    // Android: /storage/emulated/0/Documents => not Persistent
+    // Linux: /home/c1/Documents => Persistent
     // iOS: not Persistent???? But document exchange folder
 #elifdef RC1_IOS
     storagePath=QStandardPaths::writableLocation(QStandardPaths::DataLocation);
@@ -399,13 +399,13 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
     if(ignoreIndex==-1) {
         QList<QVariant> dl=data.toList();
 
-        if(path=="/ign") {
+        if(path=="/ignore") {
             if(dl.size()==1) {
                 ignoreAddr.append(QHostAddress(dl.at(0).toString()));
             }
         }
 
-        if(path=="/lst") {
+        if(path=="/listen") {
             if(dl.size()==1) {
                 int i=ignoreAddr.indexOf(QHostAddress(dl.at(0).toString()));
                 if(i>=0) {
@@ -414,7 +414,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
             }
         }
         
-        if(path=="/dst") {
+        if(path=="/dest") {
             if(dl.size()==2) {
                 senderAddress=QHostAddress(dl.at(0).toString());
                 senderPort=dl.at(1).toInt();
@@ -423,34 +423,29 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
         }
 
         if(path=="/dim") {
-            if(dl.size()<=32) {
-                layout->setNrows(dl.size());
-                int seg=0;
-                for(int i=0;i<dl.size();i++) {
-                    int nseg=dl.at(i).toInt();
-                    if(nseg>32) {
-                        nseg=32;
-                    }
-                    layout->setNseg(i,nseg);
-                    layout->setRowheight(i,1);
-                    layout->setSegwidthmax(i,nseg);
-                    for(int j=0;j<nseg;j++) {
-                        layout->setSegwidth(seg,1);
-                        layout->setPressed(seg,0);
-                        layout->setSegtype(seg,0);
-                        seg++;
-                    }
+            layout->setNrows(dl.size());
+            int seg=0;
+            for(int i=0;i<dl.size();i++) {
+                int nseg=dl.at(i).toInt();
+                layout->setNseg(i,nseg);
+                layout->setRowheight(i,1);
+                layout->setSegwidthmax(i,nseg);
+                for(int j=0;j<nseg;j++) {
+                    layout->setSegwidth(seg,1);
+                    layout->setPressed(seg,0);
+                    layout->setSegtype(seg,0);
+                    seg++;
                 }
-                layout->setNsegs(seg);
-                //qDebug() << "set nsegs " << seg;
-                layout->setRowheightmax(dl.size());
-                //layout->setScaleStartSeg(0);
-                //layout->updateLayout();
-                for(int doseg=0;doseg<=seg;) {
-                    doseg=layout->generateScale(doseg);
-                }
-                layout->calcGeo();
             }
+            layout->setNsegs(seg);
+            //qDebug() << "set nsegs " << seg;
+            layout->setRowheightmax(dl.size());
+            //layout->setScaleStartSeg(0);
+            //layout->updateLayout();
+            for(int doseg=0;doseg<=seg;) {
+                doseg=layout->generateScale(doseg);
+            }
+            layout->calcGeo();
         }
 
         if(path=="/dimxy") {
@@ -479,43 +474,75 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
         }
 
         if(path=="/freq") {
-            if(dl.size()<=layout->getNsegs()) {
+            if(dl.size()<=layout->nsegs_max) {
                 for(int i=0;i<dl.size();i++) {
-                    layout->setFreq(i,dl.at(i).toFloat());
+                    float freq=dl.at(i).toFloat();
+                    layout->setFreq(i,freq);
                 }
-                //update();
             }
         }
-
+        
+        if(path=="/freq1") {
+            if(dl.size()==2) {
+                int seg=dl.at(0).toInt();
+                float freq=dl.at(1).toFloat();
+                if(seg>=0 && seg<=layout->nsegs_max) {
+                    layout->setFreq(seg,freq);
+                }
+            }
+        }
+        
         if(path=="/midinote") {
-            if(dl.size()<=layout->getNsegs()) {
+            if(dl.size()<=layout->nsegs_max) {
                 for(int i=0;i<dl.size();i++) {
-                    layout->setMidinote(i,dl.at(i).toInt());
+                    int midinote=dl.at(i).toInt();
+                    layout->setMidinote(i,midinote);
                 }
-                //update();
             }
         }
-
+        
+        if(path=="/midinote1") {
+            if(dl.size()==2) {
+                int seg=dl.at(0).toInt();
+                int midinote=dl.at(1).toInt();
+                if(seg>=0 && seg<=layout->nsegs_max) {
+                    layout->setMidinote(seg,midinote);
+                }
+            }
+        }
+        
         if(path=="/type") {
             //qDebug() << "osc get type size " << dl.size() << " nsegs " << layout->getNsegs();
-            if(dl.size()<=layout->getNsegs()) {
+            if(dl.size()<=layout->nsegs_max) {
                 for(int i=0;i<dl.size();i++) {
                     int segtype=dl.at(i).toInt();
                     if(segtype==0 ||
                        (segtype==1 &&   // for segtype 1 both neighbors must be 0
-                       i>0 && i+1<dl.size() &&
-                       dl.at(i-1)==0 &&
-                       dl.at(i+1)==0)) {
-                        layout->setSegtype(i,segtype);
-                    }
+                        i>0 && i+1<dl.size() &&
+                        dl.at(i-1)==0 &&
+                        dl.at(i+1)==0)) {
+                           layout->setSegtype(i,segtype);
+                       }
                 }
-                //qDebug() << "osc set type";
-                //update();
             }
         }
-
+        
+        if(path=="/type1") {
+            if(dl.size()==2) {
+                int segtype=dl.at(0).toInt();
+                int i=dl.at(1).toInt();
+                if(segtype==0 ||
+                       (segtype==1 &&   // for segtype 1 both neighbors must be 0
+                        i>0 && i+1<dl.size() &&
+                        dl.at(i-1)==0 &&
+                        dl.at(i+1)==0)) {
+                           layout->setSegtype(i,segtype);
+                }
+            }
+        }
+        
         if(path=="/chan") {
-            if(dl.size()<=layout->getNsegs()) {
+            if(dl.size()<=layout->nsegs_max) {
                 for(int i=0;i<dl.size();i++) {
                     int chan=dl.at(i).toInt();
                     if(chan>0) {
@@ -526,7 +553,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
         }
 
         if(path=="/ctlx") {
-            if(dl.size()<=layout->getNsegs()) {
+            if(dl.size()<=layout->nsegs_max) {
                 for(int i=0;i<dl.size();i++) {
                     layout->setCtlx(i,dl.at(i).toInt());
                 }
@@ -534,7 +561,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
         }
 
         if(path=="/ctly") {
-            if(dl.size()<=layout->getNsegs()) {
+            if(dl.size()<=layout->nsegs_max) {
                 for(int i=0;i<dl.size();i++) {
                     layout->setCtly(i,dl.at(i).toInt());
                 }
@@ -542,7 +569,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
         }
 
         if(path=="/width") {
-            if(dl.size()<=layout->getNsegs()) {
+            if(dl.size()<=layout->nsegs_max) {
                 for(int i=0;i<dl.size();i++) {
                     layout->setSegwidth(i,dl.at(i).toInt());
                 }
@@ -551,7 +578,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
         }
 
         if(path=="/txt") {
-            if(dl.size()<=layout->getNsegs()) {
+            if(dl.size()<=layout->nsegs_max) {
                 for(int i=0;i<dl.size();i++) {
                     layout->setSegtext(i,dl.at(i).toString());
                 }
@@ -562,7 +589,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
         if(path=="/clrtxt") {
             if(dl.size()==1) {
                 int seg=dl.at(0).toInt();
-                if(seg<layout->getNsegs()) {
+                if(seg<layout->nsegs_max) {
                     layout->setSegtext(seg,"");
                 }
             }
@@ -876,7 +903,7 @@ return evstat;
 
 void RC1::transmitSoundParam()
 {
-    for(int i=0;i<NSOUNDPARAM;i++) {
+    for(uint i=0;i<layout->getSoundParamMax();i++) {
          sender->cc(chan,0,i+102,layout->getSoundParam(i));
     }
 }

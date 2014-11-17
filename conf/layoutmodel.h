@@ -53,161 +53,167 @@ class LayoutModel
     friend class LayoutXml;
 public:
     LayoutModel();
-    void calcGeo(int w, int h);
+    
+    const float freq_a=440;
+    const uint nrows_max=32;
+    const uint nsegs_max=32*32;       // size of segments memory
+    const uint midinote_max=151;
+    const float freq_max=calcMidi2Fequal(midinote_max); // 50175
+    
+    void calcGeo(uint w, uint h);
     void calcGeo();
 
-    int getWidth() const;
-    int getHeight() const;
+    uint getWidth() const;
+    uint getHeight() const;
 
     //layout
-    int getNrows() const;
-    int getRowheightpx(int i) const;
-    int getRowheightmax() {return rowheightmax;}
-    int getRowheight(int i) {return rowheight[i];}
-    int getNseg(int i) const;
-    int getNsegs() const;
-    int getSegwidth(int i) const;
-    int getSegwidthmax(int i) const;
-    int getSegwidthpx(int i) const;
-    QString * getSegText(int i) const;
-    int getSegH(int i) const;
+    uint getNrows() const;
+    uint getRowheightpx(uint i) const;
+    uint getRowheightmax() {return rowheightmax;}
+    uint getRowheight(uint i) {return rowheight[i];}
+    uint getNseg(uint i) const;
+    uint getNsegs() const;
+    uint getSegwidth(uint i) const;
+    uint getSegwidthmax(uint i) const;
+    uint getSegwidthpx(uint i) const;
+    QString * getSegText(uint i) const;
+    uint getSegH(uint i) const;
 
     // control
-    float getFreq(int i) const;
-    int getMidinote(int i) const;
-    int getPitch(int i) const;
-    int getCtlx(int i) const;
-    int getCtly(int i) const;
-    int getChan(int i) const;
-    int getPressed(int i) const;
-    int getSegtype(int i) const;
+    float getFreq(uint i) const;
+    uint getMidinote(uint i) const;
+    uint getPitch(uint i) const;
+    uint getCtlx(uint i) const;
+    uint getCtly(uint i) const;
+    uint getChan(uint i) const;
+    uint getPressed(uint i) const;
+    uint getSegtype(uint i) const;
 
-    void incPressed(int i);
-    void decPressed(int i);
-    void setPressed(int i, int v) const;
+    void incPressed(uint i);
+    void decPressed(uint i);
+    void setPressed(uint i, uint v) const;
 
-    void setFreq(int i, float v);
-    void setMidinote(int i, int v);
-    void setSegtype(int i, int v) const;
-    void setRowheight(int i, int v) const;
-    void setRowheightmax(int v);
-    void setSegwidth(int i, int v) const;
-    void setSegwidthmax(int i, int v) const;
-    void setChan(int i, int v) const;
-    void setCtlx(int i, int v) const;
-    void setCtly(int i, int v) const;
-    void setSegtext(int i, QString t) const;
+    void setFreq(uint i, float f);
+    void setMidinote(uint i, uint v);
+    void setSegtype(uint i, uint v) const;
+    void setRowheight(uint i, uint v) const;
+    void setRowheightmax(uint v);
+    void setSegwidth(uint i, uint v) const;
+    void setSegwidthmax(uint i, uint v) const;
+    void setChan(uint i, uint v) const;
+    void setCtlx(uint i, uint v) const;
+    void setCtly(uint i, uint v) const;
+    void setSegtext(uint i, QString t) const;
 
-    void setSegH(int i, int v);
-    void setAllCtlx(int v);
-    void setAllCtly(int v);
-    void setAllChan(int v);
-    int getBasenote() const;
-    void setBasenote(int v);
-    int getBasescale() const;
-    void setBasescale(int v);
-    bool getBscale(int n);
-    void setBscale(int n, bool v);
-    int getTopoct() const;
-    void setTopoct(int v);
-    int getBaseoct() const;
-    void setBaseoct(int v);
+    void setSegH(uint i, uint v);
+    void setAllCtlx(uint v);
+    void setAllCtly(uint v);
+    void setAllChan(uint v);
+    uint getBasenote() const;
+    void setBasenote(uint v);
+    uint getBasescale() const;
+    void setBasescale(uint v);
+    bool getBscale(uint n);
+    void setBscale(uint n, bool v);
+    uint getTopoct() const;
+    void setTopoct(uint v);
+    uint getBaseoct() const;
+    void setBaseoct(uint v);
     void setTransMode(bool t);
-    void setRowheightpx(int i, int v);
-    void setRowheight(int i, int v);
+    void setRowheightpx(uint i, uint v);
+    void setRowheight(uint i, uint v);
 
-    void setNrows(int v);
-    void setNseg(int i,int v);
-    void setNsegs(int v);
-    int getScalerow() const;
-    void setScaleStartSeg(int s);
+    void setNrows(uint v);
+    void setNseg(uint i,uint v);
+    void setNsegs(uint v);
+    uint getScalerow() const;
+    void setScaleStartSeg(uint s);
 
     void updateLayout();
 
-    int note2hue(int note);
-    int midi2freq(uint note);
+    uint note2hue(uint note);
+    float midi2freq(uint note);
     void setMidi2fcent(uint pos, float freq);
     void initMidi2f(uint n);
     void toggleEdit();
 
-    int getFontsize() const;
-    int getFontsizeS() const;
+    uint getFontsize() const;
+    uint getFontsizeS() const;
     QString getFont() const;
-    QString getMidi2Text(int midi) const;
-    QString getMidi2TextUrl(int midi) const;
+    QString getMidi2Text(uint midi) const;
+    QString getMidi2TextUrl(uint midi) const;
     double Log2(double n);
 
-    float getXrel(int i) const;
-    void setXrel(int i,float value);
-    float getYrel(int i) const;
-    void setYrel(int i,float value);
+    float getXrel(uint i) const;
+    void setXrel(uint i,float value);
+    float getYrel(uint i) const;
+    void setYrel(uint i,float value);
 
-    int getXrelq(int i) const;
-    void setXrelq(int i, int value);
-    int getYrelq(int i) const;
-    void setYrelq(int i, int value);
+    uint getXrelq(uint i) const;
+    void setXrelq(uint i, int value);
+    uint getYrelq(uint i) const;
+    void setYrelq(uint i, int value);
 
-    int getSoundParam(int i) const;
-    void setSoundParam(int i, int value);
+    uint getSoundParam(uint i) const;
+    uint getSoundParamMax() const;
+    void setSoundParam(uint i, uint value);
 
-    int getCurrLayout() const;
-    void setCurrLayout(int value);
+    uint getCurrLayout() const;
+    void setCurrLayout(uint value);
 
-    int getSegBorder() const;
+    uint getSegBorder() const;
 
-    void resetLayout(int i);
+    void resetLayout(uint i);
     void resetLayout(QString filename);
     void resetLayout();
 
-    void setActProgmem(int n);
+    void setActProgmem(uint n);
 
     bool getEditMode() const;
 
     void readProgmemXml(QString filename);
     void writeProgmemXml(QString filename);
 
-    int generateScale(int seg);
+    uint generateScale(uint seg);
 
 private:
     // view and event parameters
-    int nrows;
-    int nsegs;          // total number of active segments
-    int nrowsmax;
-    int nsegsmax;       // size of segments memory
+    uint nrows;
+    uint nsegs;          // total number of active segments
 
-    int *rowheight;
-    int rowheightmax;
-    int *rowheightpx;
-    int *nseg;          // segments per row
-    int *segwidth;
-    int *segwidthmax;
-    int *segwidthpx;
-    int *segtype;       // segmenttyp: 0=note, 1=transition, 2=layout
+    uint *rowheight;
+    uint rowheightmax;
+    uint *rowheightpx;
+    uint *nseg;          // segments per row
+    uint *segwidth;
+    uint *segwidthmax;
+    uint *segwidthpx;
+    uint *segtype;       // segmenttyp: 0=note, 1=transition, 2=layout
     float *freq;        // frequency
-    int *midinote;      // midi note 0...127
+    uint *midinote;      // midi note 0...127
     int *pitch;         // midi pitch -8191/8192
     float *xrel;
     float *yrel;
-    int *xrelq;
-    int *yrelq;
+    uint *xrelq;
+    uint *yrelq;
 
-    int *ctlx;
-    int *ctly;
-    int *chan;
-    int *pressed;
+    uint *ctlx;
+    uint *ctly;
+    uint *chan;
+    uint *pressed;
 
     // pure view parameters
-    int widthPx;
-    int heightPx;
-    int fontsize;
-    int fontsizeS;
+    uint widthPx;
+    uint heightPx;
+    uint fontsize;
+    uint fontsizeS;
     QString font;
     QString * segText;
-    int * segH;         // segment color hue
-    int segBorder;
+    uint * segH;         // segment color hue
+    uint segBorder;
 
     // view help parameters
-    int currLayout;
+    uint currLayout;
     bool editMode;
 
     // scale generator parameters
@@ -215,22 +221,21 @@ private:
 
     LayoutXml layxml;
     ProgMem progmem;
-    int actProgmen;
+    uint actProgmen;
 
     // here we declare from which part the performance area starts
-    int scaleStartSeg;
-    int scaleRow;
+    uint scaleStartSeg;
+    uint scaleRow;
 
     // lookup tables
     float *midi2fequal;  // equal tempered midi scale
     float *midi2fcent;   // microtuning scale
     float *midi2f;       // microtuned frequency scale
-    float freq_a;
     QString * midi2TextEU;
     QString * midi2TextUrl;
 
     // util function
-    void setAll(int n, int * d, int v);
+    void setAll(uint n, uint * d, uint v);
     float calcMidi2f(int x);
     void calcMidi2f();
     float calcMidi2Fequal(int x);

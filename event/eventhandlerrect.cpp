@@ -58,11 +58,11 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
     }
     
     // 2.b. translate to MisuEvent index iseg
-    int iy=0;
-    int ix=0;
-    int iseg=0;
-    int ysum=0;
-    int xsum=0;
+    uint iy=0;
+    uint ix=0;
+    uint iseg=0;
+    uint ysum=0;
+    uint xsum=0;
     while(p->getY()>ysum && iy<layout->getNrows()) {
         ysum+=layout->getRowheightpx(iy);
         iseg+=layout->getNseg(iy);

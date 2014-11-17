@@ -6,23 +6,25 @@
 #include <QXmlStreamWriter>
 #include <QFile>
 
-#define NSOUNDPARAM 10
-#define NPROGMEM 11
-
 class ProgMem
 {
 public:
     ProgMem();
     // program memory
+    
+    static const uint bscale_max=11;
+    static const uint soudnparam_max=10;
+    static const uint progmem_max=11;
+    
     struct prog {
-        int basenote;
-        int baseoct;
-        int topoct;
-        bool bscale[11];
-        int soundParam[NSOUNDPARAM];
+        uint basenote;
+        uint baseoct;
+        uint topoct;
+        bool bscale[bscale_max];
+        uint soundParam[soudnparam_max];
     };
 
-    prog progmem[NPROGMEM];
+    prog progmem[progmem_max];
 
     void readProgmemXml(QString filename);
     void writeProgmemXml(QString filename);

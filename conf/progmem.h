@@ -12,16 +12,16 @@ public:
     ProgMem();
     // program memory
     
-    static const uint bscale_max=11;
-    static const uint soudnparam_max=10;
-    static const uint progmem_max=11;
+    static const int bscale_max=11;
+    static const int soudnparam_max=10;
+    static const int progmem_max=11;
     
     struct prog {
-        uint basenote;
-        uint baseoct;
-        uint topoct;
+        int basenote;
+        int baseoct;
+        int topoct;
         bool bscale[bscale_max];
-        uint soundParam[soudnparam_max];
+        int soundParam[soudnparam_max];
     };
 
     prog progmem[progmem_max];

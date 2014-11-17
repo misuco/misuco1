@@ -727,12 +727,12 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
                     QDateTime ct = QDateTime::currentDateTime();
                     long t=ct.toMSecsSinceEpoch();
 
-                    quint32 sid=dl.at(1).toInt()%65536 + sourceId*65536;
+                    qint32 sid=dl.at(1).toInt()%65536 + sourceId*65536;
                     // session id:
                     // bit0-15: sid according message
                     // bit16-31: sourceId according to index in ip list
-                    quint16 xpos=dl.at(2).toFloat()*layout->getWidth();
-                    quint16 ypos=dl.at(3).toFloat()*layout->getHeight();
+                    qint16 xpos=dl.at(2).toFloat()*layout->getWidth();
+                    qint16 ypos=dl.at(3).toFloat()*layout->getHeight();
                     Qt::TouchPointState touchType=Qt::TouchPointMoved;
                     if(!tuioAlive.contains(sid)) {
                         tuioAlive.append(sid);
@@ -777,26 +777,6 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
 void RC1::resetStat()
 {
     fps=0;
-}
-
-void RC1::setPPSmin() {
-    ttl=500;
-    int cornerrad=10;
-    painterOn[0]=true;
-    prepainters[0]->setParam(0, 120);        // sPenAct
-    prepainters[0]->setParam(1, 120);        // lPenAct
-    prepainters[0]->setParam(2, 120);        // sPenPsv
-    prepainters[0]->setParam(3, 120);        // lPenPsv
-    prepainters[0]->setParam(4, 120);        // sBrushAct
-    prepainters[0]->setParam(5, 120);        // lBrushAct
-    prepainters[0]->setParam(6, 0);          // sBrushPsv
-    prepainters[0]->setParam(7, 0);          // lBrushPsv
-    prepainters[0]->setParam(8, 2);          // colorMode
-    prepainters[0]->setParam(9, 0);          // chue
-    prepainters[0]->setParam(10, cornerrad); // cradx
-    prepainters[0]->setParam(11, cornerrad); // crady
-    prepainters[0]->setParam(12, 1);         // gradients
-    prepainters[0]->setParam(13, 0);         // painttext
 }
 
 Storage *RC1::getStorage() const
@@ -903,7 +883,7 @@ return evstat;
 
 void RC1::transmitSoundParam()
 {
-    for(uint i=0;i<layout->getSoundParamMax();i++) {
+    for(int i=0;i<layout->getSoundParamMax();i++) {
          sender->cc(chan,0,i+102,layout->getSoundParam(i));
     }
 }

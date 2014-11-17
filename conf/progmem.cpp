@@ -24,7 +24,7 @@ void ProgMem::readProgmemXml(QString filename)
     if (xmlr.readNextStartElement()) {
         //qDebug() << "xmlr.name " << xmlr.name();
         if (xmlr.name() == "misucoprogmem" && xmlr.attributes().value("version") == "1.0") {
-            uint row=0;
+            int row=0;
             while (xmlr.readNextStartElement() && row<progmem_max) {
                 //qDebug() << "row " << row;
                 if (xmlr.name() == "prog") {
@@ -32,13 +32,13 @@ void ProgMem::readProgmemXml(QString filename)
                     progmem[row].baseoct=xmlr.attributes().value("baseoct").toString().toInt();
                     progmem[row].topoct=xmlr.attributes().value("topoct").toString().toInt();
                     
-                    for(uint j=0;j<bscale_max;j++) {
+                    for(int j=0;j<bscale_max;j++) {
                         QString attname;
                         attname.sprintf("bscale%d",j);
                         progmem[row].bscale[j]=(bool)xmlr.attributes().value(attname).toString().toInt();
                     }
                     
-                    for(uint i=0;i<soudnparam_max;i++) {
+                    for(int i=0;i<soudnparam_max;i++) {
                         QString attrName;
                         attrName.sprintf("soundparam%d",i);
                         progmem[row].soundParam[i]=xmlr.attributes().value(attrName).toInt();
@@ -74,7 +74,7 @@ void ProgMem::writeProgmemXml(QString filename)
     xml.writeStartElement("misucoprogmem");
     xml.writeAttribute("version", "1.0");
 
-    for (uint row = 0; row < progmem_max; row++) {
+    for (int row = 0; row < progmem_max; row++) {
         xml.writeStartElement("prog");
 
         att.sprintf("%d",progmem[row].basenote);
@@ -86,14 +86,14 @@ void ProgMem::writeProgmemXml(QString filename)
         att.sprintf("%d",progmem[row].topoct);
         xml.writeAttribute("topoct",att);
 
-        for(uint i=0;i<soudnparam_max;i++) {
+        for(int i=0;i<soudnparam_max;i++) {
             att.sprintf("%d",progmem[row].soundParam[i]);
             QString attrName;
             attrName.sprintf("soundparam%d",i);
             xml.writeAttribute(attrName,att);
         }
 
-        for(uint j=0;j<bscale_max;j++) {
+        for(int j=0;j<bscale_max;j++) {
             att.sprintf("%d",(int)progmem[row].bscale[j]);
             attname.sprintf("bscale%d",j);
             xml.writeAttribute(attname,att);

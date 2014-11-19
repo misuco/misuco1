@@ -220,7 +220,7 @@ void LayoutModel::setAll(int n, int *d, int v)
 
 int LayoutModel::getSegwidth(int i) const
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         return segwidth[i];
     } else {
         return 0;
@@ -238,7 +238,7 @@ int LayoutModel::getCtly(int i) const
 
 int LayoutModel::getChan(int i) const
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         return chan[i];
     } else {
         return 0;
@@ -247,7 +247,7 @@ int LayoutModel::getChan(int i) const
 
 int LayoutModel::getCtlx(int i) const
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         return ctlx[i];
     } else {
         return 0;
@@ -256,7 +256,7 @@ int LayoutModel::getCtlx(int i) const
 
 float LayoutModel::getFreq(int i) const
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         return freq[i];
     } else {
         return 0;
@@ -265,7 +265,7 @@ float LayoutModel::getFreq(int i) const
 
 int LayoutModel::getMidinote(int i) const
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         return midinote[i];
     } else {
         return 0;
@@ -274,7 +274,7 @@ int LayoutModel::getMidinote(int i) const
 
 int LayoutModel::getPitch(int i) const
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         return pitch[i];
     } else {
         return 0;
@@ -283,7 +283,7 @@ int LayoutModel::getPitch(int i) const
 
 int LayoutModel::getSegwidthpx(int i) const
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         return segwidthpx[i];
     } else {
         return 0;
@@ -301,7 +301,7 @@ int LayoutModel::getSegwidthmax(int i) const
 
 int LayoutModel::getPressed(int i) const
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         return pressed[i];
     } else {
         return 0;
@@ -310,7 +310,7 @@ int LayoutModel::getPressed(int i) const
 
 int LayoutModel::getSegtype(int i) const
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         return segtype[i];
     } else {
         return 0;
@@ -319,7 +319,7 @@ int LayoutModel::getSegtype(int i) const
 
 QString *LayoutModel::getSegText(int i) const
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         return &(segText[i]);
     } else {
         return NULL;
@@ -328,7 +328,7 @@ QString *LayoutModel::getSegText(int i) const
 
 int LayoutModel::getSegH(int i) const
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         return segH[i];
     } else {
         return 0;
@@ -337,14 +337,14 @@ int LayoutModel::getSegH(int i) const
 
 void LayoutModel::incPressed(int i)
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         pressed[i]++;
     }
 }
 
 void LayoutModel::decPressed(int i)
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         pressed[i]--;
     }
 }
@@ -357,7 +357,7 @@ double LayoutModel::Log2( double n )
 
 float LayoutModel::getXrel(int i) const
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         return xrel[i];
     } else {
         return 0;
@@ -366,14 +366,14 @@ float LayoutModel::getXrel(int i) const
 
 void LayoutModel::setXrel(int i,float value)
 {
-    if(i<nsegs_max && value>=0) {
+    if(i>=0 && i<nsegs_max && value>=0) {
         xrel[i] = value;
     }
 }
 
 float LayoutModel::getYrel(int i) const
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         return yrel[i];
     } else {
         return 0;
@@ -382,14 +382,14 @@ float LayoutModel::getYrel(int i) const
 
 void LayoutModel::setYrel(int i,float value)
 {
-    if(i<nsegs_max && value>=0) {
+    if(i>=0 && i<nsegs_max && value>=0) {
         yrel[i] = value;
     }
 }
 
 int LayoutModel::getXrelq(int i) const
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         return xrelq[i];
     } else {
         return 0;
@@ -398,14 +398,14 @@ int LayoutModel::getXrelq(int i) const
 
 void LayoutModel::setXrelq(int i, int value)
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         xrelq[i] = value;
     }
 }
 
 int LayoutModel::getYrelq(int i) const
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         return yrelq[i];
     } else {
         return 0;
@@ -414,7 +414,7 @@ int LayoutModel::getYrelq(int i) const
 
 void LayoutModel::setYrelq(int i, int value)
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         yrelq[i] = value;
     }
 }
@@ -457,13 +457,13 @@ int LayoutModel::getSegBorder() const
 
 void LayoutModel::setFreq(int i, float f)
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         if(f>=1.0f && f<=freq_max) {
             freq[i]=f;
             midinote[i]=round(Log2(f/(freq_a/64.0))*12.0-3);
             pitch[i]=calcPitch(midinote[i],f);
             segH[i]=note2hue(midinote[i]);
-            qDebug() << "LayoutModel::setFreq " << f << " midi " << midinote[i] << " pitch " << pitch[i];
+            //qDebug() << "LayoutModel::setFreq " << f << " midi " << midinote[i] << " pitch " << pitch[i];
         }
     }
 }
@@ -474,7 +474,7 @@ float LayoutModel::calcPitch(int midinote, float f) {
 
 void LayoutModel::setMidinote(int i, int v)
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         if(v<=midinote_max) {
             midinote[i]=v;
             freq[i]=midi2f[v];
@@ -486,8 +486,18 @@ void LayoutModel::setMidinote(int i, int v)
 
 void LayoutModel::setSegtype(int i, int v) const
 {
-    if(i<nsegs_max) {
-        segtype[i]=v;
+    if(i>=0 && i<nsegs_max) {
+        if(v==1) {
+            // for segtype 1 (transistion area)
+            // make sure, both neighbours are 0 (play area)
+            if(i>0 && i<nsegs_max-1) {
+                if(segtype[i+1]==0 && segtype[i-1]==0) {
+                    segtype[i]=v;
+                }
+            }
+        } else {
+            segtype[i]=v;
+        }
     }
 }
 
@@ -505,7 +515,7 @@ void LayoutModel::setRowheightmax(int v)
 
 void LayoutModel::setSegwidth(int i, int v) const
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         segwidth[i]=v;
     }
 }
@@ -519,35 +529,41 @@ void LayoutModel::setSegwidthmax(int i, int v) const
 
 void LayoutModel::setChan(int i, int v) const
 {
-    if(i<nsegs_max) {
-        chan[i]=v;
+    if(i>=0 && i<nsegs_max) {
+        if(v>=0 && v<16) {
+            chan[i]=v;
+        }
     }
 }
 
 void LayoutModel::setCtlx(int i, int v) const
 {
-    if(i<nsegs_max) {
-        ctlx[i]=v;
+    if(i>=0 && i<nsegs_max) {
+        if(v>=0 && v<=127) {
+            ctlx[i]=v;
+        }
     }
 }
 
 void LayoutModel::setCtly(int i, int v) const
 {
-    if(i<nsegs_max) {
-        ctly[i]=v;
+    if(i>=0 && i<nsegs_max) {
+        if(v>=0 && v<=127) {
+            ctly[i]=v;
+        }
     }
 }
 
 void LayoutModel::setPressed(int i, int v) const
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         pressed[i]=v;
     }
 }
 
 void LayoutModel::setSegtext(int i, QString t) const
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         segText[i]=t;
     }
 }
@@ -1055,7 +1071,7 @@ int LayoutModel::generateScale(int seg) {
 /*
 void LayoutModel::setSegH(int i, int v)
 {
-    if(i<nsegs_max) {
+    if(i>=0 && i<nsegs_max) {
         segH[i]=v;
     }
 }
@@ -1099,4 +1115,3 @@ void LayoutModel::writeProgmemXml(QString filename)
 {
     progmem.writeProgmemXml(filename);
 }
-

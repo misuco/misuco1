@@ -399,6 +399,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
     if(ignoreIndex==-1) {
         QList<QVariant> dl=data.toList();
 
+        /*
         if(path=="/ignore") {
             if(dl.size()==1) {
                 ignoreAddr.append(QHostAddress(dl.at(0).toString()));
@@ -413,6 +414,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
                 }
             }
         }
+         */
         
         if(path=="/dest") {
             if(dl.size()==2) {
@@ -448,7 +450,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
             layout->calcGeo();
         }
 
-        if(path=="/dimxy") {
+        if(path=="/dxy") {
             if(dl.size()==2) {
                 int width=dl.at(0).toInt();
                 int height=dl.at(1).toInt();
@@ -473,7 +475,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
             }
         }
 
-        if(path=="/freq") {
+        if(path=="/f") {
             if(dl.size()<=layout->nsegs_max) {
                 for(int i=0;i<dl.size();i++) {
                     float freq=dl.at(i).toFloat();
@@ -482,17 +484,24 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
             }
         }
         
-        if(path=="/freq1") {
+        if(path=="/f_s") {
             if(dl.size()==2) {
                 int seg=dl.at(0).toInt();
                 float freq=dl.at(1).toFloat();
-                if(seg>=0 && seg<=layout->nsegs_max) {
-                    layout->setFreq(seg,freq);
+                layout->setFreq(seg,freq);
+            }
+        }
+        
+        if(path=="/f_a") {
+            if(dl.size()==1) {
+                float freq=dl.at(0).toFloat();
+                for(int i=0;i<layout->getNsegs();i++) {
+                    layout->setFreq(i,freq);
                 }
             }
         }
         
-        if(path=="/midinote") {
+        if(path=="/mnote") {
             if(dl.size()<=layout->nsegs_max) {
                 for(int i=0;i<dl.size();i++) {
                     int midinote=dl.at(i).toInt();
@@ -501,12 +510,19 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
             }
         }
         
-        if(path=="/midinote1") {
+        if(path=="/mnote_s") {
             if(dl.size()==2) {
                 int seg=dl.at(0).toInt();
                 int midinote=dl.at(1).toInt();
-                if(seg>=0 && seg<=layout->nsegs_max) {
-                    layout->setMidinote(seg,midinote);
+                layout->setMidinote(seg,midinote);
+            }
+        }
+        
+        if(path=="/mnote_a") {
+            if(dl.size()==1) {
+                int midinote=dl.at(0).toInt();
+                for(int i=0;i<layout->nsegs_max;i++) {
+                    layout->setMidinote(i,midinote);
                 }
             }
         }
@@ -514,29 +530,40 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
         if(path=="/type") {
             //qDebug() << "osc get type size " << dl.size() << " nsegs " << layout->getNsegs();
             if(dl.size()<=layout->nsegs_max) {
+                int segtype1=0;
                 for(int i=0;i<dl.size();i++) {
                     int segtype=dl.at(i).toInt();
-                    if(segtype==0 ||
-                       (segtype==1 &&   // for segtype 1 both neighbors must be 0
-                        i>0 && i+1<dl.size() &&
-                        dl.at(i-1)==0 &&
-                        dl.at(i+1)==0)) {
-                           layout->setSegtype(i,segtype);
-                       }
+                    if(segtype==0) {
+                        layout->setSegtype(i,segtype);
+                        if(i>0) {
+                            // segtype 1 has to be set after both
+                            // neighbors are set
+                            // to make sure, it passes the neighbor check
+                            // (both neighbors need to be 0)
+                            if(segtype1==1) {
+                                layout->setSegtype(i-1,1);
+                            }
+                        }
+                    }
+                    segtype1=segtype; // store previous segtype
                 }
             }
         }
         
-        if(path=="/type1") {
+        if(path=="/type_s") {
             if(dl.size()==2) {
                 int segtype=dl.at(0).toInt();
                 int i=dl.at(1).toInt();
-                if(segtype==0 ||
-                       (segtype==1 &&   // for segtype 1 both neighbors must be 0
-                        i>0 && i+1<dl.size() &&
-                        dl.at(i-1)==0 &&
-                        dl.at(i+1)==0)) {
-                           layout->setSegtype(i,segtype);
+                if(segtype==0 || segtype==1 ) {
+                    layout->setSegtype(i,segtype);
+                }
+            }
+        }
+        
+        if(path=="/type_0") {
+            if(dl.size()==0) {
+                for(int i=0;i<layout->nsegs_max;i++) {
+                    layout->setSegtype(i, 0);
                 }
             }
         }
@@ -545,48 +572,99 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
             if(dl.size()<=layout->nsegs_max) {
                 for(int i=0;i<dl.size();i++) {
                     int chan=dl.at(i).toInt();
-                    if(chan>0) {
-                        layout->setChan(i,chan);
-                    }
+                    layout->setChan(i,chan);
                 }
             }
         }
-
+        
+        if(path=="/chan_s") {
+            if(dl.size()==2) {
+                int chan=dl.at(0).toInt();
+                int i=dl.at(1).toInt();
+                layout->setChan(i,chan);
+            }
+        }
+        
+        if(path=="/chan_a") {
+            if(dl.size()==1) {
+                int chan=dl.at(0).toInt();
+                for(int i=0;i<layout->nsegs_max;i++) {
+                    layout->setChan(i, chan);
+                }
+            }
+        }
+        
         if(path=="/ctlx") {
             if(dl.size()<=layout->nsegs_max) {
                 for(int i=0;i<dl.size();i++) {
-                    layout->setCtlx(i,dl.at(i).toInt());
+                    int ctl=dl.at(i).toInt();
+                    layout->setCtlx(i,ctl);
                 }
             }
         }
-
+        
+        if(path=="/ctlx_s") {
+            if(dl.size()==2) {
+                int ctl=dl.at(0).toInt();
+                int i=dl.at(1).toInt();
+                layout->setCtlx(i,ctl);
+            }
+        }
+        
+        if(path=="/ctlx_a") {
+            if(dl.size()==1) {
+                int ctl=dl.at(0).toInt();
+                for(int i=0;i<layout->nsegs_max;i++) {
+                    layout->setCtlx(i, ctl);
+                }
+            }
+        }
+        
         if(path=="/ctly") {
             if(dl.size()<=layout->nsegs_max) {
                 for(int i=0;i<dl.size();i++) {
-                    layout->setCtly(i,dl.at(i).toInt());
+                    int ctl=dl.at(i).toInt();
+                    layout->setCtly(i,ctl);
                 }
             }
         }
-
-        if(path=="/width") {
-            if(dl.size()<=layout->nsegs_max) {
-                for(int i=0;i<dl.size();i++) {
-                    layout->setSegwidth(i,dl.at(i).toInt());
-                }
-                layout->calcGeo();
+        
+        if(path=="/ctly_s") {
+            if(dl.size()==2) {
+                int ctl=dl.at(0).toInt();
+                int i=dl.at(1).toInt();
+                layout->setCtly(i,ctl);
             }
         }
-
+        
+        if(path=="/ctly_a") {
+            if(dl.size()==1) {
+                int ctl=dl.at(0).toInt();
+                for(int i=0;i<layout->nsegs_max;i++) {
+                    layout->setCtly(i, ctl);
+                }
+            }
+        }
+        
         if(path=="/txt") {
+            qDebug() << "osc /txt ";
             if(dl.size()<=layout->nsegs_max) {
                 for(int i=0;i<dl.size();i++) {
                     layout->setSegtext(i,dl.at(i).toString());
+                    qDebug() << layout->getSegText(i);
                 }
                 layout->calcGeo();
             }
         }
-
-        if(path=="/clrtxt") {
+        
+        if(path=="/txt_s") {
+            if(dl.size()==2) {
+                layout->setSegtext(dl.at(0).toInt(),dl.at(1).toString());
+                //layout->calcGeo();
+            }
+        }
+        
+        if(path=="/clrtxt_s") {
             if(dl.size()==1) {
                 int seg=dl.at(0).toInt();
                 if(seg<layout->nsegs_max) {
@@ -594,24 +672,82 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
                 }
             }
         }
-        if(path=="/cents") {
+        
+        if(path=="/clrtxt_a") {
+            if(dl.size()==0) {
+                for(int i=0;i<layout->nsegs_max;i++) {
+                    layout->setSegtext(i,"");
+                }
+            }
+        }
+        
+        if(path=="/cent_s") {
             if(dl.size()==2) {
                 int seg=dl.at(0).toInt();
                 if(seg>=0 && seg<=11) {
                     float cents=dl.at(1).toFloat();
-                    if(cents>=0 && cents<=1200) {
+                    if(cents>=-200 && cents<=200) {
                         layout->setMidi2fcent(seg,cents);
                         layout->updateLayout();
                     }
                 }
-            } else if(dl.size()==12) {
+            }
+        }
+        
+        if(path=="/cent_a") {
+            if(dl.size()==12) {
                 for(int i=0;i<12;i++) {
                     float cents=dl.at(i).toFloat();
-                    if(cents>=0 && cents<=1200) {
+                    if(cents>=-200 && cents<=200) {
                         layout->setMidi2fcent(i,cents);
                     }
                 }
-                layout->updateLayout();
+            }
+        }
+        
+        if(path=="/bscale_s") {
+            if(dl.size()==2) {
+                int seg=dl.at(0).toInt();
+                if(seg>=0 && seg<=11) {
+                    bool bsc=dl.at(1).toBool();
+                    layout->setBscale(seg, bsc);
+                }
+            }
+        }
+        
+        if(path=="/bscale_a") {
+            if(dl.size()==11) {
+                for(int i=0;i<11;i++) {
+                    bool bsc=dl.at(i).toBool();
+                    layout->setBscale(i, bsc);
+                }
+            }
+        }
+        
+        if(path=="/basenote") {
+            if(dl.size()==1) {
+                int note=dl.at(0).toInt();
+                if(note>=0 && note<=11) {
+                    layout->setBasenote(note);
+                }
+            }
+        }
+        
+        if(path=="/basenoct") {
+            if(dl.size()==1) {
+                int oct=dl.at(0).toInt();
+                if(oct>=0 && oct<=10) {
+                    layout->setBaseoct(oct);
+                }
+            }
+        }
+        
+        if(path=="/topoct") {
+            if(dl.size()==1) {
+                int oct=dl.at(0).toInt();
+                if(oct>=0 && oct<=10) {
+                    layout->setTopoct(oct);
+                }
             }
         }
 
@@ -620,6 +756,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
             layout->resetLayout();
         }
 
+        /*
         if(path=="/loadbg") {
             if(dl.size()==1) {
                 QString loadurl=dl.at(0).toString();
@@ -642,27 +779,6 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
                 }
             }
         }
-
-
-/*
- if(path=="/loadbg") {
- if(dl.size()==1) {
- QString loadurl=dl.at(0).toString();
- if(loadurl!="") {
- netxs->get(QNetworkRequest(QUrl(loadurl)));
- }
- }
- }
- 
- if(path=="/fs") {
- if(dl.size()==1) {
- if(dl.at(0).toInt()>0) {
- setWindowState(Qt::WindowFullScreen);
- } else {
- setWindowState(Qt::WindowNoState);
- }
- }
- }
  
         if(path=="/ttl") {
             if(dl.size()==1) {
@@ -675,42 +791,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
                 painterOn[dl.at(0).toInt()]=dl.at(1).toBool();
             }
         }
-        */
-
-/*
-        if(path=="/lxy") {
-            if(dl.size()==2) {
-                //layout->setXY(dl.at(0).toInt(),dl.at(1).toInt());
-            }
-        }
-
-        if(path=="/lsc") {
-            if(dl.size()==3) {
-                //layout->setScale(dl.at(0).toInt(),dl.at(1).toInt(),dl.at(2).toInt(),false);
-            }
-        }
-
-        if(path=="/ltx") {
-            if(dl.size()==2) {
-                layout->getSegText(dl.at(0).toInt())->clear();
-                layout->getSegText(dl.at(0).toInt())->append(dl.at(1).toString());
-            }
-        }
-
-        if(path=="/lxc") {
-            if(dl.size()==1) {
-                layout->setAllCtlx(dl.at(0).toInt());
-            }
-        }
-
-        if(path=="/lyc") {
-            if(dl.size()==1) {
-                layout->setAllCtly(dl.at(0).toInt());
-            }
-        }
-*/
-/*
-        if(path=="/tuio/2Dcur") {
+         if(path=="/tuio/2Dcur") {
             //qDebug() << "got /tuio/2Dcur signal " << path << " data " << data << " source " << host->toString();
             if(dl.size()>0) {
 

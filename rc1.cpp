@@ -442,11 +442,9 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
             layout->setNsegs(seg);
             //qDebug() << "set nsegs " << seg;
             layout->setRowheightmax(dl.size());
-            //layout->setScaleStartSeg(0);
-            //layout->updateLayout();
-            for(int doseg=0;doseg<=seg;) {
-                doseg=layout->generateScale(doseg);
-            }
+            layout->setScaleStartSeg(0);
+            layout->setScalerow(0);
+            fillWithScale();
             layout->calcGeo();
         }
 
@@ -466,10 +464,9 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
                     //qDebug() << "total segs " << nsegs;
                     layout->setNsegs(nsegs);
                     layout->setRowheightmax(height);
-                    for(int doseg=0;doseg<nsegs;) {
-                        doseg=layout->generateScale(doseg);
-                        //qDebug() << "do segs " << doseg;
-                    }
+                    layout->setScaleStartSeg(0);
+                    layout->setScalerow(0);
+                    fillWithScale();
                     layout->calcGeo();
                 }
             }
@@ -552,10 +549,10 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
         
         if(path=="/type_s") {
             if(dl.size()==2) {
-                int segtype=dl.at(0).toInt();
-                int i=dl.at(1).toInt();
+                int seg=dl.at(0).toInt();
+                int segtype=dl.at(1).toInt();
                 if(segtype==0 || segtype==1 ) {
-                    layout->setSegtype(i,segtype);
+                    layout->setSegtype(seg,segtype);
                 }
             }
         }
@@ -579,9 +576,9 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
         
         if(path=="/chan_s") {
             if(dl.size()==2) {
-                int chan=dl.at(0).toInt();
-                int i=dl.at(1).toInt();
-                layout->setChan(i,chan);
+                int seg=dl.at(0).toInt();
+                int chan=dl.at(1).toInt();
+                layout->setChan(seg,chan);
             }
         }
         
@@ -605,8 +602,8 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
         
         if(path=="/ctlx_s") {
             if(dl.size()==2) {
-                int ctl=dl.at(0).toInt();
-                int i=dl.at(1).toInt();
+                int i=dl.at(0).toInt();
+                int ctl=dl.at(1).toInt();
                 layout->setCtlx(i,ctl);
             }
         }
@@ -631,8 +628,8 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
         
         if(path=="/ctly_s") {
             if(dl.size()==2) {
-                int ctl=dl.at(0).toInt();
-                int i=dl.at(1).toInt();
+                int i=dl.at(0).toInt();
+                int ctl=dl.at(1).toInt();
                 layout->setCtly(i,ctl);
             }
         }
@@ -651,7 +648,6 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
             if(dl.size()<=layout->nsegs_max) {
                 for(int i=0;i<dl.size();i++) {
                     layout->setSegtext(i,dl.at(i).toString());
-                    qDebug() << layout->getSegText(i);
                 }
                 layout->calcGeo();
             }
@@ -688,13 +684,13 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
                     float cents=dl.at(1).toFloat();
                     if(cents>=-200 && cents<=200) {
                         layout->setMidi2fcent(seg,cents);
-                        layout->updateLayout();
+                        fillWithScale();
                     }
                 }
             }
         }
         
-        if(path=="/cent_a") {
+        if(path=="/cent") {
             if(dl.size()==12) {
                 for(int i=0;i<12;i++) {
                     float cents=dl.at(i).toFloat();
@@ -711,16 +707,18 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
                 if(seg>=0 && seg<=11) {
                     bool bsc=dl.at(1).toBool();
                     layout->setBscale(seg, bsc);
+                    fillWithScale();
                 }
             }
         }
         
-        if(path=="/bscale_a") {
+        if(path=="/bscale") {
             if(dl.size()==11) {
                 for(int i=0;i<11;i++) {
                     bool bsc=dl.at(i).toBool();
                     layout->setBscale(i, bsc);
                 }
+                fillWithScale();
             }
         }
         
@@ -729,15 +727,17 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
                 int note=dl.at(0).toInt();
                 if(note>=0 && note<=11) {
                     layout->setBasenote(note);
+                    fillWithScale();
                 }
             }
         }
         
-        if(path=="/basenoct") {
+        if(path=="/baseoct") {
             if(dl.size()==1) {
                 int oct=dl.at(0).toInt();
                 if(oct>=0 && oct<=10) {
                     layout->setBaseoct(oct);
+                    fillWithScale();
                 }
             }
         }
@@ -747,6 +747,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
                 int oct=dl.at(0).toInt();
                 if(oct>=0 && oct<=10) {
                     layout->setTopoct(oct);
+                    fillWithScale();
                 }
             }
         }
@@ -967,6 +968,10 @@ void RC1::transmitSoundParam()
     for(int i=0;i<layout->getSoundParamMax();i++) {
          sender->cc(chan,0,i+102,layout->getSoundParam(i));
     }
+}
+
+void RC1::fillWithScale() {
+    for(int doseg=0;doseg<=layout->getNsegs();doseg=layout->generateScale(doseg,false));
 }
 
 

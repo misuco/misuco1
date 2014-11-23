@@ -679,9 +679,16 @@ int LayoutModel::getScalerow() const
     return scaleRow;
 }
 
+void LayoutModel::setScalerow(int r)
+{
+    if(r>0 && r<nrows) {
+        scaleRow=r;
+    }
+}
+
 void LayoutModel::setScaleStartSeg(int s)
 {
-    if(s<nsegs) {
+    if(s>0 && s<nsegs) {
         scaleStartSeg=s;
     }
 }
@@ -704,15 +711,16 @@ float LayoutModel::midi2freq(int note)
 float LayoutModel::calcMidi2f(int x)
 {
     int oct=(x+3)/12;
-    int p=x+3;
-    return (freq_a / 64.0f) * (pow(2.0 , (double)((float)oct*1200.0f+(midi2fcent[p%12]+100.0f*(p%12))) / 1200.0));
+    float p=(x+3)%12;
+    int q=x%12;
+    return (freq_a / 64.0f) * (pow(2.0 , (double)((float)oct*1200.0f+(midi2fcent[q]+100.0f*p)) / 1200.0));
 }
 
 float LayoutModel::calcMidi2Fequal(int x)
 {
     int oct=(x+3)/12;
-    int p=x+3;
-    return (freq_a / 64.0f) * (pow(2.0 , (double)((float)oct*1200.0f+(100.0f*(p%12))) / 1200.0));
+    float p=(x+3)%12;
+    return (freq_a / 64.0f) * (pow(2.0 , (double)((float)oct*1200.0f+100.0f*p) / 1200.0f));
 }
 
 void LayoutModel::calcMidi2f()
@@ -733,6 +741,7 @@ void LayoutModel::calcMidi2Fequal()
 void LayoutModel::setMidi2fcent(int pos, float value)
 {
     if(pos<12) {
+        //qDebug() << "setMidi2fcent" << pos  << " " << value;
         midi2fcent[pos]=value;
     }
     calcMidi2f();
@@ -902,14 +911,16 @@ void LayoutModel::updateLayout()
                 }
             } else if(ctly[seg]==-3) {
                 note=ctlx[seg]%12;
-                yrel[seg]=midi2fcent[(note+3)%12]/200+0.5;
+                yrel[seg]=midi2fcent[note%12]/200+0.5;
+//                yrel[seg]=midi2fcent[(note+3)%12]/200+0.5;
             }
             int oct=progmem.progmem[actProgmen].baseoct+progmem.progmem[actProgmen].topoct;
             oct/=2;
             oct*=12;
             midinote[seg]=note+oct;
             freq[seg]=midi2f[note+oct];
-            pitch[seg]=midi2fcent[(note+3)%12]*4096.0f/100.0f;
+            pitch[seg]=midi2fcent[note%12]*4096.0f/100.0f;
+//            pitch[seg]=midi2fcent[(note+3)%12]*4096.0f/100.0f;
             segH[seg]=note2hue(note);
             segText[seg]=midi2TextEU[note%12];
         } else if(segtype[seg]==2 ) {
@@ -956,14 +967,14 @@ void LayoutModel::updateLayout()
             }
         }
     }
-    seg=generateScale(seg);
+    seg=generateScale(seg,true);
     nseg[scaleRow]=seg-scaleStartSeg;
     segwidthmax[scaleRow]=seg-scaleStartSeg;
     nsegs=seg;
     calcGeo(widthPx,heightPx);
 }
 
-int LayoutModel::generateScale(int seg) {
+int LayoutModel::generateScale(int seg, bool firstlast) {
     // row 4: the scale
     //seg=scaleStartSeg;
     if(seg>=nsegs_max) return seg;
@@ -973,7 +984,8 @@ int LayoutModel::generateScale(int seg) {
         int calcnote=progmem.progmem[actProgmen].basenote+i*12;
         midinote[seg]=calcnote;
         freq[seg]=midi2f[calcnote];
-        pitch[seg]=midi2fcent[(calcnote+3)%12]*4096.0f/100.0f;
+        //pitch[seg]=midi2fcent[(calcnote+3)%12]*4096.0f/100.0f;
+        pitch[seg]=midi2fcent[calcnote%12]*4096.0f/100.0f;
         QString octnum;
         octnum.sprintf(" %d",i+1);
         segText[seg]=midi2TextEU[calcnote%12];
@@ -1003,7 +1015,8 @@ int LayoutModel::generateScale(int seg) {
                 int thisnote=calcnote+j+1;
                 midinote[seg]=thisnote;
                 freq[seg]=midi2f[thisnote];
-                pitch[seg]=midi2fcent[(thisnote+3)%12]*4096.0f/100.0f;
+                //pitch[seg]=midi2fcent[(thisnote+3)%12]*4096.0f/100.0f;
+                pitch[seg]=midi2fcent[thisnote%12]*4096.0f/100.0f;
                 //qDebug() << "pitch " << pitch[seg] << " " ;
                 segText[seg]=midi2TextEU[thisnote%12];
                 segText[seg].append(octnum);
@@ -1026,42 +1039,42 @@ int LayoutModel::generateScale(int seg) {
             if(seg>=nsegs_max) return seg;
         }
     }
-
     // it sounds nice if an octave finishes
     // on top with the first note
     //
-
-    // but only, if there is more than 1 seg
-    if(seg>startseg+1) {
-
-        // is there enough space in transMode?
-        if(transMode) {
-            if(seg+1<nsegs_max) {
-                segtype[seg]=1;
-                segText[seg]="";
+    if(firstlast==true) {
+        // but only, if there is more than 1 seg
+        if(seg>startseg+1) {
+            
+            // is there enough space in transMode?
+            if(transMode) {
+                if(seg+1<nsegs_max) {
+                    segtype[seg]=1;
+                    segText[seg]="";
+                    segwidth[seg]=1;
+                    pressed[seg]=0;
+                    ctlx[seg]=1;
+                    ctly[seg]=2;
+                    seg++;
+                }
+            }
+            
+            // draw top segment only
+            // in case that we're  not at the really upper end
+            // border (nsegsmax) of the seg storage
+            if(!(transMode && seg+1>nsegs_max)) {
+                int calcnote=progmem.progmem[actProgmen].basenote+(progmem.progmem[actProgmen].topoct+1)*12;
+                midinote[seg]=calcnote;
+                freq[seg]=midi2f[calcnote];
+                segText[seg]=midi2TextEU[calcnote%12];
                 segwidth[seg]=1;
-                pressed[seg]=0;
+                segtype[seg]=0;
                 ctlx[seg]=1;
                 ctly[seg]=2;
+                segH[seg]=note2hue(calcnote);
+                pressed[seg]=0;
                 seg++;
             }
-        }
-
-        // draw top segment only
-        // in case that we're  not at the really upper end
-        // border (nsegsmax) of the seg storage
-        if(!(transMode && seg+1>nsegs_max)) {
-            int calcnote=progmem.progmem[actProgmen].basenote+(progmem.progmem[actProgmen].topoct+1)*12;
-            midinote[seg]=calcnote;
-            freq[seg]=midi2f[calcnote];
-            segText[seg]=midi2TextEU[calcnote%12];
-            segwidth[seg]=1;
-            segtype[seg]=0;
-            ctlx[seg]=1;
-            ctly[seg]=2;
-            segH[seg]=note2hue(calcnote);
-            pressed[seg]=0;
-            seg++;
         }
     }
     return seg;

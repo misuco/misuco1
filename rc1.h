@@ -172,6 +172,7 @@ private:
     
     void resetStat();
     void setPPSmin();
+    void fillWithScale();
 
 };
 

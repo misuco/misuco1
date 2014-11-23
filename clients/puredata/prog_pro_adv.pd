@@ -1,67 +1,333 @@
-#N canvas 70 65 1244 609 10;
-#X obj 47 328 sendOSC;
+#N canvas 58 23 1828 500 10;
+#X obj 6 271 sendOSC;
 #X msg 7 -184 connect 255.255.255.255 3333;
-#X msg 39 -160 send /dxy 5 5;
-#X msg 55 -136 send /f 100 200 300 400 500 600 700 800 900 1000 1100
-1200 1300 1400 1500 1600 1700 1800 1900 2000 2100 2200 2300 2400 2500
-;
-#X obj 66 -19 vsl 15 240 100 2500 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 16100 1;
-#X obj 84 -39 vsl 15 240 100 2500 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 11100 1;
-#X obj 102 -59 vsl 15 240 100 2500 0 0 empty empty empty 0 -9 0 10
--262144 -1 -1 0 1;
-#X obj 120 -78 vsl 15 240 100 15000 0 0 empty empty empty 0 -9 0 10
--262144 -1 -1 0 1;
-#X msg 84 219 send /f_s 1 \$1;
-#X msg 102 199 send /f_s 2 \$1;
-#X msg 120 180 send /f_s 3 \$1;
-#X msg 66 239 send /f_s 0 \$1;
-#X floatatom 158 157 10 0 0 0 - - -;
-#X obj 237 -78 vsl 15 240 100 2500 0 0 empty empty empty 0 -9 0 10
--262144 -1 -1 13600 1;
-#X msg 237 180 send /f_a \$1;
-#X obj 443 -19 vsl 15 240 1 127 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 0 1;
-#X obj 461 -39 vsl 15 240 1 127 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 0 1;
-#X obj 479 -59 vsl 15 240 1 127 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 0 1;
-#X obj 497 -78 vsl 15 240 1 127 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 0 1;
-#X floatatom 535 157 10 0 0 0 - - -;
-#X obj 614 -78 vsl 15 240 1 127 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 0 1;
-#X msg 443 239 send /mnote_s 0 \$1;
-#X msg 461 219 send /mnote_s 1 \$1;
-#X msg 479 199 send /mnote_s 2 \$1;
-#X msg 497 180 send /mnote_s 3 \$1;
-#X msg 614 180 send /mnote_a \$1;
-#X msg 432 -136 send /mnote 50 51 52 53 54 55 56 57 58 59 60 61 62
-63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80;
+#X obj 40 -113 vsl 15 240 100 2500 0 0 empty empty empty 0 -9 0 10
+-262144 -1 -1 10900 1;
+#X obj 75 -113 vsl 15 240 100 2500 0 0 empty empty empty 0 -9 0 10
+-262144 -1 -1 14700 1;
+#X obj 110 -113 vsl 15 240 100 2500 0 0 empty empty empty 0 -9 0 10
+-262144 -1 -1 10500 1;
+#X obj 216 -113 vsl 15 240 100 2500 0 0 empty empty empty 0 -9 0 10
+-262144 -1 -1 13000 1;
+#X msg 187 172 send /f_a \$1;
+#X obj 282 -1 vsl 15 127 1 127 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 3800 1;
+#X msg 461 173 send /mnote_a \$1;
+#X obj 553 104 vradio 15 1 0 2 empty empty empty 0 -8 0 10 -262144
+-1 -1 1;
+#X floatatom 553 142 5 0 0 0 - - -;
+#N canvas 221 656 1221 293 send_f 0;
+#X obj 37 63 inlet;
+#X obj 188 172 outlet;
+#X msg 37 96 send /f_s 0 \$1;
+#X obj 134 63 inlet;
+#X msg 134 96 send /f_s 1 \$1;
+#X obj 232 62 inlet;
+#X obj 329 62 inlet;
+#X msg 232 95 send /f_s 2 \$1;
+#X msg 329 95 send /f_s 3 \$1;
+#X obj 423 62 inlet;
+#X msg 423 95 send /f_s 4 \$1;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X connect 3 0 4 0;
+#X connect 4 0 1 0;
+#X connect 5 0 7 0;
+#X connect 6 0 8 0;
+#X connect 7 0 1 0;
+#X connect 8 0 1 0;
+#X connect 9 0 10 0;
+#X connect 10 0 1 0;
+#X restore 85 174 pd send_f;
+#X obj 145 -113 vsl 15 240 100 2500 0 0 empty empty empty 0 -9 0 10
+-262144 -1 -1 8500 1;
+#N canvas 1101 596 771 147 send_mnote_s 0;
+#X obj 7 10 inlet;
+#X obj 200 89 outlet;
+#X msg 126 39 send /mnote_s 1 \$1;
+#X obj 126 10 inlet;
+#X obj 245 9 inlet;
+#X obj 364 9 inlet;
+#X msg 7 39 send /mnote_s 0 \$1;
+#X msg 245 38 send /mnote_s 2 \$1;
+#X msg 364 38 send /mnote_s 3 \$1;
+#X obj 482 9 inlet;
+#X msg 482 38 send /mnote_s 4 \$1;
+#X connect 0 0 6 0;
+#X connect 2 0 1 0;
+#X connect 3 0 2 0;
+#X connect 4 0 7 0;
+#X connect 5 0 8 0;
+#X connect 6 0 1 0;
+#X connect 7 0 1 0;
+#X connect 8 0 1 0;
+#X connect 9 0 10 0;
+#X connect 10 0 1 0;
+#X restore 311 173 pd send_mnote_s;
+#X msg 21 -163 send /dxy 5 1;
+#X floatatom 40 141 5 0 0 0 - - -;
+#X floatatom 75 141 5 0 0 0 - - -;
+#X floatatom 110 141 5 0 0 0 - - -;
+#X floatatom 146 141 5 0 0 0 - - -;
+#X floatatom 181 141 5 0 0 0 - - -;
+#X obj 181 -113 vsl 15 240 100 2500 0 0 empty empty empty 0 -9 0 10
+-262144 -1 -1 13700 1;
+#X floatatom 216 141 5 0 0 0 - - -;
+#X floatatom 282 142 5 0 0 0 - - -;
+#X obj 318 -1 vsl 15 127 1 127 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 5100 1;
+#X floatatom 318 142 5 0 0 0 - - -;
+#X obj 354 -1 vsl 15 127 1 127 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 6100 1;
+#X floatatom 354 142 5 0 0 0 - - -;
+#X obj 390 -1 vsl 15 127 1 127 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 7800 1;
+#X floatatom 390 142 5 0 0 0 - - -;
+#X obj 425 -1 vsl 15 127 1 127 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 9200 1;
+#X floatatom 425 142 5 0 0 0 - - -;
+#X obj 461 -1 vsl 15 127 1 127 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 5500 1;
+#X floatatom 461 142 5 0 0 0 - - -;
+#N canvas 930 656 365 93 send_type_s 0;
+#X msg -3150 -39 send /type_s 1 \$1;
+#X obj -3150 -66 inlet;
+#X obj -3037 -5 outlet;
+#X obj -3037 -66 inlet;
+#X obj -2925 -66 inlet;
+#X msg -3037 -39 send /type_s 2 \$1;
+#X msg -2925 -39 send /type_s 3 \$1;
+#X connect 0 0 2 0;
 #X connect 1 0 0 0;
-#X connect 2 0 0 0;
-#X connect 3 0 0 0;
-#X connect 4 0 11 0;
+#X connect 3 0 5 0;
+#X connect 4 0 6 0;
+#X connect 5 0 2 0;
+#X connect 6 0 2 0;
+#X restore 571 173 pd send_type_s;
+#X obj 590 104 vradio 15 1 0 2 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X floatatom 590 142 5 0 0 0 - - -;
+#X obj 630 104 vradio 15 1 0 2 empty empty empty 0 -8 0 10 -262144
+-1 -1 1;
+#X floatatom 630 142 5 0 0 0 - - -;
+#X obj 684 -108 vradio 15 1 0 16 empty empty empty 0 -8 0 10 -262144
+-1 -1 2;
+#X floatatom 684 143 5 0 0 0 - - -;
+#N canvas 745 349 612 128 send_chan_s 1;
+#X msg 13 40 send /chan_s 0 \$1;
+#X obj 13 10 inlet;
+#X obj 151 100 outlet;
+#X obj 131 10 inlet;
+#X msg 131 40 send /chan_s 1 \$1;
+#X obj 248 10 inlet;
+#X obj 366 10 inlet;
+#X obj 482 9 inlet;
+#X msg 248 40 send /chan_s 2 \$1;
+#X msg 366 40 send /chan_s 3 \$1;
+#X msg 482 39 send /chan_s 4 \$1;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 3 0 4 0;
+#X connect 4 0 2 0;
 #X connect 5 0 8 0;
 #X connect 6 0 9 0;
 #X connect 7 0 10 0;
-#X connect 7 0 12 0;
+#X connect 8 0 2 0;
+#X connect 9 0 2 0;
+#X connect 10 0 2 0;
+#X restore 696 175 pd send_chan_s;
+#X obj 719 -107 vradio 15 1 0 16 empty empty empty 0 -8 0 10 -262144
+-1 -1 4;
+#X floatatom 719 144 5 0 0 0 - - -;
+#X obj 754 -106 vradio 15 1 0 16 empty empty empty 0 -8 0 10 -262144
+-1 -1 4;
+#X floatatom 754 145 5 0 0 0 - - -;
+#X obj 789 -106 vradio 15 1 0 16 empty empty empty 0 -8 0 10 -262144
+-1 -1 4;
+#X floatatom 789 145 5 0 0 0 - - -;
+#X obj 824 -105 vradio 15 1 0 16 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X floatatom 824 146 5 0 0 0 - - -;
+#X obj 859 -104 vradio 15 1 0 16 empty empty empty 0 -8 0 10 -262144
+-1 -1 2;
+#X floatatom 859 147 5 0 0 0 - - -;
+#X msg 800 176 send /chan_a \$1;
+#X obj 910 91 vradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144 -1
+-1 0;
+#X floatatom 910 146 5 0 0 0 - - -;
+#N canvas 425 728 648 129 send_ctlx_s 0;
+#X obj 14 16 inlet;
+#X obj 239 77 outlet;
+#X msg 14 44 send /ctlx_s 0 \$1;
+#X obj 127 16 inlet;
+#X msg 127 44 send /ctlx_s 1 \$1;
+#X obj 239 16 inlet;
+#X obj 352 16 inlet;
+#X msg 239 44 send /ctlx_s 2 \$1;
+#X msg 352 44 send /ctlx_s 3 \$1;
+#X obj 464 16 inlet;
+#X msg 464 44 send /ctlx_s 4 \$1;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X connect 3 0 4 0;
+#X connect 4 0 1 0;
+#X connect 5 0 7 0;
+#X connect 6 0 8 0;
+#X connect 7 0 1 0;
+#X connect 8 0 1 0;
+#X connect 9 0 10 0;
+#X connect 10 0 1 0;
+#X restore 912 177 pd send_ctlx_s;
+#X obj 945 91 vradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144 -1
+-1 0;
+#X floatatom 945 146 5 0 0 0 - - -;
+#X obj 980 91 vradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144 -1
+-1 0;
+#X floatatom 980 146 5 0 0 0 - - -;
+#X obj 1015 91 vradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X floatatom 1015 146 5 0 0 0 - - -;
+#X obj 1050 91 vradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X floatatom 1050 146 5 0 0 0 - - -;
+#X obj 1085 91 vradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X floatatom 1085 146 5 0 0 0 - - -;
+#X msg 1022 180 send /ctlx_a \$1;
+#X obj 1133 95 vradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
+-1 -1 1;
+#X floatatom 1133 150 5 0 0 0 - - -;
+#X obj 1168 95 vradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
+-1 -1 2;
+#X floatatom 1168 150 5 0 0 0 - - -;
+#X obj 1203 95 vradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
+-1 -1 2;
+#X floatatom 1203 150 5 0 0 0 - - -;
+#X obj 1238 95 vradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
+-1 -1 2;
+#X floatatom 1238 150 5 0 0 0 - - -;
+#X obj 1273 95 vradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X floatatom 1273 150 5 0 0 0 - - -;
+#X obj 1308 95 vradio 15 1 0 3 empty empty empty 0 -8 0 10 -262144
+-1 -1 0;
+#X floatatom 1308 150 5 0 0 0 - - -;
+#N canvas 1087 729 648 129 send_ctly_s 0;
+#X obj 14 16 inlet;
+#X obj 239 77 outlet;
+#X obj 127 16 inlet;
+#X obj 239 16 inlet;
+#X obj 352 16 inlet;
+#X obj 464 16 inlet;
+#X msg 14 44 send /ctly_s 0 \$1;
+#X msg 127 44 send /ctly_s 1 \$1;
+#X msg 239 44 send /ctly_s 2 \$1;
+#X msg 352 44 send /ctly_s 3 \$1;
+#X msg 464 44 send /ctlx_y 4 \$1;
+#X connect 0 0 6 0;
+#X connect 2 0 7 0;
+#X connect 3 0 8 0;
+#X connect 4 0 9 0;
+#X connect 5 0 10 0;
+#X connect 6 0 1 0;
+#X connect 7 0 1 0;
+#X connect 8 0 1 0;
+#X connect 9 0 1 0;
+#X connect 10 0 1 0;
+#X restore 1135 181 pd send_ctly_s;
+#X msg 1245 184 send /ctly_a \$1;
+#X msg 1458 183 send /txt_s 1 \$1;
+#X msg 1349 183 send /txt_s 0 \$1;
+#X msg 1349 152 say hello;
+#X msg 1458 152 say world;
+#X msg 1567 184 send /clrtxt_s 0;
+#X msg 1675 184 send /clrtxt_s 1;
+#X msg 1784 184 send /clrtxt_a;
+#X msg 32 -140 send /reset;
+#X connect 1 0 0 0;
+#X connect 2 0 15 0;
+#X connect 3 0 16 0;
+#X connect 4 0 17 0;
+#X connect 5 0 21 0;
+#X connect 6 0 0 0;
+#X connect 7 0 22 0;
 #X connect 8 0 0 0;
-#X connect 9 0 0 0;
-#X connect 10 0 0 0;
+#X connect 9 0 10 0;
+#X connect 10 0 33 0;
 #X connect 11 0 0 0;
-#X connect 13 0 14 0;
+#X connect 12 0 18 0;
+#X connect 13 0 0 0;
 #X connect 14 0 0 0;
-#X connect 15 0 21 0;
-#X connect 16 0 22 0;
-#X connect 17 0 23 0;
-#X connect 18 0 24 0;
-#X connect 18 0 19 0;
-#X connect 20 0 25 0;
-#X connect 21 0 0 0;
-#X connect 22 0 0 0;
-#X connect 23 0 0 0;
-#X connect 24 0 0 0;
-#X connect 25 0 0 0;
-#X connect 26 0 0 0;
+#X connect 15 0 11 0;
+#X connect 16 0 11 1;
+#X connect 17 0 11 2;
+#X connect 18 0 11 3;
+#X connect 19 0 11 4;
+#X connect 20 0 19 0;
+#X connect 21 0 6 0;
+#X connect 22 0 13 0;
+#X connect 23 0 24 0;
+#X connect 24 0 13 1;
+#X connect 25 0 26 0;
+#X connect 26 0 13 2;
+#X connect 27 0 28 0;
+#X connect 28 0 13 3;
+#X connect 29 0 30 0;
+#X connect 30 0 13 4;
+#X connect 31 0 32 0;
+#X connect 32 0 8 0;
+#X connect 33 0 0 0;
+#X connect 34 0 35 0;
+#X connect 35 0 33 1;
+#X connect 36 0 37 0;
+#X connect 37 0 33 2;
+#X connect 38 0 39 0;
+#X connect 39 0 40 0;
+#X connect 40 0 0 0;
+#X connect 41 0 42 0;
+#X connect 42 0 40 1;
+#X connect 43 0 44 0;
+#X connect 44 0 40 2;
+#X connect 45 0 46 0;
+#X connect 46 0 40 3;
+#X connect 47 0 48 0;
+#X connect 48 0 40 4;
+#X connect 49 0 50 0;
+#X connect 50 0 51 0;
+#X connect 51 0 0 0;
+#X connect 52 0 53 0;
+#X connect 53 0 54 0;
+#X connect 54 0 0 0;
+#X connect 55 0 56 0;
+#X connect 56 0 54 1;
+#X connect 57 0 58 0;
+#X connect 58 0 54 2;
+#X connect 59 0 60 0;
+#X connect 60 0 54 3;
+#X connect 61 0 62 0;
+#X connect 62 0 54 4;
+#X connect 63 0 64 0;
+#X connect 64 0 65 0;
+#X connect 65 0 0 0;
+#X connect 66 0 67 0;
+#X connect 67 0 78 0;
+#X connect 68 0 69 0;
+#X connect 69 0 78 1;
+#X connect 70 0 71 0;
+#X connect 71 0 78 2;
+#X connect 72 0 73 0;
+#X connect 73 0 78 3;
+#X connect 74 0 75 0;
+#X connect 75 0 78 4;
+#X connect 76 0 77 0;
+#X connect 77 0 79 0;
+#X connect 78 0 0 0;
+#X connect 79 0 0 0;
+#X connect 80 0 0 0;
+#X connect 81 0 0 0;
+#X connect 82 0 81 0;
+#X connect 83 0 80 0;
+#X connect 84 0 0 0;
+#X connect 85 0 0 0;
+#X connect 86 0 0 0;
+#X connect 87 0 0 0;

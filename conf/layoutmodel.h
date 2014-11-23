@@ -127,6 +127,7 @@ public:
     void setNseg(int i,int v);
     void setNsegs(int v);
     int getScalerow() const;
+    void setScalerow(int r);
     void setScaleStartSeg(int s);
 
     void updateLayout();
@@ -174,7 +175,7 @@ public:
     void readProgmemXml(QString filename);
     void writeProgmemXml(QString filename);
 
-    int generateScale(int seg);
+    int generateScale(int seg, bool firstlast);
 
 private:
     // view and event parameters

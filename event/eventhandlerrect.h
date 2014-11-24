@@ -40,6 +40,7 @@ private:
 
     float * freq;       // current frequency
     int * isegb;        // current segment index buffer
+    int * mnote;        // current midi
     int * chan;         // current note channel
 
     int * ccval1;       // current controller1 value: xrel

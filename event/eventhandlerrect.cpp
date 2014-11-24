@@ -209,7 +209,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                         snd->pitch(layout->getChan(iseg), ieventout[evptr],f,midinote, layout->getPitch(iseg));
                     } else {
                         if(freq[evptr]>0) {
-                            snd->noteOff(chan[evptr], ieventout[evptr]);
+                            snd->noteOff(chan[evptr], ieventout[evptr], mnote[evptr]);
                         }
                         ieventout[evptr]=ieventoutnext;
                         ieventoutnext++;
@@ -218,6 +218,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 }
                 freq[evptr]=f;
                 chan[evptr]=layout->getChan(iseg);
+                mnote[evptr]=midinote;
             }
         } else if(layout->getSegtype(iseg)==1) {
             // for transition segments calculate the frequency value between neighbour segments
@@ -261,7 +262,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             // turn off note if moved out of note into functional field
             bool movedin=false;
             if(freq[evptr]>0) {
-                snd->noteOff(chan[evptr], ieventout[evptr]);
+                snd->noteOff(chan[evptr], ieventout[evptr], mnote[evptr]);
                 freq[evptr]=-1;
                 layout->decPressed(isegb[evptr]);
                 //qDebug() << "event " << evptr << " decpressed " << isegb[evptr] << " if moved from note- into control-field " << iseg;
@@ -405,9 +406,11 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         }
 
         if(layout->getSegtype(iseg)==0 || layout->getSegtype(iseg)==1 || layout->getSegtype(iseg)==3) {
-            snd->noteOff(chan[evptr],ieventout[evptr]);
+            //qDebug() << "tp released " << evptr << " " <<  ieventout[evptr] << " " << mnote[evptr];
+            snd->noteOff(chan[evptr],ieventout[evptr],mnote[evptr]);
             freq[evptr]=-1;
             isegb[evptr]=-1;
+            mnote[evptr]=-1;
         }
         for(int i=evptr;i<evptr_stack_size;i++) {
             act[i]=act[i+1];
@@ -416,6 +419,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             ccval1[i]=ccval1[i+1];
             ccval2[i]=ccval2[i+1];
             freq[i]=freq[i+1];
+            mnote[i]=mnote[i+1];
             chan[i]=chan[i+1];
             isegb[i]=isegb[i+1];
             evptr_stack[i]=evptr_stack[i+1];
@@ -453,6 +457,7 @@ void EventHandlerRect::init()
     ccval2=new int[ntp];
     freq=new float[ntp];
     chan=new int[ntp];
+    mnote=new int[ntp];
     isegb=new int[ntp];
     
     evptr_stack=new int[ntp];

@@ -19,10 +19,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "senderoscpuredata.h"
 #include "../comm/libofqf/qoscclient.h"
 
-SenderOscPuredata::SenderOscPuredata(RC1 *)
+SenderOscPuredata::SenderOscPuredata()
 {
-    oscout=new QOscClient(QHostAddress("255.255.255.255"),3334);
-    oscout->setAddress(QHostAddress("255.255.255.255"),3334);
+    adr=QHostAddress("255.255.255.255");
+    port=3334;
+    oscout=new QOscClient();
+    oscout->setAddress(adr,port);
     notestate=new quint8[1024];
     ccstate=new int[1024];
     for(int i=0;i<1024;i++) {
@@ -30,7 +32,6 @@ SenderOscPuredata::SenderOscPuredata(RC1 *)
         ccstate[i]=0;
     }
     prog=0;
-    onNoteCnt=0;
 }
 
 SenderOscPuredata::~SenderOscPuredata()
@@ -44,7 +45,6 @@ void SenderOscPuredata::noteOn(int chan, int voiceId, float, int midinote, int p
 {
     int f = midinote;
     int vid=voiceId%1024;
-
     notestate[vid]=f;
     QVariantList v;
     v.append(chan);
@@ -56,18 +56,16 @@ void SenderOscPuredata::noteOn(int chan, int voiceId, float, int midinote, int p
     v.append(chan);
     v.append(pitch);
     sendOsc("/pitch",v);
-
-    onNoteCnt++;
 }
 
-void SenderOscPuredata::noteOff(int chan, int voiceId)
+void SenderOscPuredata::noteOff(int chan, int, int midinote)
 {
     QVariantList v;
     v.append(chan);
-    v.append(notestate[voiceId%1024]);
+    //v.append(notestate[voiceId%1024]);
+    v.append(midinote);
     v.append(0);
     sendOsc("/note",v);
-    onNoteCnt--;
 }
 
 void SenderOscPuredata::pitch(int chan, int voiceId, float, int midinote, int pitch)
@@ -99,7 +97,16 @@ void SenderOscPuredata::pitch(int chan, int voiceId, float, int midinote, int pi
 
 void SenderOscPuredata::setDestination(QHostAddress a, int p)
 {
+    adr=a;
+    port=p;
     oscout->setAddress(a,p);
+}
+
+void SenderOscPuredata::reconnect()
+{
+    delete(oscout);
+    oscout=new QOscClient();
+    oscout->setAddress(adr,port);
 }
 
 void SenderOscPuredata::pc(int chan, int v1)

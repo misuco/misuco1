@@ -19,10 +19,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "senderoscmidigeneric.h"
 #include "../comm/libofqf/qoscclient.h"
 
-SenderOscMidiGeneric::SenderOscMidiGeneric(RC1 *)
+SenderOscMidiGeneric::SenderOscMidiGeneric()
 {
-    oscout=new QOscClient(QHostAddress("255.255.255.255"),3334);
-    oscout->setAddress(QHostAddress("255.255.255.255"),3334);
+    adr=QHostAddress("255.255.255.255");
+    port=3150;
+    oscout=new QOscClient();
+    oscout->setAddress(adr,port);
     notestate=new quint8[1024];
     ccstate=new int[1024];
     for(int i=0;i<1024;i++) {
@@ -30,7 +32,6 @@ SenderOscMidiGeneric::SenderOscMidiGeneric(RC1 *)
         ccstate[i]=0;
     }
     prog=0;
-    onNoteCnt=0;
 }
 
 SenderOscMidiGeneric::~SenderOscMidiGeneric()
@@ -42,6 +43,7 @@ SenderOscMidiGeneric::~SenderOscMidiGeneric()
 
 void SenderOscMidiGeneric::noteOn(int chan, int voiceId, float, int midinote, int pitch, int)
 {
+    //qDebug() << "SenderOscMidiGeneric::noteOn " << chan << " " << voiceId << " " << midinote << " " << pitch;
     int f = midinote;
     int vid=voiceId%1024;
 
@@ -59,20 +61,18 @@ void SenderOscMidiGeneric::noteOn(int chan, int voiceId, float, int midinote, in
     v.append(chan);
     path.sprintf("/pitch/%d",chan);
     sendOsc(path,v);
-
-    onNoteCnt++;
 }
 
-void SenderOscMidiGeneric::noteOff(int chan, int voiceId)
+void SenderOscMidiGeneric::noteOff(int chan, int, int midinote)
 {
     QVariantList v;
     QString path;
-    v.append(notestate[voiceId%1024]);
+    //v.append(notestate[voiceId%1024]);
+    v.append(midinote);
     v.append(0);
     v.append(chan);
     path.sprintf("/note/%d",chan);
     sendOsc(path,v);
-    onNoteCnt--;
 }
 
 void SenderOscMidiGeneric::pitch(int chan, int voiceId, float, int midinote, int pitch)
@@ -109,7 +109,16 @@ void SenderOscMidiGeneric::pitch(int chan, int voiceId, float, int midinote, int
 
 void SenderOscMidiGeneric::setDestination(QHostAddress a, int p)
 {
+    adr=a;
+    port=p;
     oscout->setAddress(a,p);
+}
+
+void SenderOscMidiGeneric::reconnect()
+{
+    delete(oscout);
+    oscout=new QOscClient();
+    oscout->setAddress(adr,port);
 }
 
 void SenderOscMidiGeneric::pc(int chan, int v1)

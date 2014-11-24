@@ -17,20 +17,22 @@
  */
 
 #include "qoscclient.h"
-//#include "qoscclient.moc"
 
-//#include <QtCore/QDebug>
 #include <QtCore/QByteArray>
 #include <QtNetwork/QUdpSocket>
 
-//#include <lo/lo.h>
+QOscClient::QOscClient()
+: QOscBase() {}
+
+QOscClient::QOscClient( QObject * p)
+: QOscBase(p) {}
 
 QOscClient::QOscClient( const QHostAddress& address, quint16 port)
         : QOscBase()
         , _address( address )
         , _port( port )
 {
-//        qDebug() << "QOscClient::QOscClient(" << address << "," << port << "," << p << ")";
+        //qDebug() << "QOscClient::QOscClient(" << address << "," << port << "," << p << ")";
 }
 
 QOscClient::QOscClient( const QHostAddress& address, quint16 port, QObject* p )
@@ -38,7 +40,7 @@ QOscClient::QOscClient( const QHostAddress& address, quint16 port, QObject* p )
         , _address( address )
         , _port( port )
 {
-//        qDebug() << "QOscClient::QOscClient(" << address << "," << port << "," << p << ")";
+        //qDebug() << "QOscClient::QOscClient(" << address << "," << port << "," << p << ")";
 }
 
 QOscClient::QOscClient( const QHostAddress& address, quint16 source_port, quint16 dst_port, QObject* p )
@@ -46,24 +48,12 @@ QOscClient::QOscClient( const QHostAddress& address, quint16 source_port, quint1
         , _address( address )
         , _port( dst_port )
 {
-    //    qDebug() << "QOscClient::QOscClient(" << address << "," << source_port << "," << dst_port << "," << p << ")";
-    //    qDebug() << "- connectToHost(" << address << "," << dst_port << ")";
-    //    socket()->bind( source_port , QUdpSocket::ShareAddress);
-    //    socket()->bind( QHostAddress("192.168.1.81"),source_port );
-
-    /*
-     *  Bind to set source port
-     */
-    //socket()->connectToHost(address,dst_port,QIODevice::WriteOnly);
-//    socket()->open(QIODevice::WriteOnly);
-//    socket()->bind( source_port );
-    socket()->bind( source_port, QUdpSocket::ShareAddress );
-    // qDebug() << "- bind( 192.168.1.81," << source_port << ")";
+        socket()->bind( source_port, QUdpSocket::ShareAddress );
 }
 
 
 QOscClient::~QOscClient() {
-//        qDebug() << "QOscClient::~QOscClient()";
+        //qDebug() << "QOscClient::~QOscClient()";
 }
 
 void QOscClient::setAddress( const QHostAddress& address, quint16 port ) {
@@ -72,7 +62,7 @@ void QOscClient::setAddress( const QHostAddress& address, quint16 port ) {
 }
 
 void QOscClient::sendData( QString path, QVariant data ) {
-//        qDebug() << "QOscClient::sendData(" << path << "," << data << ")";
+        //qDebug() << "QOscClient::sendData(" << path << "," << data << ")";
 
         quint64 timeTag=getTimeTag();
         QByteArray msg = oscMessage( path, data );
@@ -82,5 +72,5 @@ void QOscClient::sendData( QString path, QVariant data ) {
 
         socket()->writeDatagram( out, _address, _port );
 
-//        qDebug() << "to " << _address << " " << _port;
+        //qDebug() << "to " << _address << " " << _port;
 }

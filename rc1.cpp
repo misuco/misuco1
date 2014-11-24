@@ -55,20 +55,13 @@ RC1::RC1(QWidget *parent) :
     nomouse = false;
     ttl=2000;
 
-    blockerOn=true;
-    blockerTimeout=30;
-    blockerTimeLeft=blockerTimeout;
-    blockerPainter=new PaintBlocker();
-    downloadAd=false;
-
     storage=new Storage();
     layout=new LayoutModel();
     ehand=new EventHandlerRect();
-    evstat=new EventStat();
 
-    senderAddress=QHostAddress("255.255.255.255");
-    senderPort=3150;
-    sender=new SenderMulti(this);
+    //senderAddress=QHostAddress("255.255.255.255");
+    //senderPort=3150;
+    sender=new SenderMulti();
     
     chan=0;
 
@@ -110,20 +103,15 @@ RC1::RC1(QWidget *parent) :
 #ifdef RC1_PRO
     oscin = new QOscServer(3333,this);
     oscin->registerPathObject(this);
-#endif
+    sender->repeatOff=2;
     
-    this->startTimer(0);
-
-    fpsT.start();
-    fps=50;
-    fcnt=0;
-    secTimer=true;
-        
-    // init test
-    tpn=0;
-    nTests=32;
-    tpx=0;
-    testMode=false;
+    blockerOn=false;
+#else
+    blockerOn=true;
+    blockerTimeout=30;
+    blockerTimeLeft=blockerTimeout;
+    blockerPainter=new PaintBlocker();
+    downloadAd=false;
 
     QFile bgimg(storagePath+"/init.jpg");
     if(bgimg.exists()) {
@@ -147,8 +135,16 @@ RC1::RC1(QWidget *parent) :
         }
     } else {
         adid.append("1");
-    }
+    }  
+#endif
 
+    this->startTimer(0);
+    
+    fpsT.start();
+    fps=50;
+    fcnt=0;
+    secTimer=true;
+    
     netxs = new QNetworkAccessManager(this);
     connect(netxs, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(replyFinished(QNetworkReply*)));
@@ -272,44 +268,8 @@ void RC1::timerEvent(QTimerEvent *)
         }
     }
     update();
-
-    if(testMode) {
-        tpy=height()/2;
-        tpstep=width()/nTests;
-        
-        Point * p = storage->getPoint(0);
-        storage->next();
-        
-        tpt=QDateTime::currentMSecsSinceEpoch();
-        
-        p->set(tpx,tpy,width(),height());
-        p->setT(tpt);
-        p->setTTL(2000);
-        switch (tpn%4) {
-            case 0:
-                p->setState(Qt::TouchPointPressed);
-                break;
-                
-            case 3:
-                p->setState(Qt::TouchPointReleased);
-                break;
-                
-            default:
-                p->setState(Qt::TouchPointPressed);
-                break;
-        }
-        p->setGid(0);
-        ehand->processPoint(p, this);
-        
-        //qDebug() << "fired test: " << tpx << " " << tpy << " " << tpt;
-        
-        tpx+=tpstep;
-        tpn++;
-        
-        if(tpn>=nTests) {
-            testMode=false;
-        }
-    }
+    sender->sendOff();
+    
 }
 
 bool RC1::event(QEvent *event)
@@ -346,7 +306,6 @@ bool RC1::event(QEvent *event)
             touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
             foreach (const QTouchEvent::TouchPoint &touchPoint, touchPoints) {
                 //qDebug() << " x:" << touchPoint.pos().x() << " y:" << touchPoint.pos().y() << " t: " << t ;
-                evstat->incToucheventcount();
                 Point * p = storage->getPoint(0);
                 // ipad: x value 0 -> selects wrong segment -> fmax
                 p->set(fmax(1,touchPoint.pos().x()),touchPoint.pos().y(),this->width(),this->height());
@@ -378,7 +337,6 @@ bool RC1::event(QEvent *event)
                 state=Qt::TouchPointReleased;
             }
             //qDebug() << sEvent << ": x:" << meve->pos().x() << " y:" << meve->pos().y() << " t: " << t1.tv_sec << "." << t1.tv_usec;
-            evstat->incToucheventcount();
             Point * p = storage->getPoint(0);
             p->set(meve->pos().x(),meve->pos().y(),this->width(),this->height());
             p->setT(t);
@@ -417,13 +375,56 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
          */
         
         if(path=="/dest") {
-            if(dl.size()==2) {
+            if(dl.size()==3) {
                 senderAddress=QHostAddress(dl.at(0).toString());
-                senderPort=dl.at(1).toInt();
-                sender->setDestination(senderAddress,senderPort);
+                if(!senderAddress.isNull()) {
+                    senderPort=dl.at(1).toInt();
+                    int s=dl.at(2).toInt();
+                    sender->setDestination(s,senderAddress,senderPort);
+                } else {
+                    qDebug() << "invalid sender address ";
+                }
             }
         }
-
+        
+        if(path=="/add_sender") {
+            if(dl.size()==1) {
+                int senderType=dl.at(0).toInt();
+                switch(senderType) {
+                    case 0:
+                        sender->create(SenderMulti::GENERIC);
+                        break;
+                    case 1:
+                        sender->create(SenderMulti::MIDI);
+                        break;
+                    case 2:
+                        sender->create(SenderMulti::REAKTOR);
+                        break;
+                    case 3:
+                        sender->create(SenderMulti::SUPERCOLLIDER);
+                        break;
+                    case 4:
+                        sender->create(SenderMulti::XY);
+                }
+            }
+        }
+        
+        if(path=="/del_sender") {
+            if(dl.size()==1) {
+                int i=dl.at(0).toInt();
+                sender->del(i);
+            }
+        }
+        
+        if(path=="/offrep") {
+            if(dl.size()==1) {
+                int i=dl.at(0).toInt();
+                if(i<10) {
+                    sender->repeatOff=i;
+                }
+            }
+        }
+        
         if(path=="/dim") {
             layout->setNrows(dl.size());
             int seg=0;
@@ -856,10 +857,12 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
     }
 }
 
+/*
 void RC1::resetStat()
 {
     fps=0;
 }
+ */
 
 Storage *RC1::getStorage() const
 {
@@ -902,9 +905,7 @@ void RC1::setTtl(long value)
 }
 void RC1::appStateChange(Qt::ApplicationState state) {
     if(state==Qt::ApplicationActive) {
-        delete(sender);
-        sender=new SenderMulti(this);
-        sender->setDestination(senderAddress,senderPort);
+        sender->reconnect();
 #ifdef RC1_PRO
         delete(oscin);
         oscin = new QOscServer(3333,this);
@@ -956,11 +957,6 @@ void RC1::replyFinished(QNetworkReply * r)
 ISender * RC1::getSender() const
 {
 return sender;
-}
-
-EventStat *RC1::getEvstat() const
-{
-return evstat;
 }
 
 void RC1::transmitSoundParam()

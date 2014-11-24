@@ -41,20 +41,18 @@ class QOscClient : public QOscBase, public QOscClientInterface
 		 * This creates a new OSC-connection to the specified host/port. Later
 		 * the servers host/port can be changed via setAddress();
 		 */
-         QOscClient(const QHostAddress&, quint16 port);
-         QOscClient(const QHostAddress&, quint16 port, QObject* );
-         QOscClient( const QHostAddress&, quint16 source_port, quint16 dst_port, QObject* );
-         QOscClient( const QHostAddress&, quint16 source_port, quint16 dst_port);
-         QOscClient() {
-              //qDebug() << "QOscClient::QOscClient()";
-         }
-         /// destructor
-         ~QOscClient();
+        QOscClient();
+        QOscClient(QObject*);
+        QOscClient(const QHostAddress&, quint16 port);
+        QOscClient(const QHostAddress&, quint16 port, QObject* );
+        QOscClient(const QHostAddress&, quint16 source_port, quint16 dst_port, QObject* );
+        QOscClient(const QHostAddress&, quint16 source_port, quint16 dst_port);
+        ~QOscClient();
 
 		/**
 		 * @brief ( Re- )Set the host/port to send messages to
 		 */
-                void setAddress( const QHostAddress&, quint16 port );
+        void setAddress( const QHostAddress&, quint16 port );
 
 	public slots:
 		void sendData( QString, QVariant =QVariant::Invalid );

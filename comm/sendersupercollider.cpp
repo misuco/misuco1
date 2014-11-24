@@ -21,10 +21,12 @@
 #include "sendersupercollider.h"
 #include "../comm/libofqf/qoscclient.h"
 
-SenderSuperCollider::SenderSuperCollider(RC1 * rc1)
+SenderSuperCollider::SenderSuperCollider()
 {
-    oscout=new QOscClient(QHostAddress("255.255.255.255"),57110);
-    oscout->setAddress(QHostAddress("255.255.255.255"),57110);
+    adr=QHostAddress("255.255.255.255");
+    port=57110;
+    oscout=new QOscClient();
+    oscout->setAddress(adr,port);
 }
 
 SenderSuperCollider::~SenderSuperCollider()
@@ -44,7 +46,16 @@ void SenderSuperCollider::pc(int, int)
 
 void SenderSuperCollider::setDestination(QHostAddress a, int p)
 {
+    adr=a;
+    port=p;
     oscout->setAddress(a,p);
+}
+
+void SenderSuperCollider::reconnect()
+{
+    delete(oscout);
+    oscout=new QOscClient();
+    oscout->setAddress(adr,port);
 }
 
 void SenderSuperCollider::noteOn(int, int voiceId, float f, int, int, int vel)
@@ -60,20 +71,6 @@ void SenderSuperCollider::noteOn(int, int voiceId, float f, int, int, int vel)
     v.append("amp");
     v.append(vel);
     sendOsc("/s_new",v);
-/*
-    v.clear();
-    v.append(voiceId);
-    v.append("freq");
-    v.append(f);
-    sendOsc("/n_set",v);
-
-    v.clear();
-    v.append(voiceId);
-    v.append("amp");
-    v.append(vel);
-    sendOsc("/n_set",v);
-*/
-    onNoteCnt++;
 }
 
 void SenderSuperCollider::pitch(int, int voiceId, float f, int, int)
@@ -93,7 +90,7 @@ void SenderSuperCollider::sendOsc(QString path, QVariant list)
 }
 
 
-void SenderSuperCollider::noteOff(int, int voiceId)
+void SenderSuperCollider::noteOff(int, int voiceId, int)
 {
     //qDebug() << "note off vid:" << voiceId ;
     QVariantList v;
@@ -101,5 +98,4 @@ void SenderSuperCollider::noteOff(int, int voiceId)
     v.append("amp");
     v.append(0);
     sendOsc("/n_set",v);
-    onNoteCnt--;
 }

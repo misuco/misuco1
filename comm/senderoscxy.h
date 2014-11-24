@@ -19,25 +19,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef SENDEROSCXY_H
 #define SENDEROSCXY_H
 
-#include "rc1.h"
 #include "isender.h"
 #include "../comm/libofqf/qoscclientinterface.h"
 
 class SenderOscXY : public ISender
 {
 public:
-    SenderOscXY(RC1 * rc1);
+    SenderOscXY();
     ~SenderOscXY();
     virtual void cc(int chan, int voiceId, int cc, float v1);
     virtual void pc(int chan, int v1);
     virtual void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int vel);
-    virtual void noteOff(int, int, float, int, int, int) {}
+    virtual void noteOff(int, int, int) {}
     virtual void pitch(int, int, float, int, int) {}
     virtual void setDestination(QHostAddress a,int p);
+    virtual void reconnect();
+    virtual bool voiceBased() {return false;}
 
 private:
     QOscClientInterface* oscout;
-    RC1 * rc1;
+    QHostAddress adr;
+    int port;
     float x;
     float y;
     void sendOsc(QString path, QVariant list);

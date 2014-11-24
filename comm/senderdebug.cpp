@@ -39,9 +39,9 @@ void SenderDebug::noteOn(int chan, int voiceId, float v1, int midinote, int pitc
     qDebug() << "SenderDebug::noteOn(" << chan << "," << voiceId << "," << v1 << "," << v2 << "," << midinote << "," << pitch << ")";
 }
 
-void SenderDebug::noteOff(int chan, int voiceId)
+void SenderDebug::noteOff(int chan, int voiceId, int midinote)
 {
-    qDebug() << "SenderDebug::noteOff(" << chan << "," << voiceId << ")";
+    qDebug() << "SenderDebug::noteOff(" << chan << "," << voiceId << "," << midinote << ")";
 }
 
 void SenderDebug::pitch(int chan, int voiceId, float v1, int midinote, int pitch)

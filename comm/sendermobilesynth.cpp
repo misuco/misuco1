@@ -22,7 +22,7 @@
 
 #ifdef RC1_IOS
 
-SenderMobileSynth::SenderMobileSynth(RC1 *)
+SenderMobileSynth::SenderMobileSynth()
 {
     
     syco=new mobilesynthview::Widget();
@@ -70,7 +70,7 @@ void SenderMobileSynth::noteOn(int, int voiceId, float f, int, int, int)
     sy->NoteOn(voiceId, (float)f);
 }
 
-void SenderMobileSynth::noteOff(int,int voiceId)
+void SenderMobileSynth::noteOff(int,int voiceId, int)
 {
     sy->NoteOff(voiceId);
 }

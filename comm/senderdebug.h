@@ -28,9 +28,11 @@ public:
     virtual void cc(int chan, int voiceId, int cc, float v1);
     virtual void pc(int chan, int v1);
     virtual void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int v);
-    virtual void noteOff(int chan, int voiceId);
+    virtual void noteOff(int chan, int voiceId, int midinote);
     virtual void pitch(int chan, int voiceId, float f, int midinote, int pitch);
     virtual void setDestination(QHostAddress,int) {}
+    virtual void reconnect() {}
+    virtual bool voiceBased() {return false;}
 };
 
 #endif // SENDERDEBUG_H

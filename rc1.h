@@ -35,10 +35,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QNetworkAccessManager>
 
 #include "storage.h"
-#include "eventstat.h"
 #include "conf/layoutmodel.h"
 #include "conf/scales.h"
 #include "comm/isender.h"
+#include "comm/sendermulti.h"
 #include "event/ieventhandler.h"
 #include "paint/ipaint.h"
 #include "paint/ipointpaint.h"
@@ -68,7 +68,6 @@ public:
     Storage *getStorage() const;
     LayoutModel *getLayout() const;
     ISender *getSender() const;
-    EventStat *getEvstat() const;
     long getNow();
     int getFps();
     QTime *getFpsT();
@@ -98,7 +97,7 @@ protected:
 private:
     Storage * storage;
     LayoutModel * layout;
-    ISender * sender;
+    SenderMulti * sender;
     IEventHandler * ehand;
     IPaint ** prepainters;
     IPointPaint ** pointpainters;
@@ -107,8 +106,7 @@ private:
 
     // painter switch
     bool * painterOn;
-    // event statistic
-    EventStat * evstat;
+
     QOscServer * oscin;
 
     QHostAddress senderAddress;
@@ -161,16 +159,7 @@ private:
     QList<quint32> tuioAlive;
     QList<quint16> tuioSources;
 
-    // test facilities
-    long tpt;
-    int tpn;
-    int nTests;
-    int tpy;
-    int tpx;
-    int tpstep;
-    bool testMode;
-    
-    void resetStat();
+//    void resetStat();
     void setPPSmin();
     void fillWithScale();
 

@@ -28,9 +28,11 @@ public:
     virtual void cc(int chan, int voiceId, int cc, float v1)=0;
     virtual void pc(int chan, int v1)=0;
     virtual void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int v)=0;
-    virtual void noteOff(int chan, int voiceId)=0;
+    virtual void noteOff(int chan, int voiceId, int midinote)=0;
     virtual void pitch(int chan, int voiceId, float f, int midinote, int pitch)=0;
-    virtual void setDestination(QHostAddress,int)=0;
+    virtual void setDestination(QHostAddress adr, int port)=0;
+    virtual void reconnect()=0;
+    virtual bool voiceBased()=0;
 };
 
 #endif // ISENDER_H

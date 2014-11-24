@@ -20,11 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "senderoscxy.h"
 #include "../comm/libofqf/qoscclient.h"
 
-SenderOscXY::SenderOscXY(RC1 *rc1)
+SenderOscXY::SenderOscXY()
 {
-    oscout=new QOscClient(QHostAddress("255.255.255.255"),3334);
-    oscout->setAddress(QHostAddress("255.255.255.255"),3334);
-    this->rc1=rc1;
+    adr=QHostAddress("255.255.255.255");
+    port=3150;
+    oscout=new QOscClient();
+    oscout->setAddress(adr,port);
     x=0;
     y=0;
 }
@@ -40,7 +41,16 @@ void SenderOscXY::noteOn(int, int, float, int, int, int)
 
 void SenderOscXY::setDestination(QHostAddress a, int p)
 {
+    adr=a;
+    port=p;
     oscout->setAddress(a,p);
+}
+
+void SenderOscXY::reconnect()
+{
+    delete(oscout);
+    oscout=new QOscClient();
+    oscout->setAddress(adr,port);
 }
 
 void SenderOscXY::pc(int, int)
@@ -64,5 +74,4 @@ void SenderOscXY::sendOsc(QString path, QVariant list)
 {
 //    qDebug() << " sendOsc to " << path << " values " << list;
     oscout->sendData(path,list);
-    rc1->getEvstat()->incOsccount();
 }

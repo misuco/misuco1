@@ -21,26 +21,51 @@
 #define SENDERMULTI_H
 
 #include "isender.h"
-#include "sendermobilesynth.h"
-#include "senderoscmidigeneric.h"
-#include "sendersupercollider.h"
 
 class SenderMulti : public ISender
 {
 public:
-    SenderMulti(RC1 * rc1);
+    SenderMulti();
     ~SenderMulti();
     virtual void cc(int chan, int voiceId, int cc, float v1);
     virtual void pc(int chan, int v1);
     virtual void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int v);
-    virtual void noteOff(int chan, int voiceId);
+    virtual void noteOff(int chan, int voiceId, int midinote);
     virtual void pitch(int chan, int voiceId, float f, int midinote, int pitch);
     virtual void setDestination(QHostAddress a,int p);
-
+    virtual void reconnect();
+    virtual bool voiceBased() {return true;}
+    
+    enum SenderType {
+        REAKTOR,
+        SUPERCOLLIDER,
+        MIDI,
+        GENERIC,
+        XY,
+        MOBILESYNTH
+    };
+    
+    void del(int i);
+    void delAll();
+    void create(SenderType i);
+    void setDestination(int i, QHostAddress a,int p);
+    void sendOff();
+    
+    int repeatOff;
+    
+    struct offRepeat {
+        int voiceId;
+        int midinote;
+        int chan;
+        int offSent;
+    };
+    
 private:
-    ISender * s1;
-    ISender * s2;
-    ISender * s3;
+    QList<ISender *> senders;
+    QList<offRepeat *> offToRepeat;
+    bool midiOn[256];
+    int onCnt;
+    
 };
 
 #endif // SENDERMULTI_H

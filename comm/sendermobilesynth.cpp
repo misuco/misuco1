@@ -86,7 +86,7 @@ void SenderMobileSynth::setDestination(QHostAddress,int)
 
 #else
 
-SenderMobileSynth::SenderMobileSynth(RC1 *)
+SenderMobileSynth::SenderMobileSynth()
 {
     sy= new mobileSynthQT52();
     //qDebug() << "mobileSynthQt52 created";
@@ -131,7 +131,7 @@ void SenderMobileSynth::noteOn(int chan, int voiceId, float f, int midinote, int
     sy->noteOn(voiceId, (float)f);
 }
 
-void SenderMobileSynth::noteOff(int chan, int voiceId)
+void SenderMobileSynth::noteOff(int chan, int voiceId, int)
 {
     sy->noteOff(voiceId);
 }

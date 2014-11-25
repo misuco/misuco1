@@ -63,8 +63,9 @@ public:
     explicit RC1(QWidget *parent = 0);
     ~RC1();
     
-    constexpr static const float freq_max = 20000.0f;
-    
+//    constexpr static const float freq_max = 20000.0f;
+    static const float freq_max = 20000.0f;
+
     Storage *getStorage() const;
     LayoutModel *getLayout() const;
     ISender *getSender() const;

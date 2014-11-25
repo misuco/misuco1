@@ -141,7 +141,12 @@ OTHER_FILES += \
     conf/l3.xml \
     conf/l4.xml \
     conf/prog.xml \
-    android/AndroidManifest.xml
+    android/AndroidManifest.xml \
+    conf/lp1.xml \
+    conf/lp2.xml \
+    conf/lp3.xml \
+    conf/lp4.xml \
+    conf/lp5.xml
 
 OBJECTIVE_SOURCES += \
     mobilesynth/mobilesynth/Classes/mobilesynthViewControllerRc1.mm \

@@ -164,6 +164,7 @@ public:
 
     int getSegBorder() const;
 
+    char * confpath;
     void resetLayout(int i);
     void resetLayout(QString filename);
     void resetLayout();

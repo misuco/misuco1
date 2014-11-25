@@ -17,6 +17,7 @@
  
  */
 #include <QDebug>
+#include <QInputDialog>
 #include "eventhandlerrect.h"
 #include "../comm/senderdebug.h"
 #include "../comm/senderoscpuredata.h"
@@ -280,13 +281,24 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     // memory button, not in use
                     layout->setActProgmem(layout->getCtlx(iseg));
                     rc1->transmitSoundParam();
+                } else if(layout->getCtly(iseg)==-3) {
+                    // edit button
+                    layout->toggleEdit();
                 } else if(layout->getCtly(iseg)==-4) {
                     // layout switch button
                     layout->resetLayout(layout->getCtlx(iseg));
                     layout->updateLayout();
-                } else if(layout->getCtly(iseg)==-3) {
+                } else if(layout->getCtly(iseg)==-5) {
                     // edit button
-                    layout->toggleEdit();
+                    // layout->toggleEdit();
+                    bool ok;
+                    QString text = QInputDialog::getText(rc1, "Destination Address",
+                                                         "IP:", QLineEdit::Normal,
+                                                         QDir::home().dirName(), &ok);
+                    if (ok && !text.isEmpty()) {
+                        // do something
+                    }
+
                 }
             } else if(layout->getSegtype(iseg)==3) {
                 // toggle button

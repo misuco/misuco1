@@ -8,5 +8,10 @@
         <file>conf/l3.xml</file>
         <file>conf/l4.xml</file>
         <file>conf/prog.xml</file>
+        <file>conf/lp1.xml</file>
+        <file>conf/lp2.xml</file>
+        <file>conf/lp3.xml</file>
+        <file>conf/lp4.xml</file>
+        <file>conf/lp5.xml</file>
     </qresource>
 </RCC>

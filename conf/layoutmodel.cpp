@@ -19,6 +19,7 @@
 #include <QDebug>
 #include <math.h>
 #include "layoutmodel.h"
+#include "platform.h"
 
 LayoutModel::LayoutModel()
 {
@@ -30,6 +31,13 @@ LayoutModel::LayoutModel()
 #else
     font="Roboto";
 #endif
+
+#ifdef RC1_PRO
+    confpath=":/conf/lp%d.xml";
+#else
+    confpath=":/conf/l%d.xml";
+#endif
+
     //nrowsmax=32;
     //nsegsmax=32*32;
     nseg = new int[nrows_max];
@@ -848,7 +856,7 @@ void LayoutModel::toggleEdit()
 
 void LayoutModel::resetLayout(int i) {
     QString filename;
-    filename.sprintf(":/conf/l%d.xml",i);
+    filename.sprintf(confpath,i);
     currLayout=i;
     resetLayout(filename);
 }

@@ -11,7 +11,7 @@ class QOscProxy : public QObject, public QOscProxyInterface  {
         QOscProxy(QObject *, QHostAddress adr_srv, QHostAddress adr_cli, quint16 port_srv, quint16 port_cli);
         QOscProxy(QObject *, QHostAddress a, quint16 port);
 
-        virtual void setAddress( const QHostAddress&, quint16 port );
+        virtual void setAddress( char * adr, quint16 port );
         virtual void setAnswerAddress( QOscServer* );
         virtual void setSocket( QUdpSocket* );
         virtual void registerPathObject( PathObject* );

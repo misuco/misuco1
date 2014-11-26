@@ -32,13 +32,16 @@ public:
     virtual void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int vel);
     virtual void noteOff(int, int, int) {}
     virtual void pitch(int, int, float, int, int) {}
-    virtual void setDestination(QHostAddress a,int p);
+    virtual void setDestination(char * a,int p);
     virtual void reconnect();
+    virtual int getPort() {return port;}
+    virtual char* getAddress() {return adr;}
+    
     virtual bool voiceBased() {return false;}
 
 private:
     QOscClientInterface* oscout;
-    QHostAddress adr;
+    char * adr;
     int port;
     float x;
     float y;

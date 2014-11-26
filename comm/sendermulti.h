@@ -20,6 +20,7 @@
 #ifndef SENDERMULTI_H
 #define SENDERMULTI_H
 
+#include <QList>
 #include "isender.h"
 
 class SenderMulti : public ISender
@@ -32,8 +33,10 @@ public:
     virtual void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int v);
     virtual void noteOff(int chan, int voiceId, int midinote);
     virtual void pitch(int chan, int voiceId, float f, int midinote, int pitch);
-    virtual void setDestination(QHostAddress a,int p);
+    virtual void setDestination(char * a,int p);
     virtual void reconnect();
+    virtual int getPort() {if(senders.count()>0) return senders.at(0)->getPort(); else return 0;}
+    virtual char* getAddress() {return 0;}
     virtual bool voiceBased() {return true;}
     
     enum SenderType {
@@ -48,7 +51,7 @@ public:
     void del(int i);
     void delAll();
     void create(SenderType i);
-    void setDestination(int i, QHostAddress a,int p);
+    void setDestination(int i, char * a,int p);
     void sendOff();
     
     int repeatOff;

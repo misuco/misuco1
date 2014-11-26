@@ -62,9 +62,12 @@ class RC1 : public QGLWidget, PathObject
 public:
     explicit RC1(QWidget *parent = 0);
     ~RC1();
-    
-//    constexpr static const float freq_max = 20000.0f;
+
+#ifdef RC1_IOS
+    constexpr static const float freq_max = 20000.0f;
+#else
     static const float freq_max = 20000.0f;
+#endif
 
     Storage *getStorage() const;
     LayoutModel *getLayout() const;
@@ -110,9 +113,9 @@ private:
 
     QOscServer * oscin;
 
-    QHostAddress senderAddress;
-    int senderPort;
-    QList<QHostAddress> ignoreAddr;
+    //QHostAddress senderAddress;
+    //int senderPort;
+    //QList<QHostAddress> ignoreAddr;
     
     int chan; // midi chan for pc
 

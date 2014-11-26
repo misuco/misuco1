@@ -79,7 +79,7 @@ void SenderMobileSynth::pitch(int, int voiceId, float f, int, int) {
     sy->NoteOn(voiceId, (float)f);
 }
 
-void SenderMobileSynth::setDestination(QHostAddress,int)
+void SenderMobileSynth::setDestination(char *,int)
 {
 
 }
@@ -140,9 +140,6 @@ void SenderMobileSynth::pitch(int chan, int voiceId, float f, int midinote, int 
     sy->noteOn(voiceId, (float)f);
 }
 
-void SenderMobileSynth::setDestination(QHostAddress a, int p)
-{
-
-}
+void SenderMobileSynth::setDestination(char *, int) {}
 
 #endif

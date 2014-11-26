@@ -56,8 +56,8 @@ QOscClient::~QOscClient() {
         //qDebug() << "QOscClient::~QOscClient()";
 }
 
-void QOscClient::setAddress( const QHostAddress& address, quint16 port ) {
-	_address = address;
+void QOscClient::setAddress( char * adr, quint16 port ) {
+	_address = QHostAddress(adr);
 	_port = port;
 }
 

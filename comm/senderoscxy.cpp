@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 SenderOscXY::SenderOscXY()
 {
-    adr=QHostAddress("255.255.255.255");
+    adr="255.255.255.255";
     port=3150;
     oscout=new QOscClient();
     oscout->setAddress(adr,port);
@@ -39,11 +39,12 @@ void SenderOscXY::noteOn(int, int, float, int, int, int)
 {
 }
 
-void SenderOscXY::setDestination(QHostAddress a, int p)
+void SenderOscXY::setDestination(char * a, int p)
 {
+    delete(a);
     adr=a;
     port=p;
-    oscout->setAddress(a,p);
+    oscout->setAddress(adr,p);
 }
 
 void SenderOscXY::reconnect()

@@ -23,7 +23,7 @@
 
 SenderSuperCollider::SenderSuperCollider()
 {
-    adr=QHostAddress("255.255.255.255");
+    adr="255.255.255.255";
     port=57110;
     oscout=new QOscClient();
     oscout->setAddress(adr,port);
@@ -44,11 +44,12 @@ void SenderSuperCollider::pc(int, int)
 
 }
 
-void SenderSuperCollider::setDestination(QHostAddress a, int p)
+void SenderSuperCollider::setDestination(char * a, int p)
 {
+    delete(a);
     adr=a;
     port=p;
-    oscout->setAddress(a,p);
+    oscout->setAddress(adr,p);
 }
 
 void SenderSuperCollider::reconnect()

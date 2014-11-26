@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 SenderOscMidiGeneric::SenderOscMidiGeneric()
 {
-    adr=QHostAddress("255.255.255.255");
+    adr="255.255.255.255";
     port=3150;
     oscout=new QOscClient();
     oscout->setAddress(adr,port);
@@ -107,11 +107,12 @@ void SenderOscMidiGeneric::pitch(int chan, int voiceId, float, int midinote, int
     sendOsc(path,v);
 }
 
-void SenderOscMidiGeneric::setDestination(QHostAddress a, int p)
+void SenderOscMidiGeneric::setDestination(char * a, int p)
 {
+    delete(a);
     adr=a;
     port=p;
-    oscout->setAddress(a,p);
+    oscout->setAddress(adr,p);
 }
 
 void SenderOscMidiGeneric::reconnect()

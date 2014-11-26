@@ -27,7 +27,7 @@ public:
     /**
      * @brief ( Re- )Set the host/port to send messages to
      */
-    void setAddress( const QHostAddress&, quint16 port );
+    void setAddress( char * adr, quint16 port );
 
     void registerPathObject( PathObject* );
     void unregisterPathObject( PathObject* );

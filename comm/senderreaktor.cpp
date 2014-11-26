@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 SenderReaktor::SenderReaktor()
 {
-    adr=QHostAddress("255.255.255.255");
+    adr="255.255.255.255";
     port=3150;
     oscout=new QOscClient();
     oscout->setAddress(adr,port);
@@ -98,11 +98,12 @@ void SenderReaktor::pitch(int chan, int voiceId, float, int midinote, int pitch)
     sendOsc(path,v);
 }
 
-void SenderReaktor::setDestination(QHostAddress a, int p)
+void SenderReaktor::setDestination(char * a, int p)
 {
+    delete(a);
     adr=a;
     port=p;
-    oscout->setAddress(a,p);
+    oscout->setAddress(adr,p);
 }
 
 void SenderReaktor::reconnect()

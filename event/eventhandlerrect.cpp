@@ -289,16 +289,28 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     layout->resetLayout(layout->getCtlx(iseg));
                     layout->updateLayout();
                 } else if(layout->getCtly(iseg)==-5) {
-                    // edit button
-                    // layout->toggleEdit();
+                    // edit sender destination adress button
                     bool ok;
+                    QString msg;
+                    msg.sprintf("%s",snd->getAddress());
                     QString text = QInputDialog::getText(rc1, "Destination Address",
                                                          "IP:", QLineEdit::Normal,
-                                                         QDir::home().dirName(), &ok);
+                                                         msg, &ok);
                     if (ok && !text.isEmpty()) {
                         // do something
                     }
-
+                } else if(layout->getCtly(iseg)==-6) {
+                    // edit sender destination port button
+                    // layout->toggleEdit();
+                    bool ok;
+                    QString msg;
+                    msg.sprintf("%d",snd->getPort());
+                    QString text = QInputDialog::getText(rc1, "Destination Port",
+                                                         "Nr:", QLineEdit::Normal,
+                                                         msg, &ok);
+                    if (ok && !text.isEmpty()) {
+                        // do something
+                    }
                 }
             } else if(layout->getSegtype(iseg)==3) {
                 // toggle button

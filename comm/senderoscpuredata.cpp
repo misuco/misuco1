@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 SenderOscPuredata::SenderOscPuredata()
 {
-    adr=QHostAddress("255.255.255.255");
+    adr="255.255.255.255";
     port=3334;
     oscout=new QOscClient();
     oscout->setAddress(adr,port);
@@ -95,11 +95,12 @@ void SenderOscPuredata::pitch(int chan, int voiceId, float, int midinote, int pi
     sendOsc("/pitch",v);
 }
 
-void SenderOscPuredata::setDestination(QHostAddress a, int p)
+void SenderOscPuredata::setDestination(char * a, int p)
 {
+    delete(a);
     adr=a;
     port=p;
-    oscout->setAddress(a,p);
+    oscout->setAddress(adr,p);
 }
 
 void SenderOscPuredata::reconnect()

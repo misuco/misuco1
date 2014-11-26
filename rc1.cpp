@@ -353,8 +353,8 @@ bool RC1::event(QEvent *event)
 void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
 {
     //qDebug() << "got osc signal " << path << " data " << data << " source " << host->toString();
-    int ignoreIndex=ignoreAddr.indexOf(*host);
-    if(ignoreIndex==-1) {
+    //int ignoreIndex=ignoreAddr.indexOf(*host);
+    //if(ignoreIndex==-1) {
         QList<QVariant> dl=data.toList();
 
         /*
@@ -376,14 +376,10 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
         
         if(path=="/dest") {
             if(dl.size()==3) {
-                senderAddress=QHostAddress(dl.at(0).toString());
-                if(!senderAddress.isNull()) {
-                    senderPort=dl.at(1).toInt();
-                    int s=dl.at(2).toInt();
-                    sender->setDestination(s,senderAddress,senderPort);
-                } else {
-                    qDebug() << "invalid sender address ";
-                }
+                char * ba=dl.at(0).toByteArray().data();
+                int senderPort=dl.at(1).toInt();
+                int s=dl.at(2).toInt();
+                sender->setDestination(s,ba,senderPort);
             }
         }
         
@@ -854,7 +850,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
             }
         }
         */
-    }
+    //}
 }
 
 /*

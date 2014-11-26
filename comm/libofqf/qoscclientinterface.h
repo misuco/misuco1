@@ -8,7 +8,7 @@ class QOscClientInterface
 {
 public:
     virtual ~QOscClientInterface() {}
-    virtual void setAddress( const QHostAddress&, quint16 port ) = 0;
+    virtual void setAddress( char * adr, quint16 port ) = 0;
 
 public slots:
     virtual void sendData( QString, QVariant ) = 0;

@@ -59,10 +59,10 @@ QOscTcpClient::~QOscTcpClient() {
     _tcp_socket->disconnectFromHost();
 }
 
-void QOscTcpClient::setAddress( const QHostAddress& address, quint16 port ) {
+void QOscTcpClient::setAddress( char * adr, quint16 port ) {
     if(_tcp_socket->state()==QAbstractSocket::ConnectedState)
         _tcp_socket->disconnectFromHost();
-    _address = address;
+    _address = QHostAddress(adr);
     _port = port;
     setupTcpSocket();
 }

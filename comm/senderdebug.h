@@ -30,8 +30,10 @@ public:
     virtual void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int v);
     virtual void noteOff(int chan, int voiceId, int midinote);
     virtual void pitch(int chan, int voiceId, float f, int midinote, int pitch);
-    virtual void setDestination(QHostAddress,int) {}
+    virtual void setDestination(char *,int) {}
     virtual void reconnect() {}
+    virtual int getPort() {return 0;}
+    virtual char* getAddress() {return 0;}
     virtual bool voiceBased() {return false;}
 };
 

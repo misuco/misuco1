@@ -19,8 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef ISENDER_H
 #define ISENDER_H
 
-#include <QHostAddress>
-
 class ISender
 {
 public:
@@ -30,8 +28,15 @@ public:
     virtual void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int v)=0;
     virtual void noteOff(int chan, int voiceId, int midinote)=0;
     virtual void pitch(int chan, int voiceId, float f, int midinote, int pitch)=0;
-    virtual void setDestination(QHostAddress adr, int port)=0;
+    virtual void setDestination(char * adr, int port)=0;
     virtual void reconnect()=0;
+    virtual int getPort()=0;
+    virtual char* getAddress()=0;
+    /*
+     * a voice based sender supports voice identificatio by voiceId
+     * in contrast to midi senders where voice is identified by
+     * midinote and thus only one voice per note can exist
+     */
     virtual bool voiceBased()=0;
 };
 

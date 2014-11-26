@@ -52,7 +52,7 @@ class QOscClient : public QOscBase, public QOscClientInterface
 		/**
 		 * @brief ( Re- )Set the host/port to send messages to
 		 */
-        void setAddress( const QHostAddress&, quint16 port );
+        void setAddress( char *, quint16 port );
 
 	public slots:
 		void sendData( QString, QVariant =QVariant::Invalid );

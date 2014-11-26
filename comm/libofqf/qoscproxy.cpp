@@ -12,7 +12,7 @@ QOscProxy::QOscProxy(QObject * p, QHostAddress adr, quint16 port) : QObject( p )
     QOscProxy(p,adr,adr,port,port);
 }
 
-void QOscProxy::setAddress(const QHostAddress&, quint16)
+void QOscProxy::setAddress(char *, quint16)
 {
 }
 

@@ -28,8 +28,8 @@
 
 SenderMulti::SenderMulti()
 {
-    senders.append(new SenderMobileSynth());
     senders.append(new SenderOscMidiGeneric());
+    senders.append(new SenderMobileSynth());
     senders.append(new SenderSuperCollider());
     repeatOff=0;
     onCnt=0;
@@ -90,7 +90,7 @@ void SenderMulti::pitch(int chan, int voiceId, float f, int midinote, int pitch)
     }
 }
 
-void SenderMulti::setDestination(QHostAddress a, int p)
+void SenderMulti::setDestination(char * a, int p)
 {
     for(int i=0;i<senders.count();i++) {
         senders.at(i)->setDestination(a,p);
@@ -135,7 +135,7 @@ void SenderMulti::create(SenderType i) {
     }
 }
 
-void SenderMulti::setDestination(int i, QHostAddress a,int p) {
+void SenderMulti::setDestination(int i, char * a,int p) {
     if(i<senders.count()) {
         senders.at(i)->setDestination(a,p);
     }

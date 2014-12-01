@@ -21,6 +21,7 @@
 #include "eventhandlerrect.h"
 #include "../comm/senderdebug.h"
 #include "../comm/senderoscpuredata.h"
+#include "../dialognet.h"
 
 EventHandlerRect::EventHandlerRect()
 {
@@ -267,10 +268,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 freq[evptr]=-1;
                 layout->decPressed(isegb[evptr]);
                 //qDebug() << "event " << evptr << " decpressed " << isegb[evptr] << " if moved from note- into control-field " << iseg;
-//                isegb[evptr]=iseg;
                 movedin=true;
             }
-            //isegb[evptr]=iseg;
             if(layout->getSegtype(iseg)==2) {
                 // push button
                 if(layout->getCtly(iseg)==-1) {
@@ -291,26 +290,36 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 } else if(layout->getCtly(iseg)==-5) {
                     // edit sender destination adress button
                     bool ok;
+                    QString text = QInputDialog::getText(rc1, "QInputDialog::getText()",
+                                                         "User name:", QLineEdit::Normal,
+                                                         "123123123", &ok);
+                    layout->setSegtext(iseg,text);
+
+                    /*
                     QString msg;
                     msg.sprintf("%s",snd->getAddress());
-                    QString text = QInputDialog::getText(rc1, "Destination Address",
-                                                         "IP:", QLineEdit::Normal,
-                                                         msg, &ok);
+                    QInputDialog dialog;
+                    QFont fnt;
+                    fnt.setPixelSize(50);
+                    fnt.setFamily("Verdana");
+                    dialog.setFont(fnt);
+                    dialog.setStyleSheet("* { font-size: 50pt; }" );
+                    QString text = dialog.getText(rc1->mainwindow, "Destination Address", "IP:", QLineEdit::Normal, msg, &ok);
                     if (ok && !text.isEmpty()) {
-                        // do something
+                        qDebug() << "got input " << text;
+                        layout->setSegtext(iseg,text);
                     }
+                    */
+
+                    //dialog.deleteLater();
+                    //rc1->activateWindow();
+                    //rc1->reset();
                 } else if(layout->getCtly(iseg)==-6) {
-                    // edit sender destination port button
-                    // layout->toggleEdit();
-                    bool ok;
-                    QString msg;
-                    msg.sprintf("%d",snd->getPort());
-                    QString text = QInputDialog::getText(rc1, "Destination Port",
-                                                         "Nr:", QLineEdit::Normal,
-                                                         msg, &ok);
-                    if (ok && !text.isEmpty()) {
-                        // do something
-                    }
+                    /*
+                    DialogNet * d= new DialogNet();
+                    d->show();
+                    d->hide();
+                    */
                 }
             } else if(layout->getSegtype(iseg)==3) {
                 // toggle button

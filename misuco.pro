@@ -62,7 +62,9 @@ SOURCES += main.cpp\
     comm/sendermulti.cpp \
     comm/senderreaktor.cpp \
     comm/senderoscmidigeneric.cpp \
-    conf/progmem.cpp
+    conf/progmem.cpp \
+    dialognet.cpp \
+    mainwindow.cpp
 
 HEADERS  += \
     storage.h \
@@ -120,7 +122,9 @@ HEADERS  += \
     comm/sendermulti.h \
     comm/senderreaktor.h \
     comm/senderoscmidigeneric.h \
-    conf/progmem.h
+    conf/progmem.h \
+    dialognet.h \
+    mainwindow.h
 
 OTHER_FILES += \
     puredata/osc2midi.pd \

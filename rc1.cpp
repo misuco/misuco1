@@ -41,7 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "paint/paintblocker.h"
 
 
-RC1::RC1(QWidget *parent) :
+RC1::RC1(MainWindow *parent) :
     #ifdef NOGL
     QWidget(parent)
     #else
@@ -51,6 +51,7 @@ RC1::RC1(QWidget *parent) :
     setAttribute(Qt::WA_AcceptTouchEvents,true);
     //qDebug() << "View() size:" << width() << " " << height();
 
+    mainwindow=parent;
     eventId = 1;
     nomouse = false;
     ttl=2000;
@@ -64,6 +65,7 @@ RC1::RC1(QWidget *parent) :
     sender=new SenderMulti();
     
     chan=0;
+    netDialog=false;
 
 #ifdef RC1_LINUX
     storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
@@ -164,7 +166,13 @@ RC1::RC1(QWidget *parent) :
     }
     */
 
-    //setWindowState(Qt::WindowFullScreen);
+    setWindowState(Qt::WindowFullScreen);
+
+    bool ok;
+    QString text = QInputDialog::getText(parent, "QInputDialog::getText()",
+                                         "User name:", QLineEdit::Normal,
+                                         "123123123", &ok);
+
 }
 
 RC1::~RC1()
@@ -269,11 +277,16 @@ void RC1::timerEvent(QTimerEvent *)
     }
     update();
     sender->sendOff();
+    if(netDialog) {
+        doNetDialog();
+        netDialog=false;
+    }
     
 }
 
 bool RC1::event(QEvent *event)
 {
+    //qDebug() << "event" << event->type();
     QList<QTouchEvent::TouchPoint> touchPoints;
     if(blockerOn) {
         if(adid!="") {
@@ -900,6 +913,7 @@ void RC1::setTtl(long value)
     ttl = value;
 }
 void RC1::appStateChange(Qt::ApplicationState state) {
+    qDebug() << "appStateChange " << state;
     if(state==Qt::ApplicationActive) {
         sender->reconnect();
 #ifdef RC1_PRO
@@ -960,6 +974,31 @@ void RC1::transmitSoundParam()
     for(int i=0;i<layout->getSoundParamMax();i++) {
          sender->cc(chan,0,i+102,layout->getSoundParam(i));
     }
+}
+
+void RC1::doNetDialog()
+{
+    bool ok;
+    QString msg;
+    msg.sprintf("%s","123 123 123 123");
+    QInputDialog dialog;
+    QFont fnt;
+    fnt.setPixelSize(50);
+    fnt.setFamily("Verdana");
+    dialog.setFont(fnt);
+    dialog.setStyleSheet("* { font-size: 50pt; }" );
+    QString text = dialog.getText(mainwindow, "Destination Address", "IP:", QLineEdit::Normal, msg, &ok);
+    if (ok && !text.isEmpty()) {
+        qDebug() << "got input " << text;
+    }
+
+    this->activateWindow();
+    this->makeCurrent();
+    this->makeOverlayCurrent();
+    this->setEnabled(true);
+    mainwindow->reset();
+    qDebug() << "RC1::reset";
+
 }
 
 void RC1::fillWithScale() {

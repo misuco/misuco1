@@ -25,9 +25,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "platform.h"
 #include <QApplication>
-#include "rc1.h"
+#include "mainwindow.h"
 
 #if defined(Q_OS_IOS)
 extern "C" int qtmn(int argc, char **argv)
@@ -36,15 +35,7 @@ int main(int argc, char **argv)
 #endif
 {
     QApplication a(argc, argv);
-    
-    RC1 * w = new RC1();
-    w->connectApp(&a);
-    w->show();
-    /*
-    RC1 w;
-    w.connectApp(&a);
+    MainWindow w;
     w.show();
-    */
-    
     return a.exec();
 }

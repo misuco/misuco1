@@ -40,9 +40,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "comm/isender.h"
 #include "comm/sendermulti.h"
 #include "event/ieventhandler.h"
+#include "event/eventhandlerrect.h"
 #include "paint/ipaint.h"
 #include "paint/ipointpaint.h"
 #include "comm/libofqf/qosctypes.h"
+#include "mainwindow.h"
 
 #define RC1_SCALES_XML_URL "http://x21.ch/rc1/scales.xml"
 #define RC1_ADS_URL "http://ads.misuco.org/go/?id="
@@ -50,6 +52,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class IPaint;
 class IPointPaint;
 class IEventHandler;
+class EventHandlerRect;
+class MainWindow;
 
 #ifdef NOGL
 class RC1 : public QWidget, PathObject
@@ -60,7 +64,7 @@ class RC1 : public QGLWidget, PathObject
     Q_OBJECT
 
 public:
-    explicit RC1(QWidget *parent = 0);
+    explicit RC1(MainWindow *parent = 0);
     ~RC1();
 
 #ifdef RC1_IOS
@@ -68,6 +72,8 @@ public:
 #else
     static const float freq_max = 20000.0f;
 #endif
+
+    MainWindow * mainwindow;
 
     Storage *getStorage() const;
     LayoutModel *getLayout() const;
@@ -83,6 +89,8 @@ public:
 
     void connectApp(QApplication * app);
     void transmitSoundParam();
+
+    bool netDialog;
     
 public slots:
     void replyFinished(QNetworkReply * r);
@@ -102,7 +110,7 @@ private:
     Storage * storage;
     LayoutModel * layout;
     SenderMulti * sender;
-    IEventHandler * ehand;
+    EventHandlerRect * ehand;
     IPaint ** prepainters;
     IPointPaint ** pointpainters;
     IPaint ** postpainters;
@@ -166,6 +174,8 @@ private:
 //    void resetStat();
     void setPPSmin();
     void fillWithScale();
+
+    void doNetDialog();
 
 };
 

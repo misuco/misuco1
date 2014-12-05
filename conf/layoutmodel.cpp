@@ -869,6 +869,12 @@ void LayoutModel::resetLayout() {
     resetLayout(currLayout);
 }
 
+void LayoutModel::saveLayout() {
+    QString filename;
+    filename.sprintf(confpath,currLayout);
+    layxml.writeXml(filename);
+}
+
 
 int LayoutModel::getFontsize() const
 {
@@ -950,6 +956,10 @@ void LayoutModel::updateLayout()
                 } else {
                     pressed[seg]=0;
                 }
+            } else if(ctly[seg]==-5) {
+                segText[seg]=progmem.adr;
+            } else if(ctly[seg]==-6) {
+                segText[seg].sprintf("%d",progmem.port);
             }
         } else if(segtype[seg]==3 ) {
             if(ctly[seg]==-2) {
@@ -966,8 +976,10 @@ void LayoutModel::updateLayout()
                 xrelq[seg]=progmem.progmem[actProgmen].topoct;
             } else if(ctly[seg]==-5) {
                 xrelq[seg]=progmem.progmem[actProgmen].baseoct;
-//            } else if(ctly[seg]>0 && ctly[seg]<NSOUNDPARAM) {
-//                xrelq[seg]=progmem.progmem[actProgmen].soundParam[ctly[seg]];
+            } else if(ctly[seg]==-6) {
+                xrelq[seg]=progmem.senderType;
+            } else if(ctly[seg]==-7) {
+                xrelq[seg]=progmem.errCorr;
             }
         } else if(segtype[seg]==5 ) {
             if(ctly[seg]>=102) {
@@ -1086,6 +1098,16 @@ int LayoutModel::generateScale(int seg, bool firstlast) {
         }
     }
     return seg;
+}
+
+void LayoutModel::setDisplayAddress(QString adr)
+{
+    progmem.adr=adr;
+}
+
+void LayoutModel::setDisplayPort(int port)
+{
+    progmem.port=port;
 }
 
 

@@ -44,6 +44,11 @@ public:
 
     prog progmem[progmem_max];
 
+    QString adr;
+    int port;
+    int senderType;
+    int errCorr;
+
     void readProgmemXml(QString filename);
     void writeProgmemXml(QString filename);
 

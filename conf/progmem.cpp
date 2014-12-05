@@ -23,6 +23,8 @@
 
 ProgMem::ProgMem()
 {
+    adr="255.255.255.255";
+    port=3150;
 }
 
 void ProgMem::readProgmemXml(QString filename)
@@ -43,6 +45,10 @@ void ProgMem::readProgmemXml(QString filename)
     if (xmlr.readNextStartElement()) {
         //qDebug() << "xmlr.name " << xmlr.name();
         if (xmlr.name() == "misucoprogmem" && xmlr.attributes().value("version") == "1.0") {
+            adr=xmlr.attributes().value("adr").toString();
+            port=xmlr.attributes().value("port").toInt();
+            senderType=xmlr.attributes().value("senderType").toInt();
+            errCorr=xmlr.attributes().value("errCorr").toInt();
             int row=0;
             while (xmlr.readNextStartElement() && row<progmem_max) {
                 //qDebug() << "row " << row;
@@ -92,6 +98,13 @@ void ProgMem::writeProgmemXml(QString filename)
     xml.writeDTD("<!DOCTYPE misuco>");
     xml.writeStartElement("misucoprogmem");
     xml.writeAttribute("version", "1.0");
+    xml.writeAttribute("adr",adr);
+    att.sprintf("%d",port);
+    xml.writeAttribute("port",att);
+    att.sprintf("%d",senderType);
+    xml.writeAttribute("senderType",att);
+    att.sprintf("%d",errCorr);
+    xml.writeAttribute("errCorr",att);
 
     for (int row = 0; row < progmem_max; row++) {
         xml.writeStartElement("prog");

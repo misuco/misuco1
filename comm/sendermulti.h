@@ -35,8 +35,8 @@ public:
     virtual void pitch(int chan, int voiceId, float f, int midinote, int pitch);
     virtual void setDestination(char * a,int p);
     virtual void reconnect();
-    virtual int getPort() {if(senders.count()>0) return senders.at(0)->getPort(); else return 0;}
-    virtual char* getAddress() {return 0;}
+    virtual int getPort();
+    virtual char* getAddress(); //{return 0;}
     virtual bool voiceBased() {return true;}
     
     enum SenderType {

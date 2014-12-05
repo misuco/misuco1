@@ -60,26 +60,24 @@ RC1::RC1(MainWindow *parent) :
     layout=new LayoutModel();
     ehand=new EventHandlerRect();
 
-    //senderAddress=QHostAddress("255.255.255.255");
-    //senderPort=3150;
     sender=new SenderMulti();
     
     chan=0;
     netDialog=false;
 
-#ifdef RC1_LINUX
-    storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
-    // Android: /storage/emulated/0/Documents => not Persistent
-    // Linux: /home/c1/Documents => Persistent
-    // iOS: not Persistent???? But document exchange folder
-#elifdef RC1_IOS
-    storagePath=QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-#else
     storagePath=QStandardPaths::writableLocation(QStandardPaths::DataLocation);
     //  Android: /data/data/org.qtproject.example.rc1/files  => Persistent !!
     //  W8: C:/Users/c1/AppData/Local/rc1 => Persistent
     //  iOS: /var/mobile/Applications/ADDEBF69-B1C5-4E36-A8C2-789D717434C1/Documents => Persistent
     //  Linux: /home/c1/.local/share/rc1 => not Writable
+#ifdef RC1_LINUX
+    storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    // Android: /storage/emulated/0/Documents => not Persistent
+    // Linux: /home/c1/Documents => Persistent
+    // iOS: not Persistent???? But document exchange folder
+#endif
+#ifdef RC1_IOS
+    storagePath=QStandardPaths::writableLocation(QStandardPaths::DataLocation);
 #endif
     //qDebug() << "storage path: " << storagePath;
     progmemFile=storagePath+"/prog.xml";
@@ -166,12 +164,7 @@ RC1::RC1(MainWindow *parent) :
     }
     */
 
-    setWindowState(Qt::WindowFullScreen);
-
-    bool ok;
-    QString text = QInputDialog::getText(parent, "QInputDialog::getText()",
-                                         "User name:", QLineEdit::Normal,
-                                         "123123123", &ok);
+    //setWindowState(Qt::WindowFullScreen);
 
 }
 
@@ -964,7 +957,7 @@ void RC1::replyFinished(QNetworkReply * r)
     }
 }
 
-ISender * RC1::getSender() const
+SenderMulti * RC1::getSender() const
 {
 return sender;
 }

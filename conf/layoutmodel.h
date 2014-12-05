@@ -168,6 +168,7 @@ public:
     void resetLayout(int i);
     void resetLayout(QString filename);
     void resetLayout();
+    void saveLayout();
 
     void setActProgmem(int n);
 
@@ -177,6 +178,15 @@ public:
     void writeProgmemXml(QString filename);
 
     int generateScale(int seg, bool firstlast);
+
+    void setDisplayAddress(QString adr);
+    void setDisplayPort(int port);
+    QString getDisplayAddress() {return progmem.adr;}
+    int getDisplayPort() {return progmem.port;}
+    void setErrorCorr(int i) {progmem.errCorr=i;}
+    int getErrorCorr() {return progmem.errCorr;}
+    void setSenderType(int i) {progmem.senderType=i;}
+    int getSenderType() {return progmem.senderType;}
 
 private:
     // view and event parameters

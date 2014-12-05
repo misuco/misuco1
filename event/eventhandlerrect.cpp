@@ -31,7 +31,7 @@ EventHandlerRect::EventHandlerRect()
 //void EventHandlerRect::processPoint(int p->getGid(), Qt::TouchPointState touchPointState, quint16 x1, quint16 y1)
 void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
 {
-    ISender * snd=rc1->getSender();
+    SenderMulti * snd=rc1->getSender();
     LayoutModel * layout=rc1->getLayout();
     
     // 1. figure out, at which index (evptr) the data for this touch point is stored
@@ -290,10 +290,14 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 } else if(layout->getCtly(iseg)==-5) {
                     // edit sender destination adress button
                     bool ok;
-                    QString text = QInputDialog::getText(rc1, "QInputDialog::getText()",
-                                                         "User name:", QLineEdit::Normal,
-                                                         "123123123", &ok);
-                    layout->setSegtext(iseg,text);
+                    QString text = QInputDialog::getText(rc1, "Destination address",
+                                                         "IP:", QLineEdit::Normal,
+                                                         snd->getAddress(), &ok);
+                    if (ok && !text.isEmpty()) {
+                        snd->setDestination(text.toLocal8Bit().data(),snd->getPort());
+                        layout->setSegtext(iseg,snd->getAddress());
+                        layout->setDisplayAddress(snd->getAddress());
+                    }
 
                     /*
                     QString msg;
@@ -315,6 +319,20 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     //rc1->activateWindow();
                     //rc1->reset();
                 } else if(layout->getCtly(iseg)==-6) {
+                    bool ok;
+                    QString p;
+                    p.sprintf("%d",snd->getPort());
+                    QString text = QInputDialog::getText(rc1, "Destination address",
+                                                         "Port:", QLineEdit::Normal,
+                                                         p, &ok);
+                    if (ok && !text.isEmpty()) {
+                        char * a=new char[strlen(snd->getAddress())];
+                        strcpy(a,snd->getAddress());
+                        snd->setDestination(a,text.toInt());
+                        p.sprintf("%d",snd->getPort());
+                        layout->setSegtext(iseg,p);
+                        layout->setDisplayPort(snd->getPort());
+                    }
                     /*
                     DialogNet * d= new DialogNet();
                     d->show();
@@ -361,6 +379,32 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 } else if(layout->getCtly(iseg)==-5) {
                     layout->setBaseoct(xrelquant);
                     layout->updateLayout();
+                } else if(layout->getCtly(iseg)==-6) {
+                    if(xrelquant<5) {
+                        snd->delAll();
+                        switch(xrelquant) {
+                        case 0:
+                            snd->create(SenderMulti::GENERIC);
+                            break;
+                        case 1:
+                            snd->create(SenderMulti::MIDI);
+                            break;
+                        case 2:
+                            snd->create(SenderMulti::SUPERCOLLIDER);
+                            break;
+                        case 3:
+                            snd->create(SenderMulti::REAKTOR);
+                            break;
+                        case 4:
+                            snd->create(SenderMulti::XY);
+                            break;
+                        }
+                        snd->setDestination(0,layout->getDisplayAddress().toLocal8Bit().data(),layout->getDisplayPort());
+                        layout->setSenderType(xrelquant);
+                    }
+                } else if(layout->getCtly(iseg)==-7) {
+                    snd->repeatOff=xrelquant;
+                    layout->setErrorCorr(xrelquant);
                 } else {
                     snd->cc(0, 0, layout->getCtly(iseg)+100, xrelquant);
                     layout->setSoundParam(layout->getCtly(iseg),xrelquant);
@@ -377,6 +421,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             } else if(layout->getSegtype(iseg)==12) {
                 if( p->getState() == Qt::TouchPointPressed || movedin) {
                     /* ordered
+
                     QString link = "";
                     QString link_pre="http://scales.misuco.org/";
                     link.append(layout->getMidi2TextUrl(layout->getBasenote()));

@@ -77,7 +77,7 @@ public:
 
     Storage *getStorage() const;
     LayoutModel *getLayout() const;
-    ISender *getSender() const;
+    SenderMulti *getSender() const;
     long getNow();
     int getFps();
     QTime *getFpsT();

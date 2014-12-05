@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE misuco>
-<misucoprogmem version="1.0">
+<misucoprogmem version="1.0" adr="255.255.255.255" port="3150" senderType="0" errCorr="0" >
     <prog basenote="0" baseoct="5" topoct="7" soundparam0="2" soundparam1="10" soundparam2="10" soundparam3="127" soundparam4="64" soundparam5="0" soundparam6="0" soundparam7="0" soundparam8="0" soundparam9="127" bscale0="0" bscale1="0" bscale2="0" bscale3="1" bscale4="0" bscale5="0" bscale6="1" bscale7="0" bscale8="0" bscale9="0" bscale10="0"/>
     <prog basenote="1" baseoct="4" topoct="5" soundparam0="1" soundparam1="46" soundparam2="10" soundparam3="127" soundparam4="64" soundparam5="0" soundparam6="12" soundparam7="0" soundparam8="0" soundparam9="100" bscale0="0" bscale1="1" bscale2="0" bscale3="0" bscale4="1" bscale5="0" bscale6="0" bscale7="0" bscale8="1" bscale9="0" bscale10="0"/>
     <prog basenote="0" baseoct="5" topoct="7" soundparam0="2" soundparam1="0" soundparam2="10" soundparam3="0" soundparam4="0" soundparam5="0" soundparam6="103" soundparam7="0" soundparam8="0" soundparam9="127" bscale0="0" bscale1="1" bscale2="0" bscale3="0" bscale4="1" bscale5="0" bscale6="1" bscale7="0" bscale8="1" bscale9="0" bscale10="0"/>

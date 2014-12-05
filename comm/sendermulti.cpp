@@ -147,6 +147,22 @@ void SenderMulti::reconnect() {
     }
 }
 
+int SenderMulti::getPort()
+{
+    if(senders.count()>0)
+        return senders.at(0)->getPort();
+    else
+        return 0;
+}
+
+char *SenderMulti::getAddress()
+{
+    if(senders.count()>0)
+        return senders.at(0)->getAddress();
+    else
+        return 0;
+}
+
 void SenderMulti::sendOff() {
     for(int j=offToRepeat.count();j>0;j--) {
         int i=j-1;

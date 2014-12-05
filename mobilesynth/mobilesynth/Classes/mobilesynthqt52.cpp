@@ -81,6 +81,9 @@ mobileSynthQT52::mobileSynthQT52()
 
 mobileSynthQT52::~mobileSynthQT52()
 {
+    m_pullTimer->stop();
+    m_audioOutput->stop();
+    this->stop();
     delete(syctl);
     delete(m_audioOutput);
 }

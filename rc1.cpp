@@ -150,11 +150,17 @@ RC1::RC1(MainWindow *parent) :
             this, SLOT(replyFinished(QNetworkReply*)));
 
     layout->readProgmemXml(progmemFile);
+    sender->repeatOff=layout->getErrorCorr();
+    sender->reset1(layout->getSenderType(),layout->getDisplayAddress().toLocal8Bit().data(),layout->getDisplayPort());
     layout->resetLayout();
     layout->toggleEdit();
     layout->setActProgmem(0);
     layout->calcGeo(width(),height());
     layout->updateLayout();
+
+    layout->setAllChan(layout->getChannel());
+    qDebug() << "RC1: setAllChan" << layout->getChannel();
+
     transmitSoundParam();
     
     /*

@@ -180,3 +180,26 @@ void SenderMulti::sendOff() {
         }
     }
 }
+
+void SenderMulti::reset1(int x, char * adr, int port) {
+    delAll();
+    switch(x) {
+    case 0:
+        create(SenderMulti::GENERIC);
+        break;
+    case 1:
+        create(SenderMulti::MIDI);
+        break;
+    case 2:
+        create(SenderMulti::SUPERCOLLIDER);
+        break;
+    case 3:
+        create(SenderMulti::REAKTOR);
+        break;
+    case 4:
+        create(SenderMulti::XY);
+        break;
+    }
+    setDestination(0,adr,port);
+}
+

@@ -187,6 +187,8 @@ public:
     int getErrorCorr() {return progmem.errCorr;}
     void setSenderType(int i) {progmem.senderType=i;}
     int getSenderType() {return progmem.senderType;}
+    void setChannel(int i) {progmem.channel=i;}
+    int getChannel() {return progmem.channel;}
 
 private:
     // view and event parameters

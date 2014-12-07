@@ -47,8 +47,10 @@ void ProgMem::readProgmemXml(QString filename)
         if (xmlr.name() == "misucoprogmem" && xmlr.attributes().value("version") == "1.0") {
             adr=xmlr.attributes().value("adr").toString();
             port=xmlr.attributes().value("port").toInt();
+            channel=xmlr.attributes().value("channel").toInt();
             senderType=xmlr.attributes().value("senderType").toInt();
             errCorr=xmlr.attributes().value("errCorr").toInt();
+            qDebug() << "read adr " << adr << " port " << port << " senderType " << senderType << " channel " << channel;
             int row=0;
             while (xmlr.readNextStartElement() && row<progmem_max) {
                 //qDebug() << "row " << row;
@@ -101,10 +103,17 @@ void ProgMem::writeProgmemXml(QString filename)
     xml.writeAttribute("adr",adr);
     att.sprintf("%d",port);
     xml.writeAttribute("port",att);
+    qDebug() << "wrote port " << att;
     att.sprintf("%d",senderType);
     xml.writeAttribute("senderType",att);
+    qDebug() << "wrote senderType " << att;
     att.sprintf("%d",errCorr);
     xml.writeAttribute("errCorr",att);
+    qDebug() << "wrote errCorr " << att;
+    att.sprintf("%d",channel);
+    xml.writeAttribute("channel",att);
+    qDebug() << "wrote channel " << att;
+    qDebug() << "wrote adr " << adr << " port " << port << " senderType " << senderType << " channel " << channel;
 
     for (int row = 0; row < progmem_max; row++) {
         xml.writeStartElement("prog");

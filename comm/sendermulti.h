@@ -63,6 +63,8 @@ public:
         int offSent;
     };
     
+    void reset1(int x, char *adr, int port);
+
 private:
     QList<ISender *> senders;
     QList<offRepeat *> offToRepeat;

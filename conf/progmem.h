@@ -46,6 +46,7 @@ public:
 
     QString adr;
     int port;
+    int channel;
     int senderType;
     int errCorr;
 

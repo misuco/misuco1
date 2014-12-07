@@ -381,29 +381,12 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     layout->updateLayout();
                 } else if(layout->getCtly(iseg)==-6) {
                     if(xrelquant<5) {
-                        snd->delAll();
-                        switch(xrelquant) {
-                        case 0:
-                            snd->create(SenderMulti::GENERIC);
-                            break;
-                        case 1:
-                            snd->create(SenderMulti::MIDI);
-                            break;
-                        case 2:
-                            snd->create(SenderMulti::SUPERCOLLIDER);
-                            break;
-                        case 3:
-                            snd->create(SenderMulti::REAKTOR);
-                            break;
-                        case 4:
-                            snd->create(SenderMulti::XY);
-                            break;
-                        }
-                        snd->setDestination(0,layout->getDisplayAddress().toLocal8Bit().data(),layout->getDisplayPort());
+                        snd->reset1(xrelquant,layout->getDisplayAddress().toLocal8Bit().data(),layout->getDisplayPort());
                         layout->setSenderType(xrelquant);
                     }
                 } else if(layout->getCtly(iseg)==-7) {
                     layout->setAllChan(xrelquant);
+                    layout->setChannel(xrelquant);
                 } else if(layout->getCtly(iseg)==-8) {
                     snd->repeatOff=xrelquant;
                     layout->setErrorCorr(xrelquant);

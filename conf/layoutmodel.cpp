@@ -979,6 +979,8 @@ void LayoutModel::updateLayout()
             } else if(ctly[seg]==-6) {
                 xrelq[seg]=progmem.senderType;
             } else if(ctly[seg]==-7) {
+                xrelq[seg]=progmem.channel;
+            } else if(ctly[seg]==-8) {
                 xrelq[seg]=progmem.errCorr;
             }
         } else if(segtype[seg]==5 ) {

@@ -90,6 +90,7 @@ public:
     void connectApp(QApplication * app);
     void transmitSoundParam();
 
+    int chan; // midi chan for pc
     bool netDialog;
     
 public slots:
@@ -125,8 +126,6 @@ private:
     //int senderPort;
     //QList<QHostAddress> ignoreAddr;
     
-    int chan; // midi chan for pc
-
     int nPrePainters;
     int nPointPainters;
     int nPostPainters;

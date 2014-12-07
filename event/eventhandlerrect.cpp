@@ -403,6 +403,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                         layout->setSenderType(xrelquant);
                     }
                 } else if(layout->getCtly(iseg)==-7) {
+                    layout->setAllChan(xrelquant);
+                } else if(layout->getCtly(iseg)==-8) {
                     snd->repeatOff=xrelquant;
                     layout->setErrorCorr(xrelquant);
                 } else {

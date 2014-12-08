@@ -25,6 +25,9 @@ ProgMem::ProgMem()
 {
     adr="255.255.255.255";
     port=3150;
+    channel=1;
+    errCorr=0;
+    senderType=0;
 }
 
 void ProgMem::readProgmemXml(QString filename)

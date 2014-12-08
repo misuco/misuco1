@@ -270,117 +270,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 //qDebug() << "event " << evptr << " decpressed " << isegb[evptr] << " if moved from note- into control-field " << iseg;
                 movedin=true;
             }
-            if(layout->getSegtype(iseg)==2) {
-                // push button
-                if(layout->getCtly(iseg)==-1) {
-                    // basenote button
-                    layout->setBasenote(layout->getCtlx(iseg));
-                    layout->updateLayout();
-                } else if(layout->getCtly(iseg)==-2) {
-                    // memory button, not in use
-                    layout->setActProgmem(layout->getCtlx(iseg));
-                    rc1->transmitSoundParam();
-                } else if(layout->getCtly(iseg)==-3) {
-                    // edit button
-                    layout->toggleEdit();
-                } else if(layout->getCtly(iseg)==-4) {
-                    // layout switch button
-                    layout->resetLayout(layout->getCtlx(iseg));
-                    layout->updateLayout();
-                } else if(layout->getCtly(iseg)==-5) {
-                    // edit sender destination adress button
-                    bool ok;
-                    QString text = QInputDialog::getText(rc1, "Destination address",
-                                                         "IP:", QLineEdit::Normal,
-                                                         snd->getAddress(), &ok);
-                    if (ok && !text.isEmpty()) {
-                        snd->setDestination(text.toLocal8Bit().data(),snd->getPort());
-                        layout->setSegtext(iseg,snd->getAddress());
-                        layout->setDisplayAddress(snd->getAddress());
-                    }
-
-                    /*
-                    QString msg;
-                    msg.sprintf("%s",snd->getAddress());
-                    QInputDialog dialog;
-                    QFont fnt;
-                    fnt.setPixelSize(50);
-                    fnt.setFamily("Verdana");
-                    dialog.setFont(fnt);
-                    dialog.setStyleSheet("* { font-size: 50pt; }" );
-                    QString text = dialog.getText(rc1->mainwindow, "Destination Address", "IP:", QLineEdit::Normal, msg, &ok);
-                    if (ok && !text.isEmpty()) {
-                        qDebug() << "got input " << text;
-                        layout->setSegtext(iseg,text);
-                    }
-                    */
-
-                    //dialog.deleteLater();
-                    //rc1->activateWindow();
-                    //rc1->reset();
-                } else if(layout->getCtly(iseg)==-6) {
-                    bool ok;
-                    QString p;
-                    p.sprintf("%d",snd->getPort());
-                    QString text = QInputDialog::getText(rc1, "Destination address",
-                                                         "Port:", QLineEdit::Normal,
-                                                         p, &ok);
-                    if (ok && !text.isEmpty()) {
-                        char * a=new char[strlen(snd->getAddress())];
-                        strcpy(a,snd->getAddress());
-                        snd->setDestination(a,text.toInt());
-                        p.sprintf("%d",snd->getPort());
-                        layout->setSegtext(iseg,p);
-                        layout->setDisplayPort(snd->getPort());
-                    }
-                    /*
-                    DialogNet * d= new DialogNet();
-                    d->show();
-                    d->hide();
-                    */
-                } else if(layout->getCtly(iseg)==-7) {
-                    if(iseg>0) {
-                        int newval=layout->getMidinote(iseg+1)-10;
-                        if(newval<0) {
-                            layout->setMidinote(iseg-1,layout->getCtlx(iseg));
-                        } else {
-                            layout->setMidinote(iseg-1,newval);
-                        }
-                    }
-                } else if(layout->getCtly(iseg)==-8) {
-                    if(iseg<layout->nsegs_max-1) {
-                        int newval=layout->getMidinote(iseg+1)+10;
-                        if(newval>layout->getCtlx(iseg)) {
-                            layout->setMidinote(iseg-1,0);
-                        } else {
-                            layout->setMidinote(iseg-1,newval);
-                        }
-                    }
-                }
-            } else if(layout->getSegtype(iseg)==3) {
-                // toggle button
-                 if( p->getState() == Qt::TouchPointPressed || movedin) {
-                     //qDebug() << " seg type 3 " << iseg << " pressed " << layout->getPressed(iseg);
-                     if(layout->getPressed(iseg)>0) {
-                         layout->setPressed(iseg,0);
-                         if(layout->getCtly(iseg)==-1) {
-                             layout->setBscale(layout->getCtlx(iseg),false);
-                             //qDebug() << " bscale off " << iseg;
-                         } else if(layout->getCtly(iseg)==-2) {
-                             layout->setTransMode(false);
-                         }
-                         layout->updateLayout();
-                     } else {
-                         layout->setPressed(iseg,1);
-                         if(layout->getCtly(iseg)==-1) {
-                             layout->setBscale(layout->getCtlx(iseg),true);
-                         } else if(layout->getCtly(iseg)==-2) {
-                             layout->setTransMode(true);
-                         }
-                         layout->updateLayout();
-                     }
-                 }
-            } else if(layout->getSegtype(iseg)==4) {
+            if(layout->getSegtype(iseg)==4) {
                 // x-slider
                 if(layout->getCtly(iseg)==-1) {
                     layout->setBasenote(xrelquant);
@@ -484,6 +374,122 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 layout->setBscale(layout->getCtlx(iseg),!layout->getBscale(layout->getCtlx(iseg)));
                 layout->updateLayout();
             }
+        }
+
+        /*
+         * button action shall be on release
+         *
+         */
+        if(layout->getSegtype(iseg)==2) {
+            // push button
+            if(layout->getCtly(iseg)==-1) {
+                // basenote button
+                layout->setBasenote(layout->getCtlx(iseg));
+                layout->updateLayout();
+            } else if(layout->getCtly(iseg)==-2) {
+                // memory button, not in use
+                layout->setActProgmem(layout->getCtlx(iseg));
+                rc1->transmitSoundParam();
+            } else if(layout->getCtly(iseg)==-3) {
+                // edit button
+                layout->toggleEdit();
+            } else if(layout->getCtly(iseg)==-4) {
+                // layout switch button
+                layout->resetLayout(layout->getCtlx(iseg));
+                layout->updateLayout();
+            } else if(layout->getCtly(iseg)==-5) {
+                // edit sender destination adress button
+                bool ok;
+                QString text = QInputDialog::getText(rc1, "Destination address",
+                                                     "IP:", QLineEdit::Normal,
+                                                     snd->getAddress(), &ok);
+                if (ok && !text.isEmpty()) {
+                    snd->setDestination(text.toLocal8Bit().data(),snd->getPort());
+                    layout->setSegtext(iseg,snd->getAddress());
+                    layout->setDisplayAddress(snd->getAddress());
+                }
+
+                /*
+                QString msg;
+                msg.sprintf("%s",snd->getAddress());
+                QInputDialog dialog;
+                QFont fnt;
+                fnt.setPixelSize(50);
+                fnt.setFamily("Verdana");
+                dialog.setFont(fnt);
+                dialog.setStyleSheet("* { font-size: 50pt; }" );
+                QString text = dialog.getText(rc1->mainwindow, "Destination Address", "IP:", QLineEdit::Normal, msg, &ok);
+                if (ok && !text.isEmpty()) {
+                    qDebug() << "got input " << text;
+                    layout->setSegtext(iseg,text);
+                }
+                */
+
+                //dialog.deleteLater();
+                //rc1->activateWindow();
+                //rc1->reset();
+            } else if(layout->getCtly(iseg)==-6) {
+                bool ok;
+                QString p;
+                p.sprintf("%d",snd->getPort());
+                QString text = QInputDialog::getText(rc1, "Destination address",
+                                                     "Port:", QLineEdit::Normal,
+                                                     p, &ok);
+                if (ok && !text.isEmpty()) {
+                    char * a=new char[strlen(snd->getAddress())];
+                    strcpy(a,snd->getAddress());
+                    snd->setDestination(a,text.toInt());
+                    p.sprintf("%d",snd->getPort());
+                    layout->setSegtext(iseg,p);
+                    layout->setDisplayPort(snd->getPort());
+                }
+                /*
+                DialogNet * d= new DialogNet();
+                d->show();
+                d->hide();
+                */
+            } else if(layout->getCtly(iseg)==-7) {
+                if(iseg<layout->nsegs_max-1) {
+                    int newval=layout->getMidinote(iseg+1)-10;
+                    if(newval<0) {
+                        layout->setMidinote(iseg+1,layout->getCtlx(iseg));
+                    } else {
+                        layout->setMidinote(iseg+1,newval);
+                    }
+                }
+            } else if(layout->getCtly(iseg)==-8) {
+                if(iseg>0) {
+                    int newval=layout->getMidinote(iseg-1)+10;
+                    if(newval>layout->getCtlx(iseg)) {
+                        layout->setMidinote(iseg-1,0);
+                    } else {
+                        layout->setMidinote(iseg-1,newval);
+                    }
+                }
+            }
+        } else if(layout->getSegtype(iseg)==3) {
+            // toggle button
+             //if( p->getState() == Qt::TouchPointPressed || movedin) {
+                 //qDebug() << " seg type 3 " << iseg << " pressed " << layout->getPressed(iseg);
+                 if(layout->getPressed(iseg)>0) {
+                     layout->setPressed(iseg,0);
+                     if(layout->getCtly(iseg)==-1) {
+                         layout->setBscale(layout->getCtlx(iseg),false);
+                         //qDebug() << " bscale off " << iseg;
+                     } else if(layout->getCtly(iseg)==-2) {
+                         layout->setTransMode(false);
+                     }
+                     layout->updateLayout();
+                 } else {
+                     layout->setPressed(iseg,1);
+                     if(layout->getCtly(iseg)==-1) {
+                         layout->setBscale(layout->getCtlx(iseg),true);
+                     } else if(layout->getCtly(iseg)==-2) {
+                         layout->setTransMode(true);
+                     }
+                     layout->updateLayout();
+                 }
+             //}
         }
 
         if(layout->getSegtype(iseg)==0 || layout->getSegtype(iseg)==1 || layout->getSegtype(iseg)==3) {

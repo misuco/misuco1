@@ -23,6 +23,7 @@
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 #include <QFile>
+#include "platform.h"
 
 class ProgMem
 {
@@ -32,7 +33,11 @@ public:
     
     static const int bscale_max=11;
     static const int soudnparam_max=10;
-    static const int progmem_max=11;
+#ifdef RC1_PRO
+    static const int progmem_max=110;
+#else
+    static const int progmem_max=10;
+#endif
     
     struct prog {
         int basenote;

@@ -338,6 +338,24 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     d->show();
                     d->hide();
                     */
+                } else if(layout->getCtly(iseg)==-7) {
+                    if(iseg>0) {
+                        int newval=layout->getMidinote(iseg+1)-10;
+                        if(newval<0) {
+                            layout->setMidinote(iseg-1,layout->getCtlx(iseg));
+                        } else {
+                            layout->setMidinote(iseg-1,newval);
+                        }
+                    }
+                } else if(layout->getCtly(iseg)==-8) {
+                    if(iseg<layout->nsegs_max-1) {
+                        int newval=layout->getMidinote(iseg+1)+10;
+                        if(newval>layout->getCtlx(iseg)) {
+                            layout->setMidinote(iseg-1,0);
+                        } else {
+                            layout->setMidinote(iseg-1,newval);
+                        }
+                    }
                 }
             } else if(layout->getSegtype(iseg)==3) {
                 // toggle button
@@ -368,7 +386,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     layout->setBasenote(xrelquant);
                     layout->updateLayout();
                 } else if(layout->getCtly(iseg)==-2) {
-                    layout->setActProgmem(xrelquant);
+                    layout->setActProgmem(xrelquant+layout->getMidinote(iseg));
                     rc1->transmitSoundParam();
                     //layout->updateLayout();
                 } else if(layout->getCtly(iseg)==-3) {

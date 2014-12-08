@@ -275,7 +275,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                     QString text;
                     pnt->setBrush(Qt::darkGray);
                     for(int i=1;i<=lay->getCtlx(iseg);i++) {
-                        text.sprintf("%d",i);
+                        text.sprintf("%d",i+lay->getMidinote(iseg));
                         pnt->setPen(Qt::NoPen);
                         pnt->drawRect(xv1+cradx,ypaint+crady,xsseg,ysseg);
                         pnt->setPen(QColor::fromHsl(col,120,0));

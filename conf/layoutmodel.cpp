@@ -971,7 +971,9 @@ void LayoutModel::updateLayout()
             }
         } else if(segtype[seg]==4 ) {
             if(ctly[seg]==-2) {
-                xrelq[seg]=actProgmen;
+                midinote[seg]=actProgmen/ctlx[seg];
+                midinote[seg]*=ctlx[seg];
+                xrelq[seg]=actProgmen - midinote[seg];
             } else if(ctly[seg]==-4) {
                 xrelq[seg]=progmem.progmem[actProgmen].topoct;
             } else if(ctly[seg]==-5) {

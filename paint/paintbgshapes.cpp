@@ -269,7 +269,9 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                     int xsseg=sseg-2*cradx;
                     int ysseg=ypaint1-2*crady;
                     int xv1=lay->getXrelq(iseg)*sseg;
-                    pnt->drawRoundedRect(xpaint+xv1,ypaint,sseg,ypaint1_1,cradx,crady);
+                    if(lay->getXrelq(iseg)>=0) {
+                        pnt->drawRoundedRect(xpaint+xv1,ypaint,sseg,ypaint1_1,cradx,crady);
+                    }
                     xrow_header=xpaint+xv1+cradx;
                     xv1=xpaint;
                     QString text;
@@ -285,7 +287,6 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                     textAlign=Qt::AlignLeft;
                     fontl=0;
                     pnt->setFont(QFont(lay->getFont(),lay->getFontsizeS()));
-
                 } else if(lay->getSegtype(iseg)==5) {
                     // vertical fadder
                     pnt->setBrush(Qt::lightGray);

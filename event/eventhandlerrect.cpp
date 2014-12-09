@@ -456,6 +456,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     } else {
                         layout->setMidinote(iseg+1,newval);
                     }
+                    layout->setXrelq(iseg+1,-1);
                 }
             } else if(layout->getCtly(iseg)==-8) {
                 if(iseg>0) {
@@ -465,6 +466,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     } else {
                         layout->setMidinote(iseg-1,newval);
                     }
+                    layout->setXrelq(iseg-1,-1);
                 }
             }
         } else if(layout->getSegtype(iseg)==3) {

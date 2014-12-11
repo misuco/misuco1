@@ -429,8 +429,8 @@ void LayoutModel::setYrelq(int i, int value)
 
 int LayoutModel::getSoundParam(int i) const
 {
-    if(i<progmem.soudnparam_max) {
-        return progmem.progmem[actProgmen].soundParam[i];
+    if(i<soundmem.soundparam_max) {
+        return soundmem.soundParam[progmem.progmem[actProgmem].sound][i];
     } else {
         return 0;
     }
@@ -438,14 +438,19 @@ int LayoutModel::getSoundParam(int i) const
 
 int LayoutModel::getSoundParamMax() const
 {
-    return progmem.soudnparam_max;
+    return soundmem.soundparam_max;
 }
 
 void LayoutModel::setSoundParam(int i, int value)
 {
-    if(i<progmem.soudnparam_max) {
-        progmem.progmem[actProgmen].soundParam[i] = value;
+    if(i<soundmem.soundparam_max) {
+        soundmem.soundParam[progmem.progmem[actProgmem].sound][i]=value;
     }
+}
+
+void LayoutModel::setSound(int v)
+{
+    progmem.progmem[actProgmem].sound=v;
 }
 
 int LayoutModel::getCurrLayout() const
@@ -578,20 +583,20 @@ void LayoutModel::setSegtext(int i, QString t) const
 
 int LayoutModel::getBasenote() const
 {
-    return progmem.progmem[actProgmen].basenote;
+    return progmem.progmem[actProgmem].basenote;
 }
 
 void LayoutModel::setBasenote(int v)
 {
     if(v<=midinote_max) {
-        progmem.progmem[actProgmen].basenote = v;
+        progmem.progmem[actProgmem].basenote = v;
     }
 }
 
 bool LayoutModel::getBscale(int n)
 {
     if(n<progmem.bscale_max) {
-        return progmem.progmem[actProgmen].bscale[n];
+        return progmem.progmem[actProgmem].bscale[n];
     } else {
         return false;
     }
@@ -600,13 +605,13 @@ bool LayoutModel::getBscale(int n)
 void LayoutModel::setBscale(int n, bool v)
 {
     if(n<progmem.bscale_max) {
-        progmem.progmem[actProgmen].bscale[n]=v;
+        progmem.progmem[actProgmem].bscale[n]=v;
     }
 }
 
 int LayoutModel::getTopoct() const
 {
-    return progmem.progmem[actProgmen].topoct;
+    return progmem.progmem[actProgmem].topoct;
 }
 
 void LayoutModel::setTopoct(int v)
@@ -614,17 +619,17 @@ void LayoutModel::setTopoct(int v)
     if(v>10) {
         v=10;
     }
-    if(progmem.progmem[actProgmen].baseoct>v) {
-        progmem.progmem[actProgmen].topoct=progmem.progmem[actProgmen].baseoct;
-        progmem.progmem[actProgmen].baseoct=v;
+    if(progmem.progmem[actProgmem].baseoct>v) {
+        progmem.progmem[actProgmem].topoct=progmem.progmem[actProgmem].baseoct;
+        progmem.progmem[actProgmem].baseoct=v;
     } else {
-        progmem.progmem[actProgmen].topoct = v;
+        progmem.progmem[actProgmem].topoct = v;
     }
 }
 
 int LayoutModel::getBaseoct() const
 {
-    return progmem.progmem[actProgmen].baseoct;
+    return progmem.progmem[actProgmem].baseoct;
 }
 
 void LayoutModel::setBaseoct(int v)
@@ -632,11 +637,11 @@ void LayoutModel::setBaseoct(int v)
     if(v>10) {
         v=10;
     }
-    if(progmem.progmem[actProgmen].topoct<v) {
-        progmem.progmem[actProgmen].baseoct=progmem.progmem[actProgmen].topoct;
-        progmem.progmem[actProgmen].topoct=v;
+    if(progmem.progmem[actProgmem].topoct<v) {
+        progmem.progmem[actProgmem].baseoct=progmem.progmem[actProgmem].topoct;
+        progmem.progmem[actProgmem].topoct=v;
     } else {
-        progmem.progmem[actProgmen].baseoct=v;
+        progmem.progmem[actProgmem].baseoct=v;
     }
 }
 
@@ -911,14 +916,14 @@ void LayoutModel::updateLayout()
             int note=0;
             if(ctly[seg]==-1) {
                 note=ctlx[seg];
-                if(progmem.progmem[actProgmen].basenote==ctlx[seg]) {
+                if(progmem.progmem[actProgmem].basenote==ctlx[seg]) {
                     pressed[seg]=1;
                 } else {
                     pressed[seg]=0;
                 }
             } else if(ctly[seg]==-2) {
-                note=(progmem.progmem[actProgmen].basenote+ctlx[seg]+1)%12;
-                if(progmem.progmem[actProgmen].bscale[ctlx[seg]]) {
+                note=(progmem.progmem[actProgmem].basenote+ctlx[seg]+1)%12;
+                if(progmem.progmem[actProgmem].bscale[ctlx[seg]]) {
                     pressed[seg]=1;
                 } else {
                     pressed[seg]=0;
@@ -928,7 +933,7 @@ void LayoutModel::updateLayout()
                 yrel[seg]=midi2fcent[note%12]/200+0.5;
 //                yrel[seg]=midi2fcent[(note+3)%12]/200+0.5;
             }
-            int oct=progmem.progmem[actProgmen].baseoct+progmem.progmem[actProgmen].topoct;
+            int oct=progmem.progmem[actProgmem].baseoct+progmem.progmem[actProgmem].topoct;
             oct/=2;
             oct*=12;
             midinote[seg]=note+oct;
@@ -939,7 +944,7 @@ void LayoutModel::updateLayout()
             segText[seg]=midi2TextEU[note%12];
         } else if(segtype[seg]==2 ) {
             if(ctly[seg]==-2) {
-                if(actProgmen==ctlx[seg]) {
+                if(actProgmem==ctlx[seg]) {
                     pressed[seg]=1;
                 } else {
                     pressed[seg]=0;
@@ -971,23 +976,30 @@ void LayoutModel::updateLayout()
             }
         } else if(segtype[seg]==4 ) {
             if(ctly[seg]==-2) {
-                midinote[seg]=actProgmen/ctlx[seg];
+                midinote[seg]=actProgmem/ctlx[seg];
                 midinote[seg]*=ctlx[seg];
-                xrelq[seg]=actProgmen - midinote[seg];
+                xrelq[seg]=actProgmem - midinote[seg];
             } else if(ctly[seg]==-4) {
-                xrelq[seg]=progmem.progmem[actProgmen].topoct;
+                xrelq[seg]=progmem.progmem[actProgmem].topoct;
             } else if(ctly[seg]==-5) {
-                xrelq[seg]=progmem.progmem[actProgmen].baseoct;
+                xrelq[seg]=progmem.progmem[actProgmem].baseoct;
             } else if(ctly[seg]==-6) {
                 xrelq[seg]=progmem.senderType;
             } else if(ctly[seg]==-7) {
                 xrelq[seg]=progmem.channel;
             } else if(ctly[seg]==-8) {
                 xrelq[seg]=progmem.errCorr;
+            } else if(ctly[seg]==-9) {
+                int actSound=progmem.progmem[actProgmem].sound;
+                midinote[seg]=actSound/ctlx[seg];
+                midinote[seg]*=ctlx[seg];
+                xrelq[seg]=actSound - midinote[seg];
             }
         } else if(segtype[seg]==5 ) {
             if(ctly[seg]>=102) {
-                yrelq[seg]=progmem.progmem[actProgmen].soundParam[ctly[seg]-102];
+                int soundparam=soundmem.soundParam[progmem.progmem[actProgmem].sound][ctly[seg]-102];
+                yrelq[seg]=soundparam;
+                //qDebug() << "updateLayout setting soundParam " << soundparam;
             }
         }
     }
@@ -1004,8 +1016,8 @@ int LayoutModel::generateScale(int seg, bool firstlast) {
     if(seg>=nsegs_max) return seg;
     int startseg=seg; // save startseg to count added segs
 
-    for(int i=progmem.progmem[actProgmen].baseoct;i<=progmem.progmem[actProgmen].topoct;i++) {
-        int calcnote=progmem.progmem[actProgmen].basenote+i*12;
+    for(int i=progmem.progmem[actProgmem].baseoct;i<=progmem.progmem[actProgmem].topoct;i++) {
+        int calcnote=progmem.progmem[actProgmem].basenote+i*12;
         midinote[seg]=calcnote;
         freq[seg]=midi2f[calcnote];
         //pitch[seg]=midi2fcent[(calcnote+3)%12]*4096.0f/100.0f;
@@ -1021,7 +1033,7 @@ int LayoutModel::generateScale(int seg, bool firstlast) {
         segH[seg]=note2hue(calcnote);
         pressed[seg]=0;
         for(int j=0;j<11;j++) {
-            if(progmem.progmem[actProgmen].bscale[j]) {
+            if(progmem.progmem[actProgmem].bscale[j]) {
                 if(transMode) {
                     seg++;
                     if(seg>=nsegs_max) return seg;
@@ -1052,7 +1064,7 @@ int LayoutModel::generateScale(int seg, bool firstlast) {
         }
         seg++;
         if(seg>=nsegs_max) return seg;
-        if(i<progmem.progmem[actProgmen].topoct && transMode) {
+        if(i<progmem.progmem[actProgmem].topoct && transMode) {
             segtype[seg]=1;
             segText[seg]="";
             segwidth[seg]=1;
@@ -1087,7 +1099,7 @@ int LayoutModel::generateScale(int seg, bool firstlast) {
             // in case that we're  not at the really upper end
             // border (nsegsmax) of the seg storage
             if(!(transMode && seg+1>nsegs_max)) {
-                int calcnote=progmem.progmem[actProgmen].basenote+(progmem.progmem[actProgmen].topoct+1)*12;
+                int calcnote=progmem.progmem[actProgmem].basenote+(progmem.progmem[actProgmem].topoct+1)*12;
                 midinote[seg]=calcnote;
                 freq[seg]=midi2f[calcnote];
                 segText[seg]=midi2TextEU[calcnote%12];
@@ -1143,7 +1155,7 @@ void LayoutModel::setActProgmem(int n)
 {
     // restore new setup
     if(n<progmem.progmem_max) {
-        actProgmen=n;
+        actProgmem=n;
         updateLayout();
     }
 }
@@ -1155,10 +1167,12 @@ bool LayoutModel::getEditMode() const
 
 void LayoutModel::readProgmemXml(QString filename)
 {
-    progmem.readProgmemXml(filename);
+    progmem.readProgmemXml(filename+"prog.xml");
+    soundmem.readSoundmemXml(filename+"sound.xml");
 }
 
 void LayoutModel::writeProgmemXml(QString filename)
 {
-    progmem.writeProgmemXml(filename);
+    progmem.writeProgmemXml(filename+"prog.xml");
+    soundmem.writeSoundmemXml(filename+"sound.xml");
 }

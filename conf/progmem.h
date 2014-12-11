@@ -32,7 +32,6 @@ public:
     // program memory
     
     static const int bscale_max=11;
-    static const int soudnparam_max=10;
 #ifdef RC1_PRO
     static const int progmem_max=110;
 #else
@@ -44,7 +43,7 @@ public:
         int baseoct;
         int topoct;
         bool bscale[bscale_max];
-        int soundParam[soudnparam_max];
+        int sound;
     };
 
     prog progmem[progmem_max];

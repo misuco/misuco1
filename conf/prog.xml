@@ -1,15 +1,136 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE misuco>
-<misucoprogmem version="1.0" adr="255.255.255.255" port="3150" senderType="0" errCorr="0" >
-    <prog basenote="0" baseoct="5" topoct="7" soundparam0="2" soundparam1="10" soundparam2="10" soundparam3="127" soundparam4="64" soundparam5="0" soundparam6="0" soundparam7="0" soundparam8="0" soundparam9="127" bscale0="0" bscale1="0" bscale2="0" bscale3="1" bscale4="0" bscale5="0" bscale6="1" bscale7="0" bscale8="0" bscale9="0" bscale10="0"/>
-    <prog basenote="1" baseoct="4" topoct="5" soundparam0="1" soundparam1="46" soundparam2="10" soundparam3="127" soundparam4="64" soundparam5="0" soundparam6="12" soundparam7="0" soundparam8="0" soundparam9="100" bscale0="0" bscale1="1" bscale2="0" bscale3="0" bscale4="1" bscale5="0" bscale6="0" bscale7="0" bscale8="1" bscale9="0" bscale10="0"/>
-    <prog basenote="0" baseoct="5" topoct="7" soundparam0="2" soundparam1="0" soundparam2="10" soundparam3="0" soundparam4="0" soundparam5="0" soundparam6="103" soundparam7="0" soundparam8="0" soundparam9="127" bscale0="0" bscale1="1" bscale2="0" bscale3="0" bscale4="1" bscale5="0" bscale6="1" bscale7="0" bscale8="1" bscale9="0" bscale10="0"/>
-    <prog basenote="0" baseoct="3" topoct="5" soundparam0="0" soundparam1="0" soundparam2="10" soundparam3="127" soundparam4="64" soundparam5="44" soundparam6="29" soundparam7="72" soundparam8="0" soundparam9="100" bscale0="0" bscale1="0" bscale2="1" bscale3="0" bscale4="0" bscale5="0" bscale6="1" bscale7="0" bscale8="0" bscale9="1" bscale10="0"/>
-    <prog basenote="0" baseoct="3" topoct="5" soundparam0="4" soundparam1="10" soundparam2="34" soundparam3="94" soundparam4="17" soundparam5="31" soundparam6="63" soundparam7="0" soundparam8="114" soundparam9="100" bscale0="1" bscale1="1" bscale2="1" bscale3="1" bscale4="1" bscale5="1" bscale6="1" bscale7="1" bscale8="1" bscale9="1" bscale10="1"/>
-    <prog basenote="0" baseoct="2" topoct="7" soundparam0="1" soundparam1="10" soundparam2="10" soundparam3="127" soundparam4="64" soundparam5="113" soundparam6="15" soundparam7="120" soundparam8="0" soundparam9="100" bscale0="0" bscale1="1" bscale2="0" bscale3="0" bscale4="0" bscale5="1" bscale6="0" bscale7="0" bscale8="0" bscale9="0" bscale10="0"/>
-    <prog basenote="1" baseoct="3" topoct="5" soundparam0="3" soundparam1="0" soundparam2="91" soundparam3="39" soundparam4="3" soundparam5="0" soundparam6="12" soundparam7="0" soundparam8="0" soundparam9="127" bscale0="0" bscale1="0" bscale2="1" bscale3="0" bscale4="0" bscale5="0" bscale6="1" bscale7="0" bscale8="0" bscale9="0" bscale10="0"/>
-    <prog basenote="1" baseoct="4" topoct="6" soundparam0="0" soundparam1="0" soundparam2="19" soundparam3="29" soundparam4="93" soundparam5="34" soundparam6="29" soundparam7="0" soundparam8="0" soundparam9="100" bscale0="1" bscale1="0" bscale2="0" bscale3="0" bscale4="1" bscale5="0" bscale6="1" bscale7="0" bscale8="0" bscale9="0" bscale10="0"/>
-    <prog basenote="0" baseoct="3" topoct="5" soundparam0="1" soundparam1="75" soundparam2="10" soundparam3="92" soundparam4="64" soundparam5="0" soundparam6="10" soundparam7="0" soundparam8="0" soundparam9="127" bscale0="0" bscale1="0" bscale2="0" bscale3="1" bscale4="0" bscale5="0" bscale6="1" bscale7="0" bscale8="1" bscale9="0" bscale10="0"/>
-    <prog basenote="0" baseoct="5" topoct="6" soundparam0="2" soundparam1="10" soundparam2="10" soundparam3="127" soundparam4="64" soundparam5="0" soundparam6="108" soundparam7="0" soundparam8="105" soundparam9="100" bscale0="0" bscale1="1" bscale2="0" bscale3="1" bscale4="1" bscale5="0" bscale6="1" bscale7="0" bscale8="1" bscale9="0" bscale10="1"/>
-    <prog basenote="0" baseoct="3" topoct="5" soundparam0="2" soundparam1="10" soundparam2="10" soundparam3="127" soundparam4="64" soundparam5="0" soundparam6="120" soundparam7="0" soundparam8="0" soundparam9="100" bscale0="0" bscale1="0" bscale2="1" bscale3="0" bscale4="0" bscale5="0" bscale6="0" bscale7="0" bscale8="0" bscale9="0" bscale10="1"/>
+<misucoprogmem version="1.1" adr="255.255.255.255" port="3150" senderType="0" errCorr="0" >
+    <prog sound="1"  basenote="0" baseoct="5" topoct="7" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="2"  basenote="1" baseoct="4" topoct="5" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="0" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="3"  basenote="0" baseoct="5" topoct="7" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="1" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="4"  basenote="0" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="1" s7="0" s8="0" s9="1" s10="0"/>
+    <prog sound="5"  basenote="0" baseoct="3" topoct="5" s0="1" s1="1" s2="1" s3="1" s4="1" s5="1" s6="1" s7="1" s8="1" s9="1" s10="1"/>
+    <prog sound="6"  basenote="0" baseoct="2" topoct="7" s0="0" s1="1" s2="0" s3="0" s4="0" s5="1" s6="0" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="7"  basenote="1" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="8"  basenote="1" baseoct="4" topoct="6" s0="1" s1="0" s2="0" s3="0" s4="1" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="9"  basenote="0" baseoct="3" topoct="5" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="10"  basenote="0" baseoct="5" topoct="6" s0="0" s1="1" s2="0" s3="1" s4="1" s5="0" s6="1" s7="0" s8="1" s9="0" s10="1"/>
+    <prog sound="11"  basenote="0" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="0" s7="0" s8="0" s9="0" s10="1"/>
+    <prog sound="12"  basenote="1" baseoct="5" topoct="7" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="13"  basenote="2" baseoct="4" topoct="5" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="0" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="14"  basenote="1" baseoct="5" topoct="7" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="1" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="15"  basenote="1" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="1" s7="0" s8="0" s9="1" s10="0"/>
+    <prog sound="16"  basenote="1" baseoct="3" topoct="5" s0="1" s1="1" s2="1" s3="1" s4="1" s5="1" s6="1" s7="1" s8="1" s9="1" s10="1"/>
+    <prog sound="17"  basenote="1" baseoct="2" topoct="7" s0="0" s1="1" s2="0" s3="0" s4="0" s5="1" s6="0" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="18"  basenote="2" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="19"  basenote="2" baseoct="4" topoct="6" s0="1" s1="0" s2="0" s3="0" s4="1" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="20"  basenote="1" baseoct="3" topoct="5" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="21"  basenote="1" baseoct="5" topoct="6" s0="0" s1="1" s2="0" s3="1" s4="1" s5="0" s6="1" s7="0" s8="1" s9="0" s10="1"/>
+    <prog sound="22"  basenote="1" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="0" s7="0" s8="0" s9="0" s10="1"/>
+    <prog sound="23"  basenote="2" baseoct="5" topoct="7" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="3" baseoct="4" topoct="5" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="0" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="2" baseoct="5" topoct="7" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="1" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="2" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="1" s7="0" s8="0" s9="1" s10="0"/>
+    <prog sound="1"  basenote="2" baseoct="3" topoct="5" s0="1" s1="1" s2="1" s3="1" s4="1" s5="1" s6="1" s7="1" s8="1" s9="1" s10="1"/>
+    <prog sound="1"  basenote="2" baseoct="2" topoct="7" s0="0" s1="1" s2="0" s3="0" s4="0" s5="1" s6="0" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="3" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="3" baseoct="4" topoct="6" s0="1" s1="0" s2="0" s3="0" s4="1" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="2" baseoct="3" topoct="5" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="2" baseoct="5" topoct="6" s0="0" s1="1" s2="0" s3="1" s4="1" s5="0" s6="1" s7="0" s8="1" s9="0" s10="1"/>
+    <prog sound="1"  basenote="2" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="0" s7="0" s8="0" s9="0" s10="1"/>
+    <prog sound="1"  basenote="3" baseoct="5" topoct="7" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="4" baseoct="4" topoct="5" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="0" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="3" baseoct="5" topoct="7" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="1" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="3" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="1" s7="0" s8="0" s9="1" s10="0"/>
+    <prog sound="1"  basenote="3" baseoct="3" topoct="5" s0="1" s1="1" s2="1" s3="1" s4="1" s5="1" s6="1" s7="1" s8="1" s9="1" s10="1"/>
+    <prog sound="1"  basenote="3" baseoct="2" topoct="7" s0="0" s1="1" s2="0" s3="0" s4="0" s5="1" s6="0" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="4" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="4" baseoct="4" topoct="6" s0="1" s1="0" s2="0" s3="0" s4="1" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="3" baseoct="3" topoct="5" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="3" baseoct="5" topoct="6" s0="0" s1="1" s2="0" s3="1" s4="1" s5="0" s6="1" s7="0" s8="1" s9="0" s10="1"/>
+    <prog sound="1"  basenote="3" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="0" s7="0" s8="0" s9="0" s10="1"/>
+    <prog sound="1"  basenote="4" baseoct="5" topoct="7" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="5" baseoct="4" topoct="5" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="0" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="4" baseoct="5" topoct="7" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="1" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="4" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="1" s7="0" s8="0" s9="1" s10="0"/>
+    <prog sound="1"  basenote="4" baseoct="3" topoct="5" s0="1" s1="1" s2="1" s3="1" s4="1" s5="1" s6="1" s7="1" s8="1" s9="1" s10="1"/>
+    <prog sound="1"  basenote="4" baseoct="2" topoct="7" s0="0" s1="1" s2="0" s3="0" s4="0" s5="1" s6="0" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="5" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="5" baseoct="4" topoct="6" s0="1" s1="0" s2="0" s3="0" s4="1" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="4" baseoct="3" topoct="5" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="4" baseoct="5" topoct="6" s0="0" s1="1" s2="0" s3="1" s4="1" s5="0" s6="1" s7="0" s8="1" s9="0" s10="1"/>
+    <prog sound="1"  basenote="4" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="0" s7="0" s8="0" s9="0" s10="1"/>
+    <prog sound="1"  basenote="5" baseoct="5" topoct="7" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="6" baseoct="4" topoct="5" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="0" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="5" baseoct="5" topoct="7" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="1" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="5" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="1" s7="0" s8="0" s9="1" s10="0"/>
+    <prog sound="1"  basenote="5" baseoct="3" topoct="5" s0="1" s1="1" s2="1" s3="1" s4="1" s5="1" s6="1" s7="1" s8="1" s9="1" s10="1"/>
+    <prog sound="1"  basenote="5" baseoct="2" topoct="7" s0="0" s1="1" s2="0" s3="0" s4="0" s5="1" s6="0" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="6" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="6" baseoct="4" topoct="6" s0="1" s1="0" s2="0" s3="0" s4="1" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="5" baseoct="3" topoct="5" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="5" baseoct="5" topoct="6" s0="0" s1="1" s2="0" s3="1" s4="1" s5="0" s6="1" s7="0" s8="1" s9="0" s10="1"/>
+    <prog sound="1"  basenote="5" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="0" s7="0" s8="0" s9="0" s10="1"/>
+    <prog sound="1"  basenote="6" baseoct="5" topoct="7" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="5" baseoct="4" topoct="5" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="0" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="6" baseoct="5" topoct="7" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="1" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="6" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="1" s7="0" s8="0" s9="1" s10="0"/>
+    <prog sound="1"  basenote="6" baseoct="3" topoct="5" s0="1" s1="1" s2="1" s3="1" s4="1" s5="1" s6="1" s7="1" s8="1" s9="1" s10="1"/>
+    <prog sound="1"  basenote="6" baseoct="2" topoct="7" s0="0" s1="1" s2="0" s3="0" s4="0" s5="1" s6="0" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="5" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="6" baseoct="4" topoct="6" s0="1" s1="0" s2="0" s3="0" s4="1" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="5" baseoct="3" topoct="5" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="5" baseoct="5" topoct="6" s0="0" s1="1" s2="0" s3="1" s4="1" s5="0" s6="1" s7="0" s8="1" s9="0" s10="1"/>
+    <prog sound="1"  basenote="5" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="0" s7="0" s8="0" s9="0" s10="1"/>
+    <prog sound="1"  basenote="7" baseoct="5" topoct="7" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="6" baseoct="4" topoct="5" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="0" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="7" baseoct="5" topoct="7" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="1" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="7" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="1" s7="0" s8="0" s9="1" s10="0"/>
+    <prog sound="1"  basenote="7" baseoct="3" topoct="5" s0="1" s1="1" s2="1" s3="1" s4="1" s5="1" s6="1" s7="1" s8="1" s9="1" s10="1"/>
+    <prog sound="1"  basenote="7" baseoct="2" topoct="7" s0="0" s1="1" s2="0" s3="0" s4="0" s5="1" s6="0" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="6" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="6" baseoct="4" topoct="6" s0="1" s1="0" s2="0" s3="0" s4="1" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="7" baseoct="3" topoct="5" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="7" baseoct="5" topoct="6" s0="0" s1="1" s2="0" s3="1" s4="1" s5="0" s6="1" s7="0" s8="1" s9="0" s10="1"/>
+    <prog sound="1"  basenote="7" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="0" s7="0" s8="0" s9="0" s10="1"/>
+    <prog sound="1"  basenote="8" baseoct="5" topoct="7" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="7" baseoct="4" topoct="5" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="0" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="8" baseoct="5" topoct="7" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="1" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="8" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="1" s7="0" s8="0" s9="1" s10="0"/>
+    <prog sound="1"  basenote="8" baseoct="3" topoct="5" s0="1" s1="1" s2="1" s3="1" s4="1" s5="1" s6="1" s7="1" s8="1" s9="1" s10="1"/>
+    <prog sound="1"  basenote="8" baseoct="2" topoct="7" s0="0" s1="1" s2="0" s3="0" s4="0" s5="1" s6="0" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="8" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="8" baseoct="4" topoct="6" s0="1" s1="0" s2="0" s3="0" s4="1" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="7" baseoct="3" topoct="5" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="7" baseoct="5" topoct="6" s0="0" s1="1" s2="0" s3="1" s4="1" s5="0" s6="1" s7="0" s8="1" s9="0" s10="1"/>
+    <prog sound="1"  basenote="7" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="0" s7="0" s8="0" s9="0" s10="1"/>
+    <prog sound="1"  basenote="9" baseoct="5" topoct="7" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="8" baseoct="4" topoct="5" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="0" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="9" baseoct="5" topoct="7" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="1" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="9" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="1" s7="0" s8="0" s9="1" s10="0"/>
+    <prog sound="1"  basenote="9" baseoct="3" topoct="5" s0="1" s1="1" s2="1" s3="1" s4="1" s5="1" s6="1" s7="1" s8="1" s9="1" s10="1"/>
+    <prog sound="1"  basenote="9" baseoct="2" topoct="7" s0="0" s1="1" s2="0" s3="0" s4="0" s5="1" s6="0" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="8" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="8" baseoct="4" topoct="6" s0="1" s1="0" s2="0" s3="0" s4="1" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="9" baseoct="3" topoct="5" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="9" baseoct="5" topoct="6" s0="0" s1="1" s2="0" s3="1" s4="1" s5="0" s6="1" s7="0" s8="1" s9="0" s10="1"/>
+    <prog sound="1"  basenote="9" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="0" s7="0" s8="0" s9="0" s10="1"/>
+    <prog sound="1"  basenote="10" baseoct="5" topoct="7" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="9" baseoct="4" topoct="5" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="0" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="10" baseoct="5" topoct="7" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="1" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="10" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="1" s7="0" s8="0" s9="1" s10="0"/>
+    <prog sound="1"  basenote="10" baseoct="3" topoct="5" s0="1" s1="1" s2="1" s3="1" s4="1" s5="1" s6="1" s7="1" s8="1" s9="1" s10="1"/>
+    <prog sound="1"  basenote="10" baseoct="2" topoct="7" s0="0" s1="1" s2="0" s3="0" s4="0" s5="1" s6="0" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="9" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="9" baseoct="4" topoct="6" s0="1" s1="0" s2="0" s3="0" s4="1" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="10" baseoct="3" topoct="5" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="10" baseoct="5" topoct="6" s0="0" s1="1" s2="0" s3="1" s4="1" s5="0" s6="1" s7="0" s8="1" s9="0" s10="1"/>
+    <prog sound="1"  basenote="10" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="0" s7="0" s8="0" s9="0" s10="1"/>
+    <prog sound="1"  basenote="11" baseoct="5" topoct="7" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="10" baseoct="4" topoct="5" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="0" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="11" baseoct="5" topoct="7" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="1" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="11" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="1" s7="0" s8="0" s9="1" s10="0"/>
+    <prog sound="1"  basenote="11" baseoct="3" topoct="5" s0="1" s1="1" s2="1" s3="1" s4="1" s5="1" s6="1" s7="1" s8="1" s9="1" s10="1"/>
+    <prog sound="1"  basenote="11" baseoct="2" topoct="7" s0="0" s1="1" s2="0" s3="0" s4="0" s5="1" s6="0" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="10" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="10" baseoct="4" topoct="6" s0="1" s1="0" s2="0" s3="0" s4="1" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
+    <prog sound="1"  basenote="11" baseoct="3" topoct="5" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="1" s9="0" s10="0"/>
+    <prog sound="1"  basenote="11" baseoct="5" topoct="6" s0="0" s1="1" s2="0" s3="1" s4="1" s5="0" s6="1" s7="0" s8="1" s9="0" s10="1"/>
+    <prog sound="1"  basenote="11" baseoct="3" topoct="5" s0="0" s1="0" s2="1" s3="0" s4="0" s5="0" s6="0" s7="0" s8="0" s9="0" s10="1"/>
 </misucoprogmem>

@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define LAYOUTMODEL_H
 #include <QString>
 #include "progmem.h"
+#include "soundmem.h"
 #include "layoutxml.h"
 
 #ifndef LAYOUTXML_H
@@ -158,6 +159,7 @@ public:
     int getSoundParam(int i) const;
     int getSoundParamMax() const;
     void setSoundParam(int i, int value);
+    void setSound(int v);
 
     int getCurrLayout() const;
     void setCurrLayout(int value);
@@ -235,7 +237,8 @@ private:
 
     LayoutXml layxml;
     ProgMem progmem;
-    int actProgmen;
+    SoundMem soundmem;
+    int actProgmem;
 
     // here we declare from which part the performance area starts
     int scaleStartSeg;

@@ -13,5 +13,6 @@
         <file>conf/lp3.xml</file>
         <file>conf/lp4.xml</file>
         <file>conf/lp5.xml</file>
+        <file>conf/sound.xml</file>
     </qresource>
 </RCC>

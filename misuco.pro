@@ -64,7 +64,8 @@ SOURCES += main.cpp\
     comm/senderoscmidigeneric.cpp \
     conf/progmem.cpp \
     dialognet.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    conf/soundmem.cpp
 
 HEADERS  += \
     storage.h \
@@ -124,7 +125,8 @@ HEADERS  += \
     comm/senderoscmidigeneric.h \
     conf/progmem.h \
     dialognet.h \
-    mainwindow.h
+    mainwindow.h \
+    conf/soundmem.h
 
 OTHER_FILES += \
     puredata/osc2midi.pd \
@@ -164,4 +166,7 @@ ios {
 }
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+
+DISTFILES += \
+    conf/sound.xml
 

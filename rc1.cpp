@@ -62,8 +62,7 @@ RC1::RC1(MainWindow *parent) :
 
     sender=new SenderMulti();
     
-    chan=0;
-    netDialog=false;
+    //chan=0;
 
     storagePath=QStandardPaths::writableLocation(QStandardPaths::DataLocation);
     //  Android: /data/data/org.qtproject.example.rc1/files  => Persistent !!
@@ -80,7 +79,7 @@ RC1::RC1(MainWindow *parent) :
     storagePath=QStandardPaths::writableLocation(QStandardPaths::DataLocation);
 #endif
     //qDebug() << "storage path: " << storagePath;
-    progmemFile=storagePath+"/prog.xml";
+    //progmemFile=storagePath+"/prog.xml";
     nPrePainters=2;
     prepainters=new IPaint*[nPrePainters];
     prepainters[0]=new PaintBgShapes();
@@ -149,7 +148,7 @@ RC1::RC1(MainWindow *parent) :
     connect(netxs, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(replyFinished(QNetworkReply*)));
 
-    layout->readProgmemXml(progmemFile);
+    layout->readProgmemXml(storagePath+"/");
     sender->repeatOff=layout->getErrorCorr();
     sender->reset1(layout->getSenderType(),layout->getDisplayAddress().toLocal8Bit().data(),layout->getDisplayPort());
     layout->resetLayout();
@@ -176,7 +175,7 @@ RC1::RC1(MainWindow *parent) :
 
 RC1::~RC1()
 {
-    layout->writeProgmemXml(storagePath+"/prog.xml");
+    layout->writeProgmemXml(storagePath+"/");
     //qDebug() << "progmem written";
 }
 
@@ -276,11 +275,6 @@ void RC1::timerEvent(QTimerEvent *)
     }
     update();
     sender->sendOff();
-    if(netDialog) {
-        doNetDialog();
-        netDialog=false;
-    }
-    
 }
 
 bool RC1::event(QEvent *event)
@@ -762,7 +756,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
         }
 
         if(path=="/reset") {
-            layout->writeProgmemXml(storagePath+"/prog.xml");
+            layout->writeProgmemXml(storagePath+"/");
             layout->resetLayout();
         }
 
@@ -921,7 +915,7 @@ void RC1::appStateChange(Qt::ApplicationState state) {
         oscin->registerPathObject(this);
 #endif
     } else {
-        layout->writeProgmemXml(progmemFile);
+        layout->writeProgmemXml(storagePath+"/");
     }
 }
 
@@ -971,33 +965,8 @@ return sender;
 void RC1::transmitSoundParam()
 {
     for(int i=0;i<layout->getSoundParamMax();i++) {
-         sender->cc(chan,0,i+102,layout->getSoundParam(i));
+         sender->cc(layout->getChannel(),0,i+102,layout->getSoundParam(i));
     }
-}
-
-void RC1::doNetDialog()
-{
-    bool ok;
-    QString msg;
-    msg.sprintf("%s","123 123 123 123");
-    QInputDialog dialog;
-    QFont fnt;
-    fnt.setPixelSize(50);
-    fnt.setFamily("Verdana");
-    dialog.setFont(fnt);
-    dialog.setStyleSheet("* { font-size: 50pt; }" );
-    QString text = dialog.getText(mainwindow, "Destination Address", "IP:", QLineEdit::Normal, msg, &ok);
-    if (ok && !text.isEmpty()) {
-        qDebug() << "got input " << text;
-    }
-
-    this->activateWindow();
-    this->makeCurrent();
-    this->makeOverlayCurrent();
-    this->setEnabled(true);
-    mainwindow->reset();
-    qDebug() << "RC1::reset";
-
 }
 
 void RC1::fillWithScale() {

@@ -53,6 +53,32 @@ void ProgMem::readProgmemXml(QString filename)
             channel=xmlr.attributes().value("channel").toInt();
             senderType=xmlr.attributes().value("senderType").toInt();
             errCorr=xmlr.attributes().value("errCorr").toInt();
+            int row=0;
+            while (xmlr.readNextStartElement() && row<progmem_max) {
+                //qDebug() << "row " << row;
+                if (xmlr.name() == "prog") {
+                    progmem[row].basenote=xmlr.attributes().value("basenote").toString().toInt();
+                    progmem[row].baseoct=xmlr.attributes().value("baseoct").toString().toInt();
+                    progmem[row].topoct=xmlr.attributes().value("topoct").toString().toInt();
+
+                    for(int j=0;j<bscale_max;j++) {
+                        QString attname;
+                        attname.sprintf("bscale%d",j);
+                        progmem[row].bscale[j]=(bool)xmlr.attributes().value(attname).toString().toInt();
+                    }
+                    progmem[row].sound=row;
+                    xmlr.skipCurrentElement();
+                    row++;
+                } else {
+                    xmlr.skipCurrentElement();
+                }
+            }
+        } else if (xmlr.name() == "misucoprogmem" && xmlr.attributes().value("version") == "1.1") {
+            adr=xmlr.attributes().value("adr").toString();
+            port=xmlr.attributes().value("port").toInt();
+            channel=xmlr.attributes().value("channel").toInt();
+            senderType=xmlr.attributes().value("senderType").toInt();
+            errCorr=xmlr.attributes().value("errCorr").toInt();
             qDebug() << "read adr " << adr << " port " << port << " senderType " << senderType << " channel " << channel;
             int row=0;
             while (xmlr.readNextStartElement() && row<progmem_max) {
@@ -61,18 +87,12 @@ void ProgMem::readProgmemXml(QString filename)
                     progmem[row].basenote=xmlr.attributes().value("basenote").toString().toInt();
                     progmem[row].baseoct=xmlr.attributes().value("baseoct").toString().toInt();
                     progmem[row].topoct=xmlr.attributes().value("topoct").toString().toInt();
-                    
                     for(int j=0;j<bscale_max;j++) {
                         QString attname;
-                        attname.sprintf("bscale%d",j);
+                        attname.sprintf("s%d",j);
                         progmem[row].bscale[j]=(bool)xmlr.attributes().value(attname).toString().toInt();
                     }
-                    
-                    for(int i=0;i<soudnparam_max;i++) {
-                        QString attrName;
-                        attrName.sprintf("soundparam%d",i);
-                        progmem[row].soundParam[i]=xmlr.attributes().value(attrName).toInt();
-                    }
+                    progmem[row].sound=xmlr.attributes().value("sound").toInt();
                     xmlr.skipCurrentElement();
                     row++;
                 } else {
@@ -130,16 +150,12 @@ void ProgMem::writeProgmemXml(QString filename)
         att.sprintf("%d",progmem[row].topoct);
         xml.writeAttribute("topoct",att);
 
-        for(int i=0;i<soudnparam_max;i++) {
-            att.sprintf("%d",progmem[row].soundParam[i]);
-            QString attrName;
-            attrName.sprintf("soundparam%d",i);
-            xml.writeAttribute(attrName,att);
-        }
+        att.sprintf("%d",progmem[row].sound);
+        xml.writeAttribute("sound",att);
 
         for(int j=0;j<bscale_max;j++) {
             att.sprintf("%d",(int)progmem[row].bscale[j]);
-            attname.sprintf("bscale%d",j);
+            attname.sprintf("s%d",j);
             xml.writeAttribute(attname,att);
         }
 

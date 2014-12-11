@@ -90,8 +90,7 @@ public:
     void connectApp(QApplication * app);
     void transmitSoundParam();
 
-    int chan; // midi chan for pc
-    bool netDialog;
+    //int chan; // midi chan for pc
     
 public slots:
     void replyFinished(QNetworkReply * r);
@@ -136,10 +135,10 @@ private:
     // network config
     QNetworkAccessManager * netxs;
     QString storagePath;
-    QString progmemFile;
+    //QString progmemFile;
 
     // mode
-    bool midimode;
+    //bool midimode;
 
     // background image
     QImage bgImageOri;
@@ -167,14 +166,12 @@ private:
     bool nomouse;
     
     // lists, required to manage tuio
-    QList<quint32> tuioAlive;
-    QList<quint16> tuioSources;
+    //QList<quint32> tuioAlive;
+    //QList<quint16> tuioSources;
 
 //    void resetStat();
     void setPPSmin();
     void fillWithScale();
-
-    void doNetDialog();
 
 };
 

@@ -448,6 +448,11 @@ void LayoutModel::setSoundParam(int i, int value)
     }
 }
 
+int LayoutModel::getSound()
+{
+    return progmem.progmem[actProgmem].sound;
+}
+
 void LayoutModel::setSound(int v)
 {
     progmem.progmem[actProgmem].sound=v;

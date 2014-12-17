@@ -159,8 +159,9 @@ public:
     int getSoundParam(int i) const;
     int getSoundParamMax() const;
     void setSoundParam(int i, int value);
+    int getSound();
     void setSound(int v);
-
+    
     int getCurrLayout() const;
     void setCurrLayout(int value);
 

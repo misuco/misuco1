@@ -277,6 +277,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     layout->updateLayout();
                 } else if(layout->getCtly(iseg)==-2) {
                     layout->setActProgmem(xrelquant+layout->getMidinote(iseg));
+                    snd->pc(layout->getChannel(),layout->getSound());
                     rc1->transmitSoundParam();
                     //layout->updateLayout();
                 } else if(layout->getCtly(iseg)==-3) {
@@ -299,7 +300,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     snd->repeatOff=xrelquant;
                     layout->setErrorCorr(xrelquant);
                 } else if(layout->getCtly(iseg)==-9) {
-                    layout->setSound(xrelquant);
+                    layout->setSound(xrelquant+layout->getMidinote(iseg));
+                    snd->pc(layout->getChannel(),xrelquant);
                     layout->updateLayout();
                 } else {
                     snd->cc(0, 0, layout->getCtly(iseg)+100, xrelquant);

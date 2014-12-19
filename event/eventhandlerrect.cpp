@@ -281,7 +281,9 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     rc1->transmitSoundParam();
                     //layout->updateLayout();
                 } else if(layout->getCtly(iseg)==-3) {
-                    snd->pc(layout->getChan(iseg), xrelquant);
+                    layout->setSound(xrelquant+layout->getMidinote(iseg));
+                    snd->pc(layout->getChannel(),xrelquant);
+                    layout->updateLayout();
                 } else if(layout->getCtly(iseg)==-4) {
                     layout->setTopoct(xrelquant);
                     layout->updateLayout();
@@ -299,10 +301,6 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 } else if(layout->getCtly(iseg)==-8) {
                     snd->repeatOff=xrelquant;
                     layout->setErrorCorr(xrelquant);
-                } else if(layout->getCtly(iseg)==-9) {
-                    layout->setSound(xrelquant+layout->getMidinote(iseg));
-                    snd->pc(layout->getChannel(),xrelquant);
-                    layout->updateLayout();
                 } else {
                     snd->cc(0, 0, layout->getCtly(iseg)+100, xrelquant);
                     layout->setSoundParam(layout->getCtly(iseg),xrelquant);
@@ -409,9 +407,12 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                                                      "IP:", QLineEdit::Normal,
                                                      snd->getAddress(), &ok);
                 if (ok && !text.isEmpty()) {
-                    snd->setDestination(text.toLocal8Bit().data(),snd->getPort());
-                    layout->setSegtext(iseg,snd->getAddress());
-                    layout->setDisplayAddress(snd->getAddress());
+                    QHostAddress testadr(text);
+                    if(!testadr.isNull()) {
+                        snd->setDestination(text.toLocal8Bit().data(),snd->getPort());
+                        layout->setSegtext(iseg,snd->getAddress());
+                        layout->setDisplayAddress(snd->getAddress());
+                    }
                 }
 
                 /*
@@ -441,12 +442,15 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                                                      "Port:", QLineEdit::Normal,
                                                      p, &ok);
                 if (ok && !text.isEmpty()) {
-                    char * a=new char[strlen(snd->getAddress())];
-                    strcpy(a,snd->getAddress());
-                    snd->setDestination(a,text.toInt());
-                    p.sprintf("%d",snd->getPort());
-                    layout->setSegtext(iseg,p);
-                    layout->setDisplayPort(snd->getPort());
+                    int convport=text.toInt();
+                    if(convport>0 && convport<65535) {
+                        char * a=new char[strlen(snd->getAddress())];
+                        strcpy(a,snd->getAddress());
+                        snd->setDestination(a,text.toInt());
+                        p.sprintf("%d",snd->getPort());
+                        layout->setSegtext(iseg,p);
+                        layout->setDisplayPort(snd->getPort());
+                    }
                 }
                 /*
                 DialogNet * d= new DialogNet();

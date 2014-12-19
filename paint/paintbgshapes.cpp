@@ -279,7 +279,11 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                     for(int i=1;i<=lay->getCtlx(iseg);i++) {
                         text.sprintf("%d",i+lay->getMidinote(iseg));
                         pnt->setPen(Qt::NoPen);
-                        pnt->drawRect(xv1+cradx,ypaint+crady,xsseg,ysseg);
+                        if(lay->getCtly(iseg)==-3) {
+                            pnt->drawEllipse(xv1+cradx,ypaint+crady,xsseg,ysseg);
+                        } else {
+                            pnt->drawRect(xv1+cradx,ypaint+crady,xsseg,ysseg);
+                        }
                         pnt->setPen(QColor::fromHsl(col,120,0));
                         pnt->drawText(xv1,ypaint,sseg,ypaint1,Qt::AlignCenter,text);
                         xv1+=sseg;

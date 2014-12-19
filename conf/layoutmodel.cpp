@@ -984,6 +984,11 @@ void LayoutModel::updateLayout()
                 midinote[seg]=actProgmem/ctlx[seg];
                 midinote[seg]*=ctlx[seg];
                 xrelq[seg]=actProgmem - midinote[seg];
+            } else if(ctly[seg]==-3) {
+                int actSound=progmem.progmem[actProgmem].sound;
+                midinote[seg]=actSound/ctlx[seg];
+                midinote[seg]*=ctlx[seg];
+                xrelq[seg]=actSound - midinote[seg];
             } else if(ctly[seg]==-4) {
                 xrelq[seg]=progmem.progmem[actProgmem].topoct;
             } else if(ctly[seg]==-5) {
@@ -994,11 +999,6 @@ void LayoutModel::updateLayout()
                 xrelq[seg]=progmem.channel;
             } else if(ctly[seg]==-8) {
                 xrelq[seg]=progmem.errCorr;
-            } else if(ctly[seg]==-9) {
-                int actSound=progmem.progmem[actProgmem].sound;
-                midinote[seg]=actSound/ctlx[seg];
-                midinote[seg]*=ctlx[seg];
-                xrelq[seg]=actSound - midinote[seg];
             }
         } else if(segtype[seg]==5 ) {
             if(ctly[seg]>=102) {

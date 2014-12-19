@@ -744,7 +744,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
                 }
             }
         }
-        
+
         if(path=="/topoct") {
             if(dl.size()==1) {
                 int oct=dl.at(0).toInt();
@@ -752,6 +752,14 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
                     layout->setTopoct(oct);
                     fillWithScale();
                 }
+            }
+        }
+
+        if(path=="/pc") {
+            if(dl.size()==1) {
+                int p=dl.at(0).toInt();
+                layout->setActProgmem(p);
+                layout->updateLayout();
             }
         }
 

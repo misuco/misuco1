@@ -182,6 +182,8 @@ public:
 
     int generateScale(int seg, bool firstlast);
 
+    void dimXY(int x,int y);
+
     void setDisplayAddress(QString adr);
     void setDisplayPort(int port);
     QString getDisplayAddress() {return progmem.adr;}

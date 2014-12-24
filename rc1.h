@@ -44,7 +44,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "paint/ipaint.h"
 #include "paint/ipointpaint.h"
 #include "comm/libofqf/qosctypes.h"
-#include "mainwindow.h"
+//#include "mainwindow.h"
+#include "qqdialog.h"
 
 #define RC1_SCALES_XML_URL "http://x21.ch/rc1/scales.xml"
 #define RC1_ADS_URL "http://ads.misuco.org/go/?id="
@@ -53,7 +54,7 @@ class IPaint;
 class IPointPaint;
 class IEventHandler;
 class EventHandlerRect;
-class MainWindow;
+class QQDialog;
 
 #ifdef NOGL
 class RC1 : public QWidget, PathObject
@@ -64,17 +65,14 @@ class RC1 : public QGLWidget, PathObject
     Q_OBJECT
 
 public:
-    explicit RC1(MainWindow *parent = 0);
+    explicit RC1(QWidget *parent = 0);
     ~RC1();
 
 #ifdef RC1_IOS
     constexpr static const float freq_max = 20000.0f;
 #else
-    static const float freq_max = 20000.0f;
+    constexpr static const float freq_max = 20000.0f;
 #endif
-
-    MainWindow * mainwindow;
-
     Storage *getStorage() const;
     LayoutModel *getLayout() const;
     SenderMulti *getSender() const;
@@ -90,11 +88,14 @@ public:
     void connectApp(QApplication * app);
     void transmitSoundParam();
 
-    //int chan; // midi chan for pc
-    
+    void startDialog();
+    void connectDialog(QQuickView * o);
+
 public slots:
     void replyFinished(QNetworkReply * r);
     void appStateChange(Qt::ApplicationState state);
+    void setDestAdr(QString adr);
+    void setDestPort(QString port);
 
 protected:
     /*  QGLWidget implementation */
@@ -172,6 +173,8 @@ private:
 //    void resetStat();
     void setPPSmin();
     void fillWithScale();
+
+    QQDialog * dialog;
 
 };
 

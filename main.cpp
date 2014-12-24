@@ -38,5 +38,6 @@ int main(int argc, char **argv)
     RC1 * w = new RC1();
     w->connectApp(&a);
     w->show();
+
     return a.exec();
 }

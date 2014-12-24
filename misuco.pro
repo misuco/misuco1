@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui opengl network multimedia xml
+QT       += core gui opengl network multimedia xml quick qml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -65,7 +65,9 @@ SOURCES += main.cpp\
     conf/progmem.cpp \
     dialognet.cpp \
     mainwindow.cpp \
-    conf/soundmem.cpp
+    conf/soundmem.cpp \
+    qdialog.cpp \
+    qqdialog.cpp
 
 HEADERS  += \
     storage.h \
@@ -126,7 +128,9 @@ HEADERS  += \
     conf/progmem.h \
     dialognet.h \
     mainwindow.h \
-    conf/soundmem.h
+    conf/soundmem.h \
+    qdialog.h \
+    qqdialog.h
 
 OTHER_FILES += \
     puredata/osc2midi.pd \

@@ -144,6 +144,7 @@ void SenderMulti::setDestination(int i, char * a,int p) {
 void SenderMulti::reconnect() {
     for(int i=0;i<senders.count();i++) {
         senders.at(i)->reconnect();
+        //qDebug() << "reconnect " << i;
     }
 }
 
@@ -182,6 +183,7 @@ void SenderMulti::sendOff() {
 }
 
 void SenderMulti::reset1(int x, char * adr, int port) {
+    //qDebug() << "SenderMulti::reset1 ";
     delAll();
     switch(x) {
     case 0:
@@ -201,5 +203,6 @@ void SenderMulti::reset1(int x, char * adr, int port) {
         break;
     }
     setDestination(0,adr,port);
+    create(SenderMulti::MOBILESYNTH);
 }
 

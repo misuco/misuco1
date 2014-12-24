@@ -16,7 +16,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  
  */
-
+#include <QDebug>
 #include "platform.h"
 #include "sendermobilesynth.h"
 
@@ -126,7 +126,7 @@ void SenderMobileSynth::cc(int chan, int voiceId, int cc, float v1)
 
 void SenderMobileSynth::pc(int chan, int v1) {}
 
-void SenderMobileSynth::noteOn(int chan, int voiceId, float f, int midinote, int pitch, int vel)
+void SenderMobileSynth::noteOn(int, int voiceId, float f, int, int, int)
 {
     sy->noteOn(voiceId, (float)f);
 }

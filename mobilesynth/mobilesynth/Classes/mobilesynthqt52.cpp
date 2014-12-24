@@ -55,9 +55,13 @@ mobileSynthQT52::mobileSynthQT52()
     m_format.setSampleType(QAudioFormat::SignedInt);
 
     QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
+    m_format=info.preferredFormat();
+    qDebug() << "Preferred format is sr " << m_format.sampleRate() << " sn " << m_format.sampleSize() << " ch " << m_format.channelCount();
+
     if (!info.isFormatSupported(m_format)) {
-        qWarning() << "Default format not supported - trying to use nearest";
+        qDebug() << "Default format not supported - trying to use nearest";
         m_format = info.nearestFormat(m_format);
+        info.preferredFormat();
     }
 
     syctl->setFormat(&m_format);

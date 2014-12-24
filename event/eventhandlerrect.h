@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define EVENTHANDLERRECT_H
 
 #include "ieventhandler.h"
+#include "../qqdialog.h"
 
 class EventHandlerRect : public IEventHandler
 {

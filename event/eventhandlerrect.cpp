@@ -21,7 +21,6 @@
 #include "eventhandlerrect.h"
 #include "../comm/senderdebug.h"
 #include "../comm/senderoscpuredata.h"
-#include "../dialognet.h"
 
 EventHandlerRect::EventHandlerRect()
 {
@@ -438,6 +437,12 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 bool ok;
                 QString p;
                 p.sprintf("%d",snd->getPort());
+
+                QQDialog * qd= new QQDialog();
+                qDebug() << "QQDialog finished";
+
+                /*
+                 *
                 QString text = QInputDialog::getText(rc1, "Destination address",
                                                      "Port:", QLineEdit::Normal,
                                                      p, &ok);
@@ -446,12 +451,14 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     if(convport>0 && convport<65535) {
                         char * a=new char[strlen(snd->getAddress())];
                         strcpy(a,snd->getAddress());
-                        snd->setDestination(a,text.toInt());
+                        snd->setDestination(a,convport);
                         p.sprintf("%d",snd->getPort());
                         layout->setSegtext(iseg,p);
                         layout->setDisplayPort(snd->getPort());
                     }
                 }
+                */
+
                 /*
                 DialogNet * d= new DialogNet();
                 d->show();

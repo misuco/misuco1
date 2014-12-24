@@ -41,7 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "paint/paintblocker.h"
 
 
-RC1::RC1(MainWindow *parent) :
+RC1::RC1(QWidget *parent) :
     #ifdef NOGL
     QWidget(parent)
     #else
@@ -51,7 +51,7 @@ RC1::RC1(MainWindow *parent) :
     setAttribute(Qt::WA_AcceptTouchEvents,true);
     //qDebug() << "View() size:" << width() << " " << height();
 
-    mainwindow=parent;
+    //mainwindow=parent;
     eventId = 1;
     nomouse = false;
     ttl=2000;
@@ -150,7 +150,9 @@ RC1::RC1(MainWindow *parent) :
 
     layout->readProgmemXml(storagePath+"/");
     sender->repeatOff=layout->getErrorCorr();
+#ifdef RC1_PRO
     sender->reset1(layout->getSenderType(),layout->getDisplayAddress().toLocal8Bit().data(),layout->getDisplayPort());
+#endif
     layout->resetLayout();
     layout->toggleEdit();
     layout->setActProgmem(0);
@@ -927,6 +929,32 @@ void RC1::appStateChange(Qt::ApplicationState state) {
     }
 }
 
+void RC1::setDestAdr(QString adr)
+{
+    QHostAddress testadr(adr);
+    if(!testadr.isNull()) {
+        sender->setDestination(adr.toLocal8Bit().data(),sender->getPort());
+        layout->setDisplayAddress(sender->getAddress());
+        layout->updateLayout();
+    }
+    delete(dialog);
+}
+
+void RC1::setDestPort(QString port)
+{
+    int convport=port.toInt();
+    if(convport>0 && convport<65535) {
+        QString p;
+        char * a=new char[strlen(sender->getAddress())];
+        strcpy(a,sender->getAddress());
+        sender->setDestination(a,convport);
+        p.sprintf("%d",sender->getPort());
+        layout->setDisplayPort(sender->getPort());
+        layout->updateLayout();
+    }
+    delete(dialog);
+}
+
 void RC1::replyFinished(QNetworkReply * r)
 {
     //qDebug() << "received " << r->url();
@@ -975,6 +1003,16 @@ void RC1::transmitSoundParam()
     for(int i=0;i<layout->getSoundParamMax();i++) {
          sender->cc(layout->getChannel(),0,i+102,layout->getSoundParam(i));
     }
+}
+
+void RC1::startDialog()
+{
+    dialog = new QQDialog();
+}
+
+void RC1::connectDialog(QQuickView *o)
+{
+    connect(o,SIGNAL(ok(QString)),this,SLOT(setDestPort(QString)));
 }
 
 void RC1::fillWithScale() {

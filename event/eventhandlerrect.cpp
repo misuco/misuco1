@@ -434,12 +434,11 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 //rc1->activateWindow();
                 //rc1->reset();
             } else if(layout->getCtly(iseg)==-6) {
-                bool ok;
+                //bool ok;
                 QString p;
                 p.sprintf("%d",snd->getPort());
 
-                QQDialog * qd= new QQDialog();
-                qDebug() << "QQDialog finished";
+                rc1->startDialog();
 
                 /*
                  *

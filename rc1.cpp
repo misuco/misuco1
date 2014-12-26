@@ -929,28 +929,19 @@ void RC1::appStateChange(Qt::ApplicationState state) {
     }
 }
 
-void RC1::setDestAdr(QString adr)
+void RC1::setDest(QString adr,QString port)
 {
     QHostAddress testadr(adr);
-    if(!testadr.isNull()) {
-        sender->setDestination(adr.toLocal8Bit().data(),sender->getPort());
-        layout->setDisplayAddress(sender->getAddress());
-        layout->updateLayout();
-    }
-    delete(dialog);
-}
-
-void RC1::setDestPort(QString port)
-{
+    qDebug() << "setDest " << adr << " " << port;
     int convport=port.toInt();
-    if(convport>0 && convport<65535) {
-        QString p;
-        char * a=new char[strlen(sender->getAddress())];
-        strcpy(a,sender->getAddress());
-        sender->setDestination(a,convport);
-        p.sprintf("%d",sender->getPort());
-        layout->setDisplayPort(sender->getPort());
-        layout->updateLayout();
+    if(!testadr.isNull()) {
+        if(convport>0 && convport<65535) {
+            sender->setDestination(adr.toLocal8Bit().data(),convport);
+            layout->setDisplayAddress(adr);
+            layout->setDisplayPort(convport);
+            layout->updateLayout();
+            qDebug() << "done " << adr << " " << port;
+        }
     }
     delete(dialog);
 }
@@ -1008,11 +999,8 @@ void RC1::transmitSoundParam()
 void RC1::startDialog()
 {
     dialog = new QQDialog();
-}
-
-void RC1::connectDialog(QQuickView *o)
-{
-    connect(o,SIGNAL(ok(QString)),this,SLOT(setDestPort(QString)));
+    QObject *item = (QObject *)dialog->getView()->rootObject();
+    connect(item,SIGNAL(ok(QString,QString)),this,SLOT(setDest(QString,QString)));
 }
 
 void RC1::fillWithScale() {

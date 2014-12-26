@@ -14,7 +14,7 @@ class QQDialog
 public:
     QQDialog();
     ~QQDialog();
-    void setRC1(RC1 * r);
+    QQuickView * getView() {return view;}
 
 private:
     QQuickView * view;

@@ -68,8 +68,8 @@ public:
     explicit RC1(QWidget *parent = 0);
     ~RC1();
 
-#ifdef RC1_IOS
-    constexpr static const float freq_max = 20000.0f;
+#ifdef RC1_LINUX
+    static const float freq_max = 20000.0f;
 #else
     constexpr static const float freq_max = 20000.0f;
 #endif
@@ -89,13 +89,11 @@ public:
     void transmitSoundParam();
 
     void startDialog();
-    void connectDialog(QQuickView * o);
 
 public slots:
     void replyFinished(QNetworkReply * r);
     void appStateChange(Qt::ApplicationState state);
-    void setDestAdr(QString adr);
-    void setDestPort(QString port);
+    void setDest(QString adr,QString port);
 
 protected:
     /*  QGLWidget implementation */

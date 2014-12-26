@@ -25,9 +25,3 @@ QQDialog::~QQDialog()
 {
     view->deleteLater();
 }
-
-void QQDialog::setRC1(RC1 *r)
-{
-    r->connectDialog(view);
-}
-

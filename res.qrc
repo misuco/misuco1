@@ -14,6 +14,6 @@
         <file>conf/lp4.xml</file>
         <file>conf/lp5.xml</file>
         <file>conf/sound.xml</file>
-        <file>Test.qml</file>
+        <file>NetDialog.qml</file>
     </qresource>
 </RCC>

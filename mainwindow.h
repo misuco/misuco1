@@ -9,15 +9,10 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 public:
     explicit MainWindow(QWidget *parent = 0);
-
-signals:
-
-public slots:
-    void reset();
+    void connectApp(QApplication * a);
 
 private:
     RC1 * w;
-    RC1 * w1;
 
 };
 

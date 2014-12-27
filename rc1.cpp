@@ -41,7 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "paint/paintblocker.h"
 
 
-RC1::RC1(QWidget *parent) :
+RC1::RC1(MainWindow *parent) :
     #ifdef NOGL
     QWidget(parent)
     #else
@@ -51,11 +51,10 @@ RC1::RC1(QWidget *parent) :
     setAttribute(Qt::WA_AcceptTouchEvents,true);
     //qDebug() << "View() size:" << width() << " " << height();
 
-    //mainwindow=parent;
+    mainwindow=parent;
     eventId = 1;
     nomouse = false;
     ttl=2000;
-
     storage=new Storage();
     layout=new LayoutModel();
     ehand=new EventHandlerRect();
@@ -160,7 +159,7 @@ RC1::RC1(QWidget *parent) :
     layout->updateLayout();
 
     layout->setAllChan(layout->getChannel());
-    qDebug() << "RC1: setAllChan" << layout->getChannel();
+    //qDebug() << "RC1: setAllChan" << layout->getChannel();
 
     transmitSoundParam();
     
@@ -184,7 +183,6 @@ RC1::~RC1()
 void RC1::connectApp(QApplication * app) {
     connect(app, SIGNAL(applicationStateChanged(Qt::ApplicationState )),
             this, SLOT(appStateChange(Qt::ApplicationState)));
-
 }
 
 void RC1::paintEvent(QPaintEvent *)
@@ -929,23 +927,6 @@ void RC1::appStateChange(Qt::ApplicationState state) {
     }
 }
 
-void RC1::setDest(QString adr,QString port)
-{
-    QHostAddress testadr(adr);
-    qDebug() << "setDest " << adr << " " << port;
-    int convport=port.toInt();
-    if(!testadr.isNull()) {
-        if(convport>0 && convport<65535) {
-            sender->setDestination(adr.toLocal8Bit().data(),convport);
-            layout->setDisplayAddress(adr);
-            layout->setDisplayPort(convport);
-            layout->updateLayout();
-            qDebug() << "done " << adr << " " << port;
-        }
-    }
-    delete(dialog);
-}
-
 void RC1::replyFinished(QNetworkReply * r)
 {
     //qDebug() << "received " << r->url();
@@ -999,12 +980,30 @@ void RC1::transmitSoundParam()
 void RC1::startDialog()
 {
     dialog = new QQDialog();
+    dialog->setContent(layout->getDisplayAddress(),layout->getDisplayPort());
     QObject *item = (QObject *)dialog->getView()->rootObject();
     connect(item,SIGNAL(ok(QString,QString)),this,SLOT(setDest(QString,QString)));
+    //mainwindow->setCentralWidget(dialog->view);
+}
+
+void RC1::setDest(QString adr,QString port)
+{
+    QHostAddress testadr(adr);
+    qDebug() << "setDest " << adr << " " << port;
+    int convport=port.toInt();
+    if(!testadr.isNull()) {
+        if(convport>0 && convport<65535) {
+            sender->setDestination(adr.toLocal8Bit().data(),convport);
+            layout->setDisplayAddress(adr);
+            layout->setDisplayPort(convport);
+            layout->updateLayout();
+            qDebug() << "done " << adr << " " << port;
+        }
+    }
+    //mainwindow->setCentralWidget(this);
+    delete(dialog);
 }
 
 void RC1::fillWithScale() {
     for(int doseg=0;doseg<=layout->getNsegs();doseg=layout->generateScale(doseg,false));
 }
-
-

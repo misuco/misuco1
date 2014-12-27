@@ -400,6 +400,9 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 layout->resetLayout(layout->getCtlx(iseg));
                 layout->updateLayout();
             } else if(layout->getCtly(iseg)==-5) {
+#ifdef RC1_IOS
+                rc1->startDialog();
+#else
                 // edit sender destination adress button
                 bool ok;
                 QString text = QInputDialog::getText(rc1, "Destination address",
@@ -413,6 +416,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                         layout->setDisplayAddress(snd->getAddress());
                     }
                 }
+#endif
 
                 /*
                 QString msg;
@@ -434,17 +438,16 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 //rc1->activateWindow();
                 //rc1->reset();
             } else if(layout->getCtly(iseg)==-6) {
-                //bool ok;
+#ifdef RC1_IOS
+                rc1->startDialog();
+#else
+
+                bool ok;
                 QString p;
                 p.sprintf("%d",snd->getPort());
-
-                rc1->startDialog();
-
-                /*
-                 *
-                QString text = QInputDialog::getText(rc1, "Destination address",
-                                                     "Port:", QLineEdit::Normal,
-                                                     p, &ok);
+                QInputDialog * d=new QInputDialog();
+                QString text = d->getText(0, "Destination address",
+                 "Port:", QLineEdit::Normal, p, &ok);
                 if (ok && !text.isEmpty()) {
                     int convport=text.toInt();
                     if(convport>0 && convport<65535) {
@@ -456,13 +459,10 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                         layout->setDisplayPort(snd->getPort());
                     }
                 }
-                */
-
-                /*
-                DialogNet * d= new DialogNet();
-                d->show();
+                d->close();
                 d->hide();
-                */
+                delete(d);
+#endif
             } else if(layout->getCtly(iseg)==-7) {
                 if(iseg<layout->nsegs_max-1) {
                     int newval=layout->getMidinote(iseg+1)-10;

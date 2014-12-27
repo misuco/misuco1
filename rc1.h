@@ -44,7 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "paint/ipaint.h"
 #include "paint/ipointpaint.h"
 #include "comm/libofqf/qosctypes.h"
-//#include "mainwindow.h"
+#include "mainwindow.h"
 #include "qqdialog.h"
 
 #define RC1_SCALES_XML_URL "http://x21.ch/rc1/scales.xml"
@@ -55,6 +55,7 @@ class IPointPaint;
 class IEventHandler;
 class EventHandlerRect;
 class QQDialog;
+class MainWindow;
 
 #ifdef NOGL
 class RC1 : public QWidget, PathObject
@@ -65,7 +66,7 @@ class RC1 : public QGLWidget, PathObject
     Q_OBJECT
 
 public:
-    explicit RC1(QWidget *parent = 0);
+    explicit RC1(MainWindow *parent = 0);
     ~RC1();
 
 #ifdef RC1_LINUX
@@ -173,6 +174,8 @@ private:
     void fillWithScale();
 
     QQDialog * dialog;
+
+    MainWindow * mainwindow;
 
 };
 

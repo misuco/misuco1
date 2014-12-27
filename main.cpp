@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <QApplication>
-#include "rc1.h"
+#include "mainwindow.h"
 
 #if defined(Q_OS_IOS)
 extern "C" int qtmn(int argc, char **argv)
@@ -35,9 +35,17 @@ int main(int argc, char **argv)
 #endif
 {
     QApplication a(argc, argv);
+    MainWindow * w=new MainWindow();
+    w->connectApp(&a);
+    w->show();
+
+
+    /*
     RC1 * w = new RC1();
     w->connectApp(&a);
     w->show();
+    */
+
 
     return a.exec();
 }

@@ -324,7 +324,7 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
 
                 if(painttext>0 && (lay->getEditMode()|(lay->getSegtype(iseg)==0)|(lay->getSegtype(iseg)==2)|(lay->getSegtype(iseg)==3)) ) {
                     pnt->setPen(QColor::fromHsl(col,120,fontl));
-                    if(lay->getSegtype(iseg)==4 | lay->getSegtype(iseg)==6) {
+                    if((lay->getSegtype(iseg)==4) | (lay->getSegtype(iseg)==6)) {
                         pnt->drawText(xrow_header,ypaint,xpaint1,ypaint1,textAlign,*lay->getSegText(iseg));
                     } else {
                         pnt->drawText(xpaint,ypaint,xpaint1,ypaint1,textAlign,*lay->getSegText(iseg));

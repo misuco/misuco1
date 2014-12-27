@@ -172,5 +172,6 @@ ios {
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 DISTFILES += \
-    conf/sound.xml
+    conf/sound.xml \
+    NetDialog.qml
 

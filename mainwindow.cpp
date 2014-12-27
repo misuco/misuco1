@@ -10,6 +10,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     w = new RC1(this);
     setCentralWidget(w);
+    w->show();
+
     //DialogNet * dn=new DialogNet();
 
     //g->setHorizontalSpacing(0);
@@ -24,10 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //top->show();
 }
 
-void MainWindow::reset()
+void MainWindow::connectApp(QApplication *a)
 {
-//    w1=w;
-//    w = new RC1();
-    setCentralWidget(w);
-//    w1->deleteLater();
+    w->connectApp(a);
 }

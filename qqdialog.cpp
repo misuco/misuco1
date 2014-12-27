@@ -1,22 +1,11 @@
 #include <QObject>
+#include <QQuickItem>
 #include "qqdialog.h"
 
 QQDialog::QQDialog()
 {
-    const QString appPath = QCoreApplication::applicationDirPath();
-
-    // This allows starting the example without previously defining QML2_IMPORT_PATH.
-    QDir qmlImportDir(appPath);
-#if defined (Q_OS_WIN)
-    qmlImportDir.cd("..");
-#endif
-    qmlImportDir.cd("../../../qml");
     view=new QQuickView();
-    view->engine()->addImportPath(qmlImportDir.canonicalPath());
-//    QObject::connect(view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
-//    BackendHelperContext *backendContext = new BackendHelperContext(&view);
-//    view.engine()->rootContext()->setContextProperty("enginioBackendContext", backendContext);
-    view->setSource(QUrl("qrc:///Test.qml"));
+    view->setSource(QUrl("qrc:///NetDialog.qml"));
     view->setResizeMode(QQuickView::SizeRootObjectToView);
     view->show();
 }
@@ -24,4 +13,19 @@ QQDialog::QQDialog()
 QQDialog::~QQDialog()
 {
     view->deleteLater();
+}
+
+void QQDialog::setContent(QString adr, int port)
+{
+    QQuickItem * i=view->rootObject();
+    QObject * p = i->findChild<QObject*>("adr");
+    if(p) {
+        p->setProperty("text",adr);
+        qDebug() << "set property text";
+    }
+    p = i->findChild<QObject*>("port");
+    if(p) {
+        p->setProperty("text",port);
+        qDebug() << "set property port";
+    }
 }

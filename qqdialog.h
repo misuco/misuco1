@@ -15,7 +15,7 @@ public:
     QQDialog();
     ~QQDialog();
     QQuickView * getView() {return view;}
-
+    void setContent(QString adr, int port);
 private:
     QQuickView * view;
 };

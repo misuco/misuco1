@@ -29,7 +29,7 @@
 SenderMulti::SenderMulti()
 {
     senders.append(new SenderOscMidiGeneric());
-//    senders.append(new SenderMobileSynth());
+    senders.append(new SenderMobileSynth());
     senders.append(new SenderSuperCollider());
     repeatOff=0;
     onCnt=0;
@@ -203,6 +203,6 @@ void SenderMulti::reset1(int x, char * adr, int port) {
         break;
     }
     setDestination(0,adr,port);
-//    create(SenderMulti::MOBILESYNTH);
+    create(SenderMulti::MOBILESYNTH);
 }
 

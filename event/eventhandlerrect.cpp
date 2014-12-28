@@ -417,26 +417,6 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     }
                 }
 #endif
-
-                /*
-                QString msg;
-                msg.sprintf("%s",snd->getAddress());
-                QInputDialog dialog;
-                QFont fnt;
-                fnt.setPixelSize(50);
-                fnt.setFamily("Verdana");
-                dialog.setFont(fnt);
-                dialog.setStyleSheet("* { font-size: 50pt; }" );
-                QString text = dialog.getText(rc1->mainwindow, "Destination Address", "IP:", QLineEdit::Normal, msg, &ok);
-                if (ok && !text.isEmpty()) {
-                    qDebug() << "got input " << text;
-                    layout->setSegtext(iseg,text);
-                }
-                */
-
-                //dialog.deleteLater();
-                //rc1->activateWindow();
-                //rc1->reset();
             } else if(layout->getCtly(iseg)==-6) {
 #ifdef RC1_IOS
                 rc1->startDialog();

@@ -78,8 +78,8 @@ public:
     LayoutModel *getLayout() const;
     SenderMulti *getSender() const;
     long getNow();
-    int getFps();
-    QTime *getFpsT();
+    //int getFps();
+    //QTime *getFpsT();
     QImage *getBgImage();
     int getBlockerTimeLeft() {return blockerTimeLeft;}
 
@@ -135,6 +135,7 @@ private:
     // network config
     QNetworkAccessManager * netxs;
     QString storagePath;
+    QString privateDataPath;
     //QString progmemFile;
 
     // mode
@@ -149,17 +150,20 @@ private:
     QImage bgBlockerOri;
     QImage bgBlocker;
     bool blockerOn;
-    int blockerTimeout;
+    //int blockerTimeout;
     int blockerTimeLeft;
+    long blockerUntil;
     IPaint * blockerPainter;
     QString adid;
     bool downloadAd;
 
     // frame statistic
+    /*
     int fps;
     int fcnt;
     QTime fpsT;
     bool secTimer;
+    */
 
     // emulated touch point id for mouse events
     int eventId;

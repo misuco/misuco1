@@ -1,5 +1,6 @@
-#include "soundmem.h"
 #include <QFile>
+#include <QDebug>
+#include "soundmem.h"
 
 SoundMem::SoundMem()
 {
@@ -54,10 +55,10 @@ void SoundMem::writeSoundmemXml(QString filename)
 {
     QFile file(filename);
     if (!file.open(QFile::WriteOnly | QFile::Text)) {
+        qDebug() << "cannot write file " << filename;
         return;
-        //qDebug() << "cannot write file " << filename;
     }
-    //qDebug() << "writing progmem file " << filename;
+    //qDebug() << "writing soundmem file " << filename;
 
     xml.setDevice(&file);
     QString att;

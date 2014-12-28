@@ -64,6 +64,25 @@ RC1::RC1(MainWindow *parent) :
     //chan=0;
 
     storagePath=QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    privateDataPath=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    /*
+    qDebug() << QStandardPaths::writableLocation(QStandardPaths::ApplicationsLocation);
+    qDebug() << QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+    qDebug() << QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
+    qDebug() << QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
+    qDebug() << QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    qDebug() << QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
+
+"/var/mobile/Containers/Data/Application/7984E312-458A-4CDA-96E7-3D986DE244AA/Applications"
+"/var/mobile/Containers/Data/Application/7984E312-458A-4CDA-96E7-3D986DE244AA/Library/Caches"
+"/var/mobile/Containers/Data/Application/7984E312-458A-4CDA-96E7-3D986DE244AA/Documents"
+"/var/mobile/Containers/Data/Application/7984E312-458A-4CDA-96E7-3D986DE244AA/Desktop"
+"/var/mobile/Containers/Data/Application/7984E312-458A-4CDA-96E7-3D986DE244AA/Documents"
+"/var/mobile/Containers/Data/Application/7984E312-458A-4CDA-96E7-3D986DE244AA/Downloads"
+
+    */
+
+
     //  Android: /data/data/org.qtproject.example.rc1/files  => Persistent !!
     //  W8: C:/Users/c1/AppData/Local/rc1 => Persistent
     //  iOS: /var/mobile/Applications/ADDEBF69-B1C5-4E36-A8C2-789D717434C1/Documents => Persistent
@@ -75,9 +94,11 @@ RC1::RC1(MainWindow *parent) :
     // iOS: not Persistent???? But document exchange folder
 #endif
 #ifdef RC1_IOS
-    storagePath=QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    privateDataPath=QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
 #endif
-    //qDebug() << "storage path: " << storagePath;
+    qDebug() << "storage path: " << storagePath;
+    qDebug() << "private data path: " << privateDataPath;
     //progmemFile=storagePath+"/prog.xml";
     nPrePainters=2;
     prepainters=new IPaint*[nPrePainters];
@@ -102,17 +123,17 @@ RC1::RC1(MainWindow *parent) :
     oscin = new QOscServer(3333,this);
     oscin->registerPathObject(this);
     sender->repeatOff=2;
-    
     blockerOn=false;
 #else
     blockerOn=true;
-    blockerTimeout=30;
-    blockerTimeLeft=blockerTimeout;
+    blockerTimeLeft=60;
+    blockerUntil=QDateTime::currentMSecsSinceEpoch()+blockerTimeLeft*1000;
     blockerPainter=new PaintBlocker();
     downloadAd=false;
 
-    QFile bgimg(storagePath+"/init.jpg");
+    QFile bgimg(privateDataPath+"/init.jpg");
     if(bgimg.exists()) {
+        qDebug() << "bgimg exists " << privateDataPath;
         bgImageOri.load(bgimg.fileName());
         if(bgImageOri.width()==0) {
             bgImageOri.load(":/conf/misuco-logo.jpg");
@@ -123,7 +144,7 @@ RC1::RC1(MainWindow *parent) :
     bgImage=bgImageOri.scaled(width(),height());
 
     adid=RC1_ADS_URL;
-    QFile adidf(storagePath+"/adid.dat");
+    QFile adidf(privateDataPath+"/adid.dat");
     if(adidf.exists()) {
         if(adidf.open(QIODevice::ReadOnly)) {
             QString adidfc=adidf.readAll();
@@ -138,10 +159,12 @@ RC1::RC1(MainWindow *parent) :
 
     this->startTimer(0);
     
+    /*
     fpsT.start();
     fps=50;
     fcnt=0;
     secTimer=true;
+    */
     
     netxs = new QNetworkAccessManager(this);
     connect(netxs, SIGNAL(finished(QNetworkReply*)),
@@ -189,6 +212,16 @@ void RC1::paintEvent(QPaintEvent *)
 {
     now=QDateTime::currentMSecsSinceEpoch();
 
+#ifndef RC1_PRO
+    if(blockerOn) {
+        blockerTimeLeft=(blockerUntil-now)/1000;
+        if(blockerUntil<=now) {
+            blockerOn=false;
+        }
+    }
+#endif
+
+/*
     if(fpsT.elapsed()>1000) {
         fpsT.restart();
         fps=fcnt;
@@ -196,13 +229,15 @@ void RC1::paintEvent(QPaintEvent *)
         secTimer=true;
         //qDebug() << "fps: " << fps;
     }
-
+*/
     QPainter painter(this);
     //qDebug() << "painter window " << painter.window().width() << " " << painter.window().height() ;
 
+#ifndef RC1_PRO
     if(blockerOn) {
         blockerPainter->paint(this,&painter);
     } else {
+#endif
         int k=0;
         for(int i=0;i<nPrePainters;i++) {
             if(painterOn[k]) {
@@ -232,8 +267,10 @@ void RC1::paintEvent(QPaintEvent *)
             }
             k++;
         }
+#ifndef RC1_PRO
     }
-    fcnt++;
+#endif
+    //fcnt++;
 }
 
 void RC1::resizeEvent(QResizeEvent *)
@@ -246,6 +283,8 @@ void RC1::resizeEvent(QResizeEvent *)
         h=width();
     }
     layout->calcGeo(w,h);
+
+#ifndef RC1_PRO
     bgImage=bgImageOri.scaled(w,h);
     QString adurl;
     adurl.sprintf("http://ads.misuco.org/get/?w=%d&h=%d",w,h);
@@ -253,6 +292,7 @@ void RC1::resizeEvent(QResizeEvent *)
         downloadAd=true;
         netxs->get(QNetworkRequest(QUrl(adurl)));
     }
+#endif
     /*
     bgImage=bgImageOri.scaled(width(),height());
     for(int i=0;i<storage->getLen();i++) {
@@ -264,15 +304,6 @@ void RC1::resizeEvent(QResizeEvent *)
 
 void RC1::timerEvent(QTimerEvent *)
 {
-    if(secTimer) {
-        secTimer=false;
-        if(blockerOn) {
-            blockerTimeLeft--;
-            if(blockerTimeLeft<=0) {
-                blockerOn=false;
-            }
-        }
-    }
     update();
     sender->sendOff();
 }
@@ -281,6 +312,7 @@ bool RC1::event(QEvent *event)
 {
     //qDebug() << "event" << event->type();
     QList<QTouchEvent::TouchPoint> touchPoints;
+#ifndef RC1_PRO
     if(blockerOn) {
         if(adid!="") {
             if(event->type()==QEvent::TouchEnd ) {
@@ -302,6 +334,7 @@ bool RC1::event(QEvent *event)
             }
         }
     } else {
+#endif
         if( event->type()==QEvent::TouchEnd ||
             event->type()==QEvent::TouchUpdate ||
             event->type()==QEvent::TouchBegin ) {
@@ -352,7 +385,9 @@ bool RC1::event(QEvent *event)
             ehand->processPoint(p,this);
             return true;
         }
+#ifndef RC1_PRO
     }
+#endif
     return QWidget::event(event);
 }
 
@@ -888,7 +923,7 @@ long RC1::getNow()
 {
     return now;
 }
-
+/*
 int RC1::getFps()
 {
     return fps;
@@ -898,6 +933,7 @@ QTime * RC1::getFpsT()
 {
     return &fpsT;
 }
+*/
 
 QImage *RC1::getBgImage()
 {
@@ -929,7 +965,7 @@ void RC1::appStateChange(Qt::ApplicationState state) {
 
 void RC1::replyFinished(QNetworkReply * r)
 {
-    //qDebug() << "received " << r->url();
+    qDebug() << "received " << r->url();
     if(r->error()==QNetworkReply::NoError) {
         QString pendingConfigFile;
         QByteArray data=r->readAll();
@@ -940,28 +976,28 @@ void RC1::replyFinished(QNetworkReply * r)
         } else {
             pendingConfigFile="init.jpg";
         }
-        QFile out(storagePath+"/"+pendingConfigFile);
+        QFile out(privateDataPath+"/"+pendingConfigFile);
         if(out.open(QIODevice::WriteOnly)) {
             out.write(data);
             out.close();
         } else {
-            //qDebug() << "cannot write " << storagePath << "/" << pendingConfigFile;
+            qDebug() << "cannot write " << storagePath << "/" << pendingConfigFile;
         }
         if(pendingConfigFile=="bg.jpg") {
-            bgImageOri.load(storagePath+"/bg.jpg");
+            bgImageOri.load(privateDataPath+"/bg.jpg");
             bgImage=bgImageOri.scaled(width(),height());
         } else if(pendingConfigFile=="init.jpg") {
-            QFile out(storagePath+"/adid.dat");
+            QFile out(privateDataPath+"/adid.dat");
             if(out.open(QIODevice::WriteOnly)) {
                 out.write(r->rawHeader("Adid"));
                 out.close();
             }
         } else if(r->url().toString()==RC1_SCALES_XML_URL) {
-            scaletab.readXml(storagePath+"/scales.xml");
+            scaletab.readXml(privateDataPath+"/scales.xml");
         }
         r->deleteLater();
     } else {
-        //qDebug() << "error reading background from www";
+        qDebug() << "error reading background from www";
     }
 }
 
@@ -983,13 +1019,12 @@ void RC1::startDialog()
     dialog->setContent(layout->getDisplayAddress(),layout->getDisplayPort());
     QObject *item = (QObject *)dialog->getView()->rootObject();
     connect(item,SIGNAL(ok(QString,QString)),this,SLOT(setDest(QString,QString)));
-    //mainwindow->setCentralWidget(dialog->view);
 }
 
 void RC1::setDest(QString adr,QString port)
 {
     QHostAddress testadr(adr);
-    qDebug() << "setDest " << adr << " " << port;
+    //qDebug() << "setDest " << adr << " " << port;
     int convport=port.toInt();
     if(!testadr.isNull()) {
         if(convport>0 && convport<65535) {
@@ -997,10 +1032,9 @@ void RC1::setDest(QString adr,QString port)
             layout->setDisplayAddress(adr);
             layout->setDisplayPort(convport);
             layout->updateLayout();
-            qDebug() << "done " << adr << " " << port;
+            //qDebug() << "done " << adr << " " << port;
         }
     }
-    //mainwindow->setCentralWidget(this);
     delete(dialog);
 }
 

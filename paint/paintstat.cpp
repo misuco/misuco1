@@ -59,9 +59,11 @@ void PaintStat::paint(RC1 *rc1, QPainter *pnt)
     //EventStat * evstat = rc1->getEvstat();
     pnt->setPen(Qt::gray);
     pnt->setFont(QFont(font,fontsize,linehight));
-    QString fpss;
+    QString fpss="";
+    /*
     fpss.sprintf("misuco.org/d401 : %d fps@", rc1->getFps());
     fpss.append(rc1->getFpsT()->toString());
+    */
     fpss.append(" on ");
     fpss.append(platform_os);
 //    pnt->drawText(10,fontsize,fpss);

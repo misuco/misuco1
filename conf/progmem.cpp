@@ -110,8 +110,8 @@ void ProgMem::writeProgmemXml(QString filename)
 {
     QFile file(filename);
     if (!file.open(QFile::WriteOnly | QFile::Text)) {
+        qDebug() << "cannot write file " << filename;
         return;
-        //qDebug() << "cannot write file " << filename;
     }
     //qDebug() << "writing progmem file " << filename;
 
@@ -122,21 +122,21 @@ void ProgMem::writeProgmemXml(QString filename)
     xml.writeStartDocument();
     xml.writeDTD("<!DOCTYPE misuco>");
     xml.writeStartElement("misucoprogmem");
-    xml.writeAttribute("version", "1.0");
+    xml.writeAttribute("version", "1.1");
     xml.writeAttribute("adr",adr);
     att.sprintf("%d",port);
     xml.writeAttribute("port",att);
-    qDebug() << "wrote port " << att;
+    //qDebug() << "wrote port " << att;
     att.sprintf("%d",senderType);
     xml.writeAttribute("senderType",att);
-    qDebug() << "wrote senderType " << att;
+    //qDebug() << "wrote senderType " << att;
     att.sprintf("%d",errCorr);
     xml.writeAttribute("errCorr",att);
-    qDebug() << "wrote errCorr " << att;
+    //qDebug() << "wrote errCorr " << att;
     att.sprintf("%d",channel);
     xml.writeAttribute("channel",att);
-    qDebug() << "wrote channel " << att;
-    qDebug() << "wrote adr " << adr << " port " << port << " senderType " << senderType << " channel " << channel;
+    //qDebug() << "wrote channel " << att;
+    //qDebug() << "wrote adr " << adr << " port " << port << " senderType " << senderType << " channel " << channel;
 
     for (int row = 0; row < progmem_max; row++) {
         xml.writeStartElement("prog");

@@ -282,6 +282,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 } else if(layout->getCtly(iseg)==-3) {
                     layout->setSound(xrelquant+layout->getMidinote(iseg));
                     snd->pc(layout->getChannel(),xrelquant);
+                    rc1->transmitSoundParam();
                     layout->updateLayout();
                 } else if(layout->getCtly(iseg)==-4) {
                     layout->setTopoct(xrelquant);
@@ -300,9 +301,9 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 } else if(layout->getCtly(iseg)==-8) {
                     snd->repeatOff=xrelquant;
                     layout->setErrorCorr(xrelquant);
-                } else {
-                    snd->cc(0, 0, layout->getCtly(iseg)+100, xrelquant);
-                    layout->setSoundParam(layout->getCtly(iseg),xrelquant);
+//                } else {
+//                    snd->cc(0, 0, layout->getCtly(iseg)+100, xrelquant);
+//                    layout->setSoundParam(layout->getCtly(iseg),xrelquant);
                 }
             } else if(layout->getSegtype(iseg)==5) {
                 // y-slider

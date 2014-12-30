@@ -46,8 +46,14 @@ private:
 
     int * ccval1;       // current controller1 value: xrel
     int * ccval2;       // current controller1 value: yrel
+
+    float * yori;         // origin position for vertical fadder diff behavior
+    float * yrelori;      // origin value for vertical fadder diff behavior
+
+    /*
     int * ccval1q;      // current controller1 value: xrel (quantized)
     int * ccval2q;      // current controller1 value: yrel (quantized)
+    */
 
     float cccval1;     // common cc value, average of individual ccvals
     float cccval2;     // common cc value, average of individual ccvals

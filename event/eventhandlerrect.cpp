@@ -100,6 +100,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             }
             // turn on pressed for new segment
             layout->incPressed(iseg);
+            yori[evptr]=-1;
             //qDebug() << "event " << evptr << "incPressed " << iseg;
         }
 
@@ -131,6 +132,16 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
 
         float yrel=p->getY()-(ysum-layout->getRowheightpx(iy))-2*layout->getSegBorder();
         yrel=yrel/(float)(layout->getRowheightpx(iy)-4*layout->getSegBorder());
+        if(yori[evptr]==-1) {
+            yori[evptr]=yrel;
+            yrelori[evptr]=1.0f-layout->getYrel(iseg);
+        }
+        //qDebug() << "yrel " << yrel << " yori " << yori[evptr] << " layout->yrel " << layout->getYrel(iseg);
+        // apply relative fadder move for vertical fadders
+        if((layout->getSegtype(iseg)==0 && layout->getCtly(iseg)==-3) || layout->getSegtype(iseg)==5) {
+            yrel=(yrelori[evptr])+(yrel-yori[evptr]);
+        }
+        //qDebug() << "yrel " << yrel;
         if(yrel>1.0f) {
             yrel=1.0f;
         }
@@ -359,6 +370,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         p->setHue(-1);
         act[evptr]=false;
         layResize=false;
+        yori[evptr]=-1;
         if(layout->getSegtype(iseg)<2) {
             layout->decPressed(isegb[evptr]);
         }
@@ -540,6 +552,8 @@ void EventHandlerRect::init()
     ieventout=new int[ntp];
     ccval1=new int[ntp];
     ccval2=new int[ntp];
+    yori=new float[ntp];
+    yrelori=new float[ntp];
     freq=new float[ntp];
     chan=new int[ntp];
     mnote=new int[ntp];
@@ -556,6 +570,8 @@ void EventHandlerRect::init()
         chan[i]=-1;
         ccval1[i]=-1;
         ccval2[i]=-1;
+        yori[i]=-1;
+        yrelori[i]=0;
         isegb[i]=-1;
         evptr_stack[i]=-1;
     }

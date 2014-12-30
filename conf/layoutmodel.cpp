@@ -178,7 +178,7 @@ void LayoutModel::calcGeo(int w, int h)
 #else
     fontsize=heightPx/30;
 #endif
-    fontsizeS=fontsize/2;
+    fontsizeS=fontsize/3*2;
 }
 
 int LayoutModel::getHeight() const

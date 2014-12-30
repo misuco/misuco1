@@ -267,7 +267,8 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                     pnt->setPen(Qt::NoPen);
                     int sseg=xpaint1/lay->getCtlx(iseg);
                     int xsseg=sseg-2*cradx;
-                    int ysseg=ypaint1-2*crady;
+                    //int ysseg=ypaint1-2*crady;
+                    int yoffset=(ypaint1_1-xsseg)/2;
                     int xv1=lay->getXrelq(iseg)*sseg;
                     if(lay->getXrelq(iseg)>=0) {
                         pnt->drawRoundedRect(xpaint+xv1,ypaint,sseg,ypaint1_1,cradx,crady);
@@ -280,9 +281,9 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                         text.sprintf("%d",i+lay->getMidinote(iseg));
                         pnt->setPen(Qt::NoPen);
                         if(lay->getCtly(iseg)==-3) {
-                            pnt->drawEllipse(xv1+cradx,ypaint+crady,xsseg,ysseg);
+                            pnt->drawEllipse(xv1+cradx,ypaint+yoffset,xsseg,xsseg);
                         } else {
-                            pnt->drawRect(xv1+cradx,ypaint+crady,xsseg,ysseg);
+                            pnt->drawRect(xv1+cradx,ypaint+yoffset,xsseg,xsseg);
                         }
                         pnt->setPen(QColor::fromHsl(col,120,0));
                         pnt->drawText(xv1,ypaint,sseg,ypaint1,Qt::AlignCenter,text);
@@ -303,8 +304,9 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                     pnt->setFont(QFont(lay->getFont(),lay->getFontsizeS()));
                     text.sprintf("%d",lay->getYrelq(iseg));
                     pnt->setPen(Qt::darkGray);
-                    pnt->drawText(xpaint,ypaint+ypaint1-crady,xpaint1_1,crady,Qt::AlignCenter,text);
-                    textAlign=Qt::AlignLeft;
+                    //pnt->drawText(xpaint,ypaint+ypaint1-crady,xpaint1_1,crady,Qt::AlignCenter,text);
+                    pnt->drawText(xpaint,ypaint,xpaint1_1,crady,Qt::AlignCenter,text);
+                    //textAlign=Qt::AlignLeft;
                     //fontl=0;
                 } else if(lay->getSegtype(iseg)==0 && lay->getCtly(iseg)==-3) {
                     // sounding vertical fadder for tuning
@@ -313,21 +315,25 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                     int yv1=(float)(ypaint1-2*cradx)*(1-lay->getYrel(iseg));
                     pnt->drawRoundedRect(xpaint,ypaint+yv1,xpaint1_1,2*crady,cradx,crady);
                     QString text;
-                    pnt->setBrush(Qt::darkGray);
+//                    pnt->setBrush(Qt::darkGray);
                     pnt->setFont(QFont(lay->getFont(),lay->getFontsizeS()));
                     text.sprintf("%3.1f",(lay->getYrel(iseg)-0.5f)*200);
-                    pnt->setPen(Qt::darkGray);
-                    pnt->drawText(xpaint,ypaint+yv1,xpaint1_1,2*crady,Qt::AlignCenter,text);
-                    textAlign=Qt::AlignLeft;
+                    pnt->setPen(Qt::black);
+                    pnt->drawText(xpaint,ypaint,xpaint1_1,2*crady,Qt::AlignCenter,text);
+                    pnt->drawText(xpaint,ypaint+yv1,xpaint1_1,2*crady,Qt::AlignCenter,*lay->getSegText(iseg));
+                    //textAlign=Qt::AlignLeft;
                     //fontl=0;
                 }
 
-                if(painttext>0 && (lay->getEditMode()|(lay->getSegtype(iseg)==0)|(lay->getSegtype(iseg)==2)|(lay->getSegtype(iseg)==3)) ) {
+                if(painttext>0 && !(lay->getSegtype(iseg)==0 && lay->getCtly(iseg)==-3)
+                        && (lay->getEditMode()|(lay->getSegtype(iseg)==0)|(lay->getSegtype(iseg)==2)|(lay->getSegtype(iseg)==3)) ) {
                     pnt->setPen(QColor::fromHsl(col,120,fontl));
                     if((lay->getSegtype(iseg)==4) | (lay->getSegtype(iseg)==6)) {
                         pnt->drawText(xrow_header,ypaint,xpaint1,ypaint1,textAlign,*lay->getSegText(iseg));
-                    } else {
-                        pnt->drawText(xpaint,ypaint,xpaint1,ypaint1,textAlign,*lay->getSegText(iseg));
+                    } else if(lay->getSegtype(iseg)==5) {
+                        pnt->drawText(xpaint,ypaint+ypaint1-2*crady,xpaint1,lay->getFontsize(),textAlign,*lay->getSegText(iseg));
+                    } else if(!(lay->getSegtype(iseg)==0 && lay->getCtly(iseg)==-3)) {
+                        pnt->drawText(xpaint,ypaint,xpaint1,lay->getFontsize(),textAlign,*lay->getSegText(iseg));
                     }
                 }
 

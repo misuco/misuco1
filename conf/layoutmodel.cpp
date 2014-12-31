@@ -913,7 +913,6 @@ QString LayoutModel::getMidi2TextUrl(int midi) const
 void LayoutModel::updateLayout()
 {
     int seg=0;
-
     //qDebug() << "scaleStartSeg " << scaleStartSeg << " nsegs " << nsegs;
     // switch states for edit elements
     for(seg=0;seg<scaleStartSeg;seg++) {
@@ -1004,6 +1003,7 @@ void LayoutModel::updateLayout()
             if(ctly[seg]>=102) {
                 int soundparam=soundmem.soundParam[progmem.progmem[actProgmem].sound][ctly[seg]-102];
                 yrelq[seg]=soundparam;
+                yrel[seg]=(float)soundparam/(float)ctlx[seg];
                 //qDebug() << "updateLayout setting soundParam " << soundparam;
             }
         }

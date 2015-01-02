@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE misuco>
 <misuco version="1.0" rowheightmax="70" scalerow="4" >
-    <row height="10" segwidthmax="10">
+    <row height="10" segwidthmax="12">
         <seg segwidth="2" freq="0.000000" midinote="0" ctlx="1" ctly="-4" segtype="2" chan="0" pressed="0" segtext="scale" segh="1"/>
         <seg segwidth="2" freq="0.000000" midinote="0" ctlx="2" ctly="-4" segtype="2" chan="0" pressed="0" segtext="octave" segh="1"/>
         <seg segwidth="2" freq="0.000000" midinote="0" ctlx="3" ctly="-4" segtype="2" chan="0" pressed="0" segtext="synth" segh="1"/>
         <seg segwidth="2" freq="0.000000" midinote="0" ctlx="4" ctly="-4" segtype="2" chan="0" pressed="0" segtext="tune" segh="1"/>
         <seg segwidth="2" freq="0.000000" midinote="0" ctlx="5" ctly="-4" segtype="2" chan="0" pressed="0" segtext="net" segh="1"/>
+        <seg segwidth="2" freq="0.000000" midinote="0" ctlx="0" ctly="-9" segtype="2" chan="0" pressed="0" segtext="save" segh="1"/>
     </row>
     <row height="30" segwidthmax="11">
         <seg segwidth="1" freq="0.000000" midinote="0" ctlx="4" ctly="102" segtype="5" chan="0" pressed="0" segtext="wave" segh="0"/>

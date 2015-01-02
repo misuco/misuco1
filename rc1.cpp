@@ -949,7 +949,7 @@ void RC1::setTtl(long value)
     ttl = value;
 }
 void RC1::appStateChange(Qt::ApplicationState state) {
-    qDebug() << "appStateChange " << state;
+    //qDebug() << "appStateChange " << state;
     if(state==Qt::ApplicationActive) {
         sender->reconnect();
 #ifdef RC1_PRO
@@ -958,8 +958,15 @@ void RC1::appStateChange(Qt::ApplicationState state) {
         oscin->registerPathObject(this);
 #endif
     } else {
-        layout->writeProgmemXml(storagePath+"/");
+#ifndef RC1_PRO
+        // pro version has save button
+        writeProgmem();
+#endif
     }
+}
+
+void RC1::writeProgmem() {
+    layout->writeProgmemXml(storagePath+"/");
 }
 
 void RC1::replyFinished(QNetworkReply * r)

@@ -90,6 +90,7 @@ public:
     void transmitSoundParam();
 
     void startDialog();
+    void writeProgmem();
 
 public slots:
     void replyFinished(QNetworkReply * r);

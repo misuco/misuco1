@@ -926,7 +926,7 @@ void LayoutModel::updateLayout()
                     pressed[seg]=0;
                 }
             } else if(ctly[seg]==-2) {
-                note=(progmem.progmem[actProgmem].basenote+ctlx[seg]+1)%12;
+                note=progmem.progmem[actProgmem].basenote+ctlx[seg]+1;
                 if(progmem.progmem[actProgmem].bscale[ctlx[seg]]) {
                     pressed[seg]=1;
                 } else {
@@ -1028,7 +1028,7 @@ int LayoutModel::generateScale(int seg, bool firstlast) {
         //pitch[seg]=midi2fcent[(calcnote+3)%12]*4096.0f/100.0f;
         pitch[seg]=midi2fcent[calcnote%12]*4096.0f/100.0f;
         QString octnum;
-        octnum.sprintf(" %d",i+1);
+        octnum.sprintf("%d",i+1);
         segText[seg]=midi2TextEU[calcnote%12];
         segText[seg].append(octnum);
         ctlx[seg]=1;

@@ -29,7 +29,8 @@ CREATE TABLE `wp_posts` (
   KEY `type_status_date` (`post_type`,`post_status`,`post_date`,`ID`),
   KEY `post_parent` (`post_parent`),
   KEY `post_author` (`post_author`)
-) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;INSERT INTO `wp_posts` VALUES (1, 1, '2014-01-01 00:00:00', '2014-01-01 00:00:00', 'c', 'c', '', 'publish', 'open', 'open', '', 'c', '', '', '2014-01-01 00:00:00', '2014-01-01 00:00:00', '', 0, 'http://scales.misuco.org/?post_id=1', 0, 'post', '', 0); 
+) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+INSERT INTO `wp_posts` VALUES (1, 1, '2014-01-01 00:00:00', '2014-01-01 00:00:00', 'c', 'c', '', 'publish', 'open', 'open', '', 'c', '', '', '2014-01-01 00:00:00', '2014-01-01 00:00:00', '', 0, 'http://scales.misuco.org/?post_id=1', 0, 'post', '', 0);
 INSERT INTO `wp_posts` VALUES (2, 1, '2014-01-01 00:00:00', '2014-01-01 00:00:00', 'c cs', 'c cs', '', 'publish', 'open', 'open', '', 'c-cs', '', '', '2014-01-01 00:00:00', '2014-01-01 00:00:00', '', 0, 'http://scales.misuco.org/?post_id=2', 0, 'post', '', 0); 
 INSERT INTO `wp_posts` VALUES (3, 1, '2014-01-01 00:00:00', '2014-01-01 00:00:00', 'c d', 'c d', '', 'publish', 'open', 'open', '', 'c-d', '', '', '2014-01-01 00:00:00', '2014-01-01 00:00:00', '', 0, 'http://scales.misuco.org/?post_id=3', 0, 'post', '', 0); 
 INSERT INTO `wp_posts` VALUES (4, 1, '2014-01-01 00:00:00', '2014-01-01 00:00:00', 'c cs d', 'c cs d', '', 'publish', 'open', 'open', '', 'c-cs-d', '', '', '2014-01-01 00:00:00', '2014-01-01 00:00:00', '', 0, 'http://scales.misuco.org/?post_id=4', 0, 'post', '', 0); 

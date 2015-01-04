@@ -23,6 +23,13 @@ namespace synth {
         cutoff_ = cutoff;
     }
     
+    void LowPassFilter::resetxy() {
+        x1_=0;
+        x2_=0;
+        y1_=0;
+        y2_=0;
+    }
+
     void LowPassFilter::reset(float frequency) {
         // Number of filter passes
         float n = 1;
@@ -103,6 +110,17 @@ namespace synth {
         resonance_ = resonance;
     }
     
+    void ResonantFilter::resetxy() {
+        y1_=0;
+        y2_=0;
+        y3_=0;
+        y4_=0;
+        oldx_=0;
+        oldy1_=0;
+        oldy2_=0;
+        oldy3_=0;
+    }
+
     float ResonantFilter::GetValue(float x) {
         if (cutoff_ == NULL) {
             return x;

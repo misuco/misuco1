@@ -95,6 +95,7 @@ namespace synth {
         lfos[size_]->set_mod_f(0);
         lfos[size_]->set_mod_pw(0);
         cutoffs[size_]->set_cutoff(freq);
+        filters[size_]->resetxy();
         mod_amt_[size_]=mod_amt_init_;
         initModulation(size_,0);
 

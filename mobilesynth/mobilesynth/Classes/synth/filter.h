@@ -37,6 +37,8 @@ namespace synth {
         
         virtual float GetValue(float x);
         
+        void resetxy();
+
     private:
         void reset(float frequency);
         
@@ -71,6 +73,7 @@ namespace synth {
         
         virtual float GetValue(float x);
         
+        void resetxy();
     private:
         Parameter* cutoff_;
         float resonance_;

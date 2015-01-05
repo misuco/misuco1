@@ -22,7 +22,7 @@
     </row>
     <row height="10" segwidthmax="12">
         <seg segwidth="1" freq="0.000000" midinote="0" ctlx="100" ctly="-7" segtype="2" chan="0" pressed="0" segtext="-" segh="0"/>
-        <seg segwidth="10" freq="0.000000" midinote="0" ctlx="10" ctly="-3" segtype="4" chan="0" pressed="0" segtext="SND" segh="0"/>
+        <seg segwidth="10" freq="0.000000" midinote="0" ctlx="10" ctly="-3" segtype="4" chan="0" pressed="0" segtext="S" segh="0"/>
         <seg segwidth="1" freq="0.000000" midinote="0" ctlx="100" ctly="-8" segtype="2" chan="0" pressed="0" segtext="+" segh="0"/>
     </row>
     <row height="10" segwidthmax="14">

@@ -44,6 +44,7 @@ public:
         int topoct;
         bool bscale[bscale_max];
         int sound;
+        int rows;
     };
 
     prog progmem[progmem_max];

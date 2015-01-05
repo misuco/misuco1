@@ -120,6 +120,7 @@ public:
     void setTopoct(int v);
     int getBaseoct() const;
     void setBaseoct(int v);
+    void setRowsGen(int v);
     void setTransMode(bool t);
     void setRowheightpx(int i, int v);
     void setRowheight(int i, int v);

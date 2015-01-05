@@ -650,6 +650,15 @@ void LayoutModel::setBaseoct(int v)
     }
 }
 
+void LayoutModel::setRowsGen(int v)
+{
+    if(v>0 && v<nsegs-scaleStartSeg) {
+        qDebug() << "setRowGen " << v;
+        progmem.progmem[actProgmem].rows=v;
+        updateLayout();
+    }
+}
+
 void LayoutModel::setTransMode(bool t)
 {
     transMode=t;
@@ -998,6 +1007,8 @@ void LayoutModel::updateLayout()
                 xrelq[seg]=progmem.channel;
             } else if(ctly[seg]==-8) {
                 xrelq[seg]=progmem.errCorr;
+            } else if(ctly[seg]==-9) {
+                xrelq[seg]=progmem.progmem[actProgmem].rows;
             }
         } else if(segtype[seg]==5 ) {
             if(ctly[seg]>=102) {
@@ -1009,8 +1020,33 @@ void LayoutModel::updateLayout()
         }
     }
     seg=generateScale(seg,true);
-    nseg[scaleRow]=seg-scaleStartSeg;
-    segwidthmax[scaleRow]=seg-scaleStartSeg;
+
+    int scalelen=seg-scaleStartSeg;
+    int segsperrow=scalelen/(progmem.progmem[actProgmem].rows+1);
+    int leftover=scalelen%(progmem.progmem[actProgmem].rows+1);
+
+    qDebug() << "scalelen " << scalelen << " segsperrow " << segsperrow << " leftover " << leftover;
+
+    if(leftover>0) {
+        segsperrow=scalelen/progmem.progmem[actProgmem].rows;
+        leftover=scalelen%progmem.progmem[actProgmem].rows;
+        for(int i=0;i<progmem.progmem[actProgmem].rows;i++) {
+            nseg[scaleRow+i]=segsperrow;
+            segwidthmax[scaleRow+i]=segsperrow;
+            nrows++;
+        }
+        nseg[scaleRow+progmem.progmem[actProgmem].rows]=leftover;
+        segwidthmax[scaleRow+progmem.progmem[actProgmem].rows]=leftover;
+        nrows++;
+    } else {
+        for(int i=0;i<progmem.progmem[actProgmem].rows+1;i++) {
+            nseg[scaleRow+i]=segsperrow;
+            segwidthmax[scaleRow+i]=segsperrow;
+            nrows++;
+        }
+    }
+    //nseg[scaleRow]=seg-scaleStartSeg;
+    //segwidthmax[scaleRow]=seg-scaleStartSeg;
     nsegs=seg;
     calcGeo(widthPx,heightPx);
 }

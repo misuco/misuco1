@@ -57,6 +57,11 @@ void ProgMem::readProgmemXml(QString filename)
             while (xmlr.readNextStartElement() && row<progmem_max) {
                 //qDebug() << "row " << row;
                 if (xmlr.name() == "prog") {
+                    if(xmlr.attributes().hasAttribute("rows")) {
+                        progmem[row].rows=xmlr.attributes().value("rows").toString().toInt();
+                    } else {
+                        progmem[row].rows=0; // default value
+                    }
                     progmem[row].basenote=xmlr.attributes().value("basenote").toString().toInt();
                     progmem[row].baseoct=xmlr.attributes().value("baseoct").toString().toInt();
                     progmem[row].topoct=xmlr.attributes().value("topoct").toString().toInt();
@@ -79,11 +84,16 @@ void ProgMem::readProgmemXml(QString filename)
             channel=xmlr.attributes().value("channel").toInt();
             senderType=xmlr.attributes().value("senderType").toInt();
             errCorr=xmlr.attributes().value("errCorr").toInt();
-            qDebug() << "read adr " << adr << " port " << port << " senderType " << senderType << " channel " << channel;
+            //qDebug() << "read adr " << adr << " port " << port << " senderType " << senderType << " channel " << channel;
             int row=0;
             while (xmlr.readNextStartElement() && row<progmem_max) {
                 //qDebug() << "row " << row;
                 if (xmlr.name() == "prog") {
+                    if(xmlr.attributes().hasAttribute("rows")) {
+                        progmem[row].rows=xmlr.attributes().value("rows").toString().toInt();
+                    } else {
+                        progmem[row].rows=0; // default value
+                    }
                     progmem[row].basenote=xmlr.attributes().value("basenote").toString().toInt();
                     progmem[row].baseoct=xmlr.attributes().value("baseoct").toString().toInt();
                     progmem[row].topoct=xmlr.attributes().value("topoct").toString().toInt();
@@ -149,6 +159,9 @@ void ProgMem::writeProgmemXml(QString filename)
 
         att.sprintf("%d",progmem[row].topoct);
         xml.writeAttribute("topoct",att);
+
+        att.sprintf("%d",progmem[row].rows);
+        xml.writeAttribute("rows",att);
 
         att.sprintf("%d",progmem[row].sound);
         xml.writeAttribute("sound",att);

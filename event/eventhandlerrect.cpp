@@ -313,6 +313,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 } else if(layout->getCtly(iseg)==-8) {
                     snd->repeatOff=xrelquant;
                     layout->setErrorCorr(xrelquant);
+                } else if(layout->getCtly(iseg)==-9) {
+                    layout->setRowsGen(xrelquant);
 //                } else {
 //                    snd->cc(0, 0, layout->getCtly(iseg)+100, xrelquant);
 //                    layout->setSoundParam(layout->getCtly(iseg),xrelquant);

@@ -156,10 +156,12 @@ void LayoutModel::calcGeo(int w, int h)
         // if(aspect_change) {
             rowheightpx[y]=heightPx*rowheight[y]/rowheightmax;
             rowheightsum+=rowheightpx[y];
+            //qDebug() << "rowheightsum " << rowheightsum << "+=" << rowheightpx[y];
             // additional pixels may occur due to rounding differences
             // -> add additional pixels to last row
             if(y==nrows-1 && rowheightsum<heightPx) {
-                rowheightpx[y]+=rowheightsum-heightPx;
+                rowheightpx[y]+=heightPx-rowheightsum;
+                //qDebug() << "calcGeo: add to px last row: " << rowheightsum-heightPx << " heightPx: " << heightPx;
             }
         // }
         int segwidthsum=0;
@@ -652,8 +654,8 @@ void LayoutModel::setBaseoct(int v)
 
 void LayoutModel::setRowsGen(int v)
 {
-    if(v>0 && v<nsegs-scaleStartSeg) {
-        qDebug() << "setRowGen " << v;
+    if(v>=0 && v<nsegs-scaleStartSeg) {
+        //qDebug() << "setRowGen " << v;
         progmem.progmem[actProgmem].rows=v;
         updateLayout();
     }
@@ -862,10 +864,8 @@ void LayoutModel::toggleEdit()
         rowheight[scaleRow-1]=10;
         rowheight[scaleRow]=rowheightmax-10;
         editMode=false;
-        for(int i=0;i<nrows;i++) {
-            if(i<scaleRow-1) {
-                rowheight[i]=0;
-            }
+        for(int i=0;i<scaleRow-1;i++) {
+            rowheight[i]=0;
         }
     }
     calcGeo();
@@ -1019,36 +1019,43 @@ void LayoutModel::updateLayout()
             }
         }
     }
-    seg=generateScale(seg,true);
+    if(progmem.progmem[actProgmem].rows==0) {
+        seg=generateScale(seg,true);
+    } else {
+        seg=generateScale(seg,false);
+    }
 
+    nrows=scaleRow+progmem.progmem[actProgmem].rows+1;
     int scalelen=seg-scaleStartSeg;
+
     int segsperrow=scalelen/(progmem.progmem[actProgmem].rows+1);
     int leftover=scalelen%(progmem.progmem[actProgmem].rows+1);
+    int rowheightsum=0;
+    for(int i=0;i<scaleRow;i++) {
+        rowheightsum+=rowheight[i];
+    }
+    int rowheightcalc=(rowheightmax-rowheightsum)/(progmem.progmem[actProgmem].rows+1);
 
-    qDebug() << "scalelen " << scalelen << " segsperrow " << segsperrow << " leftover " << leftover;
-
-    if(leftover>0) {
-        segsperrow=scalelen/progmem.progmem[actProgmem].rows;
-        leftover=scalelen%progmem.progmem[actProgmem].rows;
-        for(int i=0;i<progmem.progmem[actProgmem].rows;i++) {
-            nseg[scaleRow+i]=segsperrow;
-            segwidthmax[scaleRow+i]=segsperrow;
-            nrows++;
-        }
+    //qDebug() << "rowheightcalc " <<rowheightcalc << " rowheightmax " << rowheightmax << " rowheightsum " << rowheightsum;
+    //qDebug() << "scalelen " << scalelen << " segsperrow " << segsperrow << " leftover " << leftover << " scaleRow " << scaleRow << " nrows " << nrows;
+    for(int i=0;i<progmem.progmem[actProgmem].rows+1;i++) {
+        nseg[scaleRow+i]=segsperrow;
+        segwidthmax[scaleRow+i]=segsperrow;
+        rowheight[scaleRow+i]=rowheightcalc;
+    }
+    if(segsperrow*(progmem.progmem[actProgmem].rows+1)>scalelen) {
         nseg[scaleRow+progmem.progmem[actProgmem].rows]=leftover;
         segwidthmax[scaleRow+progmem.progmem[actProgmem].rows]=leftover;
-        nrows++;
     } else {
-        for(int i=0;i<progmem.progmem[actProgmem].rows+1;i++) {
-            nseg[scaleRow+i]=segsperrow;
-            segwidthmax[scaleRow+i]=segsperrow;
-            nrows++;
-        }
+        nseg[scaleRow+progmem.progmem[actProgmem].rows]+=leftover;
+        segwidthmax[scaleRow+progmem.progmem[actProgmem].rows]+=leftover;
     }
     //nseg[scaleRow]=seg-scaleStartSeg;
     //segwidthmax[scaleRow]=seg-scaleStartSeg;
     nsegs=seg;
+    //qDebug() << "nsegs " << nsegs << " nrows " << nrows;
     calcGeo(widthPx,heightPx);
+    //qDebug() << "nsegs " << nsegs << " nrows " << nrows;
 }
 
 int LayoutModel::generateScale(int seg, bool firstlast) {

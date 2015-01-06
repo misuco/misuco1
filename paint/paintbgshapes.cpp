@@ -151,7 +151,11 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 int lightBNote=lBrushPsvNote;
                 int satP=sPenPsv;
                 int satB=sBrushPsv;
-                fontl=120;
+                if(lay->getSegtype(iseg)==0) {
+                    fontl=127;
+                } else {
+                    fontl=255;
+                }
 
                 if(lay->getPressed(iseg) > 0) {
                     lightP=lPenAct;
@@ -248,13 +252,14 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                     pnt->setBrush(QColor::fromHsl(col,130,lightBNote));
                     pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
                 } else if (lay->getSegtype(iseg)==2) {
+                    if(lay->getPressed(iseg)>0) {
+                        pnt->setBrush(Qt::lightGray);
+                    }
                     pnt->drawRoundedRect(xpaint,ypaint,xpaint1,ypaint1, cradx, crady);
-
                 } else {
                     if(lay->getSegtype(iseg)==10) {
                         pnt->setBrush(Qt::lightGray);
                         pnt->setPen(Qt::NoPen);
-                        fontl=120;
                     }
                     if(lay->getSegtype(iseg)>=4 && lay->getSegtype(iseg)<=6 ) {
                         pnt->setBrush(QColor::fromRgb(30,30,30,255));

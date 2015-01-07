@@ -196,8 +196,8 @@ namespace synth {
     float Controller::GetSample() {
         float value=0;
         for(int i=0;i<key_stack_.GetSize();i++) {
-            value += key_stack_.getFilter(i)->GetValue(key_stack_.getOsc(i)->GetValue()*key_stack_.getEnvelope(0, i)->GetValue());
-            // value+=key_stack_.getOsc(i)->GetValue();
+            //value += key_stack_.getFilter(i)->GetValue(key_stack_.getOsc(i)->GetValue()*key_stack_.getEnvelope(0, i)->GetValue());
+            value+=key_stack_.getOsc(i)->GetValue()*key_stack_.getEnvelope(0, i)->GetValue();
             
             // Clip!
             //value*=key_stack_.getEnvelope(0, i)->GetValue();

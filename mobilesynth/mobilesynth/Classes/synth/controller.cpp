@@ -194,32 +194,8 @@ namespace synth {
     }
     
     float Controller::GetSample() {
-        
         float value=0;
-        //float amp_mod=1;
-        //float mod_value=0;
-        
         for(int i=0;i<key_stack_.GetSize();i++) {
-            /*
-            switch (modulation_destination_) {
-                case LFO_DEST_AMP:
-                    amp_mod-=(key_stack_.getLfo(i)->GetValue()+1)/2*key_stack_.getModAmt(i);
-                    break;
-                case LFO_DEST_PW:
-                    mod_value=key_stack_.getLfo(i)->GetValue()*key_stack_.getModAmt(i);
-                    //key_stack_.getOsc(i)->set_mod_pw(mod_value);
-                    break;
-                case LFO_DEST_PITCH:
-                    mod_value=key_stack_.getLfo(i)->GetValue()*key_stack_.getModAmt(i);
-                    //key_stack_.getOsc(i)->set_mod_f(mod_value);
-                    break;
-                case LFO_DEST_FILTER:
-                    break;
-                case LFO_DEST_NONE:
-                    break;
-            }
-            */
-
             value += key_stack_.getFilter(i)->GetValue(key_stack_.getOsc(i)->GetValue()*key_stack_.getEnvelope(0, i)->GetValue());
             // value+=key_stack_.getOsc(i)->GetValue();
             

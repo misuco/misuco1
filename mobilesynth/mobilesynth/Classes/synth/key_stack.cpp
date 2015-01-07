@@ -19,16 +19,17 @@ namespace synth {
                 envelopes[j][i]=new Envelope();
             }
             oscs[i]=new Oscillator();
-            oscs[i]->set_mod_f(0);
-            oscs[i]->set_mod_pw(0);
+            oscs[i]->set_sample_rate(sample_rate_);
+            //oscs[i]->set_mod_f(0);
+            //oscs[i]->set_mod_pw(0);
             //oscs[i]->set_waveform(waveform_);
-            lfos[i]=new Oscillator();
-            lfos[i]->set_frequency(0);
-            lfos[i]->set_wave_type(1);
+            //lfos[i]=new Oscillator();
+            //lfos[i]->set_frequency(0);
+            //lfos[i]->set_wave_type(1);
             //lfos[i]->set_waveform(waveform_);
-            lfos[i]->set_pulse_width(0.5);
-            lfos[i]->set_mod_f(0);
-            lfos[i]->set_mod_pw(0);
+            //lfos[i]->set_pulse_width(0.5);
+            //lfos[i]->set_mod_f(0);
+            //lfos[i]->set_mod_pw(0);
 
             mod_amt_[i]=0;
             cutoffs[i]=new FilterCutoff();
@@ -39,7 +40,7 @@ namespace synth {
             filters[i]->set_resonance(0);
         }
         mod_amt_init_=0;
-        lfo_freq_init_=0;
+        //lfo_freq_init_=0;
         osc_pw=0.5;
         filter_res_=0;
         filter_cutoff_=0.5f;
@@ -53,7 +54,7 @@ namespace synth {
                 delete(envelopes[j][i]);
             }
             delete(oscs[i]);
-            delete(lfos[i]);
+            //delete(lfos[i]);
             delete(cutoffs[i]);
             delete(filters[i]);
         }
@@ -67,6 +68,7 @@ namespace synth {
             if (notes_[i] == note) {
                 oscs[i]->set_frequency(freq);
                 oscs[i]->set_wave_type(osc_wave);
+                oscs[i]->set_sample_rate(sample_rate_);
                 cutoffs[i]->set_cutoff(freq);
                 initModulation(i,0);
                 //qDebug() << "  KeyStack existing note " << note << " size " << size_ << " wave " << osc_wave;
@@ -87,13 +89,14 @@ namespace synth {
         oscs[size_]->set_frequency(freq);
         oscs[size_]->set_pulse_width(osc_pw);
         oscs[size_]->set_wave_type(osc_wave);
-        oscs[size_]->set_mod_f(0);
-        oscs[size_]->set_mod_pw(0);
-        lfos[size_]->set_frequency(lfo_freq_init_);
-        lfos[size_]->set_pulse_width(osc_pw);
-        lfos[size_]->set_wave_type(lfo_wave);
-        lfos[size_]->set_mod_f(0);
-        lfos[size_]->set_mod_pw(0);
+        oscs[size_]->set_sample_rate(sample_rate_);
+        //oscs[size_]->set_mod_f(0);
+        //oscs[size_]->set_mod_pw(0);
+        //lfos[size_]->set_frequency(lfo_freq_init_);
+        //lfos[size_]->set_pulse_width(osc_pw);
+        //lfos[size_]->set_wave_type(lfo_wave);
+        //lfos[size_]->set_mod_f(0);
+        //lfos[size_]->set_mod_pw(0);
         cutoffs[size_]->set_cutoff(freq);
         filters[size_]->resetxy();
         mod_amt_[size_]=mod_amt_init_;
@@ -147,7 +150,7 @@ namespace synth {
                 filters[kMaxSize]=filters[i];
                 cutoffs[kMaxSize]=cutoffs[i];
                 oscs[kMaxSize]=oscs[i];
-                lfos[kMaxSize]=lfos[i];
+                //lfos[kMaxSize]=lfos[i];
                 for (int j = i; j < size_-1; ++j) {
                     notes_[j] = notes_[j + 1];
                     for(int k=0;k<kNumEnv;k++) {
@@ -156,7 +159,7 @@ namespace synth {
                     filters[j]=filters[j + 1];
                     cutoffs[j]=cutoffs[j + 1];
                     oscs[j]=oscs[j + 1];
-                    lfos[j]=lfos[j + 1];
+                    //lfos[j]=lfos[j + 1];
                     mod_amt_[j]=mod_amt_[j + 1];
                 }
 
@@ -166,7 +169,7 @@ namespace synth {
                 cutoffs[size_-1]=cutoffs[kMaxSize];
                 filters[size_-1]=filters[kMaxSize];
                 oscs[size_-1]=oscs[kMaxSize];
-                lfos[size_-1]=lfos[kMaxSize];
+                //lfos[size_-1]=lfos[kMaxSize];
                 mod_amt_[size_-1]=mod_amt_[kMaxSize];
 
                 size_--;
@@ -218,7 +221,7 @@ namespace synth {
         sample_rate_=s;
         for(int i=0;i<kMaxSize;i++) {
             oscs[i]->set_sample_rate(s);
-            lfos[i]->set_sample_rate(s);
+            //lfos[i]->set_sample_rate(s);
         }
     }
     
@@ -289,7 +292,7 @@ namespace synth {
             }
         }
     }
-    
+    /*
     void KeyStack::setLfoFreq(int voice, float v ) {
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == voice) {
@@ -303,10 +306,10 @@ namespace synth {
     void KeyStack::setLfoModFreq(int voice, float v ) {
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == voice) {
-                lfos[i]->set_mod_f(v);
+                //lfos[i]->set_mod_f(v);
                 i=size_;
             }
         }
     }
-    
+    */
 }  // namespace synth

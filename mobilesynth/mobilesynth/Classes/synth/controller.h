@@ -61,14 +61,14 @@ namespace synth {
         // Set the wave form of oscillator
         //void set_osc1_wave_type(Oscillator::WaveType wave_type);
         void set_osc1_wave_type_int(int w);
-        void set_lfo_wave_type_int(int w);
+        //void set_lfo_wave_type_int(int w);
         
 /*        enum ModulationSource {
             LFO_SRC_SQUARE,
             LFO_SRC_TRIANGLE,
             LFO_SRC_SAWTOOTH,
             LFO_SRC_REVERSE_SAWTOOTH,
-        };*/
+        };
         
         enum ModulationDestination {
             LFO_DEST_NONE,
@@ -77,14 +77,15 @@ namespace synth {
             LFO_DEST_PITCH,  // Vibrato
             LFO_DEST_FILTER,
         };
+*/
 //        void set_modulation_source(ModulationSource source);
-        void set_modulation_destination(ModulationDestination dest);
-        void set_modulation_destination(int dest);
+        //void set_modulation_destination(ModulationDestination dest);
+        //void set_modulation_destination(int dest);
         void set_modulation_amount(float amount);
-        void set_modulation_frequency(float frequency);
+        //void set_modulation_frequency(float frequency);
         void set_modulation_amount(int voice, float amount);
-        void set_modulation_frequency(int voice, float frequency);
-        void set_modulation_mod_f(int voice, float frequency);
+        //void set_modulation_frequency(int voice, float frequency);
+        //void set_modulation_mod_f(int voice, float frequency);
         void set_osc_pw(int voice, float p);
         void set_filter_cutoff(int voice, float frequency);
         void set_filter_cutoff(float frequency);
@@ -123,7 +124,7 @@ namespace synth {
         float sample_rate_;
         
 //        ModulationSource modulation_source_;
-        ModulationDestination modulation_destination_;
+//        ModulationDestination modulation_destination_;
 //        MutableParameter modulation_frequency_;
 //        Oscillator modulation_osc_;
 //        MutableParameter modulation_amount_;
@@ -134,6 +135,9 @@ namespace synth {
         int sampleBytes;
 
         float volume_;
+
+        float * sampleMemory;
+        long sampleMemorySize;
         
     };
     

@@ -67,7 +67,8 @@ SOURCES += main.cpp\
     mainwindow.cpp \
     conf/soundmem.cpp \
     qdialog.cpp \
-    qqdialog.cpp
+    qqdialog.cpp \
+    mobilesynth/mobilesynth/Classes/synth/oscillatorplus.cpp
 
 HEADERS  += \
     storage.h \
@@ -130,7 +131,8 @@ HEADERS  += \
     mainwindow.h \
     conf/soundmem.h \
     qdialog.h \
-    qqdialog.h
+    qqdialog.h \
+    mobilesynth/mobilesynth/Classes/synth/oscillatorplus.h
 
 OTHER_FILES += \
     puredata/osc2midi.pd \

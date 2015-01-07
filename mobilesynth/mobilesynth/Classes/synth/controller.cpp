@@ -16,19 +16,13 @@
 namespace synth {
     
     Controller::Controller()
-    : //modulation_source_(LFO_SRC_TRIANGLE),
-    modulation_destination_(LFO_DEST_NONE) //,
-//    modulation_frequency_(2.0f),
-//    modulation_amount_(0.0f)
     {
-//        modulation_osc_.set_frequency(modulation_frequency_.GetValue());
-//        modulation_.set_oscillator(&modulation_osc_);
-//        modulation_.set_level(&modulation_amount_);
         key_stack_.setADSR(0, 1000, 1000, 0.8, 80000);
         key_stack_.setADSR(1, 0,   0,   1, 1000);
         format=0;
         volume_=0.5;
-        //        reset_routing();
+        sampleMemory=new float[1];
+        sampleMemorySize=1;
     }
 
     void Controller::set_volume(float volume)
@@ -71,10 +65,6 @@ namespace synth {
         key_stack_.setOscWave(w);
     }
     
-    void Controller::set_lfo_wave_type_int(int w) {
-        key_stack_.setLfoWave(w);
-    }
-    
     void Controller::set_modulation_amount(float amount) {
         key_stack_.setModAmtInit(amount);
     }
@@ -82,73 +72,6 @@ namespace synth {
     void Controller::set_modulation_amount(int voice, float amount) {
         key_stack_.setModAmt(voice, amount);
     }
-    
-    void Controller::set_modulation_frequency(float frequency) {
-        key_stack_.setLfoFreqInit(frequency);
-    }
-    
-    void Controller::set_modulation_frequency(int voice, float frequency) {
-        key_stack_.setLfoFreq(voice, frequency);
-    }
-    
-    void Controller::set_modulation_mod_f(int voice, float frequency) {
-        key_stack_.setLfoModFreq(voice, frequency);
-    }
-    
-/*    void Controller::set_modulation_source(ModulationSource src) {
-        modulation_source_ = src;
-        reset_routing();
-    }*/
-    
-    void Controller::set_modulation_destination(ModulationDestination dest) {
-        modulation_destination_ = dest;
-        //        reset_routing();
-    }
-    
-    void Controller::set_modulation_destination(int dest) {
-        switch (dest) {
-            case 1:
-                modulation_destination_ = LFO_DEST_AMP;
-                break;
-                
-            case 2:
-                modulation_destination_ = LFO_DEST_FILTER;
-                break;
-                
-            case 3:
-                modulation_destination_ = LFO_DEST_PITCH;
-                break;
-                
-            case 4:
-                modulation_destination_ = LFO_DEST_PW;
-                break;
-                
-            default:
-                modulation_destination_ = LFO_DEST_NONE;
-                break;
-        }
-        //        reset_routing();
-    }
-    /*
-    void Controller::reset_routing() {
-        switch (modulation_source_) {
-            case LFO_SRC_SQUARE:
-                modulation_osc_.set_wave_type(Oscillator::SQUARE);
-                break;
-            case LFO_SRC_TRIANGLE:
-                modulation_osc_.set_wave_type(Oscillator::TRIANGLE);
-                break;
-            case LFO_SRC_SAWTOOTH:
-                modulation_osc_.set_wave_type(Oscillator::SAWTOOTH);
-                break;
-            case LFO_SRC_REVERSE_SAWTOOTH:
-                modulation_osc_.set_wave_type(Oscillator::REVERSE_SAWTOOTH);
-                break;
-            default:
-                assert(false);
-        }
-    }
-     */
 
     void Controller::set_filter_cutoff(float frequency) {
         key_stack_.setFilterCutoff(frequency);
@@ -182,16 +105,22 @@ namespace synth {
     }
     
     void Controller::GetFloatSamples(float* buffer, int size) {
+        delete(sampleMemory);
+        sampleMemory=new float[size];
         for (int i = 0; i < size; ++i) {
-            buffer[i] = GetSample();
+            sampleMemory[i]=GetSample();
+            buffer[i] = sampleMemory[i];
         }
     }
     
     void Controller::GetInt32Sapmles(int* buffer, int size) {
         //qDebug() << "get samples " <<  size << " from " <<  buffer;
+        delete(sampleMemory);
+        sampleMemory=new float[size];
         for (int i = 0; i < size; ++i) {
             //buffer[i] = GetSample()* 16777216L;
-            buffer[i] = GetSample()* 2147483648L;
+            sampleMemory[i]=GetSample();
+            buffer[i] = sampleMemory[i]* 2147483648L;
         }
     }
     
@@ -218,12 +147,17 @@ namespace synth {
     void Controller::GetCharSamples(char* buffer, int size) {
         
         if(format!=0) {
+            delete(sampleMemory);
+            sampleMemory=new float[size];
             //qDebug() << " size " << size << " sampleBytes " << sampleBytes;
             //Q_ASSERT(size % sampleBytes == 0);
             Q_UNUSED(sampleBytes) // suppress warning in release builds
             unsigned char *ptr = reinterpret_cast<unsigned char *>(buffer);
+            int j=0;
             while (size) {
-                qreal x=GetSample();
+                sampleMemory[j]=GetSample();
+                qreal x=sampleMemory[j];
+                j++;
                 for (int i=0; i<format->channelCount(); ++i) {
                     if (format->sampleSize() == 8 && format->sampleType() == QAudioFormat::UnSignedInt) {
                         const quint8 value = static_cast<quint8>((1.0 + x) / 2 * 255);
@@ -262,40 +196,42 @@ namespace synth {
     float Controller::GetSample() {
         
         float value=0;
-        float amp_mod=1;
-        float mod_value=0;
+        //float amp_mod=1;
+        //float mod_value=0;
         
         for(int i=0;i<key_stack_.GetSize();i++) {
+            /*
             switch (modulation_destination_) {
                 case LFO_DEST_AMP:
                     amp_mod-=(key_stack_.getLfo(i)->GetValue()+1)/2*key_stack_.getModAmt(i);
                     break;
                 case LFO_DEST_PW:
                     mod_value=key_stack_.getLfo(i)->GetValue()*key_stack_.getModAmt(i);
-                    key_stack_.getOsc(i)->set_mod_pw(mod_value);
+                    //key_stack_.getOsc(i)->set_mod_pw(mod_value);
                     break;
                 case LFO_DEST_PITCH:
                     mod_value=key_stack_.getLfo(i)->GetValue()*key_stack_.getModAmt(i);
-                    key_stack_.getOsc(i)->set_mod_f(mod_value);
+                    //key_stack_.getOsc(i)->set_mod_f(mod_value);
                     break;
                 case LFO_DEST_FILTER:
                     break;
                 case LFO_DEST_NONE:
                     break;
             }
-            
-            value += key_stack_.getFilter(i)->GetValue(key_stack_.getOsc(i)->GetValue());
+            */
+
+            value += key_stack_.getFilter(i)->GetValue(key_stack_.getOsc(i)->GetValue()*key_stack_.getEnvelope(0, i)->GetValue());
             // value+=key_stack_.getOsc(i)->GetValue();
             
             // Clip!
-            value*=key_stack_.getEnvelope(0, i)->GetValue();
-            value*=amp_mod;
+            //value*=key_stack_.getEnvelope(0, i)->GetValue();
+            //value*=amp_mod;
             value = fmaxf(-1.0f, value);
             value = fminf(1.0f, value);
         }
         // Clip!
-        value = fmaxf(-1.0f, value);
-        value = fminf(1.0f, value);
+        //value = fmaxf(-1.0f, value);
+        //value = fminf(1.0f, value);
         value *= volume_;
         // Adjust volume
         for(int i=0;i<key_stack_.GetSize();i++) {

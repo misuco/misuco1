@@ -13,14 +13,9 @@ namespace synth {
     Oscillator::Oscillator()
     : wave_type_(SINE),
     frequency_(0),
-    mod_f_(0),
     pulse_width_(0.5),
-    sample_num_norm_(0),
     sample_rate_(kDefaultSampleRate),
-    sample_num_(0),
-    rise_(true){
-
-    }
+    sample_num_(0){}
     
     Oscillator::~Oscillator() { }
     
@@ -33,6 +28,7 @@ namespace synth {
     }
     
     void Oscillator::set_wave_type(int w) {
+        qDebug() << "set_wave_type " << w;
         switch (w) {
             case 0:
                 wave_type_ = Oscillator::SQUARE;
@@ -49,11 +45,6 @@ namespace synth {
             case 4:
                 wave_type_ = Oscillator::NOISE;
                 break;
-                /*
-            case 5:
-                wave_type_ = Oscillator::WAVETABLE;
-                break;
-                 */
             default:
                 wave_type_ = Oscillator::SINE;
                 break;
@@ -61,192 +52,67 @@ namespace synth {
     }
 
     void Oscillator::set_frequency(float frequency) {
+        /*
         if(frequency_==0 ) {
             frequency_ = frequency;
             calc_all();
         }
-        frequency_new_ = frequency;
-        if(wave_type_ ==WAVETABLE) {
-            sample_num_=0;
-        }
-    }
-    
-    void Oscillator::set_mod_f(float mod) {
-        if(mod<-1) {
-            mod_f_new_=-1;
-        } else if(mod>1) {
-            mod_f_new_=1;
-        } else {
-            mod_f_new_=mod;
-        }
-    }
-    
-    void Oscillator::set_mod_pw(float mod) {
-        mod_pw_new_=mod;
-    }
-    
-    void Oscillator::calc_all() {
-        if(mod_f_>0) {
-            frequency_mod_=frequency_*(1+mod_f_);
-        } else if(mod_f_<0) {
-            frequency_mod_=frequency_/(1+mod_f_);
-        } else {
-            frequency_mod_=frequency_;
-            
-        }
-        calc_steps();
-        calc_edges();
+        */
+        frequency_ = frequency;
+        t_=sample_rate_/frequency_;
+        qDebug() << "Oscilator::set_frequency " << frequency << " t: " << t_ << " sr: " << sample_rate_;
     }
     
     float Oscillator::GetValue() {
-        /*
-        if (frequency_ == 0) {
-            return 0.0f;
-        }
-         */
         if (frequency_ < 0.01f) {
             return 0.0f;
         }
-        if (period_samples_ == 0) {
-            return 0.0f;
-        }
-        int sample_num_wt;
+        float x;
+        float tmp;
         switch (wave_type_) {
-            case SINE:
-                value = sinf(sample_num_norm_);
+            case SINE: // 2
+                //more precise:
+                value = sinf(2.0f * M_PI * sample_num_ * frequency_ / sample_rate_ );
+                //faster:
+                //value = sinf(2.0f * M_PI * sample_num_ / t_ );
                 break;
-            case SQUARE:
-                if (sample_num_norm_ < (pulse_width_mod_)) {
+            case SQUARE: // 0
+                x=modff(sample_num_*frequency_/sample_rate_,&tmp);
+                if (x < pulse_width_) {
                     value = 1.0f;
                 } else {
                     value = -1.0f;
                 }
                 break;
             case TRIANGLE:
-//                value = (2.0f * fabs(2.0f * x - 2.0f * floorf(x) - 1.0f) - 1.0f);
-                if(rise_) {
-                    value+=rise_val_;
-                    if(value>=1.0) {
-                        value=1.0;
-                        rise_=false;
-                    }
+                x=modff(sample_num_*frequency_/sample_rate_,&tmp);
+                if (x < pulse_width_) {
+                    value = 1.0f;
                 } else {
-                    value-=fall_val_;
-                    if(value<=-1.0) {
-                        value=-1.0;
-                        rise_=true;
-                    }
+                    value = -1.0f;
                 }
                 break;
-            case SAWTOOTH:
-                value = 2.0f * (sample_num_norm_ - floorf(sample_num_norm_) - 0.5f);
+            case SAWTOOTH: // 1
+                x=modff(sample_num_*frequency_/sample_rate_,&tmp);
+                value = 2.0f * x / t_ - 1.0f;
                 break;
             case NOISE:
                 value = -1.0f + (float)rand()/((float)RAND_MAX/2.0f);
                 break;
-            case WAVETABLE:
-                if(frequency_new_!=frequency_) {
-                    sample_num_trans_=frequency_new_/65.4064f;
-                    frequency_=frequency_new_;
-                    //qDebug() << "sample_num_trans " << sample_num_trans_ << " f " << frequency_;
-                }
-                sample_num_wt =(int)((float)sample_num_*sample_num_trans_);
-                if(sample_num_wt>waveform_->getLoop()) {
-                    //qDebug() << "sample_num_wt " << sample_num_wt << " loop " << waveform_->getLoop();
-                    sample_num_=waveform_->getAttack();
-                    sample_num_wt =(int)((float)sample_num_*sample_num_trans_);
-                }
-                value = waveform_->getValue(sample_num_wt);
-                sample_num_++;
-                break;
             case REVERSE_SAWTOOTH:
-                value = 2.0f * (floorf(sample_num_norm_) - sample_num_norm_ + 0.5f);
+                x=modff(sample_num_*frequency_/sample_rate_,&tmp);
+                value = 1.0f - 2.0f * x / t_;
                 break;
             default:
-                assert(false);
+                value = 0.0f;
                 break;
         }
-        if(wave_type_ !=WAVETABLE) {
-            sample_num_++;
-            sample_num_norm_+=sample_step_norm_;
-            if(sample_num_>= (long)period_samples_) {
-                sample_num_=0;
-                sample_num_norm_=0;
-                rise_=true;
-                value=0;
-                bool recal_freq_mod=false;
-                if(frequency_!=frequency_new_) {
-                    //qDebug() << "Oscilator freq change to " << frequency_new_;
-                    frequency_=frequency_new_;
-                    recal_freq_mod=true;
-                }
-                if(mod_f_!=mod_f_new_) {
-                    //qDebug() << "Oscilator mod_freq change to " << frequency_new_;
-                    mod_f_=mod_f_new_;
-                    recal_freq_mod=true;
-                }
-                if(mod_pw_!=mod_pw_new_) {
-                    mod_pw_=mod_pw_new_;
-                    recal_freq_mod=true;
-                }
-                if(recal_freq_mod) {
-                    calc_all();
-                }
-            }
-        }
-
+        sample_num_++;
         return value;
     }
     
     void Oscillator::set_pulse_width(float p) {
         pulse_width_ = p;
-        calc_edges();
-    }
-
-    void Oscillator::set_waveform(waveform *w)
-    {
-        waveform_=w;
     }
     
-    void Oscillator::calc_edges() {
-        if(mod_pw_!=0) {
-            pulse_width_mod_=(pulse_width_+pulse_width_*mod_pw_)/2;
-        } else {
-            pulse_width_mod_=pulse_width_;
-        }
-
-        if(pulse_width_mod_<sample_num_norm_) {
-            pulse_width_mod_=sample_num_norm_;
-            rise_val_=1.0;
-            fall_val_=2.0/period_samples_;
-        } else if(pulse_width_mod_>=1.0) {
-            pulse_width_mod_=1.0-sample_num_norm_;
-            rise_val_=1.0/period_samples_;
-            fall_val_=2.0;
-        } else {
-            rise_val_=2.0/(period_samples_*pulse_width_mod_);
-            fall_val_=2.0/(period_samples_*(1-pulse_width_mod_));
-        }
-        /*
-        rise_val_=1.0/(1+(period_samples_*pulse_width_mod_/4));
-        if(rise_val_>1.0) {
-            rise_val_=1.0;
-        }
-        fall_val_=1.0/(1+(period_samples_*(2-pulse_width_mod_)/4));
-        //fall_val_=4.0/period_samples_*(1-pulse_width_mod_);
-        if(fall_val_>1.0) {
-            fall_val_=1.0;
-        }
-         */
-    }
-    
-    void Oscillator::calc_steps() {
-        period_samples_=sample_rate_/frequency_mod_;
-        if(wave_type_==SINE) {
-            sample_step_norm_ = (2.0f * M_PI / (float)period_samples_);
-        } else {
-            sample_step_norm_ = (1.0 / (float)period_samples_);
-        }
-    }
-
 }  // namespace synth

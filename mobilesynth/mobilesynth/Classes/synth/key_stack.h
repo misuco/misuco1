@@ -62,10 +62,12 @@ namespace synth {
             return oscs[i];
         }
         
+        /*
         Oscillator * getLfo(int i) {
             return lfos[i];
         }
-        
+        */
+
         float getModAmt(int i) {
             return mod_amt_[i];
         }
@@ -80,22 +82,24 @@ namespace synth {
             mod_amt_init_=v;
         }
         
-        void setLfoFreq(int note, float v );
-        void setLfoModFreq(int note, float v );
-        
+        //void setLfoFreq(int note, float v );
+        //void setLfoModFreq(int note, float v );
+        /*
         void setLfoFreqInit(float v ) {
             lfo_freq_init_=v;
         }
+        */
         
         void setOscPW(int note, float pw);
         
         void setOscWave(int w) {
             osc_wave=w;
         }
-        
+        /*
         void setLfoWave(int w) {
             lfo_wave=w;
         }
+        */
         
         void setADSR(int n, long a, long d, float s, long r) {env_a[n]=a;env_d[n]=d;env_s[n]=s;env_r[n]=r;}
         void setAttack(int n, long a) {env_a[n]=a;}
@@ -114,7 +118,7 @@ namespace synth {
         ResonantFilter * filters[kMaxSize+1];
         FilterCutoff * cutoffs[kMaxSize+1];
         Oscillator * oscs[kMaxSize+1];
-        Oscillator * lfos[kMaxSize+1];
+        //Oscillator * lfos[kMaxSize+1];
         waveform * waveform_;
         
         // Number of times the note at the position was pressed
@@ -128,10 +132,10 @@ namespace synth {
         
         float mod_amt_[kMaxSize+1];
         float mod_amt_init_;
-        float lfo_freq_init_;
+        //float lfo_freq_init_;
         float osc_pw;
         int osc_wave;
-        int lfo_wave;
+        //int lfo_wave;
         float filter_res_;
         float filter_cutoff_; // 0.0 ... 1.0
         float mod_cutoff_;

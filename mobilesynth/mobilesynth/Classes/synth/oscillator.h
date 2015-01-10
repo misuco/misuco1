@@ -51,22 +51,12 @@ namespace synth {
         
     private:
         WaveType wave_type_;
-        //waveform * waveform_;
         float frequency_;
-        float t_;
-        //float frequency_new_;
-        //long period_samples_;
+        float phase_;
+        float pi2;
         float pulse_width_;
-        //float pulse_width_mod_; // the pw including modulation
         float sample_rate_;
         long sample_num_;
-        //float sample_num_trans_;
-        //float sample_num_norm_;
-        //float sample_step_norm_;
-        
-        //float rise_val_;
-        //float fall_val_;
-        //bool rise_;
         float value;
 
     };

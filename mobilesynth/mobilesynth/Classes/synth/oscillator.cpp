@@ -13,9 +13,11 @@ namespace synth {
     Oscillator::Oscillator()
     : wave_type_(SINE),
     frequency_(0),
-    pulse_width_(0.5),
+    pulse_width_(M_PI),
     sample_rate_(kDefaultSampleRate),
-    sample_num_(0){}
+    sample_num_(0),
+    phase_(0),
+    pi2(M_PI*2){}
     
     Oscillator::~Oscillator() { }
     
@@ -52,56 +54,45 @@ namespace synth {
     }
 
     void Oscillator::set_frequency(float frequency) {
-        /*
-        if(frequency_==0 ) {
-            frequency_ = frequency;
-            calc_all();
-        }
-        */
         frequency_ = frequency;
-        t_=sample_rate_/frequency_;
-        qDebug() << "Oscilator::set_frequency " << frequency << " t: " << t_ << " sr: " << sample_rate_;
+        //t_=sample_rate_/frequency_;
+        //qDebug() << "Oscilator::set_frequency " << frequency << " t: " << t_ << " sr: " << sample_rate_;
     }
     
     float Oscillator::GetValue() {
         if (frequency_ < 0.01f) {
             return 0.0f;
         }
-        float x;
-        float tmp;
+        phase_+=(2.0f*M_PI*frequency_) / sample_rate_;
+        if(phase_>pi2) {
+            phase_-=pi2;
+        }
         switch (wave_type_) {
             case SINE: // 2
-                //more precise:
-                value = sinf(2.0f * M_PI * sample_num_ * frequency_ / sample_rate_ );
-                //faster:
-                //value = sinf(2.0f * M_PI * sample_num_ / t_ );
+                value = sinf(phase_);
                 break;
             case SQUARE: // 0
-                x=modff(sample_num_*frequency_/sample_rate_,&tmp);
-                if (x < pulse_width_) {
+                if (phase_ < pulse_width_) {
                     value = 1.0f;
                 } else {
                     value = -1.0f;
                 }
                 break;
             case TRIANGLE:
-                x=modff(sample_num_*frequency_/sample_rate_,&tmp);
-                if (x < pulse_width_) {
-                    value = 1.0f;
+                if (phase_ < pulse_width_) {
+                    value = 1.0f-(2.0f*phase_/M_PI);
                 } else {
-                    value = -1.0f;
+                    value = (2.0f*phase_/M_PI)-1.0f;
                 }
                 break;
             case SAWTOOTH: // 1
-                x=modff(sample_num_*frequency_/sample_rate_,&tmp);
-                value = 2.0f * x / t_ - 1.0f;
+                value = 2.0f * phase_ / pi2 - 1.0f;
                 break;
             case NOISE:
                 value = -1.0f + (float)rand()/((float)RAND_MAX/2.0f);
                 break;
             case REVERSE_SAWTOOTH:
-                x=modff(sample_num_*frequency_/sample_rate_,&tmp);
-                value = 1.0f - 2.0f * x / t_;
+                value = 1.0f - 2.0f * phase_ / pi2;
                 break;
             default:
                 value = 0.0f;

@@ -18,7 +18,6 @@
  */
 
 #include "sendermulti.h"
-#include "sendermobilesynth.h"
 #include "senderoscmidigeneric.h"
 #include "sendersupercollider.h"
 #include "senderreaktor.h"
@@ -29,13 +28,14 @@
 SenderMulti::SenderMulti()
 {
     senders.append(new SenderOscMidiGeneric());
-    senders.append(new SenderMobileSynth());
+    //senders.append(new SenderMobileSynth());
     senders.append(new SenderSuperCollider());
     repeatOff=0;
     onCnt=0;
     for(int i=0;i<256;i++) {
         midiOn[i]=false;
     }
+    mobi=new SenderMobileSynth();
 }
 
 SenderMulti::~SenderMulti()
@@ -48,6 +48,7 @@ void SenderMulti::cc(int chan, int voiceId, int cc, float v1)
     for(int i=0;i<senders.count();i++) {
         senders.at(i)->cc(chan,voiceId,cc,v1);
     }
+    mobi->cc(chan,voiceId,cc,v1);
 }
 
 void SenderMulti::pc(int chan, int v1)
@@ -55,6 +56,7 @@ void SenderMulti::pc(int chan, int v1)
     for(int i=0;i<senders.count();i++) {
         senders.at(i)->pc(chan,v1);
     }
+    mobi->pc(chan,v1);
 }
 
 void SenderMulti::noteOn(int chan, int voiceId, float f, int midinote, int pitch, int v)
@@ -63,6 +65,7 @@ void SenderMulti::noteOn(int chan, int voiceId, float f, int midinote, int pitch
     for(int i=0;i<senders.count();i++) {
         senders.at(i)->noteOn(chan,voiceId,f,midinote,pitch,v);
     }
+    mobi->noteOn(chan,voiceId,f,midinote,pitch,v);
     onCnt++;
     midiOn[midinote]=true;
 }
@@ -73,6 +76,7 @@ void SenderMulti::noteOff(int chan, int voiceId, int midinote)
     for(int i=0;i<senders.count();i++) {
         senders.at(i)->noteOff(chan,voiceId,midinote);
     }
+    mobi->noteOff(chan,voiceId,midinote);
     offRepeat * otr=new offRepeat;
     otr->voiceId=voiceId;
     otr->midinote=midinote;
@@ -89,6 +93,7 @@ void SenderMulti::pitch(int chan, int voiceId, float f, int midinote, int pitch)
     for(int i=0;i<senders.count();i++) {
         senders.at(i)->pitch(chan,voiceId,f,midinote,pitch);
     }
+    mobi->pitch(chan,voiceId,f,midinote,pitch);
 }
 
 void SenderMulti::setDestination(char * a, int p)
@@ -110,6 +115,8 @@ void SenderMulti::delAll(){
         delete(senders.at(i));
     }
     senders.clear();
+    delete(mobi);
+
 }
 
 void SenderMulti::create(SenderType i) {
@@ -203,7 +210,7 @@ void SenderMulti::reset1(int x, char * adr, int port) {
         create(SenderMulti::XY);
         break;
     }
+    mobi=new SenderMobileSynth();
     setDestination(0,adr,port);
-    create(SenderMulti::MOBILESYNTH);
 }
 

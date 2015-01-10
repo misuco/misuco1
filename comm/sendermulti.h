@@ -22,6 +22,7 @@
 
 #include <QList>
 #include "isender.h"
+#include "sendermobilesynth.h"
 
 class SenderMulti : public ISender
 {
@@ -64,10 +65,14 @@ public:
     };
     
     void reset1(int x, char *adr, int port);
+    synth::Controller * getSynthController() {
+        return mobi->getSynthController();
+    }
 
 private:
     QList<ISender *> senders;
     QList<offRepeat *> offToRepeat;
+    SenderMobileSynth * mobi;
     bool midiOn[256];
     int onCnt;
     

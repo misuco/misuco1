@@ -17,6 +17,7 @@
  
  */
 #include "paintbgshapes.h"
+#include "conf/layoutmodel.h"
 #include <QColor>
 
 PaintBgShapes::PaintBgShapes()

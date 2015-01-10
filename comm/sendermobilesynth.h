@@ -44,6 +44,9 @@ public:
     virtual int getPort() {return 0;}
     virtual char* getAddress() {return 0;}
     virtual bool voiceBased() {return true;}
+    synth::Controller * getSynthController() {
+        return sy->getSyctl();
+    }
     
 private:
 #ifdef RC1_IOS

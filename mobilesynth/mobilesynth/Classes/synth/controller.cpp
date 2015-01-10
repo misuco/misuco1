@@ -21,8 +21,8 @@ namespace synth {
         key_stack_.setADSR(1, 0,   0,   1, 1000);
         format=0;
         volume_=0.5;
-        sampleMemory=new float[1];
-        sampleMemorySize=1;
+        sampleMemory=new float[32767];
+        sampleMemorySize=32767;
     }
 
     void Controller::set_volume(float volume)
@@ -30,7 +30,6 @@ namespace synth {
         volume_=volume;
     }
     void Controller::set_sample_rate(float sample_rate) {
-//        osc1_.set_sample_rate(sample_rate);
         sample_rate_=sample_rate;
         key_stack_.SetSampleRate(sample_rate);
     }
@@ -48,14 +47,6 @@ namespace synth {
          NoteOff();
          }*/
     }
-    
-    /*    void Controller::NoteOff() {
-     key_stack_.clear();
-     }*/
-    
-//    void Controller::set_osc1_wave_type(Oscillator::WaveType wave_type) {
-//        osc1_.set_wave_type(wave_type);
-//    }
     
     void Controller::set_osc_pw(int voice, float p) {
         key_stack_.setOscPW(voice, p);
@@ -105,6 +96,7 @@ namespace synth {
     }
     
     void Controller::GetFloatSamples(float* buffer, int size) {
+        //qDebug() << "GetFloatSamples " <<  size << " from " <<  buffer;
         delete(sampleMemory);
         sampleMemory=new float[size];
         for (int i = 0; i < size; ++i) {
@@ -114,7 +106,7 @@ namespace synth {
     }
     
     void Controller::GetInt32Sapmles(int* buffer, int size) {
-        //qDebug() << "get samples " <<  size << " from " <<  buffer;
+        //qDebug() << "GetInt32Sapmles " <<  size << " from " <<  buffer;
         delete(sampleMemory);
         sampleMemory=new float[size];
         for (int i = 0; i < size; ++i) {
@@ -147,9 +139,9 @@ namespace synth {
     void Controller::GetCharSamples(char* buffer, int size) {
         
         if(format!=0) {
-            delete(sampleMemory);
-            sampleMemory=new float[size];
-            //qDebug() << " size " << size << " sampleBytes " << sampleBytes;
+            //delete(sampleMemory);
+            //sampleMemory=new float[size];
+            //qDebug() << "GetCharSamples size " << size << " sampleBytes " << sampleBytes;
             //Q_ASSERT(size % sampleBytes == 0);
             Q_UNUSED(sampleBytes) // suppress warning in release builds
             unsigned char *ptr = reinterpret_cast<unsigned char *>(buffer);

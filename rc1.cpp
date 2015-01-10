@@ -39,7 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "paint/pointpaintsphere.h"
 #include "paint/paintstat.h"
 #include "paint/paintblocker.h"
-
+#include "paint/paintwave.h"
 
 RC1::RC1(MainWindow *parent) :
     #ifdef NOGL
@@ -103,7 +103,10 @@ RC1::RC1(MainWindow *parent) :
     nPrePainters=2;
     prepainters=new IPaint*[nPrePainters];
     prepainters[0]=new PaintBgShapes();
-    prepainters[1]=new PaintBgBitmap();
+    //prepainters[2]=new PaintBgBitmap();
+    prepainters[1]=new PaintWave(sender->getSynthController());
+    wavepainter=prepainters[1];
+
 
     nPointPainters=1;
     pointpainters=new IPointPaint*[nPointPainters];
@@ -116,7 +119,7 @@ RC1::RC1(MainWindow *parent) :
 
     painterOn=new bool[nPrePainters+nPointPainters+nPostPainters];
     painterOn[0]=true;
-    painterOn[1]=false;
+    painterOn[1]=true;
     painterOn[2]=false;
 
 #ifdef RC1_PRO
@@ -174,6 +177,7 @@ RC1::RC1(MainWindow *parent) :
     sender->repeatOff=layout->getErrorCorr();
 #ifdef RC1_PRO
     sender->reset1(layout->getSenderType(),layout->getDisplayAddress().toLocal8Bit().data(),layout->getDisplayPort());
+    ((PaintWave *)wavepainter)->setSynthController(sender->getSynthController());
 #endif
     layout->resetLayout();
     layout->toggleEdit();

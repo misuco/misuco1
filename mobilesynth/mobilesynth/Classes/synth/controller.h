@@ -54,38 +54,9 @@ namespace synth {
             OCTAVE_16 = 16
         };
         
-        // OSC 1
-        
-        // Set the volume of oscillator
-        // void set_osc1_level(float level);
-        // Set the wave form of oscillator
-        //void set_osc1_wave_type(Oscillator::WaveType wave_type);
         void set_osc1_wave_type_int(int w);
-        //void set_lfo_wave_type_int(int w);
-        
-/*        enum ModulationSource {
-            LFO_SRC_SQUARE,
-            LFO_SRC_TRIANGLE,
-            LFO_SRC_SAWTOOTH,
-            LFO_SRC_REVERSE_SAWTOOTH,
-        };
-        
-        enum ModulationDestination {
-            LFO_DEST_NONE,
-            LFO_DEST_AMP,  // Tremelo
-            LFO_DEST_PW,  // Vibrato
-            LFO_DEST_PITCH,  // Vibrato
-            LFO_DEST_FILTER,
-        };
-*/
-//        void set_modulation_source(ModulationSource source);
-        //void set_modulation_destination(ModulationDestination dest);
-        //void set_modulation_destination(int dest);
         void set_modulation_amount(float amount);
-        //void set_modulation_frequency(float frequency);
         void set_modulation_amount(int voice, float amount);
-        //void set_modulation_frequency(int voice, float frequency);
-        //void set_modulation_mod_f(int voice, float frequency);
         void set_osc_pw(int voice, float p);
         void set_filter_cutoff(int voice, float frequency);
         void set_filter_cutoff(float frequency);
@@ -103,6 +74,16 @@ namespace synth {
         void GetFloatSamples(float* buffer, int size);
         void GetInt32Sapmles(int* buffer, int size);
         void GetCharSamples(char *buffer, int size);
+
+        float getSampleMem(int i) {
+            if(sampleMemory) {
+                if(i<sampleMemorySize) {
+                    return sampleMemory[i];
+                } else {
+                    return 0.0f;
+                }
+            }
+        }
         
         void setFormat(QAudioFormat * f);
         
@@ -137,7 +118,7 @@ namespace synth {
         float volume_;
 
         float * sampleMemory;
-        long sampleMemorySize;
+        long sampleMemorySize=0;
         
     };
     

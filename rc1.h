@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QGLWidget>
 #endif
 
+class RC1;
 
 #include <QPaintEvent>
 #include <QResizeEvent>
@@ -39,6 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "conf/scales.h"
 #include "comm/isender.h"
 #include "comm/sendermulti.h"
+#include "comm/sendermobilesynth.h"
 #include "event/ieventhandler.h"
 #include "event/eventhandlerrect.h"
 #include "paint/ipaint.h"
@@ -113,6 +115,7 @@ private:
     SenderMulti * sender;
     EventHandlerRect * ehand;
     IPaint ** prepainters;
+    IPaint * wavepainter;
     IPointPaint ** pointpainters;
     IPaint ** postpainters;
     Scales scaletab;

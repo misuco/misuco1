@@ -22,8 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtGui>
 #include "rc1.h"
 
-class RC1;
-
 class IPaint
 {
 public:

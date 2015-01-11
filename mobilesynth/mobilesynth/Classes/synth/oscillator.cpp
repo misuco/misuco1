@@ -63,7 +63,7 @@ namespace synth {
         if (frequency_ < 0.01f) {
             return 0.0f;
         }
-        phase_+=(2.0f*M_PI*frequency_) / sample_rate_;
+        phase_+=pi2*frequency_/ sample_rate_;
         if(phase_>pi2) {
             phase_-=pi2;
         }
@@ -82,7 +82,7 @@ namespace synth {
                 if (phase_ < pulse_width_) {
                     value = 1.0f-(2.0f*phase_/M_PI);
                 } else {
-                    value = (2.0f*phase_/M_PI)-1.0f;
+                    value = (2.0f*(phase_-M_PI)/M_PI)-1.0f;
                 }
                 break;
             case SAWTOOTH: // 1
@@ -103,7 +103,7 @@ namespace synth {
     }
     
     void Oscillator::set_pulse_width(float p) {
-        pulse_width_ = p;
+        pulse_width_ = p*pi2;
     }
     
 }  // namespace synth

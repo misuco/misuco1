@@ -97,8 +97,8 @@ namespace synth {
     
     void Controller::GetFloatSamples(float* buffer, int size) {
         //qDebug() << "GetFloatSamples " <<  size << " from " <<  buffer;
-        delete(sampleMemory);
-        sampleMemory=new float[size];
+        //delete(sampleMemory);
+        //sampleMemory=new float[size];
         for (int i = 0; i < size; ++i) {
             sampleMemory[i]=GetSample();
             buffer[i] = sampleMemory[i];
@@ -107,8 +107,8 @@ namespace synth {
     
     void Controller::GetInt32Sapmles(int* buffer, int size) {
         //qDebug() << "GetInt32Sapmles " <<  size << " from " <<  buffer;
-        delete(sampleMemory);
-        sampleMemory=new float[size];
+        //delete(sampleMemory);
+        //sampleMemory=new float[size];
         for (int i = 0; i < size; ++i) {
             //buffer[i] = GetSample()* 16777216L;
             sampleMemory[i]=GetSample();
@@ -188,8 +188,8 @@ namespace synth {
     float Controller::GetSample() {
         float value=0;
         for(int i=0;i<key_stack_.GetSize();i++) {
-            //value += key_stack_.getFilter(i)->GetValue(key_stack_.getOsc(i)->GetValue()*key_stack_.getEnvelope(0, i)->GetValue());
-            value+=key_stack_.getOsc(i)->GetValue()*key_stack_.getEnvelope(0, i)->GetValue();
+            value += key_stack_.getFilter(i)->GetValue(key_stack_.getOsc(i)->GetValue()*key_stack_.getEnvelope(0, i)->GetValue());
+            //value+=key_stack_.getOsc(i)->GetValue()*key_stack_.getEnvelope(0, i)->GetValue();
             
             // Clip!
             //value*=key_stack_.getEnvelope(0, i)->GetValue();

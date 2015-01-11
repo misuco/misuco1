@@ -2,7 +2,7 @@
 #define PAINTWAVE_H
 
 #include "ipaint.h"
-#include <mobilesynth/mobilesynth/Classes/synth/controller.h>
+#include "../mobilesynth/mobilesynth/Classes/synth/controller.h"
 
 class PaintWave : public IPaint
 {

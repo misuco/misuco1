@@ -295,7 +295,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                         //layout->updateLayout();
                     } else if(layout->getCtly(iseg)==-3) {
                         layout->setSound(xrelquant+layout->getMidinote(iseg));
-                        snd->pc(layout->getChannel(),xrelquant);
+                        snd->pc(layout->getChannel(),xrelquant+layout->getMidinote(iseg));
                         rc1->transmitSoundParam();
                         layout->updateLayout();
                     } else if(layout->getCtly(iseg)==-4) {

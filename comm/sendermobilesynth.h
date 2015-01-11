@@ -45,7 +45,11 @@ public:
     virtual char* getAddress() {return 0;}
     virtual bool voiceBased() {return true;}
     synth::Controller * getSynthController() {
+#ifdef RC1_IOS
+        return sy;
+#else
         return sy->getSyctl();
+#endif
     }
     
 private:

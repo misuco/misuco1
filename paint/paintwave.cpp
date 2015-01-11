@@ -35,7 +35,7 @@ void PaintWave::paint(RC1 *rc1, QPainter *pnt)
 
     for(int i=1;i<rc1->width();i++) {
         y=ctl->getSampleMem(i+offset)*hv;
-        pnt->drawLine(i-1,yp+yv,i,y+yv);
+        pnt->drawLine(i-1,yv-yp,i,yv-y);
         yp=y;
     }
 }

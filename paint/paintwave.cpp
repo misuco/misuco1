@@ -7,14 +7,35 @@ PaintWave::PaintWave(synth::Controller * c)
 
 void PaintWave::paint(RC1 *rc1, QPainter *pnt)
 {
-    float h2=rc1->height()/2;
-    float h4=h2/2;
-    int yp=ctl->getSampleMem(0)*h4;
-    int y=0;
+    // fit the wave into the scale rows
+    LayoutModel * l=rc1->getLayout();
+    int yv=0;
+    for(int i=0;i<l->getScalerow();i++) {
+        yv+=l->getRowheightpx(i);
+    }
+    int hv=0;
+    for(int i=l->getScalerow();i<l->getNrows();i++) {
+        hv+=l->getRowheightpx(i);
+    }
+    hv/=2;
+    yv+=hv;
+
+    // offset to the first positive zero-transition
     pnt->setPen(Qt::white);
+    int offset=0;
+    while(offset<rc1->width()) {
+        offset++;
+        if( ctl->getSampleMem(offset-1)<=0 &&
+            ctl->getSampleMem(offset)>0 ) break;
+    }
+
+    // get the first value
+    int yp=ctl->getSampleMem(offset)*hv;
+    int y=0;
+
     for(int i=1;i<rc1->width();i++) {
-        y=ctl->getSampleMem(i)*h4;
-        pnt->drawLine(i-1,yp+h2,i,y+h2);
+        y=ctl->getSampleMem(i+offset)*hv;
+        pnt->drawLine(i-1,yp+yv,i,y+yv);
         yp=y;
     }
 }

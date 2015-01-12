@@ -1074,8 +1074,8 @@ int LayoutModel::generateScale(int seg, bool firstlast) {
         octnum.sprintf("%d",i+1);
         segText[seg]=midi2TextEU[calcnote%12];
         segText[seg].append(octnum);
-        ctlx[seg]=1;
-        ctly[seg]=2;
+        ctlx[seg]=0;
+        ctly[seg]=1;
         segwidth[seg]=1;
         segtype[seg]=0;
         segH[seg]=note2hue(calcnote);
@@ -1088,8 +1088,8 @@ int LayoutModel::generateScale(int seg, bool firstlast) {
                     segtype[seg]=1;
                     segText[seg]="";
                     segwidth[seg]=1;
-                    ctlx[seg]=1;
-                    ctly[seg]=2;
+                    ctlx[seg]=0;
+                    ctly[seg]=1;
                     pressed[seg]=0;
                 }
                 seg++;
@@ -1104,8 +1104,8 @@ int LayoutModel::generateScale(int seg, bool firstlast) {
                 //qDebug() << "pitch " << pitch[seg] << " " ;
                 segText[seg]=midi2TextEU[thisnote%12];
                 segText[seg].append(octnum);
-                ctlx[seg]=1;
-                ctly[seg]=2;
+                ctlx[seg]=0;
+                ctly[seg]=1;
                 segH[seg]=note2hue(thisnote);
                 pressed[seg]=0;
             }
@@ -1117,8 +1117,8 @@ int LayoutModel::generateScale(int seg, bool firstlast) {
             segText[seg]="";
             segwidth[seg]=1;
             pressed[seg]=0;
-            ctlx[seg]=1;
-            ctly[seg]=2;
+            ctlx[seg]=0;
+            ctly[seg]=1;
             seg++;
             if(seg>=nsegs_max) return seg;
         }
@@ -1137,8 +1137,8 @@ int LayoutModel::generateScale(int seg, bool firstlast) {
                     segText[seg]="";
                     segwidth[seg]=1;
                     pressed[seg]=0;
-                    ctlx[seg]=1;
-                    ctly[seg]=2;
+                    ctlx[seg]=0;
+                    ctly[seg]=1;
                     seg++;
                 }
             }
@@ -1153,8 +1153,8 @@ int LayoutModel::generateScale(int seg, bool firstlast) {
                 segText[seg]=midi2TextEU[calcnote%12];
                 segwidth[seg]=1;
                 segtype[seg]=0;
-                ctlx[seg]=1;
-                ctly[seg]=2;
+                ctlx[seg]=0;
+                ctly[seg]=1;
                 segH[seg]=note2hue(calcnote);
                 pressed[seg]=0;
                 seg++;

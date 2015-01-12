@@ -171,25 +171,22 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
             if(layout->getSegtype(iseg)==0 || layout->getSegtype(iseg)==1) {
                 if(layout->getCtlx(iseg)>0 && layout->getCtly(iseg)>=0) {
                     if(p->getX()!=ccval1[evptr]) {
-                        ccval1[evptr]=p->getX();
-                        if(useCCCVal==true) {
-                            cccval1=xrel/cccvalAvg+(cccvalAvg-1)*cccval1/cccvalAvg;
-                            snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtlx(iseg), cccval1);
-                        } else {
-                            snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtlx(iseg), xrel);
+                        if(ccval1[evptr]!=-1) {
+                            cccval1-=ccval1[evptr];
                         }
+                        ccval1[evptr]=xrel;
+                        cccval1+=ccval1[evptr];
+                        snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtlx(iseg), xrel, cccval1/evptr_stack_size);
                     }
                 }
                 if(layout->getCtly(iseg)>0) {
                     if(p->getY()!=ccval2[evptr]) {
-                        ccval2[evptr]=p->getY();
-                        //                ysum+=layout->getRowheightpx(iy);
-                        if(useCCCVal==true) {
-                            cccval2=yrel/cccvalAvg+(cccvalAvg-1)*cccval2/cccvalAvg;
-                            snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtly(iseg), cccval2);
-                        } else {
-                            snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtly(iseg), yrel);
+                        if(ccval2[evptr]!=-1) {
+                            cccval2-=ccval2[evptr];
                         }
+                        ccval2[evptr]=yrel;
+                        cccval2+=ccval2[evptr];
+                        snd->cc(layout->getChan(iseg), ieventout[evptr], layout->getCtly(iseg), yrel, cccval2/evptr_stack_size);
                     }
                 }
             }
@@ -323,7 +320,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     }
                 } else if(layout->getSegtype(iseg)==5) {
                     // y-slider
-                    snd->cc(0, 0,layout->getCtly(iseg),yrelquant);
+                    snd->cc(0, 0,layout->getCtly(iseg),yrelquant,yrelquant);
                     if(layout->getCtly(iseg)>=102) {
                         layout->setSoundParam(layout->getCtly(iseg)-102,yrelquant);
                     } else if(layout->getCtly(iseg)==-1) {
@@ -555,8 +552,6 @@ void EventHandlerRect::init()
     
     ieventoutnext=2000;
     
-    useCCCVal=true;
-    cccvalAvg=10;
     cccval1=0;
     cccval2=0;
     
@@ -566,8 +561,8 @@ void EventHandlerRect::init()
     act=new bool[ntp];
     ievent=new int[ntp];
     ieventout=new int[ntp];
-    ccval1=new int[ntp];
-    ccval2=new int[ntp];
+    ccval1=new float[ntp];
+    ccval2=new float[ntp];
     yori=new float[ntp];
     yrelori=new float[ntp];
     freq=new float[ntp];

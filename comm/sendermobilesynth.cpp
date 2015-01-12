@@ -36,7 +36,7 @@ SenderMobileSynth::~SenderMobileSynth()
     delete(sy);
 }
 
-void SenderMobileSynth::cc(int, int voiceId, int cc, float v1)
+void SenderMobileSynth::cc(int, int voiceId, int cc, float v1, float)
 {
     if(cc==2) {
         sy->set_modulation(voiceId,v1);

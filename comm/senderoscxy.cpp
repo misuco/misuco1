@@ -61,7 +61,7 @@ void SenderOscXY::pc(int, int)
 
 }
 
-void SenderOscXY::cc(int, int, int cc, float v1)
+void SenderOscXY::cc(int, int, int cc, float v1, float)
 {
 
     if(cc==1) x=v1;

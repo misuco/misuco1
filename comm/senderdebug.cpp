@@ -24,9 +24,9 @@ SenderDebug::SenderDebug()
 {
 }
 
-void SenderDebug::cc(int chan, int voiceId, int cc, float v1)
+void SenderDebug::cc(int chan, int voiceId, int cc, float v1, float v1avg)
 {
-    qDebug() << "SenderDebug::cc(" << chan << "," << voiceId << "," << cc << "," << v1 << ")";
+    qDebug() << "SenderDebug::cc(" << chan << "," << voiceId << "," << cc << "," << v1 << "," << v1avg << ")";
 }
 
 void SenderDebug::pc(int chan, int v1)

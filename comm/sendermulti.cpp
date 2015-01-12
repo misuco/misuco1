@@ -43,12 +43,12 @@ SenderMulti::~SenderMulti()
     delAll();
 }
 
-void SenderMulti::cc(int chan, int voiceId, int cc, float v1)
+void SenderMulti::cc(int chan, int voiceId, int cc, float v1, float v1avg)
 {
     for(int i=0;i<senders.count();i++) {
-        senders.at(i)->cc(chan,voiceId,cc,v1);
+        senders.at(i)->cc(chan,voiceId,cc,v1,v1avg);
     }
-    mobi->cc(chan,voiceId,cc,v1);
+    mobi->cc(chan,voiceId,cc,v1,v1avg);
 }
 
 void SenderMulti::pc(int chan, int v1)

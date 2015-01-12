@@ -35,7 +35,7 @@ SenderSuperCollider::~SenderSuperCollider()
     delete(oscout);
 }
 
-void SenderSuperCollider::cc(int, int, int, float)
+void SenderSuperCollider::cc(int, int, int, float, float)
 {
 
 }

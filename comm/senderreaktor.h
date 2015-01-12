@@ -28,7 +28,7 @@ class SenderReaktor : public ISender
 public:
     SenderReaktor();
     ~SenderReaktor();
-    virtual void cc(int chan, int voiceId, int cc, float v1);
+    virtual void cc(int chan, int voiceId, int cc, float, float v1avg);
     virtual void pc(int chan, int v1);
     virtual void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int vel);
     virtual void noteOff(int chan, int voiceId, int midinote);

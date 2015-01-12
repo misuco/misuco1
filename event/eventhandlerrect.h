@@ -44,21 +44,14 @@ private:
     int * mnote;        // current midi
     int * chan;         // current note channel
 
-    int * ccval1;       // current controller1 value: xrel
-    int * ccval2;       // current controller1 value: yrel
+    float * ccval1;       // current controller1 value: xrel
+    float * ccval2;       // current controller1 value: yrel
 
     float * yori;         // origin position for vertical fadder diff behavior
     float * yrelori;      // origin value for vertical fadder diff behavior
 
-    /*
-    int * ccval1q;      // current controller1 value: xrel (quantized)
-    int * ccval2q;      // current controller1 value: yrel (quantized)
-    */
-
     float cccval1;     // common cc value, average of individual ccvals
     float cccval2;     // common cc value, average of individual ccvals
-    bool useCCCVal;
-    int cccvalAvg;      // number of individual ccvals for average calc
     bool transitionMode; // in transition mode no new note on transistions, only pitch change
 
     int veldef;         // default velovity

@@ -30,7 +30,7 @@ namespace synth {
     }
     
     void Oscillator::set_wave_type(int w) {
-        qDebug() << "set_wave_type " << w;
+        //qDebug() << "set_wave_type " << w;
         switch (w) {
             case 0:
                 wave_type_ = Oscillator::SQUARE;
@@ -55,7 +55,6 @@ namespace synth {
 
     void Oscillator::set_frequency(float frequency) {
         frequency_ = frequency;
-        //t_=sample_rate_/frequency_;
         //qDebug() << "Oscilator::set_frequency " << frequency << " t: " << t_ << " sr: " << sample_rate_;
     }
     

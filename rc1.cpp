@@ -97,8 +97,8 @@ RC1::RC1(MainWindow *parent) :
     storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     privateDataPath=QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
 #endif
-    qDebug() << "storage path: " << storagePath;
-    qDebug() << "private data path: " << privateDataPath;
+    //qDebug() << "storage path: " << storagePath;
+    //qDebug() << "private data path: " << privateDataPath;
     //progmemFile=storagePath+"/prog.xml";
     nPrePainters=2;
     prepainters=new IPaint*[nPrePainters];

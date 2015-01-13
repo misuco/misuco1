@@ -32,7 +32,7 @@ public:
     virtual void cc(int chan, int voiceId, int cc, float v1, float v1avg);
     virtual void pc(int chan, int v1);
     virtual void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int v);
-    virtual void noteOff(int chan, int voiceId, int midinote);
+    virtual void noteOff(int chan, int voiceId, int);
     virtual void pitch(int chan, int voiceId, float f, int midinote, int pitch);
     virtual void setDestination(char * a,int p);
     virtual void reconnect();
@@ -74,8 +74,9 @@ private:
     QList<offRepeat *> offToRepeat;
     SenderMobileSynth * mobi;
     bool midiOn[256];
+    quint8 * notestate;   // currently played notes
     int onCnt;
-    
+    void createOTR(int chan, int voiceId, int midinote);
 };
 
 #endif // SENDERMULTI_H

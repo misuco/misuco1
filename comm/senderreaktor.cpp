@@ -26,10 +26,10 @@ SenderReaktor::SenderReaktor()
     port=3150;
     oscout=new QOscClient();
     oscout->setAddress(adr,port);
-    notestate=new quint8[1024];
+    //notestate=new quint8[1024];
     ccstate=new int[1024];
     for(int i=0;i<1024;i++) {
-        notestate[i]=0;
+        //notestate[i]=0;
         ccstate[i]=0;
     }
     prog=0;
@@ -37,24 +37,19 @@ SenderReaktor::SenderReaktor()
 
 SenderReaktor::~SenderReaktor()
 {
-    delete(notestate);
     delete(ccstate);
     delete(oscout);
 }
 
-void SenderReaktor::noteOn(int chan, int voiceId, float, int midinote, int pitch, int)
+void SenderReaktor::noteOn(int chan, int, float, int midinote, int pitch, int)
 {
     int f = midinote;
-    int vid=voiceId%1024;
-
-    notestate[vid]=f;
     QVariantList v;
     v.append(f);
     v.append(127);
     QString path;
     path.sprintf("/note/%d",chan);
     sendOsc(path,v);
-
     v.clear();
     v.append(pitch);
     path.sprintf("/pitch/%d",chan);
@@ -72,28 +67,11 @@ void SenderReaktor::noteOff(int chan, int, int midinote)
     sendOsc(path,v);
 }
 
-void SenderReaktor::pitch(int chan, int voiceId, float, int midinote, int pitch)
+void SenderReaktor::pitch(int chan, int, float, int, int pitch)
 {
     QVariantList v;
     QString path;
 
-    int f = midinote;
-    int vid=voiceId%1024;
-
-    if(notestate[vid]!=f) {
-        v.append(notestate[vid]);
-        v.append(0);
-        path.sprintf("/note/%d",chan);
-        sendOsc(path,v);
-
-        v.clear();
-        v.append(f);
-        v.append(127);
-        path.sprintf("/note/%d",chan);
-        sendOsc(path,v);
-
-        notestate[vid]=f;
-    }
     v.append(pitch);
     path.sprintf("/pitch/%d",chan);
     sendOsc(path,v);

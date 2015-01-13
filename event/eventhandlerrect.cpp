@@ -264,6 +264,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                             snd->pitch(layout->getChan(iseg), ieventout[evptr],frel,midinote,pitch);
                         } else {
                             ieventout[evptr]=ieventoutnext;
+                            chan[evptr]=layout->getChan(iseg);
                             ieventoutnext++;
                             snd->noteOn(layout->getChan(iseg), ieventout[evptr],frel,midinote,pitch,veldef);
                         }

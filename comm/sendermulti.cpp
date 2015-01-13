@@ -35,6 +35,10 @@ SenderMulti::SenderMulti()
     for(int i=0;i<256;i++) {
         midiOn[i]=false;
     }
+    notestate=new quint8[1024];
+    for(int i=0;i<1024;i++) {
+        notestate[i]=0;
+    }
     mobi=new SenderMobileSynth();
 }
 
@@ -62,7 +66,9 @@ void SenderMulti::pc(int chan, int v1)
 
 void SenderMulti::noteOn(int chan, int voiceId, float f, int midinote, int pitch, int v)
 {
-    //qDebug() << "SenderMulti::noteOn(" << chan << "," << voiceId << "," << f << "," << midinote << "," << pitch << "," << v << ")";
+    qDebug() << "SenderMulti::noteOn(" << chan << "," << voiceId << "," << f << "," << midinote << "," << pitch << "," << v << ")";
+    int vid=voiceId%1024;
+    notestate[vid]=midinote;
     for(int i=0;i<senders.count();i++) {
         senders.at(i)->noteOn(chan,voiceId,f,midinote,pitch,v);
     }
@@ -71,28 +77,49 @@ void SenderMulti::noteOn(int chan, int voiceId, float f, int midinote, int pitch
     midiOn[midinote]=true;
 }
 
-void SenderMulti::noteOff(int chan, int voiceId, int midinote)
+void SenderMulti::noteOff(int chan, int voiceId, int)
 {
-    //qDebug() << "SenderMulti::noteOff(" << chan << "," << voiceId << "," << midinote << ")";
+    qDebug() << "SenderMulti::noteOff(" << chan << "," << voiceId  << ")";
+    int vid=voiceId%1024;
+    int midinote=notestate[vid];
     for(int i=0;i<senders.count();i++) {
         senders.at(i)->noteOff(chan,voiceId,midinote);
     }
     mobi->noteOff(chan,voiceId,midinote);
+    createOTR(chan, voiceId, midinote);
+    midiOn[midinote]=false;
+    onCnt--;
+}
+
+void SenderMulti::createOTR(int chan, int voiceId, int midinote)
+{
     offRepeat * otr=new offRepeat;
     otr->voiceId=voiceId;
     otr->midinote=midinote;
     otr->chan=chan;
     otr->offSent=1;
     offToRepeat.append(otr);
-    midiOn[midinote]=false;
-    onCnt--;
 }
 
 void SenderMulti::pitch(int chan, int voiceId, float f, int midinote, int pitch)
 {
     //qDebug() << "SenderMulti::pitch(" << chan << "," << voiceId << "," << f << "," << midinote << "," << pitch << ")";
     for(int i=0;i<senders.count();i++) {
-        senders.at(i)->pitch(chan,voiceId,f,midinote,pitch);
+        if(senders.at(i)->voiceBased()==true) {
+            senders.at(i)->pitch(chan,voiceId,f,midinote,pitch);
+        } else {
+            int vid=voiceId%1024;
+            if(notestate[vid]!=midinote) {
+                senders.at(i)->noteOff(chan,voiceId,notestate[vid]);
+                createOTR(chan, voiceId, notestate[vid]);
+                senders.at(i)->noteOn(chan,voiceId,f,midinote,pitch,127);
+                midiOn[notestate[vid]]=false;
+                notestate[vid]=midinote;
+                midiOn[midinote]=true;
+            } else {
+                senders.at(i)->pitch(chan,voiceId,f,midinote,pitch);
+            }
+        }
     }
     mobi->pitch(chan,voiceId,f,midinote,pitch);
 }

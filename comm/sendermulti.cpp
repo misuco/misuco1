@@ -41,6 +41,7 @@ SenderMulti::SenderMulti()
 SenderMulti::~SenderMulti()
 {
     delAll();
+    delete(mobi);
 }
 
 void SenderMulti::cc(int chan, int voiceId, int cc, float v1, float v1avg)
@@ -115,8 +116,6 @@ void SenderMulti::delAll(){
         delete(senders.at(i));
     }
     senders.clear();
-    delete(mobi);
-
 }
 
 void SenderMulti::create(SenderType i) {
@@ -210,7 +209,7 @@ void SenderMulti::reset1(int x, char * adr, int port) {
         create(SenderMulti::XY);
         break;
     }
-    mobi=new SenderMobileSynth();
+    //mobi=new SenderMobileSynth();
     setDestination(0,adr,port);
 }
 

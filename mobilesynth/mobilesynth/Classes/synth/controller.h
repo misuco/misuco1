@@ -76,13 +76,13 @@ namespace synth {
         void GetCharSamples(char *buffer, int size);
 
         float getSampleMem(int i) {
+            float r=0.0f;
             if(sampleMemory) {
                 if(i<sampleMemorySize) {
-                    return sampleMemory[i];
-                } else {
-                    return 0.0f;
+                    r=sampleMemory[i];
                 }
             }
+            return r;
         }
         
         void setFormat(QAudioFormat * f);

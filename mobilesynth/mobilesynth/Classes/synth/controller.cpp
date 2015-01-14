@@ -21,8 +21,9 @@ namespace synth {
         key_stack_.setADSR(1, 0,   0,   1, 1000);
         format=0;
         volume_=0.5;
-        sampleMemory=new float[32767];
-        sampleMemorySize=32767;
+        sampleMemory=new float[2048];
+        sampleMemorySize=2048;
+        sampleMemoryPnt=0;
     }
 
     void Controller::set_volume(float volume)
@@ -42,10 +43,6 @@ namespace synth {
     void Controller::NoteOff(int note) {
         //qDebug() << "controller::noteoff " << note;
         key_stack_.NoteOff(note);
-        /*        if (key_stack_.size() == 0) {
-         // All notes were release, so start the release phase of the envelope
-         NoteOff();
-         }*/
     }
     
     void Controller::set_osc_pw(int voice, float p) {
@@ -55,16 +52,6 @@ namespace synth {
     void Controller::set_osc1_wave_type_int(int w) {
         key_stack_.setOscWave(w);
     }
-    
-    /*
-    void Controller::set_modulation_amount(float amount) {
-        key_stack_.setModAmtInit(amount);
-    }
-    
-    void Controller::set_modulation_amount(int voice, float amount) {
-        key_stack_.setModAmt(voice, amount);
-    }
-    */
 
     void Controller::set_filter_cutoff(float frequency) {
         key_stack_.setFilterCutoff(frequency);
@@ -99,22 +86,25 @@ namespace synth {
     
     void Controller::GetFloatSamples(float* buffer, int size) {
         //qDebug() << "GetFloatSamples " <<  size << " from " <<  buffer;
-        //delete(sampleMemory);
-        //sampleMemory=new float[size];
         for (int i = 0; i < size; ++i) {
-            sampleMemory[i]=GetSample();
-            buffer[i] = sampleMemory[i];
+            sampleMemory[sampleMemoryPnt]=GetSample();
+            buffer[i] = sampleMemory[sampleMemoryPnt];
+            sampleMemoryPnt++;
+            if(sampleMemoryPnt>=sampleMemorySize) {
+                sampleMemoryPnt=0;
+            }
         }
     }
     
     void Controller::GetInt32Sapmles(int* buffer, int size) {
         //qDebug() << "GetInt32Sapmles " <<  size << " from " <<  buffer;
-        //delete(sampleMemory);
-        //sampleMemory=new float[size];
         for (int i = 0; i < size; ++i) {
-            //buffer[i] = GetSample()* 16777216L;
-            sampleMemory[i]=GetSample();
-            buffer[i] = sampleMemory[i]* 2147483648L;
+            sampleMemory[sampleMemoryPnt]=GetSample();
+            buffer[i] = sampleMemory[sampleMemoryPnt]* 2147483648L;
+            sampleMemoryPnt++;
+            if(sampleMemoryPnt>=sampleMemorySize) {
+                sampleMemoryPnt=0;
+            }
         }
     }
     
@@ -147,11 +137,13 @@ namespace synth {
             //Q_ASSERT(size % sampleBytes == 0);
             Q_UNUSED(sampleBytes) // suppress warning in release builds
             unsigned char *ptr = reinterpret_cast<unsigned char *>(buffer);
-            int j=0;
             while (size) {
-                sampleMemory[j]=GetSample();
-                qreal x=sampleMemory[j];
-                j++;
+                sampleMemory[sampleMemoryPnt]=GetSample();
+                qreal x=sampleMemory[sampleMemoryPnt];
+                sampleMemoryPnt++;
+                if(sampleMemoryPnt>=sampleMemorySize) {
+                    sampleMemoryPnt=0;
+                }
                 for (int i=0; i<format->channelCount(); ++i) {
                     if (format->sampleSize() == 8 && format->sampleType() == QAudioFormat::UnSignedInt) {
                         const quint8 value = static_cast<quint8>((1.0 + x) / 2 * 255);
@@ -191,17 +183,10 @@ namespace synth {
         float value=0;
         for(int i=0;i<key_stack_.GetSize();i++) {
             value += key_stack_.getFilter(i)->GetValue(key_stack_.getOsc(i)->GetValue()*key_stack_.getEnvelope(0, i)->GetValue());
-            //value+=key_stack_.getOsc(i)->GetValue()*key_stack_.getEnvelope(0, i)->GetValue();
-            
             // Clip!
-            //value*=key_stack_.getEnvelope(0, i)->GetValue();
-            //value*=amp_mod;
             value = fmaxf(-1.0f, value);
             value = fminf(1.0f, value);
         }
-        // Clip!
-        //value = fmaxf(-1.0f, value);
-        //value = fminf(1.0f, value);
         value *= volume_;
         // Adjust volume
         for(int i=0;i<key_stack_.GetSize();i++) {

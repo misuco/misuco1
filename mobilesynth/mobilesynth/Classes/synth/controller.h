@@ -77,9 +77,11 @@ namespace synth {
 
         float getSampleMem(int i) {
             float r=0.0f;
-            if(sampleMemory) {
-                if(i<sampleMemorySize) {
-                    r=sampleMemory[i];
+            if(!released()) {
+                if(sampleMemory) {
+                    if(i<sampleMemorySize) {
+                        r=sampleMemory[i];
+                    }
                 }
             }
             return r;
@@ -107,8 +109,9 @@ namespace synth {
         float volume_;
 
         float * sampleMemory;
-        long sampleMemorySize=0;
-        
+        int sampleMemorySize;
+        int sampleMemoryPnt;
+
     };
     
 }  // namespace synth

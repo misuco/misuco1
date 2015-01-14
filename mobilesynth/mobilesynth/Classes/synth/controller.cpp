@@ -56,6 +56,7 @@ namespace synth {
         key_stack_.setOscWave(w);
     }
     
+    /*
     void Controller::set_modulation_amount(float amount) {
         key_stack_.setModAmtInit(amount);
     }
@@ -63,6 +64,7 @@ namespace synth {
     void Controller::set_modulation_amount(int voice, float amount) {
         key_stack_.setModAmt(voice, amount);
     }
+    */
 
     void Controller::set_filter_cutoff(float frequency) {
         key_stack_.setFilterCutoff(frequency);

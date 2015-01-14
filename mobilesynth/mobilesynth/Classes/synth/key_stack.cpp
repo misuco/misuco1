@@ -21,14 +21,14 @@ namespace synth {
             oscs[i]->set_sample_rate(sample_rate_);
             mod_amt_[i]=0;
             cutoffs[i]=new FilterCutoff();
-            cutoffs[i]->set_envelope(envelopes[1][i]);
+            cutoffs[i]->set_envelope(envelopes[0][i]);
             cutoffs[i]->set_cutoff(5000);
             filters[i]=new ResonantFilter();
             filters[i]->set_cutoff(cutoffs[i]);
             filters[i]->set_resonance(0);
+
         }
         mod_amt_init_=0;
-        //lfo_freq_init_=0;
         osc_pw=0.5;
         filter_res_=0;
         filter_cutoff_=0.5f;
@@ -42,7 +42,6 @@ namespace synth {
                 delete(envelopes[j][i]);
             }
             delete(oscs[i]);
-            //delete(lfos[i]);
             delete(cutoffs[i]);
             delete(filters[i]);
         }
@@ -126,7 +125,6 @@ namespace synth {
                 filters[kMaxSize]=filters[i];
                 cutoffs[kMaxSize]=cutoffs[i];
                 oscs[kMaxSize]=oscs[i];
-                //lfos[kMaxSize]=lfos[i];
                 for (int j = i; j < size_-1; ++j) {
                     notes_[j] = notes_[j + 1];
                     for(int k=0;k<kNumEnv;k++) {
@@ -145,7 +143,6 @@ namespace synth {
                 cutoffs[size_-1]=cutoffs[kMaxSize];
                 filters[size_-1]=filters[kMaxSize];
                 oscs[size_-1]=oscs[kMaxSize];
-                //lfos[size_-1]=lfos[kMaxSize];
                 mod_amt_[size_-1]=mod_amt_[kMaxSize];
 
                 size_--;
@@ -194,7 +191,7 @@ namespace synth {
     void KeyStack::setFilterCutoff(float f) {
         filter_cutoff_=f;
         for(int i=0;i<size_;i++) {
-            cutoffs[i]->set_cutoff(f);
+            initModulation(i,mod_amt_[i]);
         }
     }
 
@@ -220,7 +217,7 @@ namespace synth {
     }
 
     void KeyStack::setModulation(int voice, float mod) {
-        qDebug() << "KeyStack::setModulation " << voice << " " << mod;
+        //qDebug() << "KeyStack::setModulation " << voice << " " << mod;
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == voice) {
                 initModulation(i,mod);
@@ -230,15 +227,16 @@ namespace synth {
     }
 
     void KeyStack::initModulation(int i, float mod) {
+        mod_amt_[i]=mod;
         mod-=0.5f;
         mod*=2;
         float frs=filter_res_+filter_res_*mod_res_*mod;
         filters[i]->set_resonance(frs);
 
-        float fcf=oscs[i]->get_frequency()*filter_cutoff_*8;
+        float fcf=oscs[i]->get_frequency()*filter_cutoff_*84;
         fcf+=fcf*mod_cutoff_*mod;
         cutoffs[i]->set_cutoff(fcf);
-        qDebug() << "KeyStack::initModulation " << i << " " << mod << " frs " << frs << " fcf " << fcf;
+        //qDebug() << "KeyStack::initModulation " << i << " " << mod << " frs " << frs << " fcf " << fcf;
     }
 
     void KeyStack::setFilterRes(float f) {
@@ -256,14 +254,5 @@ namespace synth {
             }
         }
         osc_pw=pw;
-    }
-    
-    void KeyStack::setModAmt(int voice, float v ) {
-        for (int i = 0; i < size_; ++i) {
-            if (notes_[i] == voice) {
-                mod_amt_[i]=v;
-                i=size_;
-            }
-        }
     }
 }  // namespace synth

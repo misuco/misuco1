@@ -97,7 +97,7 @@ namespace synth {
         
         virtual float GetValue();
         
-        void set_cutoff(float cutoff) { cutoff_ = fmaxf(5,cutoff); }
+        void set_cutoff(float cutoff) { cutoff_ = fminf(fmaxf(5,cutoff),20000); }
         void set_modulation(Parameter* param) { modulation_ = param; }
         void set_envelope(Envelope* e) {envelope_=e;}
         Envelope* envelope() { return envelope_; }

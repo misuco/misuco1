@@ -151,11 +151,13 @@ namespace synth {
     FilterCutoff::~FilterCutoff() { }
     
     float FilterCutoff::GetValue() {
+        /*
         float value = cutoff_ * envelope_->GetValue();
         if (modulation_) {
             value *= modulation_->GetValue();
         }
-        return value;
+        */
+        return cutoff_;
     }
     
 }  // namespace synth

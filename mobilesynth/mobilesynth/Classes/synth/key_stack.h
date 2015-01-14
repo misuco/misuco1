@@ -17,8 +17,8 @@ namespace synth {
     class KeyStack {
     public:
         // We can't push more notes on the stack than this
-        static const int kMaxSize = 4;
-        static const int kNumEnv = 2;
+        static const int kMaxSize = 10;
+        static const int kNumEnv = 1;
         
         KeyStack();
         ~KeyStack();
@@ -39,8 +39,6 @@ namespace synth {
         
         int GetSize();
         float GetFreq(int num);
-/*        float GetFreq1(int num);
-        void SetFreq1(int num, float value);*/
         long GetPos(int num);
         long GetPeriodSamples(int num);
         void SetPos(int num,long value);
@@ -61,12 +59,6 @@ namespace synth {
         Oscillator * getOsc(int i) {
             return oscs[i];
         }
-        
-        /*
-        Oscillator * getLfo(int i) {
-            return lfos[i];
-        }
-        */
 
         float getModAmt(int i) {
             return mod_amt_[i];
@@ -76,30 +68,12 @@ namespace synth {
         void setFilterCutoff(float f);
         void setFilterRes(int note, float f);
         void setFilterRes(float f);
-        void setModAmt(int i, float v );
-        
-        void setModAmtInit(float v ) {
-            mod_amt_init_=v;
-        }
-        
-        //void setLfoFreq(int note, float v );
-        //void setLfoModFreq(int note, float v );
-        /*
-        void setLfoFreqInit(float v ) {
-            lfo_freq_init_=v;
-        }
-        */
         
         void setOscPW(int note, float pw);
         
         void setOscWave(int w) {
             osc_wave=w;
         }
-        /*
-        void setLfoWave(int w) {
-            lfo_wave=w;
-        }
-        */
         
         void setADSR(int n, long a, long d, float s, long r) {env_a[n]=a;env_d[n]=d;env_s[n]=s;env_r[n]=r;}
         void setAttack(int n, long a) {env_a[n]=a;}
@@ -118,11 +92,8 @@ namespace synth {
         ResonantFilter * filters[kMaxSize+1];
         FilterCutoff * cutoffs[kMaxSize+1];
         Oscillator * oscs[kMaxSize+1];
-        //Oscillator * lfos[kMaxSize+1];
         waveform * waveform_;
         
-        // Number of times the note at the position was pressed
-        // int count_[kMaxSize];
         float sample_rate_;
         
         long env_a[kNumEnv];
@@ -131,11 +102,9 @@ namespace synth {
         long env_r[kNumEnv];
         
         float mod_amt_[kMaxSize+1];
-        float mod_amt_init_;
-        //float lfo_freq_init_;
+        float mod_amt_init_=0.0f;
         float osc_pw;
         int osc_wave;
-        //int lfo_wave;
         float filter_res_;
         float filter_cutoff_; // 0.0 ... 1.0
         float mod_cutoff_;
@@ -143,9 +112,7 @@ namespace synth {
         void initModulation(int i, float mod);
 
     };
-    
-    // float KeyToFrequency(int key);
-    
+        
 }  // namespace synth
 
 #endif  // __KEY_STACK_H__

@@ -98,19 +98,8 @@ namespace synth {
         // void reset_routing();
         
         KeyStack key_stack_;
-        
-//        Oscillator osc1_;
-        
         bool osc_sync_;
         float sample_rate_;
-        
-//        ModulationSource modulation_source_;
-//        ModulationDestination modulation_destination_;
-//        MutableParameter modulation_frequency_;
-//        Oscillator modulation_osc_;
-//        MutableParameter modulation_amount_;
-//        LFO modulation_;
-        
         QAudioFormat * format;
         int channelBytes;
         int sampleBytes;

@@ -233,7 +233,17 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     mnote[evptr]=midinote;
                 }
             } else if(layout->getSegtype(iseg)==1) {
-                // for transition segments calculate the frequency value between neighbour segments
+                /*
+                 * for transition segments calculate the frequency value between neighbour segments
+                 * Assume:
+                 * Max Midi Range for pitchbend: 2^14 = 16384
+                 * this is +-8192 and it is assumed (though different on synts)
+                 * as +- 2 semitones
+                 * so: since misuco translates arbitrary frequency in midinote (semitone) steps and pitchbend values
+                 *     the sent range is +- 1/2 semitone which is +-2048 in midi value.
+                 * eg. in NI Reaktor the pitchbend has to be set to a range of +-8192. this results into correct
+                 *     conversion of arbitrary misuco frequency to midi controlled oscillators in Reaktor.
+                 */
 
                 // 1. make sure, to be in range to have two neighbours
                 if(iseg>0 && iseg<layout->getNsegs()-1) {
@@ -258,7 +268,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                         pitchdiff*=xrel;
                         float pitchednote=layout->getMidinote(iseg-1)*4096+layout->getPitch(iseg-1)+pitchdiff;
                         int midinote=round(pitchednote/4096);
-                        int pitch=(pitchednote-midinote*4096)/2;
+                        int pitch=pitchednote-midinote*4096;
 
                         if(freq[evptr]>0) {
                             snd->pitch(layout->getChan(iseg), ieventout[evptr],frel,midinote,pitch);

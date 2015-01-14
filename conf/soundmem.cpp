@@ -52,7 +52,7 @@ void SoundMem::readSoundmemXml(QString filename)
         } else if (xmlr.name() == "misucosoundmem" && xmlr.attributes().value("version") == "1.1") {
             int row=0;
             while (xmlr.readNextStartElement() && row<soundmem_max) {
-                qDebug() << "row " << row;
+                //qDebug() << "row " << row;
                 if (xmlr.name() == "sound") {
                     for(int j=0;j<soundparam_max;j++) {
                         QString attname;

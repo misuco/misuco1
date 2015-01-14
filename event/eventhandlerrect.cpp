@@ -514,6 +514,12 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                      }
                  //}
             }
+            if(layout->getSegtype(iseg)==0 || layout->getSegtype(iseg)==1) {
+                cccval1-=ccval1[evptr];
+                cccval2-=ccval2[evptr];
+                ccval1[evptr]=-1;
+                ccval2[evptr]=-1;
+            }
 
             if(layout->getSegtype(iseg)==0 || layout->getSegtype(iseg)==1 || layout->getSegtype(iseg)==3) {
                 //qDebug() << "tp released " << evptr << " " <<  ieventout[evptr] << " " << mnote[evptr];

@@ -321,9 +321,9 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     }
                 } else if(layout->getSegtype(iseg)==5) {
                     // y-slider
-                    snd->cc(0, 0,layout->getCtly(iseg),yrelquant,yrelquant);
+                    snd->cc(0, 0,layout->getCtly(iseg),yrel,yrel);
                     if(layout->getCtly(iseg)>=102) {
-                        layout->setSoundParam(layout->getCtly(iseg)-102,yrelquant);
+                        layout->setSoundParam(layout->getCtly(iseg)-102,yrel);
                     } else if(layout->getCtly(iseg)==-1) {
                         layout->initMidi2f(layout->getYrelq(iseg));
                         layout->updateLayout();

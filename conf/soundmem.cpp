@@ -36,7 +36,25 @@ void SoundMem::readSoundmemXml(QString filename)
                     for(int j=0;j<soundparam_max;j++) {
                         QString attname;
                         attname.sprintf("p%d",j);
-                        soundParam[row][j]=xmlr.attributes().value(attname).toString().toInt();
+                        soundParam[row][j]=xmlr.attributes().value(attname).toString().toInt()/127.0f;
+                        qDebug() << "1.0 sound param j " << j << " " << soundParam[row][j];
+                    }
+                    xmlr.skipCurrentElement();
+                    row++;
+                } else {
+                    xmlr.skipCurrentElement();
+                }
+            }
+        } else if (xmlr.name() == "misucosoundmem" && xmlr.attributes().value("version") == "1.1") {
+            int row=0;
+            while (xmlr.readNextStartElement() && row<soundmem_max) {
+                qDebug() << "row " << row;
+                if (xmlr.name() == "sound") {
+                    for(int j=0;j<soundparam_max;j++) {
+                        QString attname;
+                        attname.sprintf("p%d",j);
+                        soundParam[row][j]=xmlr.attributes().value(attname).toString().toFloat();
+                        qDebug() << "1.1 sound param j " << j << " " << soundParam[row][j];
                     }
                     xmlr.skipCurrentElement();
                     row++;
@@ -45,7 +63,7 @@ void SoundMem::readSoundmemXml(QString filename)
                 }
             }
         } else {
-            xmlr.raiseError(QObject::tr("The file is not a MISUCO version 1.0 file."));
+            xmlr.raiseError(QObject::tr("The file is not a MISUCO version 1.0/1.1 file."));
         }
     }
     file.close();
@@ -67,7 +85,7 @@ void SoundMem::writeSoundmemXml(QString filename)
     xml.writeStartDocument();
     xml.writeDTD("<!DOCTYPE misuco>");
     xml.writeStartElement("misucosoundmem");
-    xml.writeAttribute("version", "1.0");
+    xml.writeAttribute("version", "1.1");
 
     for (int row = 0; row < soundmem_max; row++) {
         xml.writeStartElement("sound");

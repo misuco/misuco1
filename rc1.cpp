@@ -1020,6 +1020,7 @@ void RC1::transmitSoundParam()
 {
     for(int i=0;i<layout->getSoundParamMax();i++) {
          sender->cc(layout->getChannel(),0,i+102,layout->getSoundParam(i),layout->getSoundParam(i));
+         //qDebug() << "transmitSoundParam " << i << " " << layout->getSoundParam(i);
     }
 }
 

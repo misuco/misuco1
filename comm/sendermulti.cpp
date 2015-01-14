@@ -50,7 +50,7 @@ SenderMulti::~SenderMulti()
 
 void SenderMulti::cc(int chan, int voiceId, int cc, float v1, float v1avg)
 {
-    qDebug() << "SenderMulti::cc(" << chan << "," << voiceId << "," << cc << "," << v1 << "," << v1avg << ")";
+    //qDebug() << "SenderMulti::cc(" << chan << "," << voiceId << "," << cc << "," << v1 << "," << v1avg << ")";
     for(int i=0;i<senders.count();i++) {
         senders.at(i)->cc(chan,voiceId,cc,v1,v1avg);
     }

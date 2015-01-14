@@ -429,7 +429,7 @@ void LayoutModel::setYrelq(int i, int value)
     }
 }
 
-int LayoutModel::getSoundParam(int i) const
+float LayoutModel::getSoundParam(int i) const
 {
     if(i<soundmem.soundparam_max) {
         return soundmem.soundParam[progmem.progmem[actProgmem].sound][i];
@@ -1012,9 +1012,9 @@ void LayoutModel::updateLayout()
             }
         } else if(segtype[seg]==5 ) {
             if(ctly[seg]>=102) {
-                int soundparam=soundmem.soundParam[progmem.progmem[actProgmem].sound][ctly[seg]-102];
-                yrelq[seg]=soundparam;
-                yrel[seg]=(float)soundparam/(float)ctlx[seg];
+                float soundparam=soundmem.soundParam[progmem.progmem[actProgmem].sound][ctly[seg]-102];
+                yrelq[seg]=soundparam*(float)ctlx[seg];
+                yrel[seg]=soundparam;
                 //qDebug() << "updateLayout setting soundParam " << soundparam;
             }
         }

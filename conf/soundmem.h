@@ -14,7 +14,7 @@ public:
     SoundMem();
     ~SoundMem();
 
-    int soundParam[soundmem_max][soundparam_max];
+    float soundParam[soundmem_max][soundparam_max];
 
     void readSoundmemXml(QString filename);
     void writeSoundmemXml(QString filename);

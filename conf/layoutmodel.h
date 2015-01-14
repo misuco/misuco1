@@ -157,7 +157,7 @@ public:
     int getYrelq(int i) const;
     void setYrelq(int i, int value);
 
-    int getSoundParam(int i) const;
+    float getSoundParam(int i) const;
     int getSoundParamMax() const;
     void setSoundParam(int i, int value);
     int getSound();

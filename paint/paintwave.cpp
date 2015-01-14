@@ -10,16 +10,8 @@ void PaintWave::paint(RC1 *rc1, QPainter *pnt)
     if(!ctl->released()) {
         // fit the wave into the scale rows
         LayoutModel * l=rc1->getLayout();
-        int yv=0;
-        for(int i=0;i<l->getScalerow();i++) {
-            yv+=l->getRowheightpx(i);
-        }
-        int hv=0;
-        for(int i=l->getScalerow();i<l->getNrows();i++) {
-            hv+=l->getRowheightpx(i);
-        }
-        hv/=2;
-        yv+=hv;
+        int yv=l->waveDisplayY;
+        int hv=l->waveDisplayH;
 
         // offset to the first positive zero-transition
         pnt->setPen(Qt::white);

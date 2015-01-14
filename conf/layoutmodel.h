@@ -61,6 +61,9 @@ public:
     const int midinote_max=151;
     const float freq_max=calcMidi2Fequal(midinote_max); // 50175
     
+    int waveDisplayY;
+    int waveDisplayH;
+
     void calcGeo(int w, int h);
     void calcGeo();
 

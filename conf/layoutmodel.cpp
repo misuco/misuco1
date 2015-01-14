@@ -181,6 +181,18 @@ void LayoutModel::calcGeo(int w, int h)
     fontsize=heightPx/30;
 #endif
     fontsizeS=fontsize/3*2;
+
+    waveDisplayY=0;
+    for(int i=0;i<getScalerow();i++) {
+        waveDisplayY+=getRowheightpx(i);
+    }
+    waveDisplayH=0;
+    for(int i=getScalerow();i<getNrows();i++) {
+        waveDisplayH+=getRowheightpx(i);
+    }
+    waveDisplayH/=2;
+    waveDisplayY+=waveDisplayH;
+
 }
 
 int LayoutModel::getHeight() const

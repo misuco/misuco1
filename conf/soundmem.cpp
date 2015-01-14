@@ -36,8 +36,12 @@ void SoundMem::readSoundmemXml(QString filename)
                     for(int j=0;j<soundparam_max;j++) {
                         QString attname;
                         attname.sprintf("p%d",j);
-                        soundParam[row][j]=xmlr.attributes().value(attname).toString().toInt()/127.0f;
-                        qDebug() << "1.0 sound param j " << j << " " << soundParam[row][j];
+                        if(j==0) {
+                            soundParam[row][j]=xmlr.attributes().value(attname).toString().toInt()/4.0f;
+                        } else {
+                            soundParam[row][j]=xmlr.attributes().value(attname).toString().toInt()/127.0f;
+                        }
+                        //qDebug() << "1.0 sound param j " << j << " " << soundParam[row][j];
                     }
                     xmlr.skipCurrentElement();
                     row++;
@@ -53,8 +57,8 @@ void SoundMem::readSoundmemXml(QString filename)
                     for(int j=0;j<soundparam_max;j++) {
                         QString attname;
                         attname.sprintf("p%d",j);
-                        soundParam[row][j]=xmlr.attributes().value(attname).toString().toFloat();
-                        qDebug() << "1.1 sound param j " << j << " " << soundParam[row][j];
+                        soundParam[row][j]=xmlr.attributes().value(attname).toFloat();
+                        //qDebug() << "1.1 sound param j " << j << " " << soundParam[row][j];
                     }
                     xmlr.skipCurrentElement();
                     row++;
@@ -91,7 +95,7 @@ void SoundMem::writeSoundmemXml(QString filename)
         xml.writeStartElement("sound");
 
         for(int j=0;j<soundparam_max;j++) {
-            att.sprintf("%d",soundParam[row][j]);
+            att.sprintf("%f",soundParam[row][j]);
             attname.sprintf("p%d",j);
             xml.writeAttribute(attname,att);
         }

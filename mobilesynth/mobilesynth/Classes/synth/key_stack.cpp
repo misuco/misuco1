@@ -193,6 +193,9 @@ namespace synth {
     
     void KeyStack::setFilterCutoff(float f) {
         filter_cutoff_=f;
+        for(int i=0;i<size_;i++) {
+            cutoffs[i]->set_cutoff(f);
+        }
     }
 
     void KeyStack::setFilterCutoff(int voice, float f) {
@@ -217,6 +220,7 @@ namespace synth {
     }
 
     void KeyStack::setModulation(int voice, float mod) {
+        qDebug() << "KeyStack::setModulation " << voice << " " << mod;
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == voice) {
                 initModulation(i,mod);
@@ -234,10 +238,14 @@ namespace synth {
         float fcf=oscs[i]->get_frequency()*filter_cutoff_*8;
         fcf+=fcf*mod_cutoff_*mod;
         cutoffs[i]->set_cutoff(fcf);
+        qDebug() << "KeyStack::initModulation " << i << " " << mod << " frs " << frs << " fcf " << fcf;
     }
 
     void KeyStack::setFilterRes(float f) {
         filter_res_=f;
+        for(int i=0;i<size_;i++) {
+            filters[i]->set_resonance(f);
+        }
     }
     
     void KeyStack::setOscPW(int voice, float pw) {

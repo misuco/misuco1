@@ -38,7 +38,7 @@ SenderMobileSynth::~SenderMobileSynth()
 
 void SenderMobileSynth::cc(int, int voiceId, int cc, float v1, float)
 {
-    if(cc==2) {
+    if(cc==1) {
         sy->set_modulation(voiceId,v1);
     } else if(cc==102) {
         sy->set_osc1_wave_type_int(v1*4.0f);
@@ -99,7 +99,7 @@ SenderMobileSynth::~SenderMobileSynth()
 
 void SenderMobileSynth::cc(int chan, int voiceId, int cc, float v1)
 {
-    if(cc==2) {
+    if(cc==1) {
         sy->getSyctl()->set_modulation(voiceId,v1);
     } else if(cc==102) {
         sy->getSyctl()->set_osc1_wave_type_int(v1*4.0f);

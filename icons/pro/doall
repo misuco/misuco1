@@ -14,9 +14,9 @@ sips -z 72 72 ItunesArtwork\@2x.png --out AppIcon72x72@~ipad.png
 sips -z 152 152 ItunesArtwork\@2x.png --out AppIcon76x76@2x~ipad.png
 sips -z 76 76 ItunesArtwork\@2x.png --out AppIcon76x76@~ipad.png
 sips -z 512 512 ItunesArtwork\@2x.png --out ItunesArtwork.png
+sips -z 768 1024 LaunchImage-iOS7-Landscape\@2x.png --out LaunchImage-iOS7-Landscape.png
 sips -r 270 LaunchImage-iOS7-Landscape\@2x.png --out LaunchImage-iOS7-Portrait\@2x.png
-sips -z 1024 768 LaunchImage-iOS7-Landscape\@2x.png --out LaunchImage-iOS7-Landscape.png
-sips -z 640 1136 LaunchImage-iOS7-Portrait\@2x.png --out LaunchImage-iOS7-568h\@2x.png
-sips -z 768 1024 LaunchImage-iOS7-Portrait\@2x.png --out LaunchImage-iOS7-Portrait.png
-sips -z 640 960 LaunchImage-iOS7-Portrait\@2x.png --out LaunchImage-iOS7\@2x.png
+sips -z 1136 640 LaunchImage-iOS7-Portrait\@2x.png --out LaunchImage-iOS7-568h\@2x.png
+sips -z 1024 768 LaunchImage-iOS7-Portrait\@2x.png --out LaunchImage-iOS7-Portrait.png
+sips -z 960 640 LaunchImage-iOS7-Portrait\@2x.png --out LaunchImage-iOS7\@2x.png
 

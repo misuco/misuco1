@@ -171,6 +171,10 @@ RESOURCES += \
 
 ios {
     QMAKE_INFO_PLIST = Info.plist
+    ios_icon.files = $$files($$PWD/icons/pro/AppIcon*.png)
+    QMAKE_BUNDLE_DATA += ios_icon
+    launch_images.files = $$files($$PWD/icons/pro/LaunchImage*.png)
+    QMAKE_BUNDLE_DATA += launch_images
 }
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android

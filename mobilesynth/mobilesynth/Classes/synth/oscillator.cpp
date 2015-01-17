@@ -17,6 +17,7 @@ namespace synth {
     sample_rate_(kDefaultSampleRate),
     sample_num_(0),
     phase_(0),
+    phase_inc_(0),
     pi2(M_PI*2){}
     
     Oscillator::~Oscillator() { }
@@ -54,7 +55,10 @@ namespace synth {
     }
 
     void Oscillator::set_frequency(float frequency) {
-        frequency_ = frequency;
+        if(frequency_!=frequency) {
+            frequency_=frequency;
+            phase_inc_=pi2*frequency_/ sample_rate_;
+        }
         //qDebug() << "Oscilator::set_frequency " << frequency << " t: " << t_ << " sr: " << sample_rate_;
     }
     
@@ -62,7 +66,7 @@ namespace synth {
         if (frequency_ < 0.01f) {
             return 0.0f;
         }
-        phase_+=pi2*frequency_/ sample_rate_;
+        phase_+=phase_inc_;
         if(phase_>pi2) {
             phase_-=pi2;
         }

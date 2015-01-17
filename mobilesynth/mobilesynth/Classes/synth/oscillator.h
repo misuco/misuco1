@@ -57,6 +57,7 @@ namespace synth {
         float pulse_width_;
         float sample_rate_;
         long sample_num_;
+        float phase_inc_;
         float value;
 
     };

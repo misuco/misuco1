@@ -173,6 +173,11 @@ namespace synth {
     int KeyStack::GetSize() {
         return size_;
     }
+
+    float KeyStack::GetFreq(int num)
+    {
+        return oscs[num]->get_frequency();
+    }
     
     int KeyStack::GetNote(int num) {
         if (num >= size_) {

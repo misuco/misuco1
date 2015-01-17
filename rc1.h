@@ -80,7 +80,7 @@ public:
     LayoutModel *getLayout() const;
     SenderMulti *getSender() const;
     long getNow();
-    //int getFps();
+    int getFps() {return fps;}
     //QTime *getFpsT();
     QImage *getBgImage();
     int getBlockerTimeLeft() {return blockerTimeLeft;}
@@ -161,11 +161,12 @@ private:
     QString adid;
     bool downloadAd;
 
-    // frame statistic
-    /*
     int fps;
     int fcnt;
     QTime fpsT;
+
+    // frame statistic
+    /*
     bool secTimer;
     */
 

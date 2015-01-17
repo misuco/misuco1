@@ -162,12 +162,9 @@ RC1::RC1(MainWindow *parent) :
 
     this->startTimer(0);
     
-    /*
     fpsT.start();
     fps=50;
     fcnt=0;
-    secTimer=true;
-    */
     
     netxs = new QNetworkAccessManager(this);
     connect(netxs, SIGNAL(finished(QNetworkReply*)),
@@ -225,15 +222,14 @@ void RC1::paintEvent(QPaintEvent *)
     }
 #endif
 
-/*
     if(fpsT.elapsed()>1000) {
         fpsT.restart();
         fps=fcnt;
         fcnt=0;
-        secTimer=true;
+        //secTimer=true;
         //qDebug() << "fps: " << fps;
     }
-*/
+
     QPainter painter(this);
     //qDebug() << "painter window " << painter.window().width() << " " << painter.window().height() ;
 
@@ -274,7 +270,7 @@ void RC1::paintEvent(QPaintEvent *)
 #ifndef RC1_PRO
     }
 #endif
-    //fcnt++;
+    fcnt++;
 }
 
 void RC1::resizeEvent(QResizeEvent *)

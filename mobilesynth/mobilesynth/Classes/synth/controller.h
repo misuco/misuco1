@@ -94,6 +94,9 @@ namespace synth {
         void setSustain(int n, float s);
         void setRelease(int n, int r);
 
+        int getNVoices() {return key_stack_.GetSize();}
+        float getVF(int i) {return key_stack_.GetFreq(i);}
+
     private:
         // Invoked when one of the routing parameters changes, such as the source
         // or destination of modulation.

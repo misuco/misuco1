@@ -7,14 +7,14 @@ PaintWave::PaintWave(synth::Controller * c)
 
 void PaintWave::paint(RC1 *rc1, QPainter *pnt)
 {
+    LayoutModel * l=rc1->getLayout();
+    int yv=l->waveDisplayY;
+    int hv=l->waveDisplayH;
     if(!ctl->released()) {
+        pnt->setPen(Qt::lightGray);
         // fit the wave into the scale rows
-        LayoutModel * l=rc1->getLayout();
-        int yv=l->waveDisplayY;
-        int hv=l->waveDisplayH;
 
         // offset to the first positive zero-transition
-        pnt->setPen(Qt::white);
         int offset=0;
         while(offset<rc1->width()) {
             offset++;
@@ -32,6 +32,13 @@ void PaintWave::paint(RC1 *rc1, QPainter *pnt)
             yp=y;
         }
     }
+    pnt->setPen(Qt::black);
+    QString fps,freqs;
+    fps.sprintf("%d fps %d voices ",rc1->getFps(),ctl->getNVoices());
+    for(int i=ctl->getNVoices()-1;i>=0;i--) {
+        fps.append(freqs.sprintf("  %.1f",ctl->getVF(i)));
+    }
+    pnt->drawText(0,rc1->height()-l->getFontsize(),rc1->width(),hv,Qt::AlignLeft,fps);
 }
 
 int PaintWave::getParamCount() {

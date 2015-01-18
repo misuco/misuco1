@@ -33,7 +33,7 @@ namespace synth {
         osc_pw=0.5;
         filter_res_=0;
         filter_cutoff_=0.5f;
-        qDebug() << "setup keystack done ";
+        //qDebug() << "setup keystack done ";
     }
     
     KeyStack::~KeyStack() {

@@ -12,8 +12,9 @@ namespace synth {
     
     KeyStack::KeyStack() : size_(0) {
         //qDebug() << "setup keystack";
+        kMaxSize=10;
 
-        for(int i=0;i<kMaxSize;i++) {
+        for(int i=0;i<kMaxSize+1;i++) {
             for(int j=0;j<kNumEnv;j++) {
                 envelopes[j][i]=new Envelope();
             }
@@ -32,7 +33,7 @@ namespace synth {
         osc_pw=0.5;
         filter_res_=0;
         filter_cutoff_=0.5f;
-        //qDebug() << "setup keystack done ";
+        qDebug() << "setup keystack done ";
     }
     
     KeyStack::~KeyStack() {
@@ -70,7 +71,6 @@ namespace synth {
             NoteClear(notes_[0]);
             //qDebug() << "  KeyStack full, NoteClear " << notes_[0];
         }
-        
         // put new note on top of stack
         notes_[size_] = note;
         oscs[size_]->set_frequency(freq);

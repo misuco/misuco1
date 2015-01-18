@@ -66,9 +66,11 @@ static const float kNotesPerOctave = 12.0;
 static const float kMiddleAFrequency = 440.0;
 static const int kMiddleANote = 49;
 
+/*
 static float GetFrequencyForNote(int note) {
     return kMiddleAFrequency * powf(2, (note - kMiddleANote) / kNotesPerOctave);
 }
+*/
 
 - (id)init {
     self = [super init];

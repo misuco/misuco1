@@ -17,7 +17,8 @@ namespace synth {
     class KeyStack {
     public:
         // We can't push more notes on the stack than this
-        static const int kMaxSize = 10;
+        int kMaxSize;
+        static const int kMaxSizeInit = 10;
         static const int kNumEnv = 1;
         
         KeyStack();
@@ -87,12 +88,12 @@ namespace synth {
 
     private:
         int size_;
-        int notes_[kMaxSize+1];
-        Envelope * envelopes[kNumEnv][kMaxSize+1];
-        ResonantFilter * filters[kMaxSize+1];
-        FilterCutoff * cutoffs[kMaxSize+1];
-        Oscillator * oscs[kMaxSize+1];
-        waveform * waveform_;
+        int notes_[kMaxSizeInit+1];
+        Envelope * envelopes[kNumEnv][kMaxSizeInit+1];
+        ResonantFilter * filters[kMaxSizeInit+1];
+        FilterCutoff * cutoffs[kMaxSizeInit+1];
+        Oscillator * oscs[kMaxSizeInit+1];
+        //waveform * waveform_;
         
         float sample_rate_;
         
@@ -101,7 +102,7 @@ namespace synth {
         float env_s[kNumEnv];
         long env_r[kNumEnv];
         
-        float mod_amt_[kMaxSize+1];
+        float mod_amt_[kMaxSizeInit+1];
         float mod_amt_init_=0.0f;
         float osc_pw;
         int osc_wave;

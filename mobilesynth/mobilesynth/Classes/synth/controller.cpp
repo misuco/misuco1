@@ -128,6 +128,13 @@ namespace synth {
         key_stack_.setRelease(n,r);
     }
 
+    void Controller::decVoices()
+    {
+        if(key_stack_.kMaxSize>3) {
+            key_stack_.kMaxSize--;
+        }
+    }
+
     void Controller::GetCharSamples(char* buffer, int size) {
         
         if(format!=0) {

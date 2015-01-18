@@ -228,6 +228,10 @@ void RC1::paintEvent(QPaintEvent *)
         fcnt=0;
         //secTimer=true;
         //qDebug() << "fps: " << fps;
+        if(fps<20) {
+            sender->getSynthController()->decVoices();
+            //qDebug() << "dec voices";
+        }
     }
 
     QPainter painter(this);

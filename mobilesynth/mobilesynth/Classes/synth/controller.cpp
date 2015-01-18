@@ -130,8 +130,15 @@ namespace synth {
 
     void Controller::decVoices()
     {
-        if(key_stack_.kMaxSize>3) {
+        if(key_stack_.kMaxSize>4) {
             key_stack_.kMaxSize--;
+        }
+    }
+
+    void Controller::incVoices()
+    {
+        if(key_stack_.kMaxSize<10) {
+            key_stack_.kMaxSize++;
         }
     }
 

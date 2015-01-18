@@ -95,8 +95,10 @@ namespace synth {
         void setRelease(int n, int r);
 
         int getNVoices() {return key_stack_.GetSize();}
+        int getNVoicesMax() {return key_stack_.kMaxSize;}
         float getVF(int i) {return key_stack_.GetFreq(i);}
         void decVoices();
+        void incVoices();
 
     private:
         // Invoked when one of the routing parameters changes, such as the source

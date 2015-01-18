@@ -55,9 +55,12 @@ namespace synth {
         for (int i = 0; i < size_; ++i) {
             if (notes_[i] == note) {
                 oscs[i]->set_frequency(freq);
+                oscs[i]->set_pulse_width(osc_pw);
                 oscs[i]->set_wave_type(osc_wave);
                 oscs[i]->set_sample_rate(sample_rate_);
                 cutoffs[i]->set_cutoff(freq);
+                filters[i]->resetxy();
+                mod_amt_[i]=mod_amt_init_;
                 initModulation(i,0);
                 //qDebug() << "  KeyStack existing note " << note << " size " << size_ << " wave " << osc_wave;
                 return false;

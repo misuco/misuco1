@@ -33,7 +33,7 @@ public:
     
     static const int bscale_max=11;
 #ifdef RC1_PRO
-    static const int progmem_max=110;
+    static const int progmem_max=200;
 #else
     static const int progmem_max=10;
 #endif

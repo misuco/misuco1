@@ -1214,7 +1214,7 @@ void LayoutModel::setAllChan(int v)
 void LayoutModel::setActProgmem(int n)
 {
     // restore new setup
-    if(n<progmem.progmem_max) {
+    if(n>=0 && n<progmem.progmem_max) {
         actProgmem=n;
         updateLayout();
     }

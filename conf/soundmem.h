@@ -9,7 +9,7 @@ class SoundMem
 {
 public:
     static const int soundparam_max=10;
-    static const int soundmem_max=110;
+    static const int soundmem_max=200;
 
     SoundMem();
     ~SoundMem();

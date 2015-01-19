@@ -58,7 +58,7 @@ public:
     const float freq_a=440;
     const int nrows_max=32;
     const int nsegs_max=32*32;       // size of segments memory
-    const int midinote_max=151;
+    const int midinote_max=200;
     const float freq_max=calcMidi2Fequal(midinote_max); // 50175
     
     int waveDisplayY;

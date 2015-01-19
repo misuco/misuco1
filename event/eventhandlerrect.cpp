@@ -491,8 +491,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     }
                 } else if(layout->getCtly(iseg)==-9) {
                     QMessageBox msgBox;
-                    msgBox.setText("The document has been modified.");
-                    msgBox.setInformativeText("Do you want to save your changes?");
+                    msgBox.setText("Save your changes to the flash memory");
+                    msgBox.setInformativeText("This will overwrite the current program settings.");
                     msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
                     msgBox.setDefaultButton(QMessageBox::Cancel);
                     int ret = msgBox.exec();

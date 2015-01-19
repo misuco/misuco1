@@ -468,6 +468,8 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
             }
         }
 
+        /*
+
         if(path=="/dim") {
             layout->setNrows(dl.size());
             int seg=0;
@@ -515,6 +517,7 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
                 }
             }
         }
+        */
 
         if(path=="/f") {
             if(dl.size()<=layout->nsegs_max) {
@@ -796,10 +799,26 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
             }
         }
 
+        if(path=="/rows") {
+            if(dl.size()==1) {
+                int rows=dl.at(0).toInt();
+                if(rows>=1 && rows<=10) {
+                    layout->setNrows(rows);
+                    layout->updateLayout();
+                }
+            }
+        }
+
         if(path=="/pc") {
             if(dl.size()==1) {
                 int p=dl.at(0).toInt();
                 layout->setActProgmem(p);
+            }
+        }
+
+        if(path=="/save") {
+            if(dl.size()==0) {
+                writeProgmem();
             }
         }
 

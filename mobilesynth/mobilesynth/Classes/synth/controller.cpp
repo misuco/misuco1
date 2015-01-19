@@ -71,14 +71,6 @@ namespace synth {
     {
         key_stack_.setModulation(voice,v);
     }
-
-    void Controller::set_filter_cutoff(int voice, float frequency) {
-        key_stack_.setFilterCutoff(voice, frequency);
-    }
-
-    void Controller::set_filter_resonance(int voice, float value) {
-        key_stack_.setFilterRes(voice, value);
-    }
     
     void Controller::set_filter_resonance(float value) {
         key_stack_.setFilterRes(value);

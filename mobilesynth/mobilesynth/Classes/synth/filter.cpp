@@ -96,7 +96,7 @@ namespace synth {
     }
     
     ResonantFilter::ResonantFilter()
-    : cutoff_(NULL), resonance_(0.8f),
+    : cutoff_(NULL), resonance_(0.8f), cutoff(0), scale(0),
     y1_(0.0f), y2_(0.0f), y3_(0.0f), y4_(0.0f),
     oldx_(0.0f), oldy1_(0.0f), oldy2_(0.0f), oldy3_(0.0f) { }
     
@@ -107,7 +107,8 @@ namespace synth {
     }
     
     void ResonantFilter::set_resonance(float resonance) {
-        resonance_ = resonance;
+        resonance_ = fminf(resonance,1.8);
+        r = resonance_ * scale;
     }
     
     void ResonantFilter::resetxy() {
@@ -119,18 +120,22 @@ namespace synth {
         oldy1_=0;
         oldy2_=0;
         oldy3_=0;
+        cutoff=0;
     }
 
     float ResonantFilter::GetValue(float x) {
         if (cutoff_ == NULL) {
             return x;
         }
-        float cutoff = cutoff_->GetValue();
-        float f = 2.0f * cutoff / kSampleRate;
-        float k = 3.6f * f - 1.6f * f * f - 1;
-        float p = (k + 1.0f) * 0.5f;
-        float scale = powf(kE, (1.0f - p) * 1.386249);
-        float r = resonance_ * scale;
+        float c = cutoff_->GetValue();
+        if(c!=cutoff) {
+            cutoff=c;
+            f = 2.0f * cutoff / kSampleRate;
+            k = 3.6f * f - 1.6f * f * f - 1;
+            p = (k + 1.0f) * 0.5f;
+            scale = powf(kE, (1.0f - p) * 1.386249);
+            r = resonance_ * scale;
+        }
         
         float out = x - r * y4_;
         y1_ = out * p + oldx_ * p - k * y1_;

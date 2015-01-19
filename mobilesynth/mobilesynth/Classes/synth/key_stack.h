@@ -65,9 +65,9 @@ namespace synth {
             return mod_amt_[i];
         }
         
-        void setFilterCutoff(int note, float f);
+        //void setFilterCutoff(int note, float f);
         void setFilterCutoff(float f);
-        void setFilterRes(int note, float f);
+        //void setFilterRes(int note, float f);
         void setFilterRes(float f);
         
         void setOscPW(int note, float pw);
@@ -111,6 +111,8 @@ namespace synth {
         float mod_cutoff_;
         float mod_res_;
         void initModulation(int i, float mod);
+        void initCutoff(int i, float mod);
+        void initRes(int i, float mod);
 
     };
         

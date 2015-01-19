@@ -199,28 +199,7 @@ namespace synth {
     void KeyStack::setFilterCutoff(float f) {
         filter_cutoff_=f;
         for(int i=0;i<size_;i++) {
-            initModulation(i,mod_amt_[i]);
-        }
-    }
-
-    void KeyStack::setFilterCutoff(int voice, float f) {
-        for (int i = 0; i < size_; ++i) {
-            if (notes_[i] == voice) {
-                float fcf=f*oscs[i]->get_frequency()*filter_cutoff_*8;
-                cutoffs[i]->set_cutoff(fcf);
-                break;
-                //qDebug() << "setFilterCutoff v " << voice << " f " << f << " fcf " << fcf;
-            }
-        }
-    }
-
-    void KeyStack::setFilterRes(int voice, float f) {
-        for (int i = 0; i < size_; ++i) {
-            if (notes_[i] == voice) {
-                float frs=f*filter_res_;
-                filters[i]->set_resonance(frs);
-                break;
-            }
+            initCutoff(i,mod_amt_[i]);
         }
     }
 
@@ -235,22 +214,33 @@ namespace synth {
     }
 
     void KeyStack::initModulation(int i, float mod) {
-        mod_amt_[i]=mod;
         mod-=0.5f;
         mod*=2;
-        float frs=filter_res_+filter_res_*mod_res_*mod;
-        filters[i]->set_resonance(frs);
+        mod_amt_[i]=mod;
+        initCutoff(i,mod);
+        initRes(i,mod);
+        qDebug() << "KeyStack::initModulation " << i << " " << mod;
+    }
 
+    void KeyStack::initCutoff(int i, float mod)
+    {
         float fcf=oscs[i]->get_frequency()*filter_cutoff_*84;
         fcf+=fcf*mod_cutoff_*mod;
         cutoffs[i]->set_cutoff(fcf);
-        //qDebug() << "KeyStack::initModulation " << i << " " << mod << " frs " << frs << " fcf " << fcf;
+        qDebug() << "KeyStack::initCutoff " << i << " " << mod << " fcf " << fcf;
+    }
+
+    void KeyStack::initRes(int i, float mod)
+    {
+        float frs=filter_res_+filter_res_*mod_res_*mod;
+        filters[i]->set_resonance(frs);
+        qDebug() << "KeyStack::initRes " << i << " " << mod << " frs " << frs;
     }
 
     void KeyStack::setFilterRes(float f) {
         filter_res_=f;
         for(int i=0;i<size_;i++) {
-            filters[i]->set_resonance(f);
+            initRes(i,mod_amt_[i]);
         }
     }
     

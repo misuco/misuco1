@@ -77,6 +77,13 @@ namespace synth {
     private:
         Parameter* cutoff_;
         float resonance_;
+
+        float cutoff;
+        float f;
+        float k;
+        float p;
+        float scale;
+        float r;
         
         float y1_;
         float y2_;

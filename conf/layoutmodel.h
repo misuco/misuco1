@@ -162,7 +162,7 @@ public:
 
     float getSoundParam(int i) const;
     int getSoundParamMax() const;
-    void setSoundParam(int i, int value);
+    void setSoundParam(int i, float value);
     int getSound();
     void setSound(int v);
     

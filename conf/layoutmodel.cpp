@@ -455,11 +455,9 @@ int LayoutModel::getSoundParamMax() const
     return soundmem.soundparam_max;
 }
 
-void LayoutModel::setSoundParam(int i, int value)
+void LayoutModel::setSoundParam(int i, float value)
 {
-    qDebug() << "LayoutModel::setSoundParam " << i << " " << value;
     if(i<soundmem.soundparam_max) {
-        qDebug() << "i< " << soundmem.soundparam_max;
         soundmem.soundParam[progmem.progmem[actProgmem].sound][i]=value;
     }
 }

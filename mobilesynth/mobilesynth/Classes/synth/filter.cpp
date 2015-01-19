@@ -137,12 +137,13 @@ namespace synth {
             r = resonance_ * scale;
         }
         
-        float out = x - r * y4_;
+        float out = fmaxf(-1,fminf(x - r * y4_,1));
         y1_ = out * p + oldx_ * p - k * y1_;
         y2_ = y1_ * p + oldy1_ * p - k * y2_;
         y3_ = y2_ * p + oldy2_ * p - k * y3_;
         y4_ = y3_ * p + oldy3_ * p - k * y4_;
-        y4_ = y4_ - powf(y4_, 3.0f) / 6.0f;
+        //y4_ = y4_ - powf(y4_, 3.0f) / 6.0f;
+        y4_ = y4_ - y4_*y4_*y4_ / 6.0f;
         oldx_ = out;
         oldy1_ = y1_;
         oldy2_ = y2_;

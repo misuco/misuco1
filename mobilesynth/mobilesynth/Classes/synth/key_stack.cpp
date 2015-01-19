@@ -219,7 +219,7 @@ namespace synth {
         mod_amt_[i]=mod;
         initCutoff(i,mod);
         initRes(i,mod);
-        qDebug() << "KeyStack::initModulation " << i << " " << mod;
+        //qDebug() << "KeyStack::initModulation " << i << " " << mod;
     }
 
     void KeyStack::initCutoff(int i, float mod)
@@ -227,14 +227,14 @@ namespace synth {
         float fcf=oscs[i]->get_frequency()*filter_cutoff_*84;
         fcf+=fcf*mod_cutoff_*mod;
         cutoffs[i]->set_cutoff(fcf);
-        qDebug() << "KeyStack::initCutoff " << i << " " << mod << " fcf " << fcf;
+        //qDebug() << "KeyStack::initCutoff " << i << " " << mod << " fcf " << fcf;
     }
 
     void KeyStack::initRes(int i, float mod)
     {
         float frs=filter_res_+filter_res_*mod_res_*mod;
         filters[i]->set_resonance(frs);
-        qDebug() << "KeyStack::initRes " << i << " " << mod << " frs " << frs;
+        //qDebug() << "KeyStack::initRes " << i << " " << mod << " frs " << frs;
     }
 
     void KeyStack::setFilterRes(float f) {

@@ -838,6 +838,15 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
             layout->resetLayout();
         }
 
+        if(path=="/layout") {
+            if(dl.size()==1) {
+                int l=dl.at(0).toInt();
+                if(l>=0 && l<=5) {
+                    layout->resetLayout(l);
+                }
+            }
+        }
+
         /*
         if(path=="/loadbg") {
             if(dl.size()==1) {

@@ -2,7 +2,7 @@
 #X obj 17 222 sendOSC;
 #X msg 17 -174 connect 255.255.255.255 3333;
 #X obj 49 -119 vsl 15 241 -120 120 0 0 empty empty empty 0 -9 0 10
--262144 -1 -1 15600 1;
+-262144 -1 -1 0 1;
 #X floatatom 49 154 5 0 0 0 - - -;
 #X msg 31 -153 send /dxy 12 1;
 #X obj 83 -124 vsl 15 241 -120 120 0 0 empty empty empty 0 -9 0 10
@@ -24,7 +24,7 @@
 -262144 -1 -1 0 1;
 #X floatatom 253 130 5 0 0 0 - - -;
 #X obj 287 -124 vsl 15 241 -120 120 0 0 empty empty empty 0 -9 0 10
--262144 -1 -1 9200 1;
+-262144 -1 -1 0 1;
 #X floatatom 287 130 5 0 0 0 - - -;
 #X obj 321 -124 vsl 15 241 -120 120 0 0 empty empty empty 0 -9 0 10
 -262144 -1 -1 0 1;
@@ -124,14 +124,14 @@
 #X floatatom 839 130 5 0 0 0 - - -;
 #X msg 400 162 send /basenote \$1;
 #X obj 459 -61 vradio 15 1 0 12 empty empty empty 0 -8 0 10 -262144
--1 -1 9;
+-1 -1 0;
 #X floatatom 459 130 5 0 0 0 - - -;
 #X obj 876 -29 vradio 15 1 0 10 empty empty empty 0 -8 0 10 -262144
--1 -1 3;
+-1 -1 0;
 #X floatatom 876 131 5 0 0 0 - - -;
 #X msg 817 163 send /baseoct \$1;
 #X obj 912 -28 vradio 15 1 0 10 empty empty empty 0 -8 0 10 -262144
--1 -1 6;
+-1 -1 0;
 #X floatatom 912 132 5 0 0 0 - - -;
 #X msg 924 163 send /topoct \$1;
 #N canvas 123 617 1536 148 send_bscale_s 0;
@@ -182,7 +182,7 @@
 #X connect 22 0 2 0;
 #X restore 600 163 pd send_bscale_s;
 #X obj 1011 -28 vradio 15 1 0 10 empty empty empty 0 -8 0 10 -262144
--1 -1 1;
+-1 -1 0;
 #X floatatom 1011 132 5 0 0 0 - - -;
 #X msg 1023 163 send /rows \$1;
 #X obj 1098 -28 vradio 15 1 0 10 empty empty empty 0 -8 0 10 -262144
@@ -190,6 +190,10 @@
 #X floatatom 1098 132 5 0 0 0 - - -;
 #X msg 1110 163 send /pc \$1;
 #X obj 49 130 / 10;
+#X obj 1174 -28 vradio 15 1 0 8 empty empty empty 0 -8 0 6 -262144
+-1 -1 5;
+#X floatatom 1174 132 5 0 0 0 - - -;
+#X msg 1186 163 send /layout \$1;
 #X connect 1 0 0 0;
 #X connect 2 0 66 0;
 #X connect 3 0 27 0;
@@ -256,3 +260,6 @@
 #X connect 64 0 65 0;
 #X connect 65 0 0 0;
 #X connect 66 0 3 0;
+#X connect 67 0 68 0;
+#X connect 68 0 69 0;
+#X connect 69 0 0 0;

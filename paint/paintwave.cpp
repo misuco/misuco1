@@ -34,7 +34,7 @@ void PaintWave::paint(RC1 *rc1, QPainter *pnt)
     }
     pnt->setPen(Qt::black);
     QString fps,freqs;
-    fps.sprintf("%d fps %d/%d voices ",rc1->getFps(),ctl->getNVoices(),ctl->getNVoicesMax());
+    fps.sprintf(" %d fps %d/%d voices ",rc1->getFps(),ctl->getNVoices(),ctl->getNVoicesMax());
     for(int i=ctl->getNVoices()-1;i>=0;i--) {
         fps.append(freqs.sprintf("  %.1f",ctl->getVF(i)));
     }

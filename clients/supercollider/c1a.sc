@@ -37,16 +37,16 @@ SynthDef.new("c1a1", { arg freq = 440, amp = 0, out = 0, par1=1, par2=1;
 e= EnvGen.kr(Env.asr(1, 1, 2.5), amp, doneAction:2);
 Out.ar(out, BPF.ar(Saw.ar(freq*par1+0.5, 1)*e*0.5),freq*3*par1, par2 ,0.4); }).send(s);
 
-SynthDef.new("c1a1", { arg freq = 440, amp = 0, out = 0; 
+SynthDef.new("c1a1", { arg freq = 440, amp = 0, out = 0;
 e= EnvGen.kr(Env.asr(1, 1, 2.5), amp, doneAction:2);
 Out.ar(out, Saw.ar(freq, 1)*e*0.5); }).send(s);
 
-SynthDef.new("c1a1", { arg freq = 440, amp = 0, out = 0, par1 = 0, par2 =0; 
+SynthDef.new("c1a1", { arg freq = 440, amp = 0, out = 0, par1 = 0, par2 =0;
 e= EnvGen.kr(Env.asr(1, 1, 2.5), amp, doneAction:2);
 Out.ar(out, (SinOsc.ar(freq, 0, 1, 0)+(SinOsc.ar(freq*(par1+1), 0, 1, 0)*par2))*e*0.5); }).send(s);
 
 // stereo
-SynthDef.new("c1a1", { arg freq = 440, amp = 0, out = 0, par1 = 0, par2 =0; 
+SynthDef.new("c1a1", { arg freq = 440, amp = 0, out = 0, par1 = 0, par2 =0;
 e= EnvGen.kr(Env.asr(1, 1, 2.5), amp, doneAction:2);
 Out.ar(out, (SinOsc.ar(freq, 0, 1, 0)+(SinOsc.ar(freq*(par1+1), 0, 1, 0)*par2))*[e,e]*0.5); }).send(s);
 
@@ -79,7 +79,7 @@ pan));
 // ar: audio rate
 // kr: kontrol rate
 //
-SynthDef("c1a1",{ 
+SynthDef("c1a1",{
 	arg freq=500, amp=0, par1=0.5, par2=0.5;
 	var env;
 	env = EnvGen.kr(Env.adsr, amp, doneAction:2);
@@ -98,7 +98,7 @@ SynthDef("c1a1",{
 // ar: audio rate
 // kr: kontrol rate
 //
-SynthDef("c1a1",{ 
+SynthDef("c1a1",{
 	arg freq=500, amp=0, par1=0.5, par2=0.5;
 	var env;
 	env = EnvGen.kr(Env.adsr, amp, doneAction:2);
@@ -113,7 +113,7 @@ SynthDef("c1a1",{
 //
 // Pro53: Fat Bright Synth
 //
-SynthDef("c1a1",{ 
+SynthDef("c1a1",{
 	arg freq=500, amp=0, par1=0.5, par2=0.5;
 	var env;
 	env = EnvGen.kr(Env.adsr(5,0.2,1,0.5), amp, doneAction:2);
@@ -126,7 +126,7 @@ SynthDef("c1a1",{
 
 SynthDef("c1a1",{arg freq=500, amp=0, par1=0.5, par2=0.5;var env;env = EnvGen.kr(Env.adsr(5,0.2,1,0.5), amp, doneAction:2);Out.ar(0,RLPF.ar(Pulse.ar(freq,0.5,env,0)+Pulse.ar(freq*1.01,0.5,env,0),par2*3000,par1,0,0));}).load(s);
 
-SynthDef("c1a1",{ 
+SynthDef("c1a1",{
 	arg freq=500, amp=0, par1=0.5, par2=0.5;
 	var env;
 	env = EnvGen.kr(Env.adsr(5,0.2,1,0.5), amp, doneAction:2);
@@ -139,7 +139,7 @@ SynthDef("c1a1",{
 //
 // My Epiano
 //
-SynthDef("c1a1",{ 
+SynthDef("m0",{
 	arg freq=500, amp=0, par1=0.5, par2=0.5;
 	var env;
 	env = EnvGen.kr(Env.adsr(0.1,0.2,0.2,0.5), amp, doneAction:2);
@@ -149,7 +149,7 @@ SynthDef("c1a1",{
 	}
 ).load(s);
 
-SynthDef("c1a1",{ 
+SynthDef("c1a1",{
 	arg freq=500, amp=0, par1=0.5, par2=0.5;
 	var env;
 	env = EnvGen.kr(Env.adsr(0.1,0.2,0.2,0.5), amp, doneAction:2);
@@ -164,7 +164,7 @@ s.sendMsg(\b_allocRead, 10, "/home/c1audio/Desktop/alto-aaa-F-1-d4.wav");
 s.sendMsg(\b_allocRead, 10, "/home/c1audio/Desktop/string.wav");
 
 // Now define the granular synth
-SynthDef("c1a1",{ 
+SynthDef("c1a1",{
 	arg freq=500, amp=0, par1=0.5, par2=0.5;
 	var env;
 	env = EnvGen.kr(Env.adsr(5,0.2,1,0.5), amp, doneAction:2);
@@ -173,7 +173,7 @@ SynthDef("c1a1",{
 		2, 			// num chan
 		Impulse.ar(1000), 	// trigger
 		10,			// buf_num
-		freq/200,		// rate		
+		freq/200,		// rate
 		2,			// center pos	[cp]=s
 		par2,			// duration	[d]=s
 		0, 			// pan		-1..1

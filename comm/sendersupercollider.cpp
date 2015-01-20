@@ -24,6 +24,7 @@
 SenderSuperCollider::SenderSuperCollider()
 {
     adr=new char[16];
+    sy="m0";
     strcpy(adr,"255.255.255.255");
     port=57110;
     oscout=new QOscClient();
@@ -35,14 +36,20 @@ SenderSuperCollider::~SenderSuperCollider()
     delete(oscout);
 }
 
-void SenderSuperCollider::cc(int, int, int, float, float)
+void SenderSuperCollider::cc(int, int voiceId, int cc, float v1, float)
 {
-
+    QVariantList v;
+    QString p;
+    p.sprintf("par%d",cc);
+    v.append(voiceId);
+    v.append(p);
+    v.append(v1);
+    sendOsc("/n_set",v);
 }
 
-void SenderSuperCollider::pc(int, int)
+void SenderSuperCollider::pc(int, int v1)
 {
-
+    sy.sprintf("m%d",v1);
 }
 
 void SenderSuperCollider::setDestination(char * a, int p)
@@ -63,9 +70,9 @@ void SenderSuperCollider::reconnect()
 
 void SenderSuperCollider::noteOn(int, int voiceId, float f, int, int, int vel)
 {
-    QVariantList v;
     //qDebug() << "noteOn vid:" << voiceId << " f " << f << " vel " << vel;
-    v.append("c1a1");
+    QVariantList v;
+    v.append(sy);
     v.append(voiceId);
     v.append(0);
     v.append(0);

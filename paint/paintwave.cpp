@@ -46,7 +46,7 @@ int PaintWave::getParamCount() {
     return 0;
 }
 
-float PaintWave::getParam(quint16 n) {
+float PaintWave::getParam(quint16) {
     return 0;
 }
 

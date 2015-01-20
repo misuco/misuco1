@@ -731,7 +731,8 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
                     float cents=dl.at(1).toFloat();
                     if(cents>=-200 && cents<=200) {
                         layout->setMidi2fcent(seg,cents);
-                        fillWithScale();
+                        //fillWithScale();
+                        layout->updateLayout();
                     }
                 }
             }
@@ -754,7 +755,8 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
                 if(seg>=0 && seg<=11) {
                     bool bsc=dl.at(1).toBool();
                     layout->setBscale(seg, bsc);
-                    fillWithScale();
+                    //fillWithScale();
+                    layout->updateLayout();
                 }
             }
         }
@@ -765,7 +767,8 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
                     bool bsc=dl.at(i).toBool();
                     layout->setBscale(i, bsc);
                 }
-                fillWithScale();
+                //fillWithScale();
+                layout->updateLayout();
             }
         }
 
@@ -774,7 +777,8 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
                 int note=dl.at(0).toInt();
                 if(note>=0 && note<=11) {
                     layout->setBasenote(note);
-                    fillWithScale();
+                    //fillWithScale();
+                    layout->updateLayout();
                 }
             }
         }
@@ -784,7 +788,8 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
                 int oct=dl.at(0).toInt();
                 if(oct>=0 && oct<=10) {
                     layout->setBaseoct(oct);
-                    fillWithScale();
+                    //fillWithScale();
+                    layout->updateLayout();
                 }
             }
         }
@@ -794,7 +799,8 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
                 int oct=dl.at(0).toInt();
                 if(oct>=0 && oct<=10) {
                     layout->setTopoct(oct);
-                    fillWithScale();
+                    //fillWithScale();
+                    layout->updateLayout();
                 }
             }
         }
@@ -802,8 +808,8 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
         if(path=="/rows") {
             if(dl.size()==1) {
                 int rows=dl.at(0).toInt();
-                if(rows>=1 && rows<=10) {
-                    layout->setNrows(rows);
+                if(rows>=0 && rows<=10) {
+                    layout->setRowsGen(rows);
                     layout->updateLayout();
                 }
             }

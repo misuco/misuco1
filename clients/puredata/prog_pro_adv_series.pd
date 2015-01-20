@@ -1,4 +1,4 @@
-#N canvas 6 505 590 454 10;
+#N canvas 76 351 593 607 10;
 #X msg 24 -154 send /dxy 5 5;
 #X msg 31 -134 send /f 100 200 300 400 500 600 700 800 900 1000 1100
 1200 1300 1400 1500 1600 1700 1800 1900 2000 2100 2200 2300 2400 2500
@@ -31,6 +31,7 @@
 #X msg 128 165 send /txt a b c d e f g h i j k l m n o p q r s t u
 v w x y;
 #X msg 135 185 send /cent 1 2 3 4 5 6 7 8 9 10 11 12;
+#X msg 143 205 send /save;
 #X connect 0 0 15 0;
 #X connect 1 0 15 0;
 #X connect 2 0 15 0;
@@ -48,3 +49,4 @@ v w x y;
 #X connect 14 0 15 0;
 #X connect 16 0 15 0;
 #X connect 17 0 15 0;
+#X connect 18 0 15 0;

@@ -52,7 +52,6 @@ private:
 
     float cccval1;     // common cc value, average of individual ccvals
     float cccval2;     // common cc value, average of individual ccvals
-    bool transitionMode; // in transition mode no new note on transistions, only pitch change
 
     int veldef;         // default velovity
 

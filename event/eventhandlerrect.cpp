@@ -208,25 +208,15 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
 
                 //p->setHue(30*(layout->getValueInt(iseg)%12));
                 if(freq[evptr]!=f) {
-                    if(transitionMode) {
-                        if(freq[evptr]>0) {
-                            snd->pitch(layout->getChan(iseg), ieventout[evptr],f,midinote, layout->getPitch(iseg));
-                        } else {
-                            ieventout[evptr]=ieventoutnext;
-                            ieventoutnext++;
-                            snd->noteOn(layout->getChan(iseg), ieventout[evptr], f, midinote, layout->getPitch(iseg), veldef);
-                        }
+                    if(freq[evptr]>0 && layout->getSegtype(isegb[evptr])==1) {
+                        snd->pitch(layout->getChan(iseg), ieventout[evptr],f,midinote, layout->getPitch(iseg));
                     } else {
-                        if(freq[evptr]>0 && layout->getSegtype(isegb[evptr])==1) {
-                            snd->pitch(layout->getChan(iseg), ieventout[evptr],f,midinote, layout->getPitch(iseg));
-                        } else {
-                            if(freq[evptr]>0) {
-                                snd->noteOff(chan[evptr], ieventout[evptr], mnote[evptr]);
-                            }
+                        if(freq[evptr]>0) {
+                            snd->noteOff(chan[evptr], ieventout[evptr], mnote[evptr]);
                             ieventout[evptr]=ieventoutnext;
                             ieventoutnext++;
-                            snd->noteOn(layout->getChan(iseg), ieventout[evptr], f, midinote, layout->getPitch(iseg), veldef);
                         }
+                        snd->noteOn(layout->getChan(iseg), ieventout[evptr], f, midinote, layout->getPitch(iseg), veldef);
                     }
                     freq[evptr]=f;
                     chan[evptr]=layout->getChan(iseg);
@@ -273,9 +263,9 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                         if(freq[evptr]>0) {
                             snd->pitch(layout->getChan(iseg), ieventout[evptr],frel,midinote,pitch);
                         } else {
-                            ieventout[evptr]=ieventoutnext;
-                            chan[evptr]=layout->getChan(iseg);
-                            ieventoutnext++;
+                            //ieventout[evptr]=ieventoutnext;
+                            //chan[evptr]=layout->getChan(iseg);
+                            //ieventoutnext++;
                             snd->noteOn(layout->getChan(iseg), ieventout[evptr],frel,midinote,pitch,veldef);
                         }
                         freq[evptr]=frel;
@@ -572,7 +562,6 @@ void EventHandlerRect::init()
     cccval1=0;
     cccval2=0;
     
-    transitionMode=false;
     ntp=32;
     
     act=new bool[ntp];

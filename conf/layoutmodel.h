@@ -142,6 +142,7 @@ public:
     void setMidi2fcent(int pos, float freq);
     void initMidi2f(int n);
     void toggleEdit();
+    void setEdit(bool to);
 
     int getFontsize() const;
     int getFontsizeS() const;

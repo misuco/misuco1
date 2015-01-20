@@ -869,8 +869,13 @@ void LayoutModel::initMidi2f(int n)
 
 void LayoutModel::toggleEdit()
 {
-    if(!editMode) {
-        editMode=true;
+    setEdit(!editMode);
+}
+
+void LayoutModel::setEdit(bool to)
+{
+    editMode=to;
+    if(editMode) {
         resetLayout();
     } else {
         rowheight[scaleRow-1]=10;
@@ -886,10 +891,16 @@ void LayoutModel::toggleEdit()
 
 
 void LayoutModel::resetLayout(int i) {
-    QString filename;
-    filename.sprintf(confpath,i);
     currLayout=i;
-    resetLayout(filename);
+    if(i==0) {
+        scaleRow=0;
+        scaleStartSeg=0;
+        updateLayout();
+    } else {
+        QString filename;
+        filename.sprintf(confpath,i);
+        resetLayout(filename);
+    }
 }
 
 void LayoutModel::resetLayout(QString filename) {

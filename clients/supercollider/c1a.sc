@@ -140,14 +140,25 @@ SynthDef("c1a1",{
 // My Epiano
 //
 SynthDef("m0",{
-	arg freq=500, amp=0, par1=0.5, par2=0.5;
+	arg freq=500, amp=0, par1=0.5;
 	var env;
 	env = EnvGen.kr(Env.adsr(0.1,0.2,0.2,0.5), amp, doneAction:2);
 	Out.ar(0,
-		SinOsc.ar(freq,0,env*0.5*SinOsc.ar(6,0,par2,1),0)
+		SinOsc.ar(freq,0,env*0.5*SinOsc.ar(6,0,par1,1),0)
 	);
 	}
 ).load(s);
+
+SynthDef("m1",{
+	arg freq=500, amp=0, par1=0.5;
+	var env;
+	env = EnvGen.kr(Env.adsr(0.1,0.2,0.2,0.5), amp, doneAction:2);
+	Out.ar(0,
+		Pulse.ar(freq,par1,env,0);
+	);
+	}
+).load(s);
+
 
 SynthDef("c1a1",{
 	arg freq=500, amp=0, par1=0.5, par2=0.5;

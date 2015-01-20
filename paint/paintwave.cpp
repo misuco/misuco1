@@ -38,6 +38,7 @@ void PaintWave::paint(RC1 *rc1, QPainter *pnt)
     for(int i=ctl->getNVoices()-1;i>=0;i--) {
         fps.append(freqs.sprintf("  %.1f",ctl->getVF(i)));
     }
+    pnt->setFont(QFont(l->getFont(),l->getFontsizeS()));
     pnt->drawText(0,rc1->height()-l->getFontsize(),rc1->width(),hv,Qt::AlignLeft,fps);
 }
 

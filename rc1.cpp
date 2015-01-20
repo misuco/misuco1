@@ -364,13 +364,6 @@ bool RC1::event(QEvent *event)
                 p->setState(touchPoint.state());
                 storage->next();
                 ehand->processPoint(p,this);
-                if(event->type()==QEvent::TouchEnd && layout->getCurrLayout()==0) {
-                    if(touchPoint.pos().x()<=60 && touchPoint.pos().y()<=60 && touchPoint.pos().x()>=10 && touchPoint.pos().y()>=10) {
-                        layout->toggleEdit();
-                        layout->resetLayout(1);
-                        layout->setEdit(false);
-                    }
-                }
             }
             return true;
         } else if( !nomouse && (

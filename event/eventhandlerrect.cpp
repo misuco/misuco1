@@ -59,6 +59,15 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         }
     }
     
+    bool lay0field=false;
+    if(p->getState() == Qt::TouchPointReleased
+            && layout->getCurrLayout()==0 &&
+            p->getX()<=60 && p->getY()<=60 &&
+            p->getX()>=10 && p->getY()>=10) {
+        lay0field=true;
+
+    }
+
     // 2.b. translate to MisuEvent index iseg
     int iy=0;
     int ix=0;
@@ -545,6 +554,10 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 evptr_stack_size--;
             } else {
                 //qDebug() << "evptr_stack underflow.";
+            }
+            if(lay0field) {
+                layout->resetLayout(1);
+                layout->setEdit(false);
             }
         }
     }

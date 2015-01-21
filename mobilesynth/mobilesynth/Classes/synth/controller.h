@@ -55,8 +55,8 @@ namespace synth {
         };
         
         void set_osc1_wave_type_int(int w);
-        void set_modulation_amount(float amount);
-        void set_modulation_amount(int voice, float amount);
+        //void set_modulation_amount(float amount);
+        //void set_modulation_amount(int voice, float amount);
         void set_osc_pw(int voice, float p);
         void set_filter_cutoff(float frequency);
         void set_mod_filter_cutoff(float v);

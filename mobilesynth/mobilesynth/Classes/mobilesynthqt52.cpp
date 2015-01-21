@@ -41,7 +41,7 @@ mobileSynthQT52::mobileSynthQT52()
     m_buffer.fill(0);
 
     syctl = new synth::Controller();
-    syctl->set_modulation_amount(0);
+    //syctl->set_modulation_amount(0);
     //syctl->set_modulation_frequency(0);
     //syctl->set_modulation_destination(synth::Controller::LFO_DEST_NONE);
     syctl->set_osc1_wave_type_int(0);

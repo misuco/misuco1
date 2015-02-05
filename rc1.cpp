@@ -322,7 +322,7 @@ void RC1::timerEvent(QTimerEvent *)
 bool RC1::event(QEvent *event)
 {
     //qDebug() << "event" << event->type();
-    QList<QTouchEvent::TouchPoint> touchPoints;
+    //QList<QTouchEvent::TouchPoint> touchPoints;
 #ifndef RC1_PRO
     if(blockerOn) {
         if(adid!="") {
@@ -353,7 +353,7 @@ bool RC1::event(QEvent *event)
             long t=QDateTime::currentMSecsSinceEpoch();
 
             // nomouse=true;
-            touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
+            QList<QTouchEvent::TouchPoint> touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
             foreach (const QTouchEvent::TouchPoint &touchPoint, touchPoints) {
                 //qDebug() << " x:" << touchPoint.pos().x() << " y:" << touchPoint.pos().y() << " t: " << t ;
                 Point * p = storage->getPoint(0);
@@ -365,6 +365,7 @@ bool RC1::event(QEvent *event)
                 storage->next();
                 ehand->processPoint(p,this);
             }
+            touchstat.newT(t);
             return true;
         } else if( !nomouse && (
                         event->type()==QEvent::MouseMove ||
@@ -394,6 +395,7 @@ bool RC1::event(QEvent *event)
             p->setState(state);
             storage->next();
             ehand->processPoint(p,this);
+            touchstat.newT(t);
             return true;
         }
 #ifndef RC1_PRO

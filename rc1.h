@@ -48,6 +48,7 @@ class RC1;
 #include "comm/libofqf/qosctypes.h"
 #include "mainwindow.h"
 #include "qqdialog.h"
+#include "touchstat.h"
 
 #define RC1_SCALES_XML_URL "http://x21.ch/rc1/scales.xml"
 #define RC1_ADS_URL "http://ads.misuco.org/go/?id="
@@ -79,6 +80,7 @@ public:
     Storage *getStorage() const;
     LayoutModel *getLayout() const;
     SenderMulti *getSender() const;
+    TouchStat touchstat;
     long getNow();
     int getFps() {return fps;}
     //QTime *getFpsT();
@@ -166,9 +168,6 @@ private:
     QTime fpsT;
 
     // frame statistic
-    /*
-    bool secTimer;
-    */
 
     // emulated touch point id for mouse events
     int eventId;

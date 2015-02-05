@@ -69,7 +69,8 @@ SOURCES += main.cpp\
     qdialog.cpp \
     qqdialog.cpp \
     mobilesynth/mobilesynth/Classes/synth/oscillatorplus.cpp \
-    paint/paintwave.cpp
+    paint/paintwave.cpp \
+    touchstat.cpp
 
 HEADERS  += \
     storage.h \
@@ -134,7 +135,8 @@ HEADERS  += \
     qdialog.h \
     qqdialog.h \
     mobilesynth/mobilesynth/Classes/synth/oscillatorplus.h \
-    paint/paintwave.h
+    paint/paintwave.h \
+    touchstat.h
 
 OTHER_FILES += \
     puredata/osc2midi.pd \

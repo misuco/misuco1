@@ -4,11 +4,11 @@
 #
 #-------------------------------------------------
 
-QT       += core gui opengl network multimedia xml
+QT       += core gui opengl network multimedia xml quick qml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = imisuco 
+TARGET = misuco
 TEMPLATE = app
 
 INCLUDEPATH += comm
@@ -62,7 +62,14 @@ SOURCES += main.cpp\
     comm/sendermulti.cpp \
     comm/senderreaktor.cpp \
     comm/senderoscmidigeneric.cpp \
-    conf/progmem.cpp
+    conf/progmem.cpp \
+    dialognet.cpp \
+    mainwindow.cpp \
+    conf/soundmem.cpp \
+    qdialog.cpp \
+    qqdialog.cpp \
+    mobilesynth/mobilesynth/Classes/synth/oscillatorplus.cpp \
+    paint/paintwave.cpp
 
 HEADERS  += \
     storage.h \
@@ -120,37 +127,16 @@ HEADERS  += \
     comm/sendermulti.h \
     comm/senderreaktor.h \
     comm/senderoscmidigeneric.h \
-    conf/progmem.h
+    conf/progmem.h \
+    dialognet.h \
+    mainwindow.h \
+    conf/soundmem.h \
+    qdialog.h \
+    qqdialog.h \
+    mobilesynth/mobilesynth/Classes/synth/oscillatorplus.h \
+    paint/paintwave.h
 
 OTHER_FILES += \
-    android/res/values-ru/strings.xml \
-    android/res/values-nb/strings.xml \
-    android/res/layout/splash.xml \
-    android/res/values-zh-rTW/strings.xml \
-    android/res/values-pl/strings.xml \
-    android/res/values-it/strings.xml \
-    android/res/values-de/strings.xml \
-    android/res/values-rs/strings.xml \
-    android/res/values/libs.xml \
-    android/res/values/strings.xml \
-    android/res/values-fr/strings.xml \
-    android/res/values-fa/strings.xml \
-    android/res/values-id/strings.xml \
-    android/res/values-ms/strings.xml \
-    android/res/values-ro/strings.xml \
-    android/res/values-el/strings.xml \
-    android/res/values-et/strings.xml \
-    android/res/values-zh-rCN/strings.xml \
-    android/res/values-ja/strings.xml \
-    android/res/values-es/strings.xml \
-    android/res/values-nl/strings.xml \
-    android/res/values-pt-rBR/strings.xml \
-    android/AndroidManifest.xml \
-    android/version.xml \
-    android/src/org/qtproject/qt5/android/bindings/QtApplication.java \
-    android/src/org/qtproject/qt5/android/bindings/QtActivity.java \
-    android/src/org/kde/necessitas/ministro/IMinistro.aidl \
-    android/src/org/kde/necessitas/ministro/IMinistroCallback.aidl \
     puredata/osc2midi.pd \
     puredata/xdotool.sh \
     mobilesynth/mobilesynth/Classes/synth/Makefile \
@@ -168,7 +154,13 @@ OTHER_FILES += \
     conf/l2.xml \
     conf/l3.xml \
     conf/l4.xml \
-    conf/prog.xml
+    conf/prog.xml \
+    android/AndroidManifest.xml \
+    conf/lp1.xml \
+    conf/lp2.xml \
+    conf/lp3.xml \
+    conf/lp4.xml \
+    conf/lp5.xml
 
 OBJECTIVE_SOURCES += \
     mobilesynth/mobilesynth/Classes/mobilesynthViewControllerRc1.mm \
@@ -179,6 +171,15 @@ RESOURCES += \
 
 ios {
     QMAKE_INFO_PLIST = Info.plist
+    ios_icon.files = $$files($$PWD/icons/pro/AppIcon*.png)
+    QMAKE_BUNDLE_DATA += ios_icon
+    launch_images.files = $$PWD/ios/Launch.xib $$files($$PWD/icons/pro/LaunchImage*.png)
+    QMAKE_BUNDLE_DATA += launch_images
 }
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+
+DISTFILES += \
+    conf/sound.xml \
+    NetDialog.qml
+

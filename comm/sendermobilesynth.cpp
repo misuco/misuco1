@@ -97,7 +97,7 @@ SenderMobileSynth::~SenderMobileSynth()
     delete(sy);
 }
 
-void SenderMobileSynth::cc(int chan, int voiceId, int cc, float v1)
+void SenderMobileSynth::cc(int chan, int voiceId, int cc, float v1, float)
 {
     if(cc==1) {
         sy->getSyctl()->set_modulation(voiceId,v1);

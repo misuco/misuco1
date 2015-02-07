@@ -6,12 +6,14 @@ class TouchStat
 {
 public:
     TouchStat();
-    ~TouchStat();
     void newT(long t);
-    int getSum(int n);
+    void newFps(long fps);
+    int getLatSum(int n);
+    int getFpsSum(int n);
 
 private:
-    int sums[1024];
+    int latSums[1024];
+    int fpsSums[1024];
     long prevT;
 
 };

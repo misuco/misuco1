@@ -41,22 +41,6 @@ void PaintWave::paint(RC1 *rc1, QPainter *pnt)
     pnt->setFont(QFont(l->getFont(),l->getFontsizeS()));
     pnt->drawText(0,rc1->height()-l->getFontsize(),rc1->width(),hv,Qt::AlignLeft,fps);
 
-    pnt->setPen(Qt::red);
-    int yp=0;
-    int maxat=0;
-    int max=0;
-    for(int i=0;i<1024;i++) {
-        int y=rc1->touchstat.getSum(i);
-        pnt->drawLine(i,yp,i+1,y);
-        if(y>max) {
-            max=y;
-            maxat=i;
-        }
-        yp=y;
-    }
-    pnt->drawLine(0,max,rc1->width(),max);
-    fps.sprintf("max %d at %d ms ",max,maxat);
-    pnt->drawText(maxat,max,300,100,Qt::AlignLeft,fps);
 }
 
 int PaintWave::getParamCount() {

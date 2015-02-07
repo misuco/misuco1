@@ -40,6 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "paint/paintstat.h"
 #include "paint/paintblocker.h"
 #include "paint/paintwave.h"
+#include "paint/painthistogram.h"
 
 RC1::RC1(MainWindow *parent) :
     #ifdef NOGL
@@ -100,11 +101,12 @@ RC1::RC1(MainWindow *parent) :
     //qDebug() << "storage path: " << storagePath;
     //qDebug() << "private data path: " << privateDataPath;
     //progmemFile=storagePath+"/prog.xml";
-    nPrePainters=2;
+    nPrePainters=3;
     prepainters=new IPaint*[nPrePainters];
     prepainters[0]=new PaintBgShapes();
     //prepainters[2]=new PaintBgBitmap();
     prepainters[1]=new PaintWave(sender->getSynthController());
+    prepainters[2]=new PaintHistogram();
     wavepainter=prepainters[1];
 
 
@@ -120,7 +122,8 @@ RC1::RC1(MainWindow *parent) :
     painterOn=new bool[nPrePainters+nPointPainters+nPostPainters];
     painterOn[0]=true;
     painterOn[1]=true;
-    painterOn[2]=false;
+    painterOn[2]=true;
+    painterOn[3]=false;
 
 #ifdef RC1_PRO
     oscin = new QOscServer(3333,this);
@@ -226,7 +229,7 @@ void RC1::paintEvent(QPaintEvent *)
         fpsT.restart();
         fps=fcnt;
         fcnt=0;
-        //secTimer=true;
+        touchstat.newFps(fps);
         //qDebug() << "fps: " << fps;
         if(fps<10) {
             sender->getSynthController()->decVoices();
@@ -304,8 +307,10 @@ void RC1::resizeEvent(QResizeEvent *)
         netxs->get(QNetworkRequest(QUrl(adurl)));
     }
 #endif
+    if(!bgImage.isNull()) {
+        bgImage=bgImageOri.scaled(width(),height());
+    }
     /*
-    bgImage=bgImageOri.scaled(width(),height());
     for(int i=0;i<storage->getLen();i++) {
         storage->getPoint(i)->setWidth(width());
         storage->getPoint(i)->setHeight(height());

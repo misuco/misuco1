@@ -85,7 +85,7 @@ public:
     int getFps() {return fps;}
     //QTime *getFpsT();
     QImage *getBgImage();
-    int getBlockerTimeLeft() {return blockerTimeLeft;}
+    //int getBlockerTimeLeft() {return blockerTimeLeft;}
 
     long getTtl() const;
     void setTtl(long value);
@@ -157,8 +157,8 @@ private:
     QImage bgBlocker;
     bool blockerOn;
     //int blockerTimeout;
-    int blockerTimeLeft;
-    long blockerUntil;
+    //int blockerTimeLeft;
+    //long blockerUntil;
     IPaint * blockerPainter;
     QString adid;
     bool downloadAd;

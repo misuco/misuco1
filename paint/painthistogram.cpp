@@ -7,7 +7,7 @@ PaintHistogram::PaintHistogram()
 
 void PaintHistogram::paint(RC1 *rc1, QPainter *pnt)
 {
-    QString fps;
+    QString fpstxt;
     pnt->setPen(Qt::red);
     int yp=0;
     int maxat=0;
@@ -22,8 +22,8 @@ void PaintHistogram::paint(RC1 *rc1, QPainter *pnt)
         yp=y;
     }
     pnt->drawLine(0,max,rc1->width(),max);
-    fps.sprintf("max %d at %d ms ",max,maxat);
-    pnt->drawText(maxat,max,300,100,Qt::AlignLeft,fps);
+    fpstxt.sprintf("max %d at %d ms ",max,maxat);
+    pnt->drawText(maxat,max,300,100,Qt::AlignLeft,fpstxt);
 
     pnt->setPen(Qt::blue);
     yp=0;
@@ -39,8 +39,8 @@ void PaintHistogram::paint(RC1 *rc1, QPainter *pnt)
         yp=y;
     }
     pnt->drawLine(0,max,rc1->width(),max);
-    fps.sprintf("max %d at %d ms ",max,maxat);
-    pnt->drawText(maxat,max,300,100,Qt::AlignLeft,fps);
+    fpstxt.sprintf("max %d at %d ms ",max,maxat);
+    pnt->drawText(maxat,max,300,100,Qt::AlignLeft,fpstxt);
 }
 
 int PaintHistogram::getParamCount() {

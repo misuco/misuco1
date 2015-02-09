@@ -36,9 +36,11 @@ void PaintBlocker::paint(RC1 *view, QPainter *pnt)
     //pnt->setPen(Qt::black);
     pnt->setFont(QFont(view->getLayout()->getFont(),view->getLayout()->getFontsize()));
 
+    /*
     QString text;
     text.sprintf("Ad: click to open OR wait %d seconds OR press  → ",view->getBlockerTimeLeft());
     pnt->drawText(5,5,view->getLayout()->getWidth(),view->getLayout()->getHeight(),Qt::AlignLeft,text);
+    */
 
     pnt->drawText(closeXpos,5,closeWidth,closeWidth,Qt::AlignCenter,"skip");
     // pnt->drawText(5,5,view->getLayout()->getWidth(),closeWidth,Qt::AlignLeft,"advertisement");

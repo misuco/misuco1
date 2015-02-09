@@ -5,10 +5,12 @@
 #-------------------------------------------------
 
 QT       += core gui opengl network multimedia xml quick qml
+CONFIG   += mobility
+MOBILITY += systeminfo
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = misuco
+TARGET = imisuco
 TEMPLATE = app
 
 INCLUDEPATH += comm
@@ -69,7 +71,9 @@ SOURCES += main.cpp\
     qdialog.cpp \
     qqdialog.cpp \
     mobilesynth/mobilesynth/Classes/synth/oscillatorplus.cpp \
-    paint/paintwave.cpp
+    paint/paintwave.cpp \
+    touchstat.cpp \
+    paint/painthistogram.cpp
 
 HEADERS  += \
     storage.h \
@@ -134,7 +138,9 @@ HEADERS  += \
     qdialog.h \
     qqdialog.h \
     mobilesynth/mobilesynth/Classes/synth/oscillatorplus.h \
-    paint/paintwave.h
+    paint/paintwave.h \
+    touchstat.h \
+    paint/painthistogram.h
 
 OTHER_FILES += \
     puredata/osc2midi.pd \

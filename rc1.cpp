@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QDir>
+#include <QSysInfo>
 
 #include "platform.h"
 #include "rc1.h"
@@ -51,8 +52,7 @@ RC1::RC1(MainWindow *parent) :
 {
     setAttribute(Qt::WA_AcceptTouchEvents,true);
     //qDebug() << "View() size:" << width() << " " << height();
-
-    mainwindow=parent;
+    //QSystemDeviceInfo * sysInfo = new QSystemDeviceInfo(this);
     eventId = 1;
     nomouse = false;
     ttl=2000;
@@ -122,8 +122,12 @@ RC1::RC1(MainWindow *parent) :
     painterOn=new bool[nPrePainters+nPointPainters+nPostPainters];
     painterOn[0]=true;
     painterOn[1]=true;
-    painterOn[2]=true;
+    painterOn[2]=false;
     painterOn[3]=false;
+
+    touchstat.readXml(privateDataPath+"/ts");
+    QString statparam;
+    touchstat.getStatParam(&statparam);
 
 #ifdef RC1_PRO
     oscin = new QOscServer(3333,this);
@@ -131,15 +135,18 @@ RC1::RC1(MainWindow *parent) :
     sender->repeatOff=2;
     blockerOn=false;
 #else
-    blockerOn=true;
+    blockerOn=false;
+    /*
     blockerTimeLeft=60;
     blockerUntil=QDateTime::currentMSecsSinceEpoch()+blockerTimeLeft*1000;
+    */
+
     blockerPainter=new PaintBlocker();
     downloadAd=false;
 
     QFile bgimg(privateDataPath+"/init.jpg");
     if(bgimg.exists()) {
-        qDebug() << "bgimg exists " << privateDataPath;
+        //qDebug() << "bgimg exists " << privateDataPath;
         bgImageOri.load(bgimg.fileName());
         if(bgImageOri.width()==0) {
             bgImageOri.load(":/conf/misuco-logo.jpg");
@@ -149,18 +156,7 @@ RC1::RC1(MainWindow *parent) :
     }
     bgImage=bgImageOri.scaled(width(),height());
 
-    adid=RC1_ADS_URL;
-    QFile adidf(privateDataPath+"/adid.dat");
-    if(adidf.exists()) {
-        if(adidf.open(QIODevice::ReadOnly)) {
-            QString adidfc=adidf.readAll();
-            adid.append(adidfc);
-        } else {
-            adid.append("1");
-        }
-    } else {
-        adid.append("1");
-    }  
+
 #endif
 
     this->startTimer(0);
@@ -216,6 +212,7 @@ void RC1::paintEvent(QPaintEvent *)
 {
     now=QDateTime::currentMSecsSinceEpoch();
 
+    /*
 #ifndef RC1_PRO
     if(blockerOn) {
         blockerTimeLeft=(blockerUntil-now)/1000;
@@ -224,6 +221,7 @@ void RC1::paintEvent(QPaintEvent *)
         }
     }
 #endif
+*/
 
     if(fpsT.elapsed()>1000) {
         fpsT.restart();
@@ -334,7 +332,8 @@ bool RC1::event(QEvent *event)
             if(event->type()==QEvent::TouchEnd ) {
                 blockerOn=false;
                 int closeArea=height()/5;
-                touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
+                QList<QTouchEvent::TouchPoint> touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
+//                touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
                 foreach (const QTouchEvent::TouchPoint &touchPoint, touchPoints) {
                     if(!(touchPoint.pos().x()>width()-closeArea && touchPoint.pos().y()<closeArea)) {
                         QDesktopServices::openUrl(QUrl(adid));
@@ -974,17 +973,6 @@ long RC1::getNow()
 {
     return now;
 }
-/*
-int RC1::getFps()
-{
-    return fps;
-}
-
-QTime * RC1::getFpsT()
-{
-    return &fpsT;
-}
-*/
 
 QImage *RC1::getBgImage()
 {
@@ -1004,16 +992,54 @@ void RC1::appStateChange(Qt::ApplicationState state) {
     //qDebug() << "appStateChange " << state;
     if(state==Qt::ApplicationActive) {
         sender->reconnect();
+        QString statparam;
+        touchstat.getStatParam(&statparam);
+        qDebug() << "woke up " << adid << " " << statparam;
 #ifdef RC1_PRO
         delete(oscin);
         oscin = new QOscServer(3333,this);
         oscin->registerPathObject(this);
+#else
+        blockerOn=true;
+        //blockerTimeLeft=60;
+        //blockerUntil=QDateTime::currentMSecsSinceEpoch()+blockerTimeLeft*1000;
+
+        adid=RC1_ADS_URL;
+        QFile adidf(privateDataPath+"/adid.dat");
+        if(adidf.exists()) {
+            if(adidf.open(QIODevice::ReadOnly)) {
+                QString adidfc=adidf.readAll();
+                adid.append(adidfc);
+            } else {
+                adid.append("1");
+            }
+        } else {
+            adid.append("1");
+        }
+        adid.append(statparam);
+        //qDebug() << "type " << QSysInfo::productType() << " ver " << QSysInfo::productVersion() << " pname " << QSysInfo::prettyProductName() << " cpuarch " << QSysInfo::currentCpuArchitecture();
+        //qDebug() << "kernel " << QSysInfo::kernelVersion() << " ver " << QSysInfo::kernelType() << "bildAbi" << QSysInfo::buildAbi();
+        adid.append("&type=");
+        adid.append(QSysInfo::productType());
+        adid.append("&ver=");
+        adid.append(QSysInfo::productVersion());
+        adid.append("&arch=");
+        adid.append(QSysInfo::currentCpuArchitecture());
+        adid.append("&kern=");
+        adid.append(QSysInfo::kernelType());
+        adid.append("&kerv=");
+        adid.append(QSysInfo::kernelVersion());
+        adid.append("&babi=");
+        adid.append(QSysInfo::QSysInfo::buildAbi());
 #endif
+
+
     } else {
 #ifndef RC1_PRO
         // pro version has save button
         writeProgmem();
 #endif
+        touchstat.writeXml(privateDataPath+"/ts");
     }
 }
 

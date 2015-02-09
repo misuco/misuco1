@@ -5,7 +5,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleExecutable</key>
-	<string>misuco</string>
+        <string>imisuco</string>
 	<key>CFBundleGetInfoString</key>
 	<string>microtonal surface controller</string>
 	<key>CFBundleIcons</key>

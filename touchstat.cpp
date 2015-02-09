@@ -1,5 +1,8 @@
 #include "touchstat.h"
 
+#include <QDebug>
+#include <QFile>
+
 TouchStat::TouchStat()
 {
     for(int i=0;i<256;i++) {
@@ -11,8 +14,8 @@ TouchStat::TouchStat()
 void TouchStat::newT(long t)
 {
     int diff=t-prevT;
-    if(diff>=1024) {
-        latSums[1023]++;
+    if(diff>=255) {
+        latSums[255]++;
     } else {
         latSums[diff]++;
     }
@@ -21,7 +24,7 @@ void TouchStat::newT(long t)
 
 void TouchStat::newFps(long fps)
 {
-    if(fps>255) {
+    if(fps>=255) {
         fpsSums[255]++;
     } else {
         fpsSums[fps]++;
@@ -38,3 +41,133 @@ int TouchStat::getLatSum(int n)
     return latSums[n];
 }
 
+void TouchStat::readXml(QString filename)
+{
+    QFile file(filename);
+    for(int i=0;i<256;i++) {
+        latSums[i]=0;
+        fpsSums[i]=0;
+    }
+    int total=0;
+    // default initial prog memory
+    if(file.exists()) {
+
+        qDebug() << "reading progmem " << filename;
+        if (!file.open(QFile::ReadOnly | QFile::Text)) {
+            qDebug() << "cannot read file " << filename;
+            return;
+        }
+        xmlr.setDevice(&file);
+        if (xmlr.readNextStartElement()) {
+            if (xmlr.name() == "touchstat" && xmlr.attributes().value("version") == "1.03") {
+                //int row=0;
+                while (xmlr.readNextStartElement() ) {
+                    //qDebug() << "row " << row++;
+                    if (xmlr.name() == "t") {
+                        if(xmlr.attributes().hasAttribute("n")) {
+                            int val=xmlr.attributes().value("n").toString().toInt();
+                            latSums[xmlr.attributes().value("t").toString().toInt()]=val;
+                            total+=val;
+                        }
+                    } else if (xmlr.name() == "f") {
+                        if(xmlr.attributes().hasAttribute("n")) {
+                            int val=xmlr.attributes().value("n").toString().toInt();
+                            fpsSums[xmlr.attributes().value("f").toString().toInt()]=val;
+                            total+=val;
+                        }
+                    }
+                    xmlr.skipCurrentElement();
+                }
+            } else {
+                qDebug() << "The file is not a MISUCO version 1.03 touchstat file.";
+            }
+            // reset statistic after 32000, to prevent overflow
+            if(total>32000) {
+                qDebug() << "reset statistic.";
+                for(int i=0;i<256;i++) {
+                    latSums[i]=0;
+                    fpsSums[i]=0;
+                }
+            }
+        }
+        file.close();
+    }
+}
+
+void TouchStat::writeXml(QString filename)
+{
+    QFile file(filename);
+    if (!file.open(QFile::WriteOnly | QFile::Text)) {
+        qDebug() << "cannot write file " << filename;
+        return;
+    }
+    xml.setDevice(&file);
+    QString att;
+
+    xml.writeStartDocument();
+    xml.writeDTD("<!DOCTYPE misuco>");
+    xml.writeStartElement("touchstat");
+    xml.writeAttribute("version", "1.03");
+
+    for (int row = 0; row < 255; row++) {
+        if(latSums[row]>0) {
+            xml.writeStartElement("t");
+            att.sprintf("%d",row);
+            xml.writeAttribute("t",att);
+            att.sprintf("%d",latSums[row]);
+            xml.writeAttribute("n",att);
+            xml.writeEndElement();
+        }
+    }
+
+    for (int row = 0; row < 255; row++) {
+        if(fpsSums[row]>0) {
+            xml.writeStartElement("f");
+            att.sprintf("%d",row);
+            xml.writeAttribute("f",att);
+            att.sprintf("%d",fpsSums[row]);
+            xml.writeAttribute("n",att);
+            xml.writeEndElement();
+        }
+    }
+    xml.writeEndDocument();
+    file.close();
+}
+
+void TouchStat::getStatParam(QString *statParam)
+{
+    quint16 cs=0;
+    QString spr;
+    int fpsMax=0;
+    int latMax=0;
+    for(int i=0;i<256;i++) {
+        if(fpsSums[i]>fpsMax) {
+            fpsMax=fpsSums[i];
+        }
+        if(latSums[i]>latMax) {
+            latMax=latSums[i];
+        }
+    }
+    latMax/=10;
+    latMax++;   // allways min 1
+    fpsMax/=10;
+    fpsMax++;   // allways min 1
+    for(int i=0;i<256;i++) {
+        if(fpsSums[i]>fpsMax) {
+            spr.sprintf("&f%02x=%04x",i,fpsSums[i]);
+            statParam->append(spr);
+            cs+=fpsSums[i]*77;
+        }
+        if(latSums[i]>latMax) {
+            spr.sprintf("&l%02x=%04x",i,latSums[i]);
+            statParam->append(spr);
+            cs+=latSums[i]*121;
+        }
+    }
+    if(cs!=0) {
+        cs+=3334571;
+    }
+    spr.sprintf("&cs=%08x",cs);
+    statParam->append(spr);
+    //qDebug() << "statparam " << *statParam;
+}

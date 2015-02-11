@@ -994,7 +994,7 @@ void RC1::appStateChange(Qt::ApplicationState state) {
         sender->reconnect();
         QString statparam;
         touchstat.getStatParam(&statparam);
-        qDebug() << "woke up " << adid << " " << statparam;
+        //qDebug() << "woke up " << adid << " " << statparam;
 #ifdef RC1_PRO
         delete(oscin);
         oscin = new QOscServer(3333,this);
@@ -1037,9 +1037,10 @@ void RC1::appStateChange(Qt::ApplicationState state) {
     } else {
 #ifndef RC1_PRO
         // pro version has save button
-        writeProgmem();
-#endif
+        blockerOn=true;
+        //writeProgmem();
         touchstat.writeXml(privateDataPath+"/ts");
+#endif
     }
 }
 
@@ -1049,7 +1050,7 @@ void RC1::writeProgmem() {
 
 void RC1::replyFinished(QNetworkReply * r)
 {
-    qDebug() << "received " << r->url();
+    //qDebug() << "received " << r->url();
     if(r->error()==QNetworkReply::NoError) {
         QString pendingConfigFile;
         QByteArray data=r->readAll();

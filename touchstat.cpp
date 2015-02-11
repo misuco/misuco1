@@ -53,8 +53,6 @@ void TouchStat::readXml(QString filename)
     int total=0;
     // default initial prog memory
     if(file.exists()) {
-
-        qDebug() << "reading progmem " << filename;
         if (!file.open(QFile::ReadOnly | QFile::Text)) {
             qDebug() << "cannot read file " << filename;
             return;
@@ -63,10 +61,12 @@ void TouchStat::readXml(QString filename)
         if (xmlr.readNextStartElement()) {
             if (xmlr.name() == "touchstat" && xmlr.attributes().value("version") == "1.03") {
                 if(xmlr.attributes().hasAttribute("lt")) {
-                    ltcnt=xmlr.attributes().value("lt").toString().toLong();
+                    ltcnt=xmlr.attributes().value("lt").toLong();
+                    //qDebug() << "load ltcnt " << ltcnt;
                 }
                 if(xmlr.attributes().hasAttribute("ev")) {
-                    evcnt=xmlr.attributes().value("ev").toString().toLong();
+                    evcnt=xmlr.attributes().value("ev").toLong();
+                    //qDebug() << "load evcnt " << evcnt;
                 }
                 //int row=0;
                 while (xmlr.readNextStartElement() ) {
@@ -116,9 +116,11 @@ void TouchStat::writeXml(QString filename)
     xml.writeDTD("<!DOCTYPE misuco>");
     xml.writeStartElement("touchstat");
     xml.writeAttribute("version", "1.03");
-    att.sprintf("%d",ltcnt);
+    att.sprintf("%ld",ltcnt);
+    //qDebug() << "writing ltcnt " << att;
     xml.writeAttribute("lt", att);
-    att.sprintf("%d",evcnt);
+    att.sprintf("%ld",evcnt);
+    //qDebug() << "writing evcnt " << att;
     xml.writeAttribute("ev", att);
 
     for (int row = 0; row < 255; row++) {
@@ -185,5 +187,5 @@ void TouchStat::getStatParam(QString *statParam)
     statParam->append(spr);
     spr.sprintf("&ev=%016x",evcnt);
     statParam->append(spr);
-    qDebug() << "statparam " << *statParam;
+    //qDebug() << "statparam " << *statParam;
 }

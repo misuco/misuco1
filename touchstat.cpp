@@ -20,6 +20,7 @@ void TouchStat::newT(long t)
         latSums[diff]++;
     }
     prevT=t;
+    evcnt++;
 }
 
 void TouchStat::newFps(long fps)
@@ -29,6 +30,7 @@ void TouchStat::newFps(long fps)
     } else {
         fpsSums[fps]++;
     }
+    ltcnt++;
 }
 
 int TouchStat::getFpsSum(int n)
@@ -60,6 +62,12 @@ void TouchStat::readXml(QString filename)
         xmlr.setDevice(&file);
         if (xmlr.readNextStartElement()) {
             if (xmlr.name() == "touchstat" && xmlr.attributes().value("version") == "1.03") {
+                if(xmlr.attributes().hasAttribute("lt")) {
+                    ltcnt=xmlr.attributes().value("lt").toString().toLong();
+                }
+                if(xmlr.attributes().hasAttribute("ev")) {
+                    evcnt=xmlr.attributes().value("ev").toString().toLong();
+                }
                 //int row=0;
                 while (xmlr.readNextStartElement() ) {
                     //qDebug() << "row " << row++;
@@ -108,6 +116,10 @@ void TouchStat::writeXml(QString filename)
     xml.writeDTD("<!DOCTYPE misuco>");
     xml.writeStartElement("touchstat");
     xml.writeAttribute("version", "1.03");
+    att.sprintf("%d",ltcnt);
+    xml.writeAttribute("lt", att);
+    att.sprintf("%d",evcnt);
+    xml.writeAttribute("ev", att);
 
     for (int row = 0; row < 255; row++) {
         if(latSums[row]>0) {
@@ -156,18 +168,22 @@ void TouchStat::getStatParam(QString *statParam)
         if(fpsSums[i]>fpsMax) {
             spr.sprintf("&f%02x=%04x",i,fpsSums[i]);
             statParam->append(spr);
-            cs+=fpsSums[i]*77;
+            cs+=fpsSums[i]*0x0301;
         }
         if(latSums[i]>latMax) {
             spr.sprintf("&l%02x=%04x",i,latSums[i]);
             statParam->append(spr);
-            cs+=latSums[i]*121;
+            cs+=latSums[i]*0x1100;
         }
     }
     if(cs!=0) {
-        cs+=3334571;
+        cs+=0x7999;
     }
-    spr.sprintf("&cs=%08x",cs);
+    spr.sprintf("&cs=%04x",cs);
     statParam->append(spr);
-    //qDebug() << "statparam " << *statParam;
+    spr.sprintf("&lt=%016x",ltcnt);
+    statParam->append(spr);
+    spr.sprintf("&ev=%016x",evcnt);
+    statParam->append(spr);
+    qDebug() << "statparam " << *statParam;
 }

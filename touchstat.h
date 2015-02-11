@@ -21,6 +21,8 @@ public:
 private:
     int latSums[256];
     int fpsSums[256];
+    long ltcnt;
+    long evcnt;
     long prevT;
     QXmlStreamReader xmlr;
     QXmlStreamWriter xml;

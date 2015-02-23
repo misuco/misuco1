@@ -14,10 +14,12 @@ TouchStat::TouchStat()
 void TouchStat::newT(long t)
 {
     int diff=t-prevT;
-    if(diff>=255) {
-        latSums[255]++;
-    } else {
-        latSums[diff]++;
+    if(diff>=0) {
+        if(diff>=255) {
+            latSums[255]++;
+        } else {
+            latSums[diff]++;
+        }
     }
     prevT=t;
     evcnt++;

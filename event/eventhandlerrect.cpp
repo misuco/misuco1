@@ -280,6 +280,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                             snd->noteOn(layout->getChan(iseg), ieventout[evptr],frel,midinote,pitch,veldef);
                         }
                         freq[evptr]=frel;
+                        chan[evptr]=layout->getChan(iseg);
+                        mnote[evptr]=midinote;
                     }
                 }
             } else {

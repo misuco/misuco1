@@ -201,6 +201,9 @@ public:
     void setChannel(int i) {progmem.channel=i;}
     int getChannel() {return progmem.channel;}
 
+    int seqPos=-1;
+    int bpm=-1;
+
 private:
     // view and event parameters
     int nrows;

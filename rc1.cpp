@@ -322,6 +322,11 @@ void RC1::timerEvent(QTimerEvent *)
 {
     now=QDateTime::currentMSecsSinceEpoch();
     sequencer->doNow(now);
+    if(layout->seqPos>=0)
+    {
+        layout->setXrel(layout->seqPos,sequencer->getStep());
+        layout->setXrelq(layout->seqPos,sequencer->getStep());
+    }
     update();
     sender->sendOff();
 }

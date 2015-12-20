@@ -21,7 +21,10 @@ public:
     void setBPM(int b);
     void setNbars(int n);
     void setStep(int n);
-
+    int getStep() { if(currStep==0) {
+            return seq->getNsteps()-1;
+        } else
+        return currStep-1;}
 
 private:
     RC1 * rc1;
@@ -34,6 +37,8 @@ private:
     bool rec;
     int currStep;
     std::list<noteEvent *> onNotes;
+
+    void alloff();
 
 };
 

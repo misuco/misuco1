@@ -54,6 +54,7 @@ RC1::RC1(MainWindow *parent) :
     //qDebug() << "View() size:" << width() << " " << height();
     //QSystemDeviceInfo * sysInfo = new QSystemDeviceInfo(this);
     eventId = 1;
+    ieventoutnext=2000;
     nomouse = false;
     ttl=2000;
     storage=new Storage();
@@ -61,7 +62,10 @@ RC1::RC1(MainWindow *parent) :
     ehand=new EventHandlerRect();
 
     sender=new SenderMulti();
-    
+
+    seq=new Sequence(16,4);
+    sequencer=new Sequencer(this,120,seq);
+
     //chan=0;
 
     storagePath=QStandardPaths::writableLocation(QStandardPaths::DataLocation);
@@ -185,6 +189,7 @@ RC1::RC1(MainWindow *parent) :
     //qDebug() << "RC1: setAllChan" << layout->getChannel();
 
     transmitSoundParam();
+    sequencer->play();
     
     /*
     QFontDatabase db;
@@ -210,8 +215,6 @@ void RC1::connectApp(QApplication * app) {
 
 void RC1::paintEvent(QPaintEvent *)
 {
-    now=QDateTime::currentMSecsSinceEpoch();
-
     /*
 #ifndef RC1_PRO
     if(blockerOn) {
@@ -318,6 +321,8 @@ void RC1::resizeEvent(QResizeEvent *)
 
 void RC1::timerEvent(QTimerEvent *)
 {
+    now=QDateTime::currentMSecsSinceEpoch();
+    sequencer->doNow(now);
     update();
     sender->sendOff();
 }
@@ -1046,6 +1051,11 @@ void RC1::appStateChange(Qt::ApplicationState state) {
 
 void RC1::writeProgmem() {
     layout->writeProgmemXml(storagePath+"/");
+}
+
+int RC1::getIEventOut()
+{
+    return ieventoutnext++;
 }
 
 void RC1::replyFinished(QNetworkReply * r)

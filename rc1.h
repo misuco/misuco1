@@ -36,6 +36,8 @@ class RC1;
 #include <QNetworkAccessManager>
 
 #include "storage.h"
+#include "conf/sequence.h"
+#include "sequencer.h"
 #include "conf/layoutmodel.h"
 #include "conf/scales.h"
 #include "comm/isender.h"
@@ -59,6 +61,7 @@ class IEventHandler;
 class EventHandlerRect;
 class QQDialog;
 class MainWindow;
+class Sequencer;
 
 #ifdef NOGL
 class RC1 : public QWidget, PathObject
@@ -95,6 +98,13 @@ public:
 
     void startDialog();
     void writeProgmem();
+    int getIEventOut();
+
+    LayoutModel * layout;
+    SenderMulti * sender;
+
+    Sequence * seq;
+    Sequencer * sequencer;
 
 public slots:
     void replyFinished(QNetworkReply * r);
@@ -113,8 +123,6 @@ protected:
 
 private:
     Storage * storage;
-    LayoutModel * layout;
-    SenderMulti * sender;
     EventHandlerRect * ehand;
     IPaint ** prepainters;
     IPaint * wavepainter;
@@ -126,6 +134,8 @@ private:
     bool * painterOn;
 
     QOscServer * oscin;
+
+    int ieventoutnext;  // id of next output event
 
     //QHostAddress senderAddress;
     //int senderPort;

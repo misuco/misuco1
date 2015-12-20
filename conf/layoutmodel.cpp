@@ -720,6 +720,11 @@ int LayoutModel::getScalerow() const
     return scaleRow;
 }
 
+int LayoutModel::getScaleStartSeg() const
+{
+    return scaleStartSeg;
+}
+
 void LayoutModel::setScalerow(int r)
 {
     if(r>0 && r<nrows) {

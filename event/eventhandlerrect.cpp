@@ -54,8 +54,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
         if(act[evptr]!=true) {  // if needed, else ieventsub will be set to 0 by accitent -> hanging note
             act[evptr]=true;
             ievent[evptr]=p->getGid();
-            ieventout[evptr]=ieventoutnext;
-            ieventoutnext++;
+            // TODO: make thread proof
+            ieventout[evptr]=rc1->getIEventOut();
         }
     }
     
@@ -224,8 +224,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     } else {
                         if(freq[evptr]>0) {
                             snd->noteOff(chan[evptr], ieventout[evptr], mnote[evptr]);
-                            ieventout[evptr]=ieventoutnext;
-                            ieventoutnext++;
+                            ieventout[evptr]=rc1->getIEventOut();
                         }
                         snd->noteOn(layout->getChan(iseg), ieventout[evptr], f, midinote, layout->getPitch(iseg), veldef);
                     }
@@ -573,8 +572,6 @@ void EventHandlerRect::init()
     layResize=false;
     layResizeDiff=0;
     layResizePnt=0;
-    
-    ieventoutnext=2000;
     
     cccval1=0;
     cccval2=0;

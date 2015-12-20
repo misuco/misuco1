@@ -132,6 +132,7 @@ public:
     void setNseg(int i,int v);
     void setNsegs(int v);
     int getScalerow() const;
+    int getScaleStartSeg() const;
     void setScalerow(int r);
     void setScaleStartSeg(int s);
 

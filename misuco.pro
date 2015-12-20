@@ -71,7 +71,9 @@ SOURCES += main.cpp\
     mobilesynth/mobilesynth/Classes/synth/oscillatorplus.cpp \
     paint/paintwave.cpp \
     touchstat.cpp \
-    paint/painthistogram.cpp
+    paint/painthistogram.cpp \
+    conf/sequence.cpp \
+    sequencer.cpp
 
 HEADERS  += \
     storage.h \
@@ -138,7 +140,9 @@ HEADERS  += \
     mobilesynth/mobilesynth/Classes/synth/oscillatorplus.h \
     paint/paintwave.h \
     touchstat.h \
-    paint/painthistogram.h
+    paint/painthistogram.h \
+    conf/sequence.h \
+    sequencer.h
 
 OTHER_FILES += \
     puredata/osc2midi.pd \

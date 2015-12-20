@@ -189,5 +189,6 @@ ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 DISTFILES += \
     conf/sound.xml \
-    NetDialog.qml
+    NetDialog.qml \
+    conf/lp6.xml
 

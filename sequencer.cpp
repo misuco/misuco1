@@ -7,7 +7,6 @@ Sequencer::Sequencer(RC1 * rc1, float bpm, Sequence *seq)
     this->seq=seq;
     this->bpm=bpm;
     this->currStep=0;
-    this->stepDiff=60/bpm/seq->getNbars()*1000;
     this->run=false;
 }
 
@@ -86,3 +85,24 @@ void Sequencer::play()
     run=true;
 }
 
+void Sequencer::stop()
+{
+    run=false;
+}
+
+void Sequencer::setBPM(int b)
+{
+    this->bpm=b;
+    this->stepDiff=60/bpm/seq->getNbars()*1000;
+}
+
+void Sequencer::setNbars(int n)
+{
+    seq->nbars=n;
+    setBPM(bpm);
+}
+
+void Sequencer::setStep(int n)
+{
+    currStep=n;
+}

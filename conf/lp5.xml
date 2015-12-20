@@ -5,29 +5,22 @@
         <seg segwidth="2" freq="0.000000" midinote="0" ctlx="2" ctly="-4" segtype="2" chan="0" pressed="0" segtext="octave" segh="1"/>
         <seg segwidth="2" freq="0.000000" midinote="0" ctlx="3" ctly="-4" segtype="2" chan="0" pressed="0" segtext="synth" segh="1"/>
         <seg segwidth="2" freq="0.000000" midinote="0" ctlx="4" ctly="-4" segtype="2" chan="0" pressed="0" segtext="tune" segh="1"/>
-        <seg segwidth="2" freq="0.000000" midinote="0" ctlx="5" ctly="-4" segtype="2" chan="0" pressed="0" segtext="net" segh="1"/>
+        <seg segwidth="2" freq="0.000000" midinote="0" ctlx="5" ctly="-4" segtype="2" chan="0" pressed="0" segtext="seq" segh="1"/>
+        <seg segwidth="2" freq="0.000000" midinote="0" ctlx="6" ctly="-4" segtype="2" chan="0" pressed="0" segtext="net" segh="1"/>
         <seg segwidth="2" freq="0.000000" midinote="0" ctlx="0" ctly="-9" segtype="2" chan="0" pressed="0" segtext="save" segh="1"/>
     </row>
-    <row height="10" segwidthmax="10">
-        <seg segwidth="4" freq="0.000000" midinote="0" ctlx="5" ctly="-5" segtype="2" chan="0" pressed="0" segtext="255.255.255.255" segh="1"/>
-        <seg segwidth="2" freq="0.000000" midinote="0" ctlx="5" ctly="-6" segtype="2" chan="0" pressed="0" segtext="3150" segh="1"/>
-        <seg segwidth="4" freq="0.000000" midinote="0" ctlx="4" ctly="-6" segtype="4" chan="0" pressed="0" segtext="type" segh="0"/>
+    <row height="10" segwidthmax="40">
+        <seg segwidth="20" freq="0.000000" midinote="0" ctlx="40" ctly="-10" segtype="4" chan="0" pressed="0" segtext="bpm" segh="0"/>
     </row>
     <row height="10" segwidthmax="10">
-        <seg segwidth="10" freq="0.000000" midinote="0" ctlx="10" ctly="-7" segtype="4" chan="0" pressed="0" segtext="channel" segh="0"/>
+        <seg segwidth="8" freq="0.000000" midinote="0" ctlx="8" ctly="-11" segtype="4" chan="0" pressed="0" segtext="nbars" segh="0"/>
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="0" ctly="-3"  segtype="3" chan="0" pressed="0" segtext="play" segh="1"/>
+        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="0" ctly="-4"  segtype="3" chan="0" pressed="0" segtext="rec" segh="1"/>
     </row>
-    <row height="10" segwidthmax="10">
-        <seg segwidth="10" freq="0.000000" midinote="0" ctlx="10" ctly="-8" segtype="4" chan="0" pressed="0" segtext="error corr" segh="0"/>
+    <row height="10" segwidthmax="16">
+        <seg segwidth="16" freq="0.000000" midinote="0" ctlx="16" ctly="-12" segtype="4" chan="0" pressed="0" segtext="step" segh="0"/>
     </row>
-    <row height="10" segwidthmax="15">
-        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="0" ctly="-4" segtype="2" chan="0" pressed="0" segtext="x" segh="0"/>
-        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="0" ctly="-2" segtype="3" chan="0" pressed="0" segtext="mm" segh="0"/>
-        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="190" ctly="-7" segtype="2" chan="0" pressed="0" segtext="-" segh="0"/>
-        <seg segwidth="10" freq="0.000000" midinote="0" ctlx="10" ctly="-2" segtype="4" chan="0" pressed="0" segtext="P" segh="0"/>
-        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="190" ctly="-8" segtype="2" chan="0" pressed="0" segtext="+" segh="0"/>
-        <seg segwidth="1" freq="0.000000" midinote="0" ctlx="0" ctly="-3" segtype="2" chan="0" pressed="1" segtext="edit" segh="0"/>
-    </row>
-    <row height="10" segwidthmax="1">
+    <row height="20" segwidthmax="1">
         <seg segwidth="1" freq="261.625565" midinote="60" ctlx="1" ctly="2" segtype="0" chan="0" pressed="0" segtext="C" segh="145"/>
     </row>
 </misuco>

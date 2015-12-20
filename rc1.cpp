@@ -189,7 +189,6 @@ RC1::RC1(MainWindow *parent) :
     //qDebug() << "RC1: setAllChan" << layout->getChannel();
 
     transmitSoundParam();
-    sequencer->play();
     
     /*
     QFontDatabase db;

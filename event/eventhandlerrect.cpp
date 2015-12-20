@@ -327,9 +327,12 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                         layout->setErrorCorr(xrelquant);
                     } else if(layout->getCtly(iseg)==-9) {
                         layout->setRowsGen(xrelquant);
-    //                } else {
-    //                    snd->cc(0, 0, layout->getCtly(iseg)+100, xrelquant);
-    //                    layout->setSoundParam(layout->getCtly(iseg),xrelquant);
+                    } else if(layout->getCtly(iseg)==-10) {
+                        rc1->sequencer->setBPM(xrelquant*2+100);
+                    } else if(layout->getCtly(iseg)==-11) {
+                        rc1->sequencer->setNbars(xrelquant);
+                    } else if(layout->getCtly(iseg)==-12) {
+                        rc1->sequencer->setStep(xrelquant);
                     }
                 } else if(layout->getSegtype(iseg)==5) {
                     // y-slider
@@ -513,6 +516,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                              //qDebug() << " bscale off " << iseg;
                          } else if(layout->getCtly(iseg)==-2) {
                              layout->setTransMode(false);
+                         } else if(layout->getCtly(iseg)==-3) {
+                             rc1->sequencer->stop();
                          }
                          layout->updateLayout();
                      } else {
@@ -521,6 +526,8 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                              layout->setBscale(layout->getCtlx(iseg),true);
                          } else if(layout->getCtly(iseg)==-2) {
                              layout->setTransMode(true);
+                         } else if(layout->getCtly(iseg)==-3) {
+                             rc1->sequencer->play();
                          }
                          layout->updateLayout();
                      }

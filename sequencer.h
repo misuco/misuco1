@@ -17,6 +17,11 @@ public:
     ~Sequencer();
     void doNow(long now);
     void play();
+    void stop();
+    void setBPM(int b);
+    void setNbars(int n);
+    void setStep(int n);
+
 
 private:
     RC1 * rc1;

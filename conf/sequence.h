@@ -16,9 +16,10 @@ public:
     void addNote(int s, int n);
     void removeNote(int s, int n);
 
+    int nbars;
+
 private:
     int nsteps;
-    int nbars;
     std::vector<int> * steps;
 };
 

@@ -97,6 +97,7 @@ void ProgMem::readProgmemXml(QString filename)
                     progmem[row].basenote=xmlr.attributes().value("basenote").toString().toInt();
                     progmem[row].baseoct=xmlr.attributes().value("baseoct").toString().toInt();
                     progmem[row].topoct=xmlr.attributes().value("topoct").toString().toInt();
+                    progmem[row].seq=row;
                     for(int j=0;j<bscale_max;j++) {
                         QString attname;
                         attname.sprintf("s%d",j);

@@ -45,6 +45,7 @@ public:
         bool bscale[bscale_max];
         int sound;
         int rows;
+        int seq;
     };
 
     prog progmem[progmem_max];

@@ -1050,6 +1050,11 @@ void LayoutModel::updateLayout()
                 xrelq[seg]=progmem.errCorr;
             } else if(ctly[seg]==-9) {
                 xrelq[seg]=progmem.progmem[actProgmem].rows;
+            } else if(ctly[seg]==-13) {
+                int actSeq=progmem.progmem[actProgmem].seq;
+                midinote[seg]=actSeq/ctlx[seg];
+                midinote[seg]*=ctlx[seg];
+                xrelq[seg]=actSeq - midinote[seg];
             }
         } else if(segtype[seg]==5 ) {
             if(ctly[seg]>=102) {
@@ -1213,6 +1218,11 @@ void LayoutModel::setDisplayAddress(QString adr)
 void LayoutModel::setDisplayPort(int port)
 {
     progmem.port=port;
+}
+
+void LayoutModel::setSeq(int s)
+{
+    progmem.progmem[actProgmem].seq = s;
 }
 
 

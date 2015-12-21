@@ -201,6 +201,8 @@ public:
     void setChannel(int i) {progmem.channel=i;}
     int getChannel() {return progmem.channel;}
 
+    void setSeq(int s);
+
     int seqPos=-1;
     int bpm=-1;
     bool seqPlay=false;

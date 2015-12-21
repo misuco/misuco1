@@ -203,6 +203,8 @@ public:
 
     int seqPos=-1;
     int bpm=-1;
+    bool seqPlay=false;
+    bool seqRec=false;
 
 private:
     // view and event parameters

@@ -37,17 +37,18 @@ void Sequencer::doNow(long now)
             }
             if(!alreadyOn) {
                 //qDebug() << "not on ";
+                noteEvent * ne = new noteEvent;
+                ne->note=note;
+                ne->eventId=rc1->getIEventOut();
+                ne->channel=rc1->layout->getChannel();
+                onNotes.push_back(ne);
+
                 int seg=note+l->getScaleStartSeg();
                 float freq=l->getFreq(seg);
                 int pitch=l->getPitch(seg);
                 int midinote=l->getMidinote(seg);
-                int evid=rc1->getIEventOut();
-                rc1->sender->noteOn(1,evid,freq,midinote,pitch,1);
+                rc1->sender->noteOn(ne->channel,ne->eventId,freq,midinote,pitch,1);
                 //qDebug() << "note on " << freq << " evid " << evid << " midinote " << midinote;
-                noteEvent * ne = new noteEvent;
-                ne->note=note;
-                ne->eventId=evid;
-                onNotes.push_back(ne);
                 //qDebug() << "pushed back ";
             }
         }
@@ -63,7 +64,7 @@ void Sequencer::doNow(long now)
             }
             if(nolongerOn) {
                 //qDebug() << "no longer on";
-                rc1->sender->noteOff(1,ne->eventId,0);
+                rc1->sender->noteOff(ne->channel,ne->eventId,0);
                 //qDebug() << " note off " << ne->eventId;
                 delete(*it);
                 onNotes.erase(it);

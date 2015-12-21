@@ -15,5 +15,6 @@
         <file>conf/lp5.xml</file>
         <file>conf/sound.xml</file>
         <file>NetDialog.qml</file>
+        <file>conf/lp6.xml</file>
     </qresource>
 </RCC>

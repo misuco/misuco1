@@ -8,6 +8,7 @@
 struct noteEvent {
     int note;
     int eventId;
+    int channel;
 };
 
 class Sequencer

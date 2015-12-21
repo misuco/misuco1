@@ -1008,8 +1008,21 @@ void LayoutModel::updateLayout()
                 segText[seg].sprintf("%d",progmem.port);
             }
         } else if(segtype[seg]==3 ) {
+            // toggle buttons
             if(ctly[seg]==-2) {
                 if(transMode) {
+                    pressed[seg]=1;
+                } else {
+                    pressed[seg]=0;
+                }
+            } else if(ctly[seg]==-3) {
+                if(seqPlay) {
+                    pressed[seg]=1;
+                } else {
+                    pressed[seg]=0;
+                }
+            } else if(ctly[seg]==-4) {
+                if(seqRec) {
                     pressed[seg]=1;
                 } else {
                     pressed[seg]=0;

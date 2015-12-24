@@ -110,6 +110,38 @@ void ProgMem::readProgmemXml(QString filename)
                     xmlr.skipCurrentElement();
                 }
             }
+        } else if (xmlr.name() == "misucoprogmem" && xmlr.attributes().value("version") == "1.2") {
+            adr=xmlr.attributes().value("adr").toString();
+            port=xmlr.attributes().value("port").toInt();
+            channel=xmlr.attributes().value("channel").toInt();
+            senderType=xmlr.attributes().value("senderType").toInt();
+            errCorr=xmlr.attributes().value("errCorr").toInt();
+            //qDebug() << "read adr " << adr << " port " << port << " senderType " << senderType << " channel " << channel;
+            int row=0;
+            while (xmlr.readNextStartElement() && row<progmem_max) {
+                //qDebug() << "row " << row;
+                if (xmlr.name() == "prog") {
+                    if(xmlr.attributes().hasAttribute("rows")) {
+                        progmem[row].rows=xmlr.attributes().value("rows").toString().toInt();
+                    } else {
+                        progmem[row].rows=0; // default value
+                    }
+                    progmem[row].basenote=xmlr.attributes().value("basenote").toString().toInt();
+                    progmem[row].baseoct=xmlr.attributes().value("baseoct").toString().toInt();
+                    progmem[row].topoct=xmlr.attributes().value("topoct").toString().toInt();
+                    progmem[row].seq=xmlr.attributes().value("seq").toString().toInt();
+                    for(int j=0;j<bscale_max;j++) {
+                        QString attname;
+                        attname.sprintf("s%d",j);
+                        progmem[row].bscale[j]=(bool)xmlr.attributes().value(attname).toString().toInt();
+                    }
+                    progmem[row].sound=xmlr.attributes().value("sound").toInt();
+                    xmlr.skipCurrentElement();
+                    row++;
+                } else {
+                    xmlr.skipCurrentElement();
+                }
+            }
         } else {
             xmlr.raiseError(QObject::tr("The file is not a MISUCO version 1.0 file."));
         }
@@ -133,7 +165,7 @@ void ProgMem::writeProgmemXml(QString filename)
     xml.writeStartDocument();
     xml.writeDTD("<!DOCTYPE misuco>");
     xml.writeStartElement("misucoprogmem");
-    xml.writeAttribute("version", "1.1");
+    xml.writeAttribute("version", "1.2");
     xml.writeAttribute("adr",adr);
     att.sprintf("%d",port);
     xml.writeAttribute("port",att);
@@ -166,6 +198,9 @@ void ProgMem::writeProgmemXml(QString filename)
 
         att.sprintf("%d",progmem[row].sound);
         xml.writeAttribute("sound",att);
+
+        att.sprintf("%d",progmem[row].seq);
+        xml.writeAttribute("seq",att);
 
         for(int j=0;j<bscale_max;j++) {
             att.sprintf("%d",(int)progmem[row].bscale[j]);

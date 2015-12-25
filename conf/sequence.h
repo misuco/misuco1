@@ -9,12 +9,14 @@ public:
     Sequence(int nsteps, int nbars);
     ~Sequence();
     int getNsteps() {return nsteps;}
+    void setNsteps(int s) {nsteps=s;}
     int getNbars() {return nbars;}
     int getStepNNotes(int i) {return steps[i].size();}
     int getStepNote(int s, int n) {return steps[s].at(n);}
 
     void addNote(int s, int n);
     void removeNote(int s, int n);
+    void clearStep(int s);
 
     int nbars;
 

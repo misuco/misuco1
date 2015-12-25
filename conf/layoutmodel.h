@@ -20,8 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define LAYOUTMODEL_H
 #include <QString>
 #include "progmem.h"
+#include "seqmem.h"
 #include "soundmem.h"
 #include "layoutxml.h"
+#include "sequence.h"
 
 #ifndef LAYOUTXML_H
 #define LAYOUTXML_H
@@ -201,6 +203,8 @@ public:
     void setChannel(int i) {progmem.channel=i;}
     int getChannel() {return progmem.channel;}
 
+    Sequence * getCurrentSeq() {return seqmem.seqmem[progmem.progmem[actProgmem].seq];}
+
     void setSeq(int s);
 
     int seqPos=-1;
@@ -254,6 +258,7 @@ private:
     LayoutXml layxml;
     ProgMem progmem;
     SoundMem soundmem;
+    SeqMem seqmem;
     int actProgmem;
 
     // here we declare from which part the performance area starts

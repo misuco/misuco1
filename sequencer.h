@@ -5,6 +5,8 @@
 #include "rc1.h"
 #include "conf/sequence.h"
 
+class RC1;
+
 struct noteEvent {
     int note;
     int eventId;
@@ -14,7 +16,7 @@ struct noteEvent {
 class Sequencer
 {
 public:
-    Sequencer(RC1 *rc1, float bpm, Sequence * seq);
+    Sequencer(RC1 *rc1, float bpm);
     ~Sequencer();
     void doNow(long now);
     void play();
@@ -22,14 +24,10 @@ public:
     void setBPM(int b);
     void setNbars(int n);
     void setStep(int n);
-    int getStep() { if(currStep==0) {
-            return seq->getNsteps()-1;
-        } else
-        return currStep-1;}
+    int getStep() { return currStep;}
 
 private:
     RC1 * rc1;
-    Sequence * seq;
     long nowInit;
     float nextStepAt;
     float stepDiff;

@@ -1,10 +1,9 @@
 #include "sequencer.h"
 
 
-Sequencer::Sequencer(RC1 * rc1, float bpm, Sequence *seq)
+Sequencer::Sequencer(RC1 * rc1, float bpm)
 {
     this->rc1=rc1;
-    this->seq=seq;
     this->bpm=bpm;
     this->currStep=0;
     this->run=false;
@@ -25,6 +24,7 @@ void Sequencer::doNow(long now)
 
     std::list<noteEvent *>::iterator it;
     if(now-nowInit>=nextStepAt && this->run) {
+        Sequence * seq=rc1->layout->getCurrentSeq();
         stepNNotes=seq->getStepNNotes(currStep);
         //qDebug() << "do step " << currStep << " stepNotes " << stepNNotes;
         l=rc1->getLayout();
@@ -95,12 +95,12 @@ void Sequencer::stop()
 void Sequencer::setBPM(int b)
 {
     this->bpm=b;
-    this->stepDiff=60/bpm/seq->getNbars()*1000;
+    this->stepDiff=60/bpm/rc1->layout->getCurrentSeq()->getNbars()*1000;
 }
 
 void Sequencer::setNbars(int n)
 {
-    seq->nbars=n;
+    rc1->layout->getCurrentSeq()->nbars=n;
     setBPM(bpm);
 }
 

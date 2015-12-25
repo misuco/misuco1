@@ -26,3 +26,8 @@ void Sequence::removeNote(int s, int n)
     steps[s].erase(steps[s].begin()+n);
 }
 
+void Sequence::clearStep(int s)
+{
+    steps[s].clear();
+}
+

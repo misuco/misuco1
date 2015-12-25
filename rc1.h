@@ -103,7 +103,6 @@ public:
     LayoutModel * layout;
     SenderMulti * sender;
 
-    Sequence * seq;
     Sequencer * sequencer;
 
 public slots:

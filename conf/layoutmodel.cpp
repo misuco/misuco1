@@ -1050,6 +1050,8 @@ void LayoutModel::updateLayout()
                 xrelq[seg]=progmem.errCorr;
             } else if(ctly[seg]==-9) {
                 xrelq[seg]=progmem.progmem[actProgmem].rows;
+            } else if(ctly[seg]==-11) {
+                xrelq[seg]=getCurrentSeq()->getNbars()-1;
             } else if(ctly[seg]==-13) {
                 int actSeq=progmem.progmem[actProgmem].seq;
                 midinote[seg]=actSeq/ctlx[seg];
@@ -1268,10 +1270,18 @@ void LayoutModel::readProgmemXml(QString filename)
 {
     progmem.readProgmemXml(filename+"prog.xml");
     soundmem.readSoundmemXml(filename+"sound.xml");
+
+    QString seqbin=filename+"seq.bin";
+    QByteArray ba=seqbin.toLatin1();
+    seqmem.readSeqmem(ba.data());
 }
 
 void LayoutModel::writeProgmemXml(QString filename)
 {
     progmem.writeProgmemXml(filename+"prog.xml");
     soundmem.writeSoundmemXml(filename+"sound.xml");
+
+    QString seqbin=filename+"seq.bin";
+    QByteArray ba=seqbin.toLatin1();
+    seqmem.writeSeqmem(ba.data());
 }

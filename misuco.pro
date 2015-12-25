@@ -73,7 +73,8 @@ SOURCES += main.cpp\
     touchstat.cpp \
     paint/painthistogram.cpp \
     conf/sequence.cpp \
-    sequencer.cpp
+    sequencer.cpp \
+    conf/seqmem.cpp
 
 HEADERS  += \
     storage.h \
@@ -142,7 +143,8 @@ HEADERS  += \
     touchstat.h \
     paint/painthistogram.h \
     conf/sequence.h \
-    sequencer.h
+    sequencer.h \
+    conf/seqmem.h
 
 OTHER_FILES += \
     puredata/osc2midi.pd \

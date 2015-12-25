@@ -335,6 +335,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                         rc1->sequencer->setStep(xrelquant);
                     } else if(layout->getCtly(iseg)==-13) {
                         layout->setSeq(xrelquant+layout->getMidinote(iseg));
+                        layout->updateLayout();
                     }
                 } else if(layout->getSegtype(iseg)==5) {
                     // y-slider

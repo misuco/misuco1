@@ -63,8 +63,7 @@ RC1::RC1(MainWindow *parent) :
 
     sender=new SenderMulti();
 
-    seq=new Sequence(16,4);
-    sequencer=new Sequencer(this,120,seq);
+    sequencer=new Sequencer(this,120);
 
     //chan=0;
 

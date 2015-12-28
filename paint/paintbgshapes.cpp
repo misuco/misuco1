@@ -252,6 +252,12 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 } else if (lay->getSegtype(iseg)==0 ) {
                     pnt->setBrush(QColor::fromHsl(col,130,lightBNote));
                     pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
+
+                    if(view->sequencer->isOn(iseg-lay->getScaleStartSeg())) {
+                        pnt->setBrush(Qt::black);
+                        pnt->drawRect(xpaint,ypaint,xpaint1,ypaint1);
+                    }
+
                 } else if (lay->getSegtype(iseg)==2 || lay->getSegtype(iseg)==3) {
                     if(lay->getPressed(iseg)>0) {
                         pnt->setBrush(Qt::lightGray);

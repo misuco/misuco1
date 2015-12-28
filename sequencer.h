@@ -28,6 +28,7 @@ public:
     int getStep() { return currStep;}
     void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int scalenote, int v);
     void noteOff(int chan, int voiceId);
+    bool isOn(int scalenote);
 
 private:
     RC1 * rc1;

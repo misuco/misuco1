@@ -164,6 +164,18 @@ void Sequencer::noteOff(int chan, int voiceId)
     }
 }
 
+bool Sequencer::isOn(int scalenote)
+{
+    Sequence * seq=rc1->layout->getCurrentSeq();
+    int nnotes=seq->getStepNNotes(currStep);
+    if(nnotes>0) {
+        for (int i=0;i<nnotes;i++) {
+            if(seq->getStepNote(currStep,i)==scalenote) return true;
+        }
+    }
+    return false;
+}
+
 void Sequencer::alloff()
 {
     std::list<noteEvent *>::iterator it;

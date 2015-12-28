@@ -16,6 +16,7 @@ public:
 
     void addNote(int s, int n);
     void removeNote(int s, int n);
+    void removeScaleNote(int s, int note);
     void clearStep(int s);
 
     int nbars;

@@ -27,6 +27,17 @@ void Sequence::removeNote(int s, int n)
     steps[s].erase(steps[s].begin()+n);
 }
 
+void Sequence::removeScaleNote(int s, int note)
+{
+    std::vector<int>::iterator it;
+    for (it=steps[s].begin(); it!=steps[s].end(); ++it) {
+        if(*it==note) {
+            steps[s].erase(it);
+            break;
+        }
+    }
+}
+
 void Sequence::clearStep(int s)
 {
     steps[s].clear();

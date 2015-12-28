@@ -29,6 +29,7 @@ public:
     void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int scalenote, int v);
     void noteOff(int chan, int voiceId);
     bool isOn(int scalenote);
+    void setEdit(bool e) {edit=e;}
 
 private:
     RC1 * rc1;
@@ -38,6 +39,7 @@ private:
     float bpm;
     bool run;
     bool rec;
+    bool edit;
     int currStep;
     std::list<noteEvent *> onNotes;
     std::list<noteEvent *> onRecNotes;

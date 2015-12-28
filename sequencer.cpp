@@ -7,6 +7,7 @@ Sequencer::Sequencer(RC1 * rc1, float bpm)
     this->bpm=bpm;
     this->currStep=0;
     this->run=false;
+    this->edit=false;
 }
 
 Sequencer::~Sequencer()
@@ -128,6 +129,7 @@ void Sequencer::setStep(int n)
 void Sequencer::noteOn(int chan, int voiceId, float f, int midinote, int pitch, int scalenote, int v)
 {
     qDebug() << "sequencer noteOn ch " << chan << " scalenote " << scalenote;
+    Sequence * seq;
     if(rec) {
         noteEvent * ne = new noteEvent;
         ne->note=scalenote;
@@ -135,7 +137,7 @@ void Sequencer::noteOn(int chan, int voiceId, float f, int midinote, int pitch, 
         ne->channel=rc1->layout->getChannel()*-1;
         onRecNotes.push_back(ne);
 
-        Sequence * seq=rc1->layout->getCurrentSeq();
+        seq=rc1->layout->getCurrentSeq();
         qDebug() << " step " << currStep << " note " << scalenote;
         seq->addNote(currStep,scalenote);
 
@@ -144,6 +146,14 @@ void Sequencer::noteOn(int chan, int voiceId, float f, int midinote, int pitch, 
         ne->eventId=rc1->getIEventOut();
         ne->channel=rc1->layout->getChannel()*-1;
         onNotes.push_back(ne);
+    } else if(!run && edit) {
+        seq=rc1->layout->getCurrentSeq();
+        if(isOn(scalenote)) {
+            seq->removeScaleNote(currStep,scalenote);
+        } else {
+            seq->addNote(currStep,scalenote);
+        }
+
     }
 }
 
@@ -160,7 +170,6 @@ void Sequencer::noteOff(int chan, int voiceId)
                 //qDebug() << "erased ";
             }
         }
-
     }
 }
 

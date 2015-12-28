@@ -432,6 +432,12 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 } else if(layout->getCtly(iseg)==-4) {
                     // layout switch button
                     layout->resetLayout(layout->getCtlx(iseg));
+                    // enable seqencer edit mode in layout 5
+                    if(layout->getCtlx(iseg)==5) {
+                        rc1->sequencer->setEdit(true);
+                    } else {
+                        rc1->sequencer->setEdit(false);
+                    }
                     layout->updateLayout();
                 } else if(layout->getCtly(iseg)==-5) {
     #ifdef RC1_IOS

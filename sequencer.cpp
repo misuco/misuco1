@@ -1,6 +1,5 @@
 #include "sequencer.h"
 
-
 Sequencer::Sequencer(RC1 * rc1, float bpm)
 {
     this->rc1=rc1;
@@ -8,6 +7,8 @@ Sequencer::Sequencer(RC1 * rc1, float bpm)
     this->currStep=0;
     this->run=false;
     this->edit=false;
+    this->syncMaster=true;
+    this->noSyncMasterFor=0;
 }
 
 Sequencer::~Sequencer()
@@ -26,8 +27,21 @@ void Sequencer::doNow(long now)
     std::list<noteEvent *>::iterator it;
     if(now-nowInit>=nextStepAt && this->run) {
         Sequence * seq=rc1->layout->getCurrentSeq();
+        noSyncMasterFor++;
+        if(noSyncMasterFor>20) {
+            syncMaster=true;
+        }
+
         currStep++;
         if(currStep>=seq->getNsteps()) currStep=0;
+
+        if(syncMaster) {
+            if(currStep%seq->getNbars()==0) {
+                int bar=currStep/seq->getNbars();
+                rc1->sender->sync(1,bar,bpm);
+            }
+        }
+
         if(rec) {
             for (it=onRecNotes.begin(); it!=onRecNotes.end(); ++it) {
                 nolongerOn=true;
@@ -107,12 +121,19 @@ void Sequencer::stop()
     run=false;
     rec=false;
     alloff();
+    rc1->sender->sync(0,0,bpm);
 }
 
 void Sequencer::setBPM(int b)
 {
     this->bpm=b;
     this->stepDiff=60/bpm/rc1->layout->getCurrentSeq()->getNbars()*1000;
+}
+
+void Sequencer::setBar(int b)
+{
+    int step=b*rc1->layout->getCurrentSeq()->getNbars()-1;
+    if(step<0) step=rc1->layout->getCurrentSeq()->getNsteps();
 }
 
 void Sequencer::setNbars(int n)

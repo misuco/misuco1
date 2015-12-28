@@ -24,12 +24,15 @@
 #include "senderoscpuredata.h"
 #include "senderoscxy.h"
 #include "sendermobilesynth.h"
+#include "qoscclient.h"
 
 SenderMulti::SenderMulti()
 {
     senders.append(new SenderOscMidiGeneric());
     //senders.append(new SenderMobileSynth());
     senders.append(new SenderSuperCollider());
+    syncout=new QOscClient();
+
     repeatOff=0;
     onCnt=0;
     for(int i=0;i<256;i++) {
@@ -140,7 +143,9 @@ void SenderMulti::setDestination(char * a, int p)
     for(int i=0;i<senders.count();i++) {
         senders.at(i)->setDestination(a,p);
     }
+    syncout->setAddress(a,p);
 }
+
 
 void SenderMulti::del(int i) {
     if(i<senders.count()) {
@@ -209,6 +214,16 @@ char *SenderMulti::getAddress()
         return 0;
 }
 
+void SenderMulti::sync(int mode, int bar, float bpm)
+{
+    QVariantList data;
+    data.append(mode);
+    data.append(bar);
+    data.append(bpm);
+    syncout->sendData("/snc",data);
+    qDebug() << "sync " << bpm << " " << bar ;
+}
+
 void SenderMulti::sendOff() {
     for(int j=offToRepeat.count();j>0;j--) {
         int i=j-1;
@@ -248,6 +263,7 @@ void SenderMulti::reset1(int x, char * adr, int port) {
         break;
     }
     //mobi=new SenderMobileSynth();
-    setDestination(0,adr,port);
+    //setDestination(0,adr,port);
+    setDestination(adr,port);
 }
 

@@ -22,6 +22,7 @@
 
 #include <QList>
 #include "isender.h"
+#include "../comm/libofqf/qoscclientinterface.h"
 #include "sendermobilesynth.h"
 #include "sequencer.h"
 
@@ -43,6 +44,8 @@ public:
     virtual char* getAddress(); //{return 0;}
     virtual bool voiceBased() {return true;}
     
+    void sync(int mode, int bar, float bpm);
+
     void setSeq(Sequencer * s) {this->seq=s;}
 
     enum SenderType {
@@ -78,6 +81,7 @@ private:
     QList<ISender *> senders;
     QList<offRepeat *> offToRepeat;
     SenderMobileSynth * mobi;
+    QOscClientInterface* syncout;
     Sequencer * seq;
     bool midiOn[256];
     quint8 * notestate;   // currently played notes

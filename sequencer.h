@@ -18,11 +18,15 @@ class Sequencer
 public:
     Sequencer(RC1 *rc1, float bpm);
     ~Sequencer();
+    bool syncMaster;
+    int noSyncMasterFor;
+
     void doNow(long now);
     void play();
     void record();
     void stop();
     void setBPM(int b);
+    void setBar(int b);
     void setNbars(int n);
     void setStep(int n);
     int getStep() { return currStep;}

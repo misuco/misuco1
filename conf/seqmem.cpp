@@ -16,14 +16,13 @@ SeqMem::~SeqMem() {
 }
 
 void SeqMem::readSeqmem(char * filename) {
-    int counter;
     FILE *ptr_myfile;
 
     ptr_myfile=fopen(filename,"rb");
     if (!ptr_myfile) {
         printf("Unable to open file!");
     } else {
-        int nseqs,nbars,nsteps,nnotes,note;
+        int nbars,nsteps,nnotes,note;
         //fread(&nseqs,sizeof(int),1,ptr_myfile);
         for (int i=0;i<seqmem_max;i++) {
             fread(&nbars,sizeof(int),1,ptr_myfile);

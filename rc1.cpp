@@ -450,6 +450,24 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
             }
         }
 
+        if(path=="/sync") {
+            if(dl.size()==3) {
+                int mode=dl.at(0).toInt();
+                int bar=dl.at(1).toInt();
+                float bmp=dl.at(2).toFloat();
+                sequencer->noSyncMasterFor=0;
+                sequencer->syncMaster=false;
+                if(mode==1) {
+                    sequencer->play();
+                    sequencer->setBar(bar);
+                    sequencer->setBPM(bmp);
+                } else if(mode==0) {
+                    sequencer->stop();
+                }
+
+            }
+        }
+
         if(path=="/add_sender") {
             if(dl.size()==1) {
                 int senderType=dl.at(0).toInt();

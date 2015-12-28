@@ -25,7 +25,19 @@ void Sequencer::doNow(long now)
     std::list<noteEvent *>::iterator it;
     if(now-nowInit>=nextStepAt && this->run) {
         Sequence * seq=rc1->layout->getCurrentSeq();
+        currStep++;
+        if(currStep>=seq->getNsteps()) currStep=0;
+        if(rec) {
+            for (it=onRecNotes.begin(); it!=onRecNotes.end(); ++it) {
+                nolongerOn=true;
+                noteEvent * ne = *it;
+                seq->addNote(currStep,ne->note);
+            }
+
+        }
+
         stepNNotes=seq->getStepNNotes(currStep);
+
         qDebug() << "do step " << currStep << " stepNotes " << stepNNotes;
         l=rc1->getLayout();
         for(int i=0;i<stepNNotes;i++) {
@@ -73,24 +85,20 @@ void Sequencer::doNow(long now)
             }
         }
         nextStepAt+=stepDiff;
-        currStep++;
-        if(currStep>=seq->getNsteps()) currStep=0;
         //qDebug() << "next step " << currStep << " at " << nextStepAt << " diff " << stepDiff;
     }
 }
 
 void Sequencer::play()
 {
-    setNbars(rc1->layout->getCurrentSeq()->nbars);
-    nextStepAt=0;
-    nowInit=QDateTime::currentMSecsSinceEpoch();
-    run=true;
+    rec=false;
+    playInt();
 }
 
 void Sequencer::record()
 {
     rec=true;
-    play();
+    playInt();
 }
 
 void Sequencer::stop()
@@ -121,11 +129,17 @@ void Sequencer::noteOn(int chan, int voiceId, float f, int midinote, int pitch, 
 {
     qDebug() << "sequencer noteOn ch " << chan << " scalenote " << scalenote;
     if(rec) {
+        noteEvent * ne = new noteEvent;
+        ne->note=scalenote;
+        ne->eventId=voiceId;
+        ne->channel=rc1->layout->getChannel()*-1;
+        onRecNotes.push_back(ne);
+
         Sequence * seq=rc1->layout->getCurrentSeq();
         qDebug() << " step " << currStep << " note " << scalenote;
         seq->addNote(currStep,scalenote);
 
-        noteEvent * ne = new noteEvent;
+        ne = new noteEvent;
         ne->note=scalenote;
         ne->eventId=rc1->getIEventOut();
         ne->channel=rc1->layout->getChannel()*-1;
@@ -136,6 +150,16 @@ void Sequencer::noteOn(int chan, int voiceId, float f, int midinote, int pitch, 
 void Sequencer::noteOff(int chan, int voiceId)
 {
     if(rec) {
+        std::list<noteEvent *>::iterator it;
+        for (it=onRecNotes.begin(); it!=onRecNotes.end(); ++it) {
+            noteEvent * ne = *it;
+            if(ne->eventId==voiceId) {
+                delete(*it);
+                onRecNotes.erase(it);
+                it=onRecNotes.begin();
+                //qDebug() << "erased ";
+            }
+        }
 
     }
 }
@@ -146,9 +170,17 @@ void Sequencer::alloff()
     for (it=onNotes.begin(); it!=onNotes.end(); ++it) {
         noteEvent * ne;
         ne = *it;
-        rc1->sender->noteOff(1,ne->eventId,0);
+        rc1->sender->noteOff(ne->channel,ne->eventId,0);
         delete(*it);
         onNotes.erase(it);
         it=onNotes.begin();
     }
+}
+
+void Sequencer::playInt()
+{
+    setNbars(rc1->layout->getCurrentSeq()->nbars);
+    nextStepAt=0;
+    nowInit=QDateTime::currentMSecsSinceEpoch();
+    run=true;
 }

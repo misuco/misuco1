@@ -39,8 +39,10 @@ private:
     bool rec;
     int currStep;
     std::list<noteEvent *> onNotes;
+    std::list<noteEvent *> onRecNotes;
 
     void alloff();
+    void playInt();
 
 };
 

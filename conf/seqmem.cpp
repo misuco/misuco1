@@ -1,3 +1,4 @@
+#include <QDebug>
 #include "seqmem.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,12 +24,13 @@ void SeqMem::readSeqmem(char * filename) {
         printf("Unable to open file!");
     } else {
         int nseqs,nbars,nsteps,nnotes,note;
-        fread(&nseqs,sizeof(int),1,ptr_myfile);
-        for (int i=0;i<nseqs && i<seqmem_max;i++) {
+        //fread(&nseqs,sizeof(int),1,ptr_myfile);
+        for (int i=0;i<seqmem_max;i++) {
             fread(&nbars,sizeof(int),1,ptr_myfile);
             seqmem[i]->nbars=nbars;
             fread(&nsteps,sizeof(int),1,ptr_myfile);
             seqmem[i]->setNsteps(nsteps);
+            qDebug() << "read seq " << i << " nsteps " << nsteps << " nbars " << nbars;
             for(int j=0;j<seqmem[i]->getNsteps();j++) {
                 fread(&nnotes,sizeof(int),1,ptr_myfile);
                 seqmem[i]->clearStep(j);

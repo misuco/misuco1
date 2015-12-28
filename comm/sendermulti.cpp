@@ -143,7 +143,7 @@ void SenderMulti::setDestination(char * a, int p)
     for(int i=0;i<senders.count();i++) {
         senders.at(i)->setDestination(a,p);
     }
-    syncout->setAddress(a,p);
+    syncout->setAddress(a,3333);
 }
 
 

@@ -39,7 +39,7 @@ void Sequencer::doNow(long now)
 
         stepNNotes=seq->getStepNNotes(currStep);
 
-        qDebug() << "do step " << currStep << " stepNotes " << stepNNotes;
+        //qDebug() << "do step " << currStep << " stepNotes " << stepNNotes;
         l=rc1->getLayout();
         for(int i=0;i<stepNNotes;i++) {
             note=seq->getStepNote(currStep,i);
@@ -61,7 +61,7 @@ void Sequencer::doNow(long now)
                 int pitch=l->getPitch(seg);
                 int midinote=l->getMidinote(seg);
                 rc1->sender->noteOn(ne->channel,ne->eventId,freq,midinote,pitch,note,1);
-                qDebug() << "note on " << freq << " evid " << ne->eventId << " midinote " << midinote << " ch " << ne->channel;
+                //qDebug() << "note on " << freq << " evid " << ne->eventId << " midinote " << midinote << " ch " << ne->channel;
                 //qDebug() << "pushed back ";
             }
         }
@@ -76,9 +76,9 @@ void Sequencer::doNow(long now)
                 //qDebug() << "whichis " << ne->note << "against " << i << " which is " << note << " gives " << nolongerOn;
             }
             if(nolongerOn) {
-                qDebug() << "no longer on";
+                //qDebug() << "no longer on";
                 rc1->sender->noteOff(ne->channel,ne->eventId,0);
-                qDebug() << " note off " << ne->eventId << " ch " << ne->channel;
+                //qDebug() << " note off " << ne->eventId << " ch " << ne->channel;
                 delete(*it);
                 onNotes.erase(it);
                 it=onNotes.begin();
@@ -128,7 +128,7 @@ void Sequencer::setStep(int n)
 
 void Sequencer::noteOn(int chan, int voiceId, float f, int midinote, int pitch, int scalenote, int v)
 {
-    qDebug() << "sequencer noteOn ch " << chan << " scalenote " << scalenote;
+    //qDebug() << "sequencer noteOn ch " << chan << " scalenote " << scalenote;
     Sequence * seq;
     if(rec) {
         noteEvent * ne = new noteEvent;
@@ -138,7 +138,7 @@ void Sequencer::noteOn(int chan, int voiceId, float f, int midinote, int pitch, 
         onRecNotes.push_back(ne);
 
         seq=rc1->layout->getCurrentSeq();
-        qDebug() << " step " << currStep << " note " << scalenote;
+        //qDebug() << " step " << currStep << " note " << scalenote;
         seq->addNote(currStep,scalenote);
 
         ne = new noteEvent;

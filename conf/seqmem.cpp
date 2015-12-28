@@ -30,7 +30,7 @@ void SeqMem::readSeqmem(char * filename) {
             seqmem[i]->nbars=nbars;
             fread(&nsteps,sizeof(int),1,ptr_myfile);
             seqmem[i]->setNsteps(nsteps);
-            qDebug() << "read seq " << i << " nsteps " << nsteps << " nbars " << nbars;
+            //qDebug() << "read seq " << i << " nsteps " << nsteps << " nbars " << nbars;
             for(int j=0;j<seqmem[i]->getNsteps();j++) {
                 fread(&nnotes,sizeof(int),1,ptr_myfile);
                 seqmem[i]->clearStep(j);

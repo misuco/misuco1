@@ -61,9 +61,10 @@ RC1::RC1(MainWindow *parent) :
     layout=new LayoutModel();
     ehand=new EventHandlerRect();
 
-    sender=new SenderMulti();
-
     sequencer=new Sequencer(this,120);
+
+    sender=new SenderMulti();
+    sender->setSeq(sequencer);
 
     //chan=0;
 

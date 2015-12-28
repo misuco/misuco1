@@ -62,6 +62,7 @@ class EventHandlerRect;
 class QQDialog;
 class MainWindow;
 class Sequencer;
+class SenderMulti;
 
 #ifdef NOGL
 class RC1 : public QWidget, PathObject

@@ -5,10 +5,11 @@ Sequence::Sequence(int nsteps, int nbars)
     steps=new std::vector<int>[nsteps];
     this->nsteps=nsteps;
     this->nbars=nbars;
-
+/*
     for(int i=0;i<nsteps;i++) {
         steps[i].push_back(i);
     }
+*/
 }
 
 Sequence::~Sequence()

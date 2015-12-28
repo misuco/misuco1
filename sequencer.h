@@ -20,11 +20,14 @@ public:
     ~Sequencer();
     void doNow(long now);
     void play();
+    void record();
     void stop();
     void setBPM(int b);
     void setNbars(int n);
     void setStep(int n);
     int getStep() { return currStep;}
+    void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int scalenote, int v);
+    void noteOff(int chan, int voiceId);
 
 private:
     RC1 * rc1;

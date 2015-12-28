@@ -209,7 +209,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     // prevent re-trigger due to freq. difference
                     if(p->getState()==Qt::TouchPointMoved) {
                         freq[evptr]=layout->getFreq(iseg);
-                        snd->pitch(layout->getChan(iseg), ieventout[evptr],freq[evptr], layout->getMidinote(iseg), layout->getPitch(iseg));
+                        snd->pitch(layout->getChan(iseg), ieventout[evptr],freq[evptr], layout->getMidinote(iseg), layout->getPitch(iseg), iseg-layout->getScaleStartSeg());
                     }
                 }
                 int midinote=layout->getMidinote(iseg);
@@ -220,13 +220,13 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                 //p->setHue(30*(layout->getValueInt(iseg)%12));
                 if(freq[evptr]!=f) {
                     if(freq[evptr]>0 && layout->getSegtype(isegb[evptr])==1) {
-                        snd->pitch(layout->getChan(iseg), ieventout[evptr],f,midinote, layout->getPitch(iseg));
+                        snd->pitch(layout->getChan(iseg), ieventout[evptr],f,midinote, layout->getPitch(iseg), iseg-layout->getScaleStartSeg());
                     } else {
                         if(freq[evptr]>0) {
                             snd->noteOff(chan[evptr], ieventout[evptr], mnote[evptr]);
                             ieventout[evptr]=rc1->getIEventOut();
                         }
-                        snd->noteOn(layout->getChan(iseg), ieventout[evptr], f, midinote, layout->getPitch(iseg), veldef);
+                        snd->noteOn(layout->getChan(iseg), ieventout[evptr], f, midinote, layout->getPitch(iseg), iseg-layout->getScaleStartSeg(),veldef);
                     }
                     freq[evptr]=f;
                     chan[evptr]=layout->getChan(iseg);
@@ -271,12 +271,12 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                         int pitch=pitchednote-midinote*4096;
 
                         if(freq[evptr]>0) {
-                            snd->pitch(layout->getChan(iseg), ieventout[evptr],frel,midinote,pitch);
+                            snd->pitch(layout->getChan(iseg), ieventout[evptr],frel,midinote,pitch, iseg-layout->getScaleStartSeg());
                         } else {
                             //ieventout[evptr]=ieventoutnext;
                             //chan[evptr]=layout->getChan(iseg);
                             //ieventoutnext++;
-                            snd->noteOn(layout->getChan(iseg), ieventout[evptr],frel,midinote,pitch,veldef);
+                            snd->noteOn(layout->getChan(iseg), ieventout[evptr],frel,midinote,pitch,iseg-layout->getScaleStartSeg(),veldef);
                         }
                         freq[evptr]=frel;
                         chan[evptr]=layout->getChan(iseg);
@@ -522,6 +522,9 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                          } else if(layout->getCtly(iseg)==-3) {
                              rc1->sequencer->stop();
                              layout->seqPlay=false;
+                         } else if(layout->getCtly(iseg)==-4) {
+                             rc1->sequencer->stop();
+                             layout->seqRec=false;
                          }
                          layout->updateLayout();
                      } else {
@@ -533,6 +536,11 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                          } else if(layout->getCtly(iseg)==-3) {
                              rc1->sequencer->play();
                              layout->seqPlay=true;
+                             layout->seqRec=false;
+                         } else if(layout->getCtly(iseg)==-4) {
+                             rc1->sequencer->record();
+                             layout->seqRec=true;
+                             layout->seqPlay=false;
                          }
                          layout->updateLayout();
                      }

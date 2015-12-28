@@ -25,9 +25,9 @@ public:
     virtual ~ISender() {}
     virtual void cc(int chan, int voiceId, int cc, float v1, float v1avg)=0;
     virtual void pc(int chan, int v1)=0;
-    virtual void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int v)=0;
+    virtual void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int scalenote, int v)=0;
     virtual void noteOff(int chan, int voiceId, int midinote)=0;
-    virtual void pitch(int chan, int voiceId, float f, int midinote, int pitch)=0;
+    virtual void pitch(int chan, int voiceId, float f, int midinote, int pitch, int scalenote)=0;
     virtual void setDestination(char * adr, int port)=0;
     virtual void reconnect()=0;
     virtual int getPort()=0;

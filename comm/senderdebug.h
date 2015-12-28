@@ -27,9 +27,9 @@ public:
     SenderDebug();
     virtual void cc(int chan, int voiceId, int cc, float v1, float v1avg);
     virtual void pc(int chan, int v1);
-    virtual void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int v);
+    virtual void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int scalenote, int v);
     virtual void noteOff(int chan, int voiceId, int midinote);
-    virtual void pitch(int chan, int voiceId, float f, int midinote, int pitch);
+    virtual void pitch(int chan, int voiceId, float f, int midinote, int pitch, int scalenote);
     virtual void setDestination(char *,int) {}
     virtual void reconnect() {}
     virtual int getPort() {return 0;}

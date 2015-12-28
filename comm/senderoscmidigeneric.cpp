@@ -39,7 +39,7 @@ SenderOscMidiGeneric::~SenderOscMidiGeneric()
     delete(oscout);
 }
 
-void SenderOscMidiGeneric::noteOn(int chan, int, float, int midinote, int pitch, int)
+void SenderOscMidiGeneric::noteOn(int chan, int, float, int midinote, int pitch, int scalenote, int)
 {
     //qDebug() << "SenderOscMidiGeneric::noteOn " << chan << " " << voiceId << " " << midinote << " " << pitch;
 
@@ -70,7 +70,7 @@ void SenderOscMidiGeneric::noteOff(int chan, int, int midinote)
     sendOsc(path,v);
 }
 
-void SenderOscMidiGeneric::pitch(int chan, int, float, int, int pitch)
+void SenderOscMidiGeneric::pitch(int chan, int, float, int, int pitch, int scalenote)
 {
     //qDebug() << "SenderOscMidiGeneric::pitch " << chan << " " << voiceId << " " << midinote << " " << pitch;
     QVariantList v;

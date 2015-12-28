@@ -126,7 +126,7 @@ void SenderMobileSynth::cc(int chan, int voiceId, int cc, float v1, float)
 
 void SenderMobileSynth::pc(int chan, int v1) {}
 
-void SenderMobileSynth::noteOn(int, int voiceId, float f, int, int, int)
+void SenderMobileSynth::noteOn(int, int voiceId, float f, int, int, int, int)
 {
     sy->noteOn(voiceId, (float)f);
 }
@@ -136,7 +136,7 @@ void SenderMobileSynth::noteOff(int chan, int voiceId, int)
     sy->noteOff(voiceId);
 }
 
-void SenderMobileSynth::pitch(int chan, int voiceId, float f, int midinote, int pitch) {
+void SenderMobileSynth::pitch(int chan, int voiceId, float f, int midinote, int pitch, int scalenote) {
     sy->noteOn(voiceId, (float)f);
 }
 

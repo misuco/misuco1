@@ -26,7 +26,7 @@ void Sequencer::doNow(long now)
     if(now-nowInit>=nextStepAt && this->run) {
         Sequence * seq=rc1->layout->getCurrentSeq();
         stepNNotes=seq->getStepNNotes(currStep);
-        //qDebug() << "do step " << currStep << " stepNotes " << stepNNotes;
+        qDebug() << "do step " << currStep << " stepNotes " << stepNNotes;
         l=rc1->getLayout();
         for(int i=0;i<stepNNotes;i++) {
             note=seq->getStepNote(currStep,i);
@@ -40,32 +40,32 @@ void Sequencer::doNow(long now)
                 noteEvent * ne = new noteEvent;
                 ne->note=note;
                 ne->eventId=rc1->getIEventOut();
-                ne->channel=rc1->layout->getChannel();
+                ne->channel=rc1->layout->getChannel()*-1;
                 onNotes.push_back(ne);
 
                 int seg=note+l->getScaleStartSeg();
                 float freq=l->getFreq(seg);
                 int pitch=l->getPitch(seg);
                 int midinote=l->getMidinote(seg);
-                rc1->sender->noteOn(ne->channel,ne->eventId,freq,midinote,pitch,1);
-                //qDebug() << "note on " << freq << " evid " << evid << " midinote " << midinote;
+                rc1->sender->noteOn(ne->channel,ne->eventId,freq,midinote,pitch,note,1);
+                qDebug() << "note on " << freq << " evid " << ne->eventId << " midinote " << midinote << " ch " << ne->channel;
                 //qDebug() << "pushed back ";
             }
         }
         for (it=onNotes.begin(); it!=onNotes.end(); ++it) {
             nolongerOn=true;
-            noteEvent * ne;
+            noteEvent * ne = *it;
             //qDebug() << "checking noLongerOn note ";
             for(int i=0;i<stepNNotes;i++) {
                 note=seq->getStepNote(currStep,i);
-                ne = *it;
+                //ne = ;
                 if(ne->note==note) nolongerOn=false;
                 //qDebug() << "whichis " << ne->note << "against " << i << " which is " << note << " gives " << nolongerOn;
             }
             if(nolongerOn) {
-                //qDebug() << "no longer on";
+                qDebug() << "no longer on";
                 rc1->sender->noteOff(ne->channel,ne->eventId,0);
-                //qDebug() << " note off " << ne->eventId;
+                qDebug() << " note off " << ne->eventId << " ch " << ne->channel;
                 delete(*it);
                 onNotes.erase(it);
                 it=onNotes.begin();
@@ -81,14 +81,22 @@ void Sequencer::doNow(long now)
 
 void Sequencer::play()
 {
+    setNbars(rc1->layout->getCurrentSeq()->nbars);
     nextStepAt=0;
     nowInit=QDateTime::currentMSecsSinceEpoch();
     run=true;
 }
 
+void Sequencer::record()
+{
+    rec=true;
+    play();
+}
+
 void Sequencer::stop()
 {
     run=false;
+    rec=false;
     alloff();
 }
 
@@ -107,6 +115,29 @@ void Sequencer::setNbars(int n)
 void Sequencer::setStep(int n)
 {
     currStep=n;
+}
+
+void Sequencer::noteOn(int chan, int voiceId, float f, int midinote, int pitch, int scalenote, int v)
+{
+    qDebug() << "sequencer noteOn ch " << chan << " scalenote " << scalenote;
+    if(rec) {
+        Sequence * seq=rc1->layout->getCurrentSeq();
+        qDebug() << " step " << currStep << " note " << scalenote;
+        seq->addNote(currStep,scalenote);
+
+        noteEvent * ne = new noteEvent;
+        ne->note=scalenote;
+        ne->eventId=rc1->getIEventOut();
+        ne->channel=rc1->layout->getChannel()*-1;
+        onNotes.push_back(ne);
+    }
+}
+
+void Sequencer::noteOff(int chan, int voiceId)
+{
+    if(rec) {
+
+    }
 }
 
 void Sequencer::alloff()

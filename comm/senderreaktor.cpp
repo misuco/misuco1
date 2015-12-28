@@ -41,7 +41,7 @@ SenderReaktor::~SenderReaktor()
     delete(oscout);
 }
 
-void SenderReaktor::noteOn(int chan, int, float, int midinote, int pitch, int)
+void SenderReaktor::noteOn(int chan, int, float, int midinote, int pitch, int scalenote, int)
 {
     int f = midinote;
     QVariantList v;
@@ -67,7 +67,7 @@ void SenderReaktor::noteOff(int chan, int, int midinote)
     sendOsc(path,v);
 }
 
-void SenderReaktor::pitch(int chan, int, float, int, int pitch)
+void SenderReaktor::pitch(int chan, int, float, int, int pitch, int scalenote)
 {
     QVariantList v;
     QString path;

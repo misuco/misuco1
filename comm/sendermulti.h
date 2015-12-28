@@ -23,6 +23,9 @@
 #include <QList>
 #include "isender.h"
 #include "sendermobilesynth.h"
+#include "sequencer.h"
+
+class Sequencer;
 
 class SenderMulti : public ISender
 {
@@ -31,15 +34,17 @@ public:
     ~SenderMulti();
     virtual void cc(int chan, int voiceId, int cc, float v1, float v1avg);
     virtual void pc(int chan, int v1);
-    virtual void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int v);
+    virtual void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int scalenote, int v);
     virtual void noteOff(int chan, int voiceId, int);
-    virtual void pitch(int chan, int voiceId, float f, int midinote, int pitch);
+    virtual void pitch(int chan, int voiceId, float f, int midinote, int pitch, int scalenote);
     virtual void setDestination(char * a,int p);
     virtual void reconnect();
     virtual int getPort();
     virtual char* getAddress(); //{return 0;}
     virtual bool voiceBased() {return true;}
     
+    void setSeq(Sequencer * s) {this->seq=s;}
+
     enum SenderType {
         REAKTOR,
         SUPERCOLLIDER,
@@ -73,6 +78,7 @@ private:
     QList<ISender *> senders;
     QList<offRepeat *> offToRepeat;
     SenderMobileSynth * mobi;
+    Sequencer * seq;
     bool midiOn[256];
     quint8 * notestate;   // currently played notes
     int onCnt;

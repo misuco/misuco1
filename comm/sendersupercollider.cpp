@@ -68,7 +68,7 @@ void SenderSuperCollider::reconnect()
     oscout->setAddress(adr,port);
 }
 
-void SenderSuperCollider::noteOn(int, int voiceId, float f, int, int, int vel)
+void SenderSuperCollider::noteOn(int, int voiceId, float f, int, int, int scalenote, int vel)
 {
     //qDebug() << "noteOn vid:" << voiceId << " f " << f << " vel " << vel;
     QVariantList v;
@@ -83,7 +83,7 @@ void SenderSuperCollider::noteOn(int, int voiceId, float f, int, int, int vel)
     sendOsc("/s_new",v);
 }
 
-void SenderSuperCollider::pitch(int, int voiceId, float f, int, int)
+void SenderSuperCollider::pitch(int, int voiceId, float f, int, int, int scalenote)
 {
     //qDebug() << "pitch vid:" << voiceId << " f " << f;
     QVariantList v;

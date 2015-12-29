@@ -53,12 +53,19 @@ QOscClient::QOscClient( const QHostAddress& address, quint16 source_port, quint1
 
 
 QOscClient::~QOscClient() {
-        //qDebug() << "QOscClient::~QOscClient()";
+    //qDebug() << "QOscClient::~QOscClient()";
+}
+
+QHostAddress QOscClient::getIP()
+{
+    qDebug() << "QOscClient getIP " << socket()->localAddress();
+    qDebug() << "QOscClient localPort " << socket()->localPort();
+    return socket()->localAddress();
 }
 
 void QOscClient::setAddress( char * adr, quint16 port ) {
-	_address = QHostAddress(adr);
-	_port = port;
+    _address = QHostAddress(adr);
+    _port = port;
 }
 
 void QOscClient::sendData( QString path, QVariant data ) {

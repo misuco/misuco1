@@ -134,6 +134,7 @@ private:
     bool * painterOn;
 
     QOscServer * oscin;
+    QString myIP;
 
     int ieventoutnext;  // id of next output event
 

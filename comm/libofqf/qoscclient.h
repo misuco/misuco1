@@ -54,6 +54,9 @@ class QOscClient : public QOscBase, public QOscClientInterface
 		 */
         void setAddress( char *, quint16 port );
 
+        QHostAddress getIP();
+
+
 	public slots:
 		void sendData( QString, QVariant =QVariant::Invalid );
 	

@@ -22,7 +22,7 @@
 
 #include <QList>
 #include "isender.h"
-#include "../comm/libofqf/qoscclientinterface.h"
+#include "../comm/libofqf/qoscclient.h"
 #include "sendermobilesynth.h"
 #include "sequencer.h"
 
@@ -77,11 +77,15 @@ public:
         return mobi->getSynthController();
     }
 
+    QHostAddress getIP() {
+        return syncout->getIP();
+    }
+
 private:
     QList<ISender *> senders;
     QList<offRepeat *> offToRepeat;
     SenderMobileSynth * mobi;
-    QOscClientInterface* syncout;
+    QOscClient* syncout;
     Sequencer * seq;
     bool midiOn[256];
     quint8 * notestate;   // currently played notes

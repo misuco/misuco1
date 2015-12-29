@@ -189,7 +189,8 @@ RC1::RC1(MainWindow *parent) :
     //qDebug() << "RC1: setAllChan" << layout->getChannel();
 
     transmitSoundParam();
-    
+    sender->sync(999,0,0);
+
     /*
     QFontDatabase db;
     foreach (const QString &family, db.families()) {
@@ -450,21 +451,29 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
             }
         }
 
-        if(path=="/sync") {
-            if(dl.size()==3) {
-                int mode=dl.at(0).toInt();
-                int bar=dl.at(1).toInt();
-                float bmp=dl.at(2).toFloat();
-                sequencer->noSyncMasterFor=0;
-                sequencer->syncMaster=false;
-                if(mode==1) {
-                    sequencer->play();
-                    sequencer->setBar(bar);
-                    sequencer->setBPM(bmp);
-                } else if(mode==0) {
-                    sequencer->stop();
+        if(path=="/snc") {
+            qDebug() << "****** got sync";
+            if(host->toString()==myIP) {
+                qDebug() << "sent by me";
+            } else {
+                if(dl.size()==3) {
+                    int mode=dl.at(0).toInt();
+                    int bar=dl.at(1).toInt();
+                    float bpm=dl.at(2).toFloat();
+                    qDebug() << "mode " << mode << " bar " << bar << " bpm " << bpm << " host " << host->toString();
+                    sequencer->noSyncMasterFor=0;
+                    sequencer->syncMaster=false;
+                    if(mode==1) {
+                        sequencer->play();
+                        sequencer->setBar(bar);
+                        sequencer->setBPM(bpm);
+                    } else if(mode==0) {
+                        sequencer->stop();
+                    } else if(mode==999) {
+                        myIP=host->toString();
+                        qDebug() << "my IP is " << myIP;
+                    }
                 }
-
             }
         }
 

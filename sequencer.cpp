@@ -39,6 +39,7 @@ void Sequencer::doNow(long now)
             if(currStep%seq->getNbars()==0) {
                 int bar=currStep/seq->getNbars();
                 rc1->sender->sync(1,bar,bpm);
+                qDebug() << "send sync " << bar << " " << bpm;
             }
         }
 
@@ -121,7 +122,9 @@ void Sequencer::stop()
     run=false;
     rec=false;
     alloff();
-    rc1->sender->sync(0,0,bpm);
+    if(syncMaster) {
+        rc1->sender->sync(0,0,bpm);
+    }
 }
 
 void Sequencer::setBPM(int b)
@@ -134,6 +137,7 @@ void Sequencer::setBar(int b)
 {
     int step=b*rc1->layout->getCurrentSeq()->getNbars()-1;
     if(step<0) step=rc1->layout->getCurrentSeq()->getNsteps();
+    qDebug() << "setBar " << b << " step " << step;
 }
 
 void Sequencer::setNbars(int n)

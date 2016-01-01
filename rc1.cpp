@@ -189,7 +189,6 @@ RC1::RC1(MainWindow *parent) :
     //qDebug() << "RC1: setAllChan" << layout->getChannel();
 
     transmitSoundParam();
-    sender->sync(999,0,0);
 
     /*
     QFontDatabase db;

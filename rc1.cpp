@@ -66,8 +66,6 @@ RC1::RC1(MainWindow *parent) :
     sender=new SenderMulti();
     sender->setSeq(sequencer);
 
-    //chan=0;
-
     storagePath=QStandardPaths::writableLocation(QStandardPaths::DataLocation);
     privateDataPath=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     /*

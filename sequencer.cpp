@@ -153,7 +153,7 @@ void Sequencer::setStep(int n)
 
 void Sequencer::noteOn(int chan, int voiceId, float f, int midinote, int pitch, int scalenote, int v)
 {
-    //qDebug() << "sequencer noteOn ch " << chan << " scalenote " << scalenote;
+    qDebug() << "sequencer noteOn ch " << chan << " scalenote " << scalenote << " vid " << voiceId;
     Sequence * seq;
     if(rec) {
         noteEvent * ne = new noteEvent;
@@ -184,15 +184,17 @@ void Sequencer::noteOn(int chan, int voiceId, float f, int midinote, int pitch, 
 
 void Sequencer::noteOff(int chan, int voiceId)
 {
+    qDebug() << "sequencer noteOff ch " << chan << " vid " << voiceId;
     if(rec) {
         std::list<noteEvent *>::iterator it;
         for (it=onRecNotes.begin(); it!=onRecNotes.end(); ++it) {
             noteEvent * ne = *it;
             if(ne->eventId==voiceId) {
+                qDebug() << "erased " << ne->note;
                 delete(*it);
                 onRecNotes.erase(it);
                 it=onRecNotes.begin();
-                //qDebug() << "erased ";
+                qDebug() << "erased ";
             }
         }
     }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE misuco>
-<misucoprogmem version="1.1" adr="255.255.255.255" port="3150" senderType="0" errCorr="0" >
+<misucoprogmem version="1.1" adr="255.255.255.255" port="3150" senderType="0" errCorr="0" channel="1">
 <prog sound="0"  basenote="3" baseoct="5" topoct="6" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
 <prog sound="1"  basenote="0" baseoct="5" topoct="7" s0="0" s1="0" s2="0" s3="1" s4="0" s5="0" s6="1" s7="0" s8="0" s9="0" s10="0"/>
 <prog sound="2"  basenote="1" baseoct="4" topoct="5" s0="0" s1="1" s2="0" s3="0" s4="1" s5="0" s6="0" s7="0" s8="1" s9="0" s10="0"/>

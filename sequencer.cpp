@@ -227,7 +227,6 @@ void Sequencer::alloff()
 
 void Sequencer::playInt()
 {
-    rc1->sender->sync(999,0,0);
     setNbars(rc1->layout->getCurrentSeq()->nbars);
     nextStepAt=0;
     nowInit=QDateTime::currentMSecsSinceEpoch();

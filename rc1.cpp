@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtGlobal>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QNetworkInterface>
 #include <QDir>
 #include <QSysInfo>
 
@@ -90,6 +91,14 @@ RC1::RC1(MainWindow *parent) :
     //  W8: C:/Users/c1/AppData/Local/rc1 => Persistent
     //  iOS: /var/mobile/Applications/ADDEBF69-B1C5-4E36-A8C2-789D717434C1/Documents => Persistent
     //  Linux: /home/c1/.local/share/rc1 => not Writable
+
+    foreach (const QHostAddress &address, QNetworkInterface::allAddresses()) {
+        if (address.protocol() == QAbstractSocket::IPv4Protocol && address != QHostAddress(QHostAddress::LocalHost)) {
+            myIP=address.toString();
+            qDebug() << "go ip " << address.toString();
+        }
+    }
+
 #ifdef RC1_LINUX
     storagePath=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     // Android: /storage/emulated/0/Documents => not Persistent
@@ -464,11 +473,12 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
                         sequencer->play();
                         sequencer->setBar(bar);
                         sequencer->setBPM(bpm);
+                        layout->seqPlay=true;
+                        layout->updateLayout();
                     } else if(mode==0) {
                         sequencer->stop();
-                    } else if(mode==999) {
-                        myIP=host->toString();
-                        qDebug() << "my IP is " << myIP;
+                        layout->seqPlay=false;
+                        layout->updateLayout();
                     }
                 }
             }

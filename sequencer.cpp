@@ -7,6 +7,7 @@ Sequencer::Sequencer(RC1 * rc1, float bpm)
     this->currStep=0;
     this->run=false;
     this->edit=false;
+    this->manuStop=false;
     this->syncMaster=true;
     this->noSyncMasterFor=0;
 }
@@ -28,7 +29,7 @@ void Sequencer::doNow(long now)
     if(now-nowInit>=nextStepAt && this->run) {
         Sequence * seq=rc1->layout->getCurrentSeq();
         noSyncMasterFor++;
-        if(noSyncMasterFor>20) {
+        if(noSyncMasterFor>10) {
             syncMaster=true;
         }
 
@@ -107,8 +108,16 @@ void Sequencer::doNow(long now)
 
 void Sequencer::play()
 {
+    manuStop=false;
     rec=false;
     playInt();
+}
+
+void Sequencer::netPlay()
+{
+    if(!manuStop) {
+        playInt();
+    }
 }
 
 void Sequencer::record()
@@ -118,6 +127,12 @@ void Sequencer::record()
 }
 
 void Sequencer::stop()
+{
+    manuStop=true;
+    netStop();
+}
+
+void Sequencer::netStop()
 {
     run=false;
     rec=false;

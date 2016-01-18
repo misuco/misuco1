@@ -428,6 +428,7 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                     rc1->transmitSoundParam();
                 } else if(layout->getCtly(iseg)==-3) {
                     // edit button
+                    rc1->sequencer->setEdit(false);
                     layout->toggleEdit();
                 } else if(layout->getCtly(iseg)==-4) {
                     // layout switch button

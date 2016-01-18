@@ -23,16 +23,20 @@ public:
 
     void doNow(long now);
     void play();
+    void netPlay();
     void record();
     void stop();
+    void netStop();
     void setBPM(int b);
     void setBar(int b);
     void setNbars(int n);
     void setStep(int n);
     int getStep() { return currStep;}
+    bool isSyncMaster() {return syncMaster;}
     void noteOn(int chan, int voiceId, float f, int midinote, int pitch, int scalenote, int v);
     void noteOff(int chan, int voiceId);
     bool isOn(int scalenote);
+    bool isManuStop() {return manuStop;}
     void setEdit(bool e) {edit=e;}
 
 private:
@@ -43,6 +47,7 @@ private:
     float bpm;
     bool run;
     bool rec;
+    bool manuStop;
     bool edit;
     int currStep;
     std::list<noteEvent *> onNotes;

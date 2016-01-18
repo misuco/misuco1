@@ -470,13 +470,13 @@ void RC1::signalData(QString path, QVariant data, QHostAddress * host, quint16)
                     sequencer->noSyncMasterFor=0;
                     sequencer->syncMaster=false;
                     if(mode==1) {
-                        sequencer->play();
+                        sequencer->netPlay();
                         sequencer->setBar(bar);
                         sequencer->setBPM(bpm);
                         layout->seqPlay=true;
                         layout->updateLayout();
                     } else if(mode==0) {
-                        sequencer->stop();
+                        sequencer->netStop();
                         layout->seqPlay=false;
                         layout->updateLayout();
                     }

@@ -34,7 +34,17 @@ void PaintWave::paint(RC1 *rc1, QPainter *pnt)
     }
     pnt->setPen(Qt::black);
     QString fps,freqs;
-    fps.sprintf(" %d fps %d/%d voices ",rc1->getFps(),ctl->getNVoices(),ctl->getNVoicesMax());
+    if(rc1->sequencer->isManuStop()) {
+        fps.sprintf("*");
+    } else {
+        fps.sprintf(" ");
+    }
+    if(rc1->sequencer->isSyncMaster()) {
+        fps.append(freqs.sprintf("M "));
+    } else {
+        fps.append(freqs.sprintf("S "));
+    }
+    fps.append(freqs.sprintf("%d step %d fps %d/%d voices ",rc1->sequencer->getStep(),rc1->getFps(),ctl->getNVoices(),ctl->getNVoicesMax()));
 //    fps.sprintf(" %d fps %d/%d voices ",1,ctl->getNVoices(),ctl->getNVoicesMax());
     for(int i=ctl->getNVoices()-1;i>=0;i--) {
         fps.append(freqs.sprintf("  %.1f",ctl->getVF(i)));

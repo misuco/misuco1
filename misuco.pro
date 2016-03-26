@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui opengl network multimedia xml quick qml
+CCFLAG += -lpthread -lgthread-2.0 -lglib-2.0
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,6 +17,17 @@ INCLUDEPATH += comm/libofqf
 INCLUDEPATH += mobilesynth/mobilesynth/Classes/synth
 INCLUDEPATH += mobilesynth/mobilesynth/Classes
 INCLUDEPATH += mobilesynth/lib
+INCLUDEPATH += fluidsynth-1.1.6/include
+INCLUDEPATH += fluidsynth-1.1.6/src/utils
+INCLUDEPATH += fluidsynth-1.1.6/src/synth
+INCLUDEPATH += fluidsynth-1.1.6/src/midi
+INCLUDEPATH += fluidsynth-1.1.6/src/rvoice
+INCLUDEPATH += fluidsynth-1.1.6/src/sfloader
+INCLUDEPATH += fluidsynth-1.1.6/src/bindings
+INCLUDEPATH += fluidsynth-1.1.6/src/drivers
+INCLUDEPATH += fluidsynth-1.1.6/src
+INCLUDEPATH += /usr/include/glib-2.0
+INCLUDEPATH += /usr/lib/x86_64-linux-gnu/glib-2.0/include
 
 SOURCES += main.cpp\
     storage.cpp \
@@ -74,7 +86,42 @@ SOURCES += main.cpp\
     paint/painthistogram.cpp \
     conf/sequence.cpp \
     sequencer.cpp \
-    conf/seqmem.cpp
+    conf/seqmem.cpp \
+    fluidsynth-1.1.6/src/drivers/fluid_adriver.c \
+    fluidsynth-1.1.6/src/drivers/fluid_dart.c \
+    fluidsynth-1.1.6/src/drivers/fluid_mdriver.c \
+    fluidsynth-1.1.6/src/drivers/fluid_midishare.c \
+    fluidsynth-1.1.6/src/drivers/fluid_portaudio.c \
+    fluidsynth-1.1.6/src/drivers/fluid_sndmgr.c \
+    fluidsynth-1.1.6/src/midi/fluid_midi.c \
+    fluidsynth-1.1.6/src/midi/fluid_midi_router.c \
+    fluidsynth-1.1.6/src/midi/fluid_seq.c \
+    fluidsynth-1.1.6/src/midi/fluid_seqbind.c \
+    fluidsynth-1.1.6/src/rvoice/fluid_adsr_env.c \
+    fluidsynth-1.1.6/src/rvoice/fluid_chorus.c \
+    fluidsynth-1.1.6/src/rvoice/fluid_iir_filter.c \
+    fluidsynth-1.1.6/src/rvoice/fluid_lfo.c \
+    fluidsynth-1.1.6/src/rvoice/fluid_rev.c \
+    fluidsynth-1.1.6/src/rvoice/fluid_rvoice.c \
+    fluidsynth-1.1.6/src/rvoice/fluid_rvoice_dsp.c \
+    fluidsynth-1.1.6/src/rvoice/fluid_rvoice_event.c \
+    fluidsynth-1.1.6/src/rvoice/fluid_rvoice_mixer.c \
+    fluidsynth-1.1.6/src/sfloader/fluid_defsfont.c \
+    fluidsynth-1.1.6/src/sfloader/fluid_ramsfont.c \
+    fluidsynth-1.1.6/src/synth/fluid_chan.c \
+    fluidsynth-1.1.6/src/synth/fluid_event.c \
+    fluidsynth-1.1.6/src/synth/fluid_gen.c \
+    fluidsynth-1.1.6/src/synth/fluid_mod.c \
+    fluidsynth-1.1.6/src/synth/fluid_synth.c \
+    fluidsynth-1.1.6/src/synth/fluid_tuning.c \
+    fluidsynth-1.1.6/src/synth/fluid_voice.c \
+    fluidsynth-1.1.6/src/utils/fluid_conv.c \
+    fluidsynth-1.1.6/src/utils/fluid_hash.c \
+    fluidsynth-1.1.6/src/utils/fluid_list.c \
+    fluidsynth-1.1.6/src/utils/fluid_ringbuffer.c \
+    fluidsynth-1.1.6/src/utils/fluid_settings.c \
+    fluidsynth-1.1.6/src/utils/fluid_sys.c \
+    comm/sendersfmidi.cpp
 
 HEADERS  += \
     storage.h \
@@ -144,7 +191,57 @@ HEADERS  += \
     paint/painthistogram.h \
     conf/sequence.h \
     sequencer.h \
-    conf/seqmem.h
+    conf/seqmem.h \
+    fluidsynth-1.1.6/include/fluidsynth/audio.h \
+    fluidsynth-1.1.6/include/fluidsynth/event.h \
+    fluidsynth-1.1.6/include/fluidsynth/gen.h \
+    fluidsynth-1.1.6/include/fluidsynth/log.h \
+    fluidsynth-1.1.6/include/fluidsynth/midi.h \
+    fluidsynth-1.1.6/include/fluidsynth/misc.h \
+    fluidsynth-1.1.6/include/fluidsynth/mod.h \
+    fluidsynth-1.1.6/include/fluidsynth/ramsfont.h \
+    fluidsynth-1.1.6/include/fluidsynth/seq.h \
+    fluidsynth-1.1.6/include/fluidsynth/seqbind.h \
+    fluidsynth-1.1.6/include/fluidsynth/settings.h \
+    fluidsynth-1.1.6/include/fluidsynth/sfont.h \
+    fluidsynth-1.1.6/include/fluidsynth/shell.h \
+    fluidsynth-1.1.6/include/fluidsynth/synth.h \
+    fluidsynth-1.1.6/include/fluidsynth/types.h \
+    fluidsynth-1.1.6/include/fluidsynth/voice.h \
+    fluidsynth-1.1.6/include/fluidsynth.h \
+    fluidsynth-1.1.6/src/drivers/fluid_adriver.h \
+    fluidsynth-1.1.6/src/drivers/fluid_mdriver.h \
+    fluidsynth-1.1.6/src/midi/fluid_midi.h \
+    fluidsynth-1.1.6/src/midi/fluid_midi_router.h \
+    fluidsynth-1.1.6/src/rvoice/fluid_adsr_env.h \
+    fluidsynth-1.1.6/src/rvoice/fluid_chorus.h \
+    fluidsynth-1.1.6/src/rvoice/fluid_iir_filter.h \
+    fluidsynth-1.1.6/src/rvoice/fluid_lfo.h \
+    fluidsynth-1.1.6/src/rvoice/fluid_phase.h \
+    fluidsynth-1.1.6/src/rvoice/fluid_rev.h \
+    fluidsynth-1.1.6/src/rvoice/fluid_rvoice.h \
+    fluidsynth-1.1.6/src/rvoice/fluid_rvoice_event.h \
+    fluidsynth-1.1.6/src/rvoice/fluid_rvoice_mixer.h \
+    fluidsynth-1.1.6/src/sfloader/fluid_defsfont.h \
+    fluidsynth-1.1.6/src/sfloader/fluid_ramsfont.h \
+    fluidsynth-1.1.6/src/sfloader/fluid_sfont.h \
+    fluidsynth-1.1.6/src/synth/fluid_chan.h \
+    fluidsynth-1.1.6/src/synth/fluid_event_priv.h \
+    fluidsynth-1.1.6/src/synth/fluid_event_queue.h \
+    fluidsynth-1.1.6/src/synth/fluid_gen.h \
+    fluidsynth-1.1.6/src/synth/fluid_mod.h \
+    fluidsynth-1.1.6/src/synth/fluid_synth.h \
+    fluidsynth-1.1.6/src/synth/fluid_tuning.h \
+    fluidsynth-1.1.6/src/synth/fluid_voice.h \
+    fluidsynth-1.1.6/src/utils/fluid_conv.h \
+    fluidsynth-1.1.6/src/utils/fluid_hash.h \
+    fluidsynth-1.1.6/src/utils/fluid_list.h \
+    fluidsynth-1.1.6/src/utils/fluid_ringbuffer.h \
+    fluidsynth-1.1.6/src/utils/fluid_settings.h \
+    fluidsynth-1.1.6/src/utils/fluid_sys.h \
+    fluidsynth-1.1.6/src/utils/fluidsynth_priv.h \
+    comm/sendersfmidi.h \
+    fluidsynth-1.1.6/include/fluidsynth/version.h
 
 OTHER_FILES += \
     puredata/osc2midi.pd \

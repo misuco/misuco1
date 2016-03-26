@@ -42,7 +42,8 @@ SenderMulti::SenderMulti()
     for(int i=0;i<1024;i++) {
         notestate[i]=0;
     }
-    mobi=new SenderMobileSynth();
+    //mobi=new SenderMobileSynth();
+    mobi=new SenderSfMidi();
 }
 
 SenderMulti::~SenderMulti()

@@ -132,7 +132,7 @@ RC1::RC1(MainWindow *parent) :
 
     painterOn=new bool[nPrePainters+nPointPainters+nPostPainters];
     painterOn[0]=true;
-    painterOn[1]=true;
+    painterOn[1]=false;
     painterOn[2]=false;
     painterOn[3]=false;
 
@@ -238,12 +238,14 @@ void RC1::paintEvent(QPaintEvent *)
         fcnt=0;
         touchstat.newFps(fps);
         //qDebug() << "fps: " << fps;
+        /*
         if(fps<10) {
             sender->getSynthController()->decVoices();
             //qDebug() << "dec voices";
         } else if(fps>50) {
             sender->getSynthController()->incVoices();
         }
+        */
     }
 
     QPainter painter(this);

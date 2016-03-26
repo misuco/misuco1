@@ -24,6 +24,7 @@
 #include "isender.h"
 #include "../comm/libofqf/qoscclient.h"
 #include "sendermobilesynth.h"
+#include "sendersfmidi.h"
 #include "sequencer.h"
 
 class Sequencer;
@@ -74,7 +75,8 @@ public:
     
     void reset1(int x, char *adr, int port);
     synth::Controller * getSynthController() {
-        return mobi->getSynthController();
+        //return mobi->getSynthController();
+        return 0;
     }
 
     QHostAddress getIP() {
@@ -84,7 +86,8 @@ public:
 private:
     QList<ISender *> senders;
     QList<offRepeat *> offToRepeat;
-    SenderMobileSynth * mobi;
+    //SenderMobileSynth * mobi;
+    SenderSfMidi * mobi;
     QOscClient* syncout;
     Sequencer * seq;
     bool midiOn[256];

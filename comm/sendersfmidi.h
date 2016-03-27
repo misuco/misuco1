@@ -28,6 +28,8 @@
 #include "isender.h"
 #include "fluidsynth-1.1.6/include/fluidsynth.h"
 
+#define STACK_SIZE 256
+
 
 class SenderSfMidi : public QIODevice, ISender
 {
@@ -39,8 +41,8 @@ public:
     virtual void cc(int chan, int voiceId, int cc, float, float v1avg);
     virtual void pc(int chan, int v1);
     virtual void noteOn(int chan, int, float f, int midinote, int pitch,int scalenote, int vel);
-    virtual void noteOff(int chan, int voiceId, int midinote);
-    virtual void pitch(int chan, int, float fr, int, int pitch,int scalenote);
+    virtual void noteOff(int chan, int vid, int midinote);
+    virtual void pitch(int chan, int vid, float f, int midinote, int pitch, int scalenote);
     virtual void setDestination(char * a,int p);
     virtual void reconnect();
     virtual int getPort() {return 0;}
@@ -90,6 +92,14 @@ private:
     QAudioFormat m_format;
     QAudioDeviceInfo m_device;
 
+    int vstack[STACK_SIZE]; // voice id stack
+    int cstack[STACK_SIZE]; // channel of voice
+    int nstack[STACK_SIZE]; // note of voice
+    int stack_top;
+
+    int getStackId(int vid);
+    void deleteStackId(int sid);
+    int nextChannel;
 };
 
 #endif // SENDERSFMIDI_H

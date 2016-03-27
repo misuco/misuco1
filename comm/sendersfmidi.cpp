@@ -32,6 +32,14 @@ SenderSfMidi::SenderSfMidi() :   QIODevice()
         ccstate[i]=0;
     }
 
+    stack_top=0;
+    nextChannel=0;
+    for(int i=0;i<STACK_SIZE;i++) {
+        vstack[i]=-1;
+        cstack[i]=-1;
+        nstack[i]=-1;
+    }
+
     DataSampleRateHz  = 44100;
     //const int BufferSize        = 32768;
     //BufferSize        = 8192;
@@ -173,26 +181,38 @@ qint64 SenderSfMidi::bytesAvailable() const
 }
 
 
-void SenderSfMidi::noteOn(int chan, int, float, int midinote, int pitch, int scalenote, int)
+void SenderSfMidi::noteOn(int chan, int vid, float, int midinote, int pitch, int scalenote, int)
 {
-    qDebug() << "SenderOscMidiGeneric::noteOn " << chan << " " << midinote << " " << pitch;
-    fluid_synth_noteon(_synth, 0, midinote, 127);
+    qDebug() << "SenderSfMidi::noteOn v " << vid << " c " << chan << " note " << midinote << " pitch " << pitch;
+    int sid=getStackId(vid);
+    nstack[sid]=midinote;
+    cstack[sid]=nextChannel;
+    nextChannel++;
+    if(nextChannel>15) nextChannel=0;
+    fluid_synth_noteon(_synth, cstack[sid], midinote, 127);
+    fluid_synth_pitch_bend(_synth, cstack[sid], pitch+8192);
 }
 
-void SenderSfMidi::noteOff(int chan, int, int midinote)
+void SenderSfMidi::noteOff(int chan, int vid, int midinote)
 {
     /* Release the note on key 60 */
-    qDebug() << "SenderOscMidiGeneric::noteOn " << chan << " " << midinote << " ";
-    fluid_synth_noteoff(_synth, 0, midinote);
+    qDebug() << "SenderSfMidi::noteOff v " << vid << " c " << chan << " note " << midinote << " ";
+    int sid=getStackId(vid);
+    qDebug() << "fluid_synth_noteoff" << vid << " c " << cstack[sid] << nstack[sid];
+    fluid_synth_noteoff(_synth, cstack[sid], nstack[sid]);
+    deleteStackId(sid);
 }
 
-void SenderSfMidi::pitch(int chan, int, float, int, int pitch, int scalenote)
+void SenderSfMidi::pitch(int chan, int vid, float f, int midinote, int pitch, int scalenote)
 {
-    qDebug() << "SenderSfMidi::pitch " << pitch;
-    fluid_synth_pitch_bend 	( 	_synth,
-            0, //int  	chan,
-            pitch/2+8192 //int  	val
-        );
+    qDebug() << "SenderSfMidi::pitch " << pitch << " n " << midinote;
+    int sid=getStackId(vid);
+    if(midinote!=nstack[sid]) {
+        fluid_synth_noteoff(_synth, cstack[sid], nstack[sid]);
+        nstack[sid]=midinote;
+        fluid_synth_noteon(_synth, cstack[sid], midinote, 127);
+    }
+    fluid_synth_pitch_bend(_synth, cstack[sid], pitch+8192);
 }
 
 void SenderSfMidi::setDestination(char * a, int p)
@@ -206,14 +226,9 @@ void SenderSfMidi::reconnect()
 void SenderSfMidi::pc(int chan, int v1)
 {
     qDebug() <<  "SenderSfMidi::pc ch " << chan << " v1 " << v1;
-    int ret = fluid_synth_program_select 	( 	_synth,
-            0,
-            1,
-            0,
-            v1
-        ) ;
-    qDebug() << "program select " << ret;
-
+    for(int i=0;i<16;i++) {
+        fluid_synth_program_select(_synth,i,1,0,v1);
+    }
 }
 
 void SenderSfMidi::cc(int chan, int, int cc, float, float v1avg)
@@ -251,4 +266,35 @@ void SenderSfMidi::pullTimerExpired()
         }
         //qDebug() << "***** pullTimerExpired DONE *****  ";
     }
+}
+
+int SenderSfMidi::getStackId(int vid)
+{
+    int sid=-1;
+    for(int i=0;i<stack_top;i++) {
+        if(vstack[i]==vid) {
+            sid=i;
+        }
+    }
+    if(sid==-1) {
+        sid=stack_top;
+        vstack[sid]=vid;
+        stack_top++;
+    }
+    return sid;
+}
+
+void SenderSfMidi::deleteStackId(int sid)
+{
+    for(int i=0;i<stack_top-1;i++) {
+        if(i>=sid) {
+            vstack[i]=vstack[i+1];
+            cstack[i]=cstack[i+1];
+            nstack[i]=nstack[i+1];
+        }
+    }
+    stack_top--;
+    vstack[stack_top]=-1;
+    cstack[stack_top]=-1;
+    nstack[stack_top]=-1;
 }

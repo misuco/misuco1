@@ -289,5 +289,6 @@ ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 DISTFILES += \
     conf/sound.xml \
     NetDialog.qml \
-    conf/lp6.xml
+    conf/lp6.xml \
+    conf/sYnerGi-8Mb.sf2
 

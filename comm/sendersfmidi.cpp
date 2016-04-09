@@ -43,8 +43,8 @@ SenderSfMidi::SenderSfMidi() :   QIODevice()
     DataSampleRateHz  = 44100;
     //const int BufferSize        = 32768;
     //BufferSize        = 8192;
-    //BufferSize        = 32768;
-    BufferSize        = 16384;
+    BufferSize        = 32768;
+    //BufferSize        = 16384;
 
     m_buffer.resize(BufferSize);
     m_buffer.fill(0);

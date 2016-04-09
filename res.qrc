@@ -16,5 +16,6 @@
         <file>conf/sound.xml</file>
         <file>NetDialog.qml</file>
         <file>conf/lp6.xml</file>
+        <file>conf/sYnerGi-8Mb.sf2</file>
     </qresource>
 </RCC>

@@ -504,6 +504,10 @@ float LayoutModel::calcPitch(int midinote, float f) {
     return round(Log2(f/midi2fequal[midinote])*12*8192/2);
 }
 
+float LayoutModel::calcFreq(int midinote, int pitch) {
+    return pow(2.0,(float)pitch*2.0/12.0/8192.0)*midi2fequal[midinote];
+}
+
 void LayoutModel::setMidinote(int i, int v)
 {
     if(i>=0 && i<nsegs_max) {
@@ -1111,104 +1115,135 @@ int LayoutModel::generateScale(int seg, bool firstlast) {
     //seg=scaleStartSeg;
     if(seg>=nsegs_max) return seg;
     int startseg=seg; // save startseg to count added segs
-
-    for(int i=progmem.progmem[actProgmem].baseoct;i<=progmem.progmem[actProgmem].topoct;i++) {
-        int calcnote=progmem.progmem[actProgmem].basenote+i*12;
-        midinote[seg]=calcnote;
-        freq[seg]=midi2f[calcnote];
-        //pitch[seg]=midi2fcent[(calcnote+3)%12]*4096.0f/100.0f;
-        pitch[seg]=midi2fcent[calcnote%12]*4096.0f/100.0f;
-        QString octnum;
-        octnum.sprintf("%d",i+1);
-        segText[seg]=midi2TextEU[calcnote%12];
-        segText[seg].append(octnum);
-        ctlx[seg]=0;
-        ctly[seg]=1;
-        segwidth[seg]=1;
-        segtype[seg]=0;
-        segH[seg]=note2hue(calcnote);
-        pressed[seg]=0;
-        for(int j=0;j<11;j++) {
-            if(progmem.progmem[actProgmem].bscale[j]) {
-                if(transMode) {
-                    seg++;
-                    if(seg>=nsegs_max) return seg;
-                    segtype[seg]=1;
-                    segText[seg]="";
-                    segwidth[seg]=1;
-                    ctlx[seg]=0;
-                    ctly[seg]=1;
-                    pressed[seg]=0;
-                }
-                seg++;
-                if(seg>=nsegs_max) return seg;
-                segtype[seg]=0;
-                segwidth[seg]=1;
-                int thisnote=calcnote+j+1;
-                midinote[seg]=thisnote;
-                freq[seg]=midi2f[thisnote];
-                //pitch[seg]=midi2fcent[(thisnote+3)%12]*4096.0f/100.0f;
-                pitch[seg]=midi2fcent[thisnote%12]*4096.0f/100.0f;
-                //qDebug() << "pitch " << pitch[seg] << " " ;
-                segText[seg]=midi2TextEU[thisnote%12];
-                segText[seg].append(octnum);
-                ctlx[seg]=0;
-                ctly[seg]=1;
-                segH[seg]=note2hue(thisnote);
-                pressed[seg]=0;
-            }
-        }
-        seg++;
-        if(seg>=nsegs_max) return seg;
-        if(i<progmem.progmem[actProgmem].topoct && transMode) {
-            segtype[seg]=1;
-            segText[seg]="";
-            segwidth[seg]=1;
-            pressed[seg]=0;
+    for(int k=0;k<=2;k++) {
+        for(int i=progmem.progmem[actProgmem].baseoct;i<=progmem.progmem[actProgmem].topoct;i++) {
+            int calcnote=progmem.progmem[actProgmem].basenote+i*12;
+            midinote[seg]=calcnote;
+            freq[seg]=midi2f[calcnote];
+            //pitch[seg]=midi2fcent[(calcnote+3)%12]*4096.0f/100.0f;
+            pitch[seg]=midi2fcent[calcnote%12]*4096.0f/100.0f;
+            QString octnum;
+            octnum.sprintf("%d",i+1);
+            segText[seg]=midi2TextEU[calcnote%12];
+            segText[seg].append(octnum);
             ctlx[seg]=0;
             ctly[seg]=1;
-            seg++;
-            if(seg>=nsegs_max) return seg;
-        }
-    }
-    // it sounds nice if an octave finishes
-    // on top with the first note
-    //
-    if(firstlast==true) {
-        // but only, if there is more than 1 seg
-        if(seg>startseg+1) {
-            
-            // is there enough space in transMode?
-            if(transMode) {
-                if(seg+1<nsegs_max) {
-                    segtype[seg]=1;
-                    segText[seg]="";
-                    segwidth[seg]=1;
-                    pressed[seg]=0;
+            segwidth[seg]=1;
+            segtype[seg]=0;
+            segH[seg]=note2hue(calcnote);
+            pressed[seg]=0;
+            if(k==0) {
+                segtype[seg]=1;
+                ctlx[seg]=4;
+                ctly[seg]=-1;
+            }
+            if(k==2) {
+                segtype[seg]=1;
+                ctlx[seg]=-4;
+                ctly[seg]=-1;
+                midinote[seg]=calcnote+4;
+            }
+
+            for(int j=0;j<11;j++) {
+                if(progmem.progmem[actProgmem].bscale[j]) {
+                    if(transMode) {
+                        seg++;
+                        if(seg>=nsegs_max) return seg;
+                        segtype[seg]=1;
+                        segText[seg]="";
+                        segwidth[seg]=1;
+                        ctlx[seg]=0;
+                        ctly[seg]=1;
+                        pressed[seg]=0;
+                    }
+                    seg++;
+                    if(seg>=nsegs_max) return seg;
+
+                    int thisnote=calcnote+j+1;
+                    midinote[seg]=thisnote;
+
+                    segtype[seg]=0;
                     ctlx[seg]=0;
                     ctly[seg]=1;
+                    if(k==0) {
+                        segtype[seg]=1;
+                        ctlx[seg]=4;
+                        ctly[seg]=-1;
+                    }
+                    if(k==2) {
+                        segtype[seg]=1;
+                        ctlx[seg]=-4;
+                        ctly[seg]=-1;
+                        midinote[seg]=thisnote+4;
+                    }
+                    segwidth[seg]=1;
+
+                    freq[seg]=midi2f[thisnote];
+                    //pitch[seg]=midi2fcent[(thisnote+3)%12]*4096.0f/100.0f;
+                    pitch[seg]=midi2fcent[thisnote%12]*4096.0f/100.0f;
+                    //qDebug() << "pitch " << pitch[seg] << " " ;
+
+
+                    segText[seg]=midi2TextEU[thisnote%12];
+                    segText[seg].append(octnum);
+                    segH[seg]=note2hue(midinote[seg]);
+                    pressed[seg]=0;
+                }
+            }
+            seg++;
+            if(seg>=nsegs_max) return seg;
+            if(i<progmem.progmem[actProgmem].topoct && transMode) {
+                segtype[seg]=1;
+                segText[seg]="";
+                segwidth[seg]=1;
+                pressed[seg]=0;
+                ctlx[seg]=0;
+                ctly[seg]=1;
+                seg++;
+                if(seg>=nsegs_max) return seg;
+            }
+        }
+        // it sounds nice if an octave finishes
+        // on top with the first note
+        //
+        if(firstlast==true) {
+            // but only, if there is more than 1 seg
+            if(seg>startseg+1) {
+
+                // is there enough space in transMode?
+                if(transMode) {
+                    if(seg+1<nsegs_max) {
+                        segtype[seg]=1;
+                        segText[seg]="";
+                        segwidth[seg]=1;
+                        pressed[seg]=0;
+                        ctlx[seg]=0;
+                        ctly[seg]=1;
+                        seg++;
+                    }
+                }
+
+                // draw top segment only
+                // in case that we're  not at the really upper end
+                // border (nsegsmax) of the seg storage
+                if(!(transMode && seg+1>nsegs_max)) {
+                    int calcnote=progmem.progmem[actProgmem].basenote+(progmem.progmem[actProgmem].topoct+1)*12;
+                    midinote[seg]=calcnote;
+                    freq[seg]=midi2f[calcnote];
+                    segText[seg]=midi2TextEU[calcnote%12];
+                    segwidth[seg]=1;
+                    segtype[seg]=0;
+                    ctlx[seg]=0;
+                    ctly[seg]=1;
+                    segH[seg]=note2hue(calcnote);
+                    pressed[seg]=0;
                     seg++;
                 }
             }
-            
-            // draw top segment only
-            // in case that we're  not at the really upper end
-            // border (nsegsmax) of the seg storage
-            if(!(transMode && seg+1>nsegs_max)) {
-                int calcnote=progmem.progmem[actProgmem].basenote+(progmem.progmem[actProgmem].topoct+1)*12;
-                midinote[seg]=calcnote;
-                freq[seg]=midi2f[calcnote];
-                segText[seg]=midi2TextEU[calcnote%12];
-                segwidth[seg]=1;
-                segtype[seg]=0;
-                ctlx[seg]=0;
-                ctly[seg]=1;
-                segH[seg]=note2hue(calcnote);
-                pressed[seg]=0;
-                seg++;
-            }
         }
+
     }
+
     return seg;
 }
 

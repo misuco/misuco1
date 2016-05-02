@@ -245,42 +245,67 @@ void EventHandlerRect::processPoint(Point * p, RC1 *rc1)
                  *     conversion of arbitrary misuco frequency to midi controlled oscillators in Reaktor.
                  */
 
-                // 1. make sure, to be in range to have two neighbours
-                if(iseg>0 && iseg<layout->getNsegs()-1) {
-                    // 2. make sure, two neighbours are notes
-                    if(layout->getSegtype(iseg+1)==0 && layout->getSegtype(iseg-1)==0) {
-                        // 3. calculate frequency
+                if(layout->getCtly(iseg)==-1) {
+                    // A: Y-Pitcher
 
-                        // 3b. calculate frequency difference
-                        float fdiff=layout->getFreq(iseg+1)-layout->getFreq(iseg-1);
-                        //float mndiff=layout->getValueInt(iseg+1)%12-layout->getValueInt(iseg-1)%12;
-                        // 3c. calculate relative frequency
-                        float frel=fdiff*xrel;
-                        frel+=layout->getFreq(iseg-1);
-                        //float hue=(float)(layout->getValueInt(iseg-1)%12)+(mndiff*(float)xrel);
-                        //hue*=30;
-                        //layout->setSegH(iseg, hue);    // store value for painter
-                        //p->setHue(hue);
+                    float pitchednote=layout->getMidinote(iseg)*4096+layout->getPitch(iseg)+yrel*(layout->getCtlx(iseg)*4096);
+                    int midinote=round(pitchednote/4096);
+                    int pitch=pitchednote-midinote*4096;
+                    float frel=layout->calcFreq(midinote,pitch);
 
-                        float pitchdiff=4096*(layout->getMidinote(iseg+1)-layout->getMidinote(iseg-1));
-                        pitchdiff+=layout->getPitch(iseg+1);
-                        pitchdiff-=layout->getPitch(iseg-1);
-                        pitchdiff*=xrel;
-                        float pitchednote=layout->getMidinote(iseg-1)*4096+layout->getPitch(iseg-1)+pitchdiff;
-                        int midinote=round(pitchednote/4096);
-                        int pitch=pitchednote-midinote*4096;
+                    if(freq[evptr]>0) {
+                        snd->pitch(layout->getChan(iseg), ieventout[evptr],frel,midinote,pitch, iseg-layout->getScaleStartSeg());
+                    } else {
+                        //ieventout[evptr]=ieventoutnext;
+                        //chan[evptr]=layout->getChan(iseg);
+                        //ieventoutnext++;
+                        snd->noteOn(layout->getChan(iseg), ieventout[evptr],frel,midinote,pitch,iseg-layout->getScaleStartSeg(),veldef);
+                    }
+                    freq[evptr]=frel;
+                    chan[evptr]=layout->getChan(iseg);
+                    mnote[evptr]=midinote;
 
-                        if(freq[evptr]>0) {
-                            snd->pitch(layout->getChan(iseg), ieventout[evptr],frel,midinote,pitch, iseg-layout->getScaleStartSeg());
-                        } else {
-                            //ieventout[evptr]=ieventoutnext;
-                            //chan[evptr]=layout->getChan(iseg);
-                            //ieventoutnext++;
-                            snd->noteOn(layout->getChan(iseg), ieventout[evptr],frel,midinote,pitch,iseg-layout->getScaleStartSeg(),veldef);
+                } else {
+                    // B: X-Pitcher
+                    // 1. make sure, to be in range to have two neighbours
+                    if(iseg>0 && iseg<layout->getNsegs()-1) {
+
+
+                        // 2. make sure, two neighbours are notes
+                        if(layout->getSegtype(iseg+1)==0 && layout->getSegtype(iseg-1)==0) {
+                            // 3. calculate frequency
+
+                            // 3b. calculate frequency difference
+                            float fdiff=layout->getFreq(iseg+1)-layout->getFreq(iseg-1);
+                            //float mndiff=layout->getValueInt(iseg+1)%12-layout->getValueInt(iseg-1)%12;
+                            // 3c. calculate relative frequency
+                            float frel=fdiff*xrel;
+                            frel+=layout->getFreq(iseg-1);
+                            //float hue=(float)(layout->getValueInt(iseg-1)%12)+(mndiff*(float)xrel);
+                            //hue*=30;
+                            //layout->setSegH(iseg, hue);    // store value for painter
+                            //p->setHue(hue);
+
+                            float pitchdiff=4096*(layout->getMidinote(iseg+1)-layout->getMidinote(iseg-1));
+                            pitchdiff+=layout->getPitch(iseg+1);
+                            pitchdiff-=layout->getPitch(iseg-1);
+                            pitchdiff*=xrel;
+                            float pitchednote=layout->getMidinote(iseg-1)*4096+layout->getPitch(iseg-1)+pitchdiff;
+                            int midinote=round(pitchednote/4096);
+                            int pitch=pitchednote-midinote*4096;
+
+                            if(freq[evptr]>0) {
+                                snd->pitch(layout->getChan(iseg), ieventout[evptr],frel,midinote,pitch, iseg-layout->getScaleStartSeg());
+                            } else {
+                                //ieventout[evptr]=ieventoutnext;
+                                //chan[evptr]=layout->getChan(iseg);
+                                //ieventoutnext++;
+                                snd->noteOn(layout->getChan(iseg), ieventout[evptr],frel,midinote,pitch,iseg-layout->getScaleStartSeg(),veldef);
+                            }
+                            freq[evptr]=frel;
+                            chan[evptr]=layout->getChan(iseg);
+                            mnote[evptr]=midinote;
                         }
-                        freq[evptr]=frel;
-                        chan[evptr]=layout->getChan(iseg);
-                        mnote[evptr]=midinote;
                     }
                 }
             } else {

@@ -170,25 +170,51 @@ void PaintBgShapes::paint(RC1 *view, QPainter * pnt) {
                 int col1=chue;
                 int col2=chue;
                 if(lay->getSegtype(iseg)==1) {
-                    if(colorMode==1 ) {
-                        col1=(lay->getMidinote(iseg-1)%12)*32;
-                        col2=(lay->getMidinote(iseg+1)%12)*32;
-                    } else if(colorMode==2 ) {
-                        col1=lay->getSegH(iseg-1);
-                        col2=lay->getSegH(iseg+1);
-                    }
-
-                    if(gradients>0) {
-                        QLinearGradient linearGrad(QPointF(xpaint, ypaint), QPointF(xpaint+xpaint1, ypaint));
-                        if(iseg>0) {
-                            linearGrad.setColorAt(0, QColor::fromHsl(col1,130,lightBNote));
-                            linearGrad.setColorAt(1, QColor::fromHsl(col2,130,lightBNote));
-                        } else {
-                            linearGrad.setColorAt(0, Qt::black);
-                            linearGrad.setColorAt(1, Qt::white);
-
+                    if(lay->getCtly(iseg)==-1) {
+                        if(colorMode==1 ) {
+                            col1=(lay->getMidinote(iseg)%12)*32;
+                            col2=((lay->getMidinote(iseg)+lay->getCtlx(iseg))%12)*32;
+                        } else if(colorMode==2 ) {
+                            col1=lay->getSegH(iseg);
+                            col2=lay->getSegH(iseg)+32*lay->getCtlx(iseg);
                         }
-                        pnt->setBrush(linearGrad);
+                        if(col1>360) col1-=360;
+                        if(col1<0) col1+=360;
+                        if(col2>360) col2-=360;
+                        if(col2<0) col2+=360;
+                        if(gradients>0) {
+                            QLinearGradient linearGrad(QPointF(xpaint, ypaint+ypaint1), QPointF(xpaint, ypaint));
+                            if(iseg>0) {
+                                linearGrad.setColorAt(0, QColor::fromHsl(col1,130,lightBNote));
+                                linearGrad.setColorAt(1, QColor::fromHsl(col2,130,lightBNote));
+                            } else {
+                                linearGrad.setColorAt(0, Qt::black);
+                                linearGrad.setColorAt(1, Qt::white);
+                            }
+                            pnt->setBrush(linearGrad);
+                        }
+                    } else {
+                        if(colorMode==1 ) {
+                            col1=(lay->getMidinote(iseg-1)%12)*32;
+                            col2=(lay->getMidinote(iseg+1)%12)*32;
+                        } else if(colorMode==2 ) {
+                            col1=lay->getSegH(iseg-1);
+                            col2=lay->getSegH(iseg+1);
+                        }
+
+                        if(gradients>0) {
+                            QLinearGradient linearGrad(QPointF(xpaint, ypaint), QPointF(xpaint+xpaint1, ypaint));
+                            if(iseg>0) {
+                                linearGrad.setColorAt(0, QColor::fromHsl(col1,130,lightBNote));
+                                linearGrad.setColorAt(1, QColor::fromHsl(col2,130,lightBNote));
+                            } else {
+                                linearGrad.setColorAt(0, Qt::black);
+                                linearGrad.setColorAt(1, Qt::white);
+
+                            }
+                            pnt->setBrush(linearGrad);
+                        }
+
                     }
                 } else {
                     if(lightB>0) {

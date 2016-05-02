@@ -212,6 +212,8 @@ public:
     bool seqPlay=false;
     bool seqRec=false;
 
+    float calcFreq(int midinote, int pitch);
+
 private:
     // view and event parameters
     int nrows;

@@ -6,6 +6,8 @@
 
 QT       += core gui opengl network multimedia xml quick qml
 CCFLAG += -lpthread -lgthread-2.0 -lglib-2.0
+QMAKE_CXXFLAGS += -lpthread -lgthread-2.0 -lglib-2.0
+LIBS += -lpthread -lgthread-2.0 -lglib-2.0
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

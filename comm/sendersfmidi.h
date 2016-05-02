@@ -53,9 +53,9 @@ public:
         _settings = new_fluid_settings();
         _synth = new_fluid_synth(_settings);
 
-        //int ret=fluid_synth_sfload(_synth,"/usr/share/sounds/sf2/FluidR3_GM.sf2",true);
+        int ret=fluid_synth_sfload(_synth,"/usr/share/sounds/sf2/FluidR3_GM.sf2",true);
         //int ret=fluid_synth_sfload(_synth,"/media/c1/3764-3838/owncloud/code/sYnerGi8/sYnerGi-8Mb.sf2",true);
-        int ret=fluid_synth_sfload(_synth,":/conf/sYnerGi-8Mb.sf2",true);
+        //int ret=fluid_synth_sfload(_synth,":/conf/sYnerGi-8Mb.sf2",true);
         //int ret=fluid_synth_sfload(_synth,":/conf/FluidR3_GM.sf2",true);
         qDebug() << "loaded sf " << ret;
         ret = fluid_synth_program_select 	( 	_synth,

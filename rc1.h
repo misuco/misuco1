@@ -73,7 +73,7 @@ public:
     ~RC1();
 
 #ifdef RC1_LINUX
-    static const float freq_max = 20000.0f;
+    constexpr static const float freq_max = 20000.0f;
 #else
     constexpr static const float freq_max = 20000.0f;
 #endif
